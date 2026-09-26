@@ -14,7 +14,18 @@
     - the offline block, where Download links to the GitHub ZIPs work and Load / Reconnect show "arrives in Phase 2".
   - **Every other area** has a page whose header explains its name, plus an honest "being built in Phase N" list. There are also About (the names) and Credits, licences & privacy pages.
   - **Tests** (all passing on 2026-09-26): `npm test` runs 8 Vitest checks; `npm run e2e` runs 5 Playwright tests in the installed Microsoft Edge.
-- **Not started:** Phases 2–9.
+- **Phase 2 (Library and reader): in progress.** Done so far:
+  - **Catalogue** (`pipeline/build_catalog.py` → `web/public/data/catalog.json`, committed): 373 authors, 1,837 works, 2,816 texts, pinned to exact commits.
+  - **TEI reader** (`web/src/lib/tei/`): parses each file by its own cRefPattern citation scheme, pages by book or scene or size, and aligns translations (Murray's line markers anchor the English). Tests prove no letter is lost.
+  - **Text sources** (`web/src/lib/texts/`): browser storage (OPFS), then connected folders (File System Access), then GitHub raw pinned to a SHA.
+  - **Downloader**: per-file, each file checked against its git blob SHA-1, resumable. ZIP import, reconnect folders.
+  - **Pages**: the Reader (`/read?w=…&ed=…&tr=…&at=…`); the Mouseion library with where-to-begin guidance and search; the Scroll Case downloads page. The front-page and Settings offline buttons work.
+  - **Word look-up**, in three layers:
+    1. GLAUx in-context analysis (`pipeline/build_words.py` → `web/public/data/words/`, **345 MB, not committed**);
+    2. LSJ (`pipeline/build_lsj.py` → `web/public/data/lsj/`, **75 MB, not committed**; citations link into the reader);
+    3. live Wiktionary.
+  - **Still to do in Phase 2**: bookmarks, favourites, notes and highlights (store written: `lib/annotations.ts`); side-by-side reading; Share (link, text, image); a live passage of the day; offline download of the word and LSJ packs; library filters by genre, period and dialect (`works-meta.json` built); e2e tests for the reader.
+- **Not started:** Phases 3–9.
 
 ## Decisions log
 | Date | Decision | Reason |
@@ -41,11 +52,18 @@
 | 2026-09-26 | State: **Zustand**. `lib/settings.ts` is persisted with `skipHydration` (rehydrated in `SettingsApplier`); `lib/ui.ts` holds site-wide UI state in the root layout. The floating reader's state goes in `lib/ui.ts` too. | Survives page changes; avoids hydration mismatches. |
 | 2026-09-26 | three.js is imported dynamically inside `Amphora`, so only the home page downloads it. The "motion" library was removed as unused; CSS and the View Transitions API cover the animation so far. | Performance. |
 | 2026-09-26 | Browser tests use the installed Microsoft Edge (`channel: "msedge"`), so no Playwright browser download is needed. Next.js telemetry was switched off (`next telemetry disable`). | Simplicity; no-trackers spirit. |
+| 2026-09-27 | **Offline downloads fetch only the original text XML files, one by one** from GitHub raw (pinned SHA), each verified by git blob SHA-1, into browser storage (OPFS) or a chosen folder. Full-repository ZIPs remain as an option. | Owner's choice; much smaller than the ZIPs. |
+| 2026-09-27 | **Word analyses come from GLAUx** (in context; hand-checked treebank sentences flagged; stated accuracy: lemma 98.8%, morphology 97.2%). **Dictionary: LSJ** from PerseusDL/lexica. Wiktionary is live when online. Logeion and Perseus are links. | The most scholarly open sources; context beats out-of-context analysis. |
+| 2026-09-27 | The reader is one static page, `/read?w=<work>&ed=<version>&tr=<version or none>&at=<ref>`, so a cached shell works offline. | Offline-friendly. |
 | 2026-09-27 | **Git**: the owner allows local commits (version snapshots). Commit at the end of each piece of work; don't push (there is no remote). | Owner's instruction. |
 | 2026-09-27 | **Phase reviews by a fresh session are optional**, the owner's own workflow. Don't wait for them. | Owner's instruction. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
 
 ## Known problems
+- **Hosting the generated data packs** (word analyses 345 MB and LSJ 75 MB, uncompressed; roughly 100 MB gzipped) is not decided. They are gitignored and must be rebuilt with the pipeline scripts. Options: Vercel static files (check the limits), GitHub Releases or jsDelivr, or Cloudflare R2. This needs the owner's input before launch.
+- GLAUx covers 1,186 of our 1,837 works; the rest show "no analysis yet" plus LSJ and Wiktionary.
+- The GLAUx tag "b" is read as "coordinating conjunction", confirmed in glaux-nlp `treebanks/Tagsets.py` ("coordinator").
+- The Bash tool mangles `` in heredocs into a control character. Never write regex back-references through a Bash heredoc; use the Edit tool or `chr(92)`. This bit `build_lsj.py` once; it was fixed and the output was verified clean.
 - Home page items the brief asks for that depend on later phases: "recent forum activity" (Phase 8), and daily rotation of the wiki cards (Phase 7, once real entries exist). The three current cards are fixed.
 - "Save word", "Load from a folder" and "Reconnect folders" show a toast saying which phase delivers them.
 - The passage of the day is hard-coded from the Perseus files (`src/data/iliad-sample.ts`). Phase 2 should load it live from the TEI file and choose a different passage each day.

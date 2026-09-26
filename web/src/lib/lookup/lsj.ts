@@ -42,7 +42,9 @@ export async function lsjEntries(headword: string): Promise<{ head: string; entr
 
 /** "urn:cts:greekLit:tlg0019.tlg006.perseus-grc1:827" → a link into the reader. */
 export function citationHref(urn: string): string | null {
-  const m = /^urn:cts:greekLit:(tlg\d+\.tlg\d+)(?:\.[\w-]+)?(?::([\w.]+))?/.exec(urn);
+  // LSJ writes passages as "5:34" or "2.50b"; the reader uses dots
+  const m = /^urn:cts:greekLit:(tlg\d+\.tlg\d+)(?:\.[\w-]+)?(?::([\w.:-]+))?/.exec(urn);
   if (!m) return null;
-  return `/read?w=${m[1]}${m[2] ? `&at=${encodeURIComponent(m[2])}` : ""}`;
+  const at = m[2]?.replace(/:/g, ".").replace(/-.*$/, "");
+  return `/read?w=${m[1]}${at ? `&at=${encodeURIComponent(at)}` : ""}`;
 }

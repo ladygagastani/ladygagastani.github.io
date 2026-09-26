@@ -100,13 +100,18 @@ def segments(el: ET.Element, greek: bool = False) -> list:
             merged[-1] += s
         else:
             merged.append(s)
-    return [s for s in merged if not (isinstance(s, str) and not s.strip())] if merged else []
+    # layout whitespace only: collapse runs of spaces and the space before punctuation
+    tidy = [re.sub(r"\s+([,;:.)])", r"\1", re.sub(r"\s{2,}", " ", s)) if isinstance(s, str) else s for s in merged]
+    return [s for s in tidy if not (isinstance(s, str) and not s.strip())]
 
 
 def short_gloss(entry: ET.Element) -> str:
     seen: list[str] = []
     for tr in entry.iter("tr"):
         t = " ".join("".join(tr.itertext()).split()).strip(" ,;:")
+        # a few <tr> elements in the source hold abbreviations ("Il.Parv..", "Smp.."), not translations
+        if ".." in t or re.fullmatch(r"[A-Z][\w.]*\.", t):
+            continue
         if t and t not in seen:
             seen.append(t)
         if len(seen) >= 4:
