@@ -3,15 +3,17 @@ import { persist, createJSONStorage, type StateStorage } from "zustand/middlewar
 
 export type ThemePref = "auto" | "light" | "dark";
 export type MotionPref = "auto" | "reduce" | "full";
+export type Columns = "both" | "greek" | "trans";
 
 export interface Settings {
   theme: ThemePref;
   motion: MotionPref;
   greekSize: number;   // rem
   leading: number;     // unitless line height for reading text
+  columns: Columns;    // reader: Greek and translation, or one of them
 }
 
-export const DEFAULTS: Settings = { theme: "auto", motion: "auto", greekSize: 1.25, leading: 1.75 };
+export const DEFAULTS: Settings = { theme: "auto", motion: "auto", greekSize: 1.25, leading: 1.75, columns: "both" };
 export const LIMITS = {
   greekSize: { min: 1, max: 2, step: 0.0625 },
   leading: { min: 1.4, max: 2.2, step: 0.1 },
@@ -46,7 +48,7 @@ export const useSettings = create<SettingsStore>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => safeStorage),
-      partialize: ({ theme, motion, greekSize, leading }) => ({ theme, motion, greekSize, leading }),
+      partialize: ({ theme, motion, greekSize, leading, columns }) => ({ theme, motion, greekSize, leading, columns }),
       skipHydration: true,
     },
   ),

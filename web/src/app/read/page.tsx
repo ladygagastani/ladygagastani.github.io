@@ -1,24 +1,18 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Page from "@/components/Page";
-import AreaHeader from "@/components/AreaHeader";
-import ComingSoon from "@/components/ComingSoon";
+import Reader from "@/components/reader/Reader";
 import { AREAS } from "@/config/areas";
 
 export const metadata: Metadata = { title: `${AREAS.reader.name} · ${AREAS.reader.english}` };
 
-const ITEMS = [
-  "The Greek text beside its translation, exactly as the source files give it",
-  "Click any word for its dictionary form, grammar and meaning, with live links to Logeion, Perseus and Wiktionary",
-  "Bookmarks, favourites, notes and highlights on any passage",
-  "Two books side by side, and sharing a passage as a link, text or image",
-  "Reading from GitHub online, or from your downloaded copy offline"
-];
-
+// One static page serves every work (chosen by ?w=…), so it also works offline once cached.
 export default function ReadPage() {
   return (
     <Page>
-      <AreaHeader id="reader" />
-      <ComingSoon id="reader" items={ITEMS} />
+      <Suspense fallback={null}>
+        <Reader />
+      </Suspense>
     </Page>
   );
 }

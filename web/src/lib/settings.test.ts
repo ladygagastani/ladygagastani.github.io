@@ -3,8 +3,8 @@ import { useSettings, DEFAULTS, LIMITS } from "./settings";
 
 describe("settings", () => {
   it("starts from the defaults", () => {
-    const { theme, motion, greekSize, leading } = useSettings.getState();
-    expect({ theme, motion, greekSize, leading }).toEqual(DEFAULTS);
+    const { theme, motion, greekSize, leading, columns } = useSettings.getState();
+    expect({ theme, motion, greekSize, leading, columns }).toEqual(DEFAULTS);
   });
 
   it("keeps text size and line spacing inside their limits", () => {

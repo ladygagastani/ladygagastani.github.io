@@ -97,3 +97,16 @@ describe("alignment with the translation", () => {
     expect(plain(rows[0].trans)).toMatch(/How you, men of Athens/);
   });
 });
+
+import { findRef } from "./refs";
+describe("going to a reference", () => {
+  it("finds exact references, prefixes and Stephanus sections", () => {
+    const il = doc("tlg0012.tlg001.perseus-grc2");
+    expect(il.units[findRef(il, "1.33")].ref).toEqual(["1", "33"]);
+    expect(il.units[findRef(il, "2")].ref).toEqual(["2", "1"]);
+    expect(il.units[findRef(il, "3 15")].ref).toEqual(["3", "15"]);
+    const ap = doc("tlg0059.tlg002.perseus-grc2");
+    expect(ap.units[findRef(ap, "19a")].ref).toEqual(["19"]);
+    expect(findRef(il, "99.1")).toBe(-1);
+  });
+});

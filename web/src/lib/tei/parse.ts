@@ -30,7 +30,7 @@ function buildTree(xml: string): { body: El | null; patterns: { n: string; rp: s
   parser.on("opentag", (t) => {
     const name = local(t.name);
     const attrs: Record<string, string> = {};
-    for (const [k, v] of Object.entries(t.attributes)) attrs[k] = typeof v === "string" ? v : v.value;
+    for (const [k, v] of Object.entries(t.attributes)) attrs[k] = String(v);
     if (skip) {
       skip++;
       if (name === "cRefPattern" && attrs.replacementPattern) patterns.push({ n: attrs.n ?? "", rp: attrs.replacementPattern });
