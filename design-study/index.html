@@ -1,0 +1,1007 @@
+<title>Mathesis Design Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Alegreya:ital,wght@0,400;0,600;1,400&family=Alegreya+Sans+SC:wght@500;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=Literata:ital,wght@0,400;0,600;1,400&family=Cormorant+SC:wght@600&family=Piazzolla:ital,wght@0,400;0,700;0,900;1,400&family=Ysabeau:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* ============================================================
+   TOKENS — three directions × two themes.
+   A = Black-Figure (default), B = Papyrus & Rubric, C = Fresco
+   ============================================================ */
+:root{
+  --bg:#E6C39B; --bg2:#DDB186; --surface:#F3E3CC; --ink:#1B1410; --ink2:#5A3E2B;
+  --accent:#A33A16; --accent-ink:#F6ECDD; --band:#1B1410; --blue:#2F4F6B; --ochre:#B7802F; --red:#A33A16;
+  --rule:rgba(27,20,16,.28); --shadow:rgba(40,20,5,.35);
+  --f-display:"GFS Didot","Gentium Book Plus",Georgia,serif;
+  --f-greek:"GFS Didot","Gentium Book Plus","Noto Serif",Georgia,serif;
+  --f-body:"Alegreya",Georgia,serif;
+  --f-label:"Alegreya Sans SC","Alegreya",system-ui,sans-serif;
+  --radius:2px;
+  color-scheme:light;
+}
+:root[data-dir="b"]{
+  --bg:#E9DDBF; --bg2:#E0D0AB; --surface:#F2E9D3; --ink:#2B2117; --ink2:#6B5A44;
+  --accent:#A5301B; --accent-ink:#F7EFDC; --band:#A5301B; --blue:#2E5470; --ochre:#9C7A3C; --red:#A5301B;
+  --rule:rgba(43,33,23,.25); --shadow:rgba(60,40,10,.25);
+  --f-display:"Cormorant Garamond","Gentium Book Plus",Georgia,serif;
+  --f-greek:"Gentium Book Plus","GFS Didot","Noto Serif",Georgia,serif;
+  --f-body:"Literata",Georgia,serif;
+  --f-label:"Cormorant SC","Cormorant Garamond",Georgia,serif;
+  --radius:0px; --tex-body:var(--papyrus); --tex-blend:normal;
+}
+:root[data-dir="c"]{
+  --bg:#EDE8DF; --bg2:#E3DCCE; --surface:#F8F5EF; --ink:#1B2336; --ink2:#55607A;
+  --accent:#1F58A8; --accent-ink:#F8F5EF; --band:#1F58A8; --blue:#1F58A8; --ochre:#D39B37; --red:#B0452B;
+  --rule:rgba(27,35,54,.18); --shadow:rgba(20,30,60,.22);
+  --f-display:"Piazzolla","Gentium Book Plus",Georgia,serif;
+  --f-greek:"Piazzolla","Gentium Book Plus","Noto Serif",Georgia,serif;
+  --f-body:"Ysabeau","Alegreya Sans",system-ui,sans-serif;
+  --f-label:"Ysabeau","Alegreya Sans",system-ui,sans-serif;
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16110E; --bg2:#1F1712; --surface:#241A14; --ink:#EDCBA0; --ink2:#BE9876;
+    --accent:#E0673A; --accent-ink:#16110E; --band:#C8703A; --blue:#8FB0CC; --ochre:#D9A15A; --red:#E0673A;
+    --rule:rgba(237,203,160,.22); --shadow:rgba(0,0,0,.6); color-scheme:dark;
+  }
+  :root[data-dir="b"]:not([data-theme="light"]){
+    --tex-body:none; --tex-blend:soft-light;
+    --bg:#1B1712; --bg2:#231E17; --surface:#29231B; --ink:#E9DCC0; --ink2:#AD9B7C;
+    --accent:#E27458; --accent-ink:#1B1712; --band:#E27458; --blue:#86AECB; --ochre:#CDAA66; --red:#E27458;
+    --rule:rgba(233,220,192,.2); --shadow:rgba(0,0,0,.55); color-scheme:dark;
+  }
+  :root[data-dir="c"]:not([data-theme="light"]){
+    --bg:#0E1729; --bg2:#132038; --surface:#172642; --ink:#EEE8DC; --ink2:#A4AFC6;
+    --accent:#79AAE8; --accent-ink:#0E1729; --band:#79AAE8; --blue:#79AAE8; --ochre:#E6B659; --red:#E27B5E;
+    --rule:rgba(238,232,220,.16); --shadow:rgba(0,0,0,.5); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16110E; --bg2:#1F1712; --surface:#241A14; --ink:#EDCBA0; --ink2:#BE9876;
+  --accent:#E0673A; --accent-ink:#16110E; --band:#C8703A; --blue:#8FB0CC; --ochre:#D9A15A; --red:#E0673A;
+  --rule:rgba(237,203,160,.22); --shadow:rgba(0,0,0,.6); color-scheme:dark;
+}
+:root[data-dir="b"][data-theme="dark"]{
+    --tex-body:none; --tex-blend:soft-light;
+  --bg:#1B1712; --bg2:#231E17; --surface:#29231B; --ink:#E9DCC0; --ink2:#AD9B7C;
+  --accent:#E27458; --accent-ink:#1B1712; --band:#E27458; --blue:#86AECB; --ochre:#CDAA66; --red:#E27458;
+  --rule:rgba(233,220,192,.2); --shadow:rgba(0,0,0,.55); color-scheme:dark;
+}
+:root[data-dir="c"][data-theme="dark"]{
+  --bg:#0E1729; --bg2:#132038; --surface:#172642; --ink:#EEE8DC; --ink2:#A4AFC6;
+  --accent:#79AAE8; --accent-ink:#0E1729; --band:#79AAE8; --blue:#79AAE8; --ochre:#E6B659; --red:#E27B5E;
+  --rule:rgba(238,232,220,.16); --shadow:rgba(0,0,0,.5); color-scheme:dark;
+}
+
+/* ============================================================ BASE */
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--f-body);
+  transition:background-color .5s ease,color .5s ease;overflow-x:hidden}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:clamp(16px,4vw,48px)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;font-weight:400;line-height:1.08}
+h2{font-size:clamp(28px,3.4vw,42px)}
+h3{font-size:22px}
+p{margin:0}
+.gr{font-family:var(--f-greek)}
+.label{font-family:var(--f-label);letter-spacing:.08em;font-size:14px;color:var(--ink2)}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+kbd{font:600 12px/1 var(--f-label);border:1px solid var(--rule);border-radius:4px;padding:2px 6px}
+
+/* meander band (mask, so it takes any colour) */
+.meander{height:16px;background:var(--band);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") repeat-x left center/16px 16px;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") repeat-x left center/16px 16px}
+.tongues{height:14px;background:var(--band);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14'%3E%3Cpath d='M1 0H11V6A5 5 0 0 1 1 6Z'/%3E%3C/svg%3E") repeat-x left top/12px 14px;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14'%3E%3Cpath d='M1 0H11V6A5 5 0 0 1 1 6Z'/%3E%3C/svg%3E") repeat-x left top/12px 14px}
+.draw{animation:draw 1.4s cubic-bezier(.6,0,.2,1) both}
+@keyframes draw{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+
+/* ============================================================ HEADER */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.top .wrap{display:flex;align-items:center;gap:20px;min-height:68px}
+.brand{display:flex;flex-direction:column;text-decoration:none;line-height:1.1;flex:none}
+.brand-gr{font-family:var(--f-greek);font-size:21px}
+.brand-en{font-family:var(--f-label);font-size:12px;letter-spacing:.14em;color:var(--ink2)}
+.areas{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0;-webkit-mask:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask:linear-gradient(90deg,#000 calc(100% - 36px),transparent);padding-right:36px}
+.areas a{display:flex;flex-direction:column;padding:6px 12px;text-decoration:none;border-radius:var(--radius);white-space:nowrap;line-height:1.15;position:relative}
+.areas b{font-weight:600;font-size:15px;font-family:var(--f-body)}
+.areas small{font-family:var(--f-label);font-size:12px;color:var(--ink2);letter-spacing:.06em}
+.areas a:hover{background:var(--bg2)}
+.areas a[aria-current]::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:2px;background:var(--accent)}
+.tools{display:flex;gap:8px;flex:none}
+.tbtn{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--rule);border-radius:var(--radius);padding:7px 12px;font-size:14px}
+.tbtn:hover{border-color:var(--ink2)}
+.tbtn svg{width:16px;height:16px}
+
+/* ============================================================ HEROES (one per direction) */
+.hero{display:none;position:relative}
+:root:not([data-dir]) .hero-a,:root[data-dir="a"] .hero-a,:root[data-dir="b"] .hero-b,:root[data-dir="c"] .hero-c{display:block}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);
+  border-radius:var(--radius);font-weight:600;font-size:16px;text-decoration:none;transition:transform .2s ease,background .2s,color .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn .arr{transition:transform .25s}
+.btn:hover .arr{transform:translateX(4px)}
+
+/* --- A: Black-Figure ------------------------------------------------ */
+.hero-a{padding-block:36px 0}
+.hero-a .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:center}
+.hero-a .kicker{display:flex;align-items:center;gap:12px}
+.hero-a .kicker .tongues{width:72px}
+.hero-a h1{font-size:clamp(52px,7.4vw,104px);letter-spacing:-.01em;margin-top:18px}
+.hero-a h1 .l2{display:block;padding-left:.9em;color:var(--accent)}
+.hero-a .sub{font-size:21px;max-width:30ch;margin-top:22px;color:var(--ink2)}
+.vase-stage{position:relative;height:clamp(420px,52vw,600px)}
+.vase-stage canvas{position:absolute;inset:0;width:100%!important;height:100%!important;cursor:grab;touch-action:pan-y}
+.vase-stage canvas:active{cursor:grabbing}
+.vase-stage .shadow{position:absolute;left:50%;bottom:5%;width:46%;height:26px;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(closest-side,var(--shadow),transparent)}
+.vase-cap{margin:6px 0 0 auto;max-width:36ch;font-size:13px;color:var(--ink2);text-align:right;font-style:italic}
+.frieze{margin-top:10px;display:grid;gap:5px}
+
+/* --- B: Papyrus & Rubric ---------------------------------------------- */
+.hero-b{padding-block:44px 8px}
+.hero-b .head{display:grid;grid-template-columns:1fr auto;gap:20px 40px;align-items:end}
+.hero-b h1{font-size:clamp(46px,6.4vw,88px);font-style:italic;font-weight:500}
+.hero-b h1 .gr{font-family:var(--f-greek);font-style:italic;display:block;font-weight:400}
+.hero-b h1 .en{display:block;font-size:.46em;color:var(--accent);margin-top:10px;letter-spacing:.01em}
+.hero-b .sub{max-width:38ch;font-size:18px;color:var(--ink2)}
+.scroll{--open:1;position:relative;margin-top:34px;padding-inline:26px}
+.sheet{position:relative;min-height:230px;padding:34px clamp(20px,5vw,64px);
+  background-color:var(--surface);background-image:var(--papyrus);background-size:512px 512px;background-blend-mode:var(--tex-blend,normal);
+  box-shadow:0 18px 40px -22px var(--shadow),inset 0 0 60px rgba(120,90,40,.12);
+  clip-path:inset(0 calc((1 - var(--open)) * 50%) 0 calc((1 - var(--open)) * 50%))}
+.roller{position:absolute;top:-14px;bottom:-14px;width:22px;border-radius:11px;
+  background:linear-gradient(90deg,#4a2f18,#8a5a30 40%,#c89458 55%,#6b4322 80%,#3d2512);box-shadow:0 8px 16px -6px var(--shadow)}
+.roller.l{left:calc(26px + (1 - var(--open)) * (50% - 26px));transform:translateX(-100%)}
+.roller.r{right:calc(26px + (1 - var(--open)) * (50% - 26px));transform:translateX(100%)}
+.roller::before,.roller::after{content:"";position:absolute;left:50%;width:12px;height:12px;border-radius:50%;background:#2b1a0c;transform:translateX(-50%)}
+.roller::before{top:-6px}.roller::after{bottom:-6px}
+.lines{font-family:var(--f-greek);font-size:clamp(19px,2.3vw,30px);line-height:1.7;letter-spacing:.02em}
+.lines .ln{display:flex;flex-wrap:wrap}
+.lines .wd{display:inline-block;margin-right:0;transition:margin .9s cubic-bezier(.5,0,.2,1)}
+.lines .lo{display:none}
+.sheet.s2 .wd,.sheet.s3 .wd{margin-right:.42em}
+.sheet.s3 .up{display:none}.sheet.s3 .lo{display:inline}
+.sheet .lines{transition:opacity .28s ease,filter .28s ease}
+.sheet.fading .lines{opacity:0;filter:blur(5px)}
+.stages{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:flex-start;margin-top:22px}
+.stepper{display:flex;border:1px solid var(--rule)}
+.stepper button{background:transparent;border:0;padding:8px 14px;font-family:var(--f-label);font-size:15px;letter-spacing:.04em;color:var(--ink2)}
+.stepper button+button{border-left:1px solid var(--rule)}
+.stepper button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.stage-cap{flex:1;min-width:260px;max-width:62ch;font-size:15.5px;color:var(--ink2)}
+.stage-cap .tag{margin-top:6px}
+
+/* --- C: Fresco --------------------------------------------------------- */
+.hero-c{padding-block:40px 20px}
+.hero-c .grid{display:grid;grid-template-columns:1fr 1.05fr;gap:32px;align-items:center}
+.hero-c .eyebrow{font-family:var(--f-label);font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.hero-c h1{font-size:clamp(56px,8.6vw,124px);font-weight:900;color:var(--blue);letter-spacing:-.02em;line-height:.95;margin-top:14px}
+.hero-c h1 span{display:block}
+.hero-c h1 span+span{color:var(--ink);font-weight:400;font-style:italic;padding-left:.5em}
+.hero-c .sub{font-size:20px;max-width:32ch;margin-top:22px;color:var(--ink2)}
+.hero-c .btn{border-radius:999px;background:var(--blue);border-color:var(--blue);color:var(--accent-ink)}
+.hero-c .btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.frags{position:relative;height:clamp(400px,46vw,540px)}
+.frag{position:absolute;box-shadow:0 30px 50px -30px var(--shadow);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.frag.f1{left:0;top:6%;width:74%;height:52%;background:var(--blue);
+  clip-path:polygon(2% 6%,18% 0,41% 4%,63% 1%,88% 5%,100% 0,98% 34%,100% 61%,96% 100%,71% 96%,44% 100%,21% 95%,0 99%,3% 70%,0 38%)}
+.frag.f1 canvas{width:100%;height:100%;display:block}
+.frag.f2{right:0;top:30%;width:44%;height:52%;background:var(--ochre);color:#1B2336;display:grid;place-items:center;text-align:center;
+  clip-path:polygon(6% 2%,33% 0,64% 5%,100% 1%,97% 32%,100% 58%,95% 100%,62% 97%,30% 100%,0 95%,4% 64%,0 30%)}
+.frag.f3{left:10%;bottom:0;width:40%;height:28%;background:var(--red);color:#F8F5EF;padding:22px 26px;display:flex;flex-direction:column;justify-content:center;
+  clip-path:polygon(0 8%,30% 2%,58% 6%,100% 0,97% 45%,100% 100%,55% 95%,22% 100%,2% 94%,4% 50%)}
+.big-letter{font-family:var(--f-greek);font-size:clamp(90px,11vw,150px);line-height:1;transition:opacity .35s,transform .35s}
+.big-letter.swap{opacity:0;transform:translateY(12px) scale(.92)}
+.letter-name{font-family:var(--f-label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:14px}
+.frag.f3 b{font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1.1}
+.frag.f3 span{font-size:14px;opacity:.9}
+.fcap{position:absolute;left:0;bottom:-26px;font-size:13px;color:var(--ink2);font-style:italic}
+
+/* ============================================================ SECTIONS */
+main{padding-block:24px 120px}
+section.block{padding-block:clamp(48px,7vw,88px)}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px 32px;margin-bottom:32px}
+.sec-head p{max-width:52ch;color:var(--ink2)}
+.sec-head .label{display:block;margin-bottom:10px}
+
+/* learn */
+.learn{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(24px,4vw,56px);align-items:start}
+.path{list-style:none;margin:0;padding:0;display:grid;gap:4px;counter-reset:step}
+.path li{counter-increment:step;display:grid;grid-template-columns:44px 1fr;gap:14px;padding:16px 0;border-top:1px solid var(--rule)}
+.path li::before{content:counter(step);font-family:var(--f-display);font-size:30px;line-height:1;color:var(--accent)}
+.path b{display:block;font-size:18px}
+.path span{color:var(--ink2);font-size:15.5px}
+.letters{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tile{perspective:800px;height:150px;border:0;padding:0;background:none;text-align:left}
+.tile .in{position:relative;display:block;width:100%;height:100%;transition:transform .7s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.tile:hover .in,.tile:focus-visible .in,.tile.on .in{transform:rotateY(180deg)}
+.tile .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;background:var(--surface);border:1px solid var(--rule)}
+.tile .face.back{transform:rotateY(180deg);background:var(--ink);color:var(--bg);gap:4px;padding:12px;text-align:center}
+.tile .glyph{font-family:var(--f-greek);font-size:58px;line-height:1}
+.tile .glyph small{font-size:.6em;margin-left:.15em;color:var(--ink2)}
+.tile .face.back b{font-family:var(--f-display);font-size:22px;font-weight:400}
+.tile .face.back span{font-size:14px;opacity:.85}
+.note{font-size:14px;color:var(--ink2);margin-top:14px}
+
+/* passage */
+.aids{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--rule);border-radius:999px;font-size:14px;background:transparent}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.5}
+.chip[aria-pressed="true"] .dot{opacity:1}
+.reading{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:start}
+.reading .scholia{grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px}
+.reading .scholia .label{grid-column:1/-1}
+.reading.no-eng{grid-template-columns:minmax(0,1fr)}
+@media (min-width:1320px){.reading{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) 220px}.reading.no-eng{grid-template-columns:minmax(0,1fr) 220px}.reading .scholia{grid-column:auto;grid-template-columns:1fr}}
+.reading.no-eng .eng{display:none}
+.grc{font-family:var(--f-greek);font-size:clamp(20px,1.7vw,24px);line-height:1.75}
+.grc .row>span:last-child{padding-left:1.4em;text-indent:-1.4em}
+.grc .row{display:grid;grid-template-columns:34px 1fr;align-items:baseline}
+.grc .n{font-family:var(--f-label);font-size:13px;color:var(--ink2);text-align:right;padding-right:12px;opacity:1;transition:opacity .3s}
+.reading.no-num .n{opacity:0}
+.w{cursor:pointer;border-radius:3px;transition:background .15s,color .15s;padding:0 1px;margin:0 -1px}
+.w.has{background-image:linear-gradient(var(--accent),var(--accent));background-size:0 1.5px;background-repeat:no-repeat;background-position:0 92%;transition:background-size .3s}
+.show-has .w.has{background-size:100% 1.5px}
+.w:hover,.w.sel{background-color:color-mix(in srgb,var(--accent) 18%,transparent)}
+.eng{font-size:17px;line-height:1.7;color:var(--ink2);border-left:1px solid var(--rule);padding-left:clamp(16px,2.5vw,32px)}
+.eng .label{display:block;margin-bottom:8px}
+.scholia{display:grid;gap:14px;font-size:14.5px;line-height:1.5}
+.scholia .label{margin-bottom:-4px}
+.scholion b{font-family:var(--f-greek);font-weight:400;color:var(--accent)}
+.scholion .ref{font-family:var(--f-label);color:var(--ink2);margin-right:6px}
+.cite{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:26px;padding-top:16px;border-top:1px solid var(--rule);font-size:14px;color:var(--ink2)}
+.cite strong{color:var(--ink);font-weight:600}
+.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-label);font-size:12.5px;letter-spacing:.06em;padding:2px 9px;border-radius:999px;border:1px solid currentColor}
+.tag.well{color:var(--blue)}.tag.debated{color:var(--ochre)}.tag.legend{color:var(--red)}
+
+/* stoa */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{display:flex;flex-direction:column;gap:12px;padding:24px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -24px var(--shadow)}
+.card .label{color:var(--accent)}
+.card h3{font-size:25px}
+.card p{color:var(--ink2);font-size:16px}
+.card .tag{align-self:flex-start;margin-top:auto}
+
+/* offline */
+.offline{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(24px,4vw,56px);align-items:start;padding:clamp(24px,4vw,44px);
+  background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius)}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:14px;margin-top:18px}
+.status i{width:9px;height:9px;border-radius:50%;background:#3f8f5a;box-shadow:0 0 0 4px color-mix(in srgb,#3f8f5a 25%,transparent)}
+.off-actions{display:grid;gap:12px}
+.oa{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--rule);
+  border-radius:var(--radius);background:var(--bg)}
+.oa:hover{border-color:var(--ink2)}
+.oa svg{width:26px;height:26px;color:var(--accent)}
+.oa b{display:block;font-size:17px}
+.oa span{font-size:14.5px;color:var(--ink2)}
+.oa .go{font-family:var(--f-label);font-size:14px;color:var(--accent)}
+
+footer{border-top:1px solid var(--rule);padding-block:28px 110px;font-size:13.5px;color:var(--ink2)}
+footer p+p{margin-top:6px}
+
+/* ============================================================ DIRECTION-SPECIFIC SECTION STYLES */
+/* A: registers framed by bands, square gloss buttons */
+:root:not([data-dir]) section.block,:root[data-dir="a"] section.block{position:relative}
+:root:not([data-dir]) section.block+section.block::before,:root[data-dir="a"] section.block+section.block::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:16px;background:var(--band);opacity:.85;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") repeat-x left center/16px 16px;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") repeat-x left center/16px 16px}
+:root:not([data-dir]) .card,:root[data-dir="a"] .card{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+:root:not([data-dir]) .card p,:root[data-dir="a"] .card p{color:color-mix(in srgb,var(--bg) 78%,var(--ink))}
+:root:not([data-dir]) .card .label,:root[data-dir="a"] .card .label{color:var(--accent)}
+:root:not([data-dir]) .card .tag,:root[data-dir="a"] .card .tag{color:var(--bg)}
+
+/* B: manuscript ruling, rubric initials, no card chrome */
+:root[data-dir="b"] body{background-image:var(--tex-body);background-size:512px 512px}
+:root[data-dir="b"] section.block{border-top:3px double var(--rule)}
+:root[data-dir="b"] .sec-head h2::first-letter{color:var(--accent);font-size:1.25em}
+:root[data-dir="b"] .card{background:transparent;border:0;border-top:1px solid var(--rule);padding:18px 0 0}
+:root[data-dir="b"] .card:hover{box-shadow:none}
+:root[data-dir="b"] .btn{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+:root[data-dir="b"] .btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+:root[data-dir="b"] .offline{background:transparent}
+:root[data-dir="b"] .scholia{border-left:1px solid var(--accent);padding-left:16px}
+:root[data-dir="b"] .tile .face.back{background:var(--accent);color:var(--accent-ink)}
+
+/* C: fragments, rounded, colour blocks */
+:root[data-dir="c"] .card{border:0;box-shadow:0 1px 0 var(--rule)}
+:root[data-dir="c"] .card:nth-child(1){background:var(--blue);color:var(--accent-ink)}
+:root[data-dir="c"] .card:nth-child(1) p,:root[data-dir="c"] .card:nth-child(1) .label,:root[data-dir="c"] .card:nth-child(1) .tag{color:var(--accent-ink)}
+:root[data-dir="c"] .tile .face{border:0;box-shadow:0 10px 24px -18px var(--shadow)}
+:root[data-dir="c"] .tile:nth-child(3n+1) .face.back{background:var(--blue);color:var(--accent-ink)}
+:root[data-dir="c"] .tile:nth-child(3n+2) .face.back{background:var(--ochre);color:#1B2336}
+:root[data-dir="c"] .tile:nth-child(3n) .face.back{background:var(--red);color:#F8F5EF}
+:root[data-dir="c"] .offline{border:0;background:var(--surface);box-shadow:0 30px 60px -40px var(--shadow)}
+:root[data-dir="c"] .path li::before{color:var(--blue);font-weight:900}
+
+/* ============================================================ OVERLAYS */
+.pop{position:fixed;z-index:60;width:min(340px,calc(100vw - 32px));background:var(--surface);color:var(--ink);border:1px solid var(--rule);
+  border-radius:max(var(--radius),6px);box-shadow:0 24px 48px -20px var(--shadow);padding:18px 20px;
+  opacity:0;transform:translateY(6px) scale(.98);pointer-events:none;transition:opacity .18s,transform .18s}
+.pop.show{opacity:1;transform:none;pointer-events:auto}
+.pop .pw{font-family:var(--f-greek);font-size:30px;line-height:1.1}
+.pop .lem{font-size:15px;color:var(--ink2);margin-top:4px}
+.pop .lem .gr{color:var(--ink);font-size:17px}
+.pop .parse{margin-top:12px;font-family:var(--f-label);font-size:14px;letter-spacing:.04em;color:var(--accent)}
+.pop .def{margin-top:6px;font-size:16px}
+.pop .acts{display:flex;gap:8px;margin-top:14px}
+.pop .acts button{padding:6px 12px;border:1px solid var(--rule);background:transparent;border-radius:var(--radius);font-size:14px}
+.pop .acts button:first-child{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pop .fine{margin-top:12px;font-size:12.5px;color:var(--ink2)}
+.turn{position:fixed;inset:0;z-index:80;pointer-events:none;transform:translateX(-102%);background:var(--ink);display:grid;place-items:center}
+.turn span{font-family:var(--f-display);font-size:clamp(34px,5vw,64px);color:var(--bg)}
+.turn.play{animation:turn 1.05s cubic-bezier(.7,0,.3,1) both}
+@keyframes turn{0%{transform:translateX(-102%)}42%,58%{transform:translateX(0)}100%{transform:translateX(102%)}}
+:root:not([data-dir]) .turn,:root[data-dir="a"] .turn{border-right:16px solid var(--accent)}
+:root[data-dir="b"] .turn{background-color:var(--surface);background-image:var(--papyrus);box-shadow:30px 0 40px -10px var(--shadow)}
+:root[data-dir="b"] .turn span{color:var(--ink);font-style:italic}
+:root[data-dir="c"] .turn{background:var(--blue);clip-path:polygon(0 0,97% 0,100% 12%,96% 30%,99% 52%,95% 74%,100% 90%,97% 100%,0 100%)}
+:root[data-dir="c"] .turn span{color:var(--accent-ink)}
+.toast{position:fixed;left:50%;bottom:92px;z-index:70;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--bg);padding:10px 18px;
+  border-radius:max(var(--radius),6px);font-size:15px;transition:opacity .25s,transform .25s;pointer-events:none;max-width:calc(100vw - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* study chrome — deliberately neutral, not part of any direction */
+.study{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;
+  padding:6px;background:#1d1d1f;color:#f2f2f2;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.35);font:500 13px/1.2 system-ui,sans-serif;max-width:calc(100vw - 32px)}
+.study .lab{padding:0 8px;opacity:.7;white-space:nowrap}
+.study button{background:transparent;color:#f2f2f2;border:0;padding:8px 12px;border-radius:9px;font:inherit;white-space:nowrap}
+.study button[aria-pressed="true"]{background:#f2f2f2;color:#1d1d1f}
+.study button:hover:not([aria-pressed="true"]){background:#333}
+
+/* reveal: elements are visible at rest; the class only adds a lift-in */
+.rv.in{animation:lift .8s cubic-bezier(.2,.7,.2,1) both}
+@keyframes lift{from{transform:translateY(18px);opacity:.35}to{transform:none;opacity:1}}
+
+/* ============================================================ RESPONSIVE */
+@media (max-width:980px){
+  .hero-a .grid,.hero-c .grid,.learn,.offline{grid-template-columns:1fr}
+  .reading,.reading.no-eng{grid-template-columns:1fr}
+  .reading .scholia{grid-template-columns:1fr}
+  .eng{border-left:0;padding-left:0;border-top:1px solid var(--rule);padding-top:16px}
+  .cards{grid-template-columns:1fr}
+  .hero-b .head{grid-template-columns:1fr}
+  .tools .tbtn .txt{display:none}
+}
+@media (max-width:620px){
+  .letters{grid-template-columns:repeat(2,1fr)}
+  .top .wrap{flex-wrap:wrap;gap:8px 16px;padding-block:8px}
+  .areas{order:3;flex-basis:100%}
+  .tools{margin-left:auto}
+  .study .lab{display:none}
+  .study button{padding:8px 9px}
+  .oa{grid-template-columns:32px 1fr}
+  .oa .go{display:none}
+  .frag.f3{width:56%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<div class="turn" aria-hidden="true"><span id="turnText"></span></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Mathesis Stoicheion, home">
+      <span class="brand-gr">Μάθησις Στοιχείων</span>
+      <span class="brand-en">Mathesis Stoicheion</span>
+    </a>
+    <nav class="areas" aria-label="Areas of the site">
+      <a href="#top" aria-current="page" data-area="The Propylaea"><b>The Propylaea</b><small>Home</small></a>
+      <a href="#top" data-area="The Mouseion"><b>The Mouseion</b><small>Library</small></a>
+      <a href="#top" data-area="The Academy"><b>The Academy</b><small>Learn Greek</small></a>
+      <a href="#top" data-area="The Painted Stoa"><b>The Painted Stoa</b><small>Wiki</small></a>
+      <a href="#top" data-area="The Town Hall"><b>The Town Hall</b><small>Forum</small></a>
+      <a href="#top" data-area="The Treasury"><b>The Treasury</b><small>My Library</small></a>
+    </nav>
+    <div class="tools">
+      <button class="tbtn" id="oracleBtn" type="button" aria-label="Search, The Oracle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <span class="txt">The Oracle</span> <kbd>/</kbd>
+      </button>
+      <button class="tbtn" id="themeBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+        <span class="txt" id="themeTxt">Black-figure</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== HERO A: BLACK-FIGURE ===================== -->
+<section class="hero hero-a" aria-label="Welcome">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="kicker"><div class="tongues draw"></div><span class="label">Ancient Greek for beginners</span></div>
+        <h1 class="gr">Μάθησις<span class="l2">Στοιχείων</span></h1>
+        <p class="sub">Learn to read Ancient Greek, and meet the world that wrote it.</p>
+        <div class="cta">
+          <a class="btn" href="#learn">Start learning Greek <span class="arr">→</span></a>
+          <a class="btn ghost" href="#passage">Open the library</a>
+        </div>
+      </div>
+      <div>
+      <div class="vase-stage" id="vaseStage">
+        <div class="shadow"></div>
+      </div>
+      <p class="vase-cap">A neck-amphora in the black-figure style: black gloss painted on orange clay. Drag to turn it.</p>
+      </div>
+    </div>
+    <div class="frieze"><div class="meander draw"></div></div>
+  </div>
+</section>
+
+<!-- ===================== HERO B: PAPYRUS & RUBRIC ===================== -->
+<section class="hero hero-b" aria-label="Welcome">
+  <div class="wrap">
+    <div class="head">
+      <h1><span class="gr">Μάθησις Στοιχείων</span><span class="en">Learning the letters</span></h1>
+      <div>
+        <p class="sub">Start from the alphabet and end up reading Homer and Plato in the original, with help at every word.</p>
+        <div class="cta">
+          <a class="btn" href="#learn">Start learning Greek <span class="arr">→</span></a>
+          <a class="btn ghost" href="#passage">Open the library</a>
+        </div>
+      </div>
+    </div>
+    <div class="scroll" id="scroll">
+      <div class="roller l" aria-hidden="true"></div>
+      <div class="sheet s3" id="sheet"><div class="lines" id="scrollLines" lang="grc"></div></div>
+      <div class="roller r" aria-hidden="true"></div>
+    </div>
+    <div class="stages">
+      <div class="stepper" role="group" aria-label="How Greek writing changed">
+        <button type="button" data-stage="1" aria-pressed="false">1 Papyrus</button>
+        <button type="button" data-stage="2" aria-pressed="false">2 Word spaces</button>
+        <button type="button" data-stage="3" aria-pressed="true">3 Accents</button>
+      </div>
+      <div class="stage-cap" id="stageCap" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HERO C: FRESCO ===================== -->
+<section class="hero hero-c" aria-label="Welcome">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <p class="eyebrow">Ancient Greek for beginners</p>
+        <h1 class="gr"><span>Μάθησις</span><span>Στοιχείων</span></h1>
+        <p class="sub">Learn to read Ancient Greek, and meet the world that wrote it.</p>
+        <div class="cta">
+          <a class="btn" href="#learn">Start learning Greek <span class="arr">→</span></a>
+          <a class="btn ghost" href="#passage">Open the library</a>
+        </div>
+      </div>
+      <div class="frags" id="frags">
+        <div class="frag f1" data-depth="14"><canvas id="spirals"></canvas></div>
+        <div class="frag f2" data-depth="26">
+          <div><div class="big-letter" id="bigLetter">α</div><div class="letter-name" id="letterName">alpha · 1 of 24</div></div>
+        </div>
+        <div class="frag f3" data-depth="36"><b>24 letters</b><span>7 of them vowels: α ε η ι ο υ ω</span></div>
+        <p class="fcap">Running spirals, a motif of Aegean Bronze Age art.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main id="top">
+  <div class="wrap">
+
+    <!-- LEARN -->
+    <section class="block" id="learn">
+      <div class="learn">
+        <div class="rv">
+          <span class="label">The Academy · Learn Greek</span>
+          <h2 style="margin-top:10px">Start with the letters</h2>
+          <p style="margin-top:14px;color:var(--ink2);max-width:44ch">Twenty-four letters, seven of them vowels. Most will look familiar from maths and science; a few will surprise you.</p>
+          <ol class="path" style="margin-top:26px">
+            <li><div><b>Meet the alphabet</b><span>Shapes, names and sounds, with the order each letter is written in.</span></div></li>
+            <li><div><b>Accents and breathings</b><span>What the small marks above the letters do, and how much they matter to a beginner.</span></div></li>
+            <li><div><b>Your first real sentence</b><span>A genuine line of Homer by the end of lesson one, linked to the library.</span></div></li>
+          </ol>
+        </div>
+        <div class="rv">
+          <div class="letters" id="letters"></div>
+          <p class="note">Hover or tap a letter. Sounds follow the reconstructed pronunciation of Classical Athens; you'll be able to switch to Erasmian or Modern Greek.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PASSAGE -->
+    <section class="block" id="passage">
+      <div class="sec-head rv">
+        <div><span class="label">The Scroll · Reader</span><h2>Passage of the day</h2></div>
+        <div class="aids" role="group" aria-label="Reading aids">
+          <button class="chip" type="button" id="aidEng" aria-pressed="true"><span class="dot"></span>Translation</button>
+          <button class="chip" type="button" id="aidNum" aria-pressed="true"><span class="dot"></span>Line numbers</button>
+          <button class="chip" type="button" id="aidHas" aria-pressed="false"><span class="dot"></span>Mark words with notes</button>
+        </div>
+      </div>
+      <div class="reading rv" id="reading">
+        <div class="grc" id="grc" lang="grc"></div>
+        <div class="eng">
+          <span class="label">A. T. Murray, 1924</span>
+          <p>The wrath sing, goddess, of Peleus' son, Achilles, that destructive wrath which brought countless woes upon the Achaeans, and sent forth to Hades many valiant souls of heroes, and made them themselves spoil for dogs and every bird; thus the plan of Zeus came to fulfillment, from the time when first they parted in strife Atreus' son, king of men, and brilliant Achilles.</p>
+        </div>
+        <aside class="scholia" aria-label="Notes in the margin">
+          <span class="label">In the margin</span>
+          <p class="scholion"><span class="ref">1</span><b>μῆνιν</b> The poem's first word, "wrath". Achilles' anger is the subject of the whole Iliad.</p>
+          <p class="scholion"><span class="ref">1</span><b>θεά</b> The poet calls on a goddess, the Muse, to sing the story through him.</p>
+          <p class="scholion"><span class="ref">5</span><b>Διὸς βουλή</b> "The plan of Zeus". What exactly this plan was is argued over by ancient and modern readers alike.<br><span class="tag debated" style="margin-top:6px">Debated among scholars</span></p>
+        </aside>
+      </div>
+      <div class="cite">
+        <span><strong>Homer, Iliad 1.1–7</strong></span>
+        <button class="chip" type="button" id="copyCite">Copy citation</button>
+        <span>Click any word to look it up.</span>
+      </div>
+    </section>
+
+    <!-- STOA -->
+    <section class="block" id="stoa">
+      <div class="sec-head rv">
+        <div><span class="label">The Painted Stoa · Wiki</span><h2>From the Painted Stoa</h2></div>
+        <p>History, daily life, the strange and the brutal, told from the sources. Every entry says how sure we can be.</p>
+      </div>
+      <div class="cards">
+        <article class="card rv"><span class="label">The strange</span><h3>The Antikythera mechanism</h3>
+          <p>Recovered from a shipwreck off the island of Antikythera in 1901, this box of bronze gears modelled the movements of the Sun and Moon.</p>
+          <span class="tag well">Well established</span></article>
+        <article class="card rv"><span class="label">Democracy</span><h3>Ostracism</h3>
+          <p>Once a year the Athenian Assembly could vote to hold an ostracism. The man named on the most potsherds had to leave Athens for ten years.</p>
+          <span class="tag well">Well established</span></article>
+        <article class="card rv"><span class="label">The beautiful</span><h3>Painted statues</h3>
+          <p>Greek marble statues were painted in strong colours. Traces of pigment, studied under raking and ultraviolet light, show us how.</p>
+          <span class="tag well">Well established</span></article>
+      </div>
+    </section>
+
+    <!-- OFFLINE -->
+    <section class="block" id="offline">
+      <div class="offline rv">
+        <div>
+          <span class="label">The Scroll Case · Downloads</span>
+          <h2 style="margin-top:10px">Read without a connection</h2>
+          <p style="margin-top:14px;color:var(--ink2)">Download the library once and keep reading on a train, a plane or a remote island. Your notes and saved words stay on this device.</p>
+          <span class="status"><i></i>Online</span>
+        </div>
+        <div class="off-actions">
+          <button class="oa" type="button" data-msg="Sample only. In the real site this downloads the library.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
+            <div><b>Download the library</b><span>Texts, translations and the dictionary, packed for offline use. The size is shown before you start.</span></div>
+            <span class="go">Download</span></button>
+          <button class="oa" type="button" data-msg="Sample only. In the real site this asks you to choose the folder.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <div><b>Load from a folder</b><span>Already downloaded it? Choose the folder and read from it.</span></div>
+            <span class="go">Choose folder</span></button>
+          <button class="oa" type="button" data-msg="Sample only. In the real site this restores access to your folders.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg>
+            <div><b>Reconnect folders</b><span>After a restart your browser asks permission again. One click restores it.</span></div>
+            <span class="go">Reconnect</span></button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Greek text: Homer, <i>Iliad</i>, edited by D. B. Monro and T. W. Allen (Oxford, 1908–1920). English: A. T. Murray (Loeb, 1924). Both from the Perseus Digital Library, CC BY-SA 4.0.</p>
+    <p>This is a design study. The word notes on this page were checked by hand for the preview; in the real site they come from the processed corpus.</p>
+  </div>
+</footer>
+
+<div class="pop" id="pop" role="dialog" aria-label="Word look-up"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<nav class="study" aria-label="Design study">
+  <span class="lab">Design study</span>
+  <button type="button" data-dir="a" aria-pressed="true">A · Black-Figure</button>
+  <button type="button" data-dir="b" aria-pressed="false">B · Papyrus</button>
+  <button type="button" data-dir="c" aria-pressed="false">C · Fresco</button>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+const root = document.documentElement;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
+const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+/* ---------------- papyrus texture (generated once) ---------------- */
+(function papyrus(){
+  const c = document.createElement('canvas'); c.width = c.height = 512;
+  const x = c.getContext('2d');
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 900; i++) {            // horizontal fibres
+    const y = rnd() * 512, h = 0.6 + rnd() * 2.2;
+    x.fillStyle = `rgba(${110 + rnd()*40|0},${80 + rnd()*30|0},${30 + rnd()*20|0},${0.03 + rnd()*0.06})`;
+    x.fillRect(0, y, 512, h);
+  }
+  for (let i = 0; i < 380; i++) {            // vertical fibres (the second layer of strips)
+    const X = rnd() * 512, w = 0.6 + rnd() * 1.8;
+    x.fillStyle = `rgba(90,60,20,${0.02 + rnd()*0.04})`;
+    x.fillRect(X, 0, w, 512);
+  }
+  for (let i = 0; i < 1400; i++) {           // specks
+    x.fillStyle = `rgba(70,45,15,${rnd()*0.12})`;
+    x.fillRect(rnd()*512, rnd()*512, 1 + rnd()*1.5, 1 + rnd()*1.5);
+  }
+  root.style.setProperty('--papyrus', `url(${c.toDataURL()})`);
+})();
+
+/* ---------------- toast ---------------- */
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600); }
+
+/* ---------------- direction + theme ---------------- */
+const DIRS = { a:'Black-Figure', b:'Papyrus & Rubric', c:'Fresco' };
+function effectiveDark(){ const t = root.getAttribute('data-theme'); return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; }
+function themeLabel(){ $('#themeTxt').textContent = effectiveDark() ? 'Papyrus' : 'Black-figure';
+  $('#themeBtn').setAttribute('aria-label', effectiveDark() ? 'Switch to the light papyrus theme' : 'Switch to the dark black-figure theme'); }
+$('#themeBtn').addEventListener('click', () => { root.setAttribute('data-theme', effectiveDark() ? 'light' : 'dark'); themeLabel(); if (window.__repaintVase) window.__repaintVase(); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeLabel);
+themeLabel();
+
+function setDir(d, fromUser){
+  if (!DIRS[d]) d = 'a';
+  root.setAttribute('data-dir', d); store.set('mathesis-dir', d);
+  $$('.study button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.dir === d)));
+  if (fromUser) history.replaceState(null, '', '#' + d);
+  if (d === 'a') startVase();
+  if (d === 'b') playScroll(!fromUser && reduce);
+  if (d === 'c') startFresco();
+}
+$$('.study button').forEach(b => b.addEventListener('click', () => { setDir(b.dataset.dir, true); window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); }));
+
+/* ---------------- page-turn transition on the area links ---------------- */
+$$('.areas a').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  const turn = $('.turn'); $('#turnText').textContent = a.dataset.area;
+  if (!reduce) { turn.classList.remove('play'); void turn.offsetWidth; turn.classList.add('play'); }
+  setTimeout(() => toast(`Sample only. In the real site this opens ${a.dataset.area}.`), reduce ? 0 : 700);
+}));
+$('#oracleBtn').addEventListener('click', () => toast('Sample only. The Oracle searches texts, dictionary, wiki and your notes.'));
+document.addEventListener('keydown', e => { if (e.key === '/' && !/input|textarea/i.test(document.activeElement.tagName)) { e.preventDefault(); $('#oracleBtn').click(); } });
+$$('.oa').forEach(b => b.addEventListener('click', () => toast(b.dataset.msg)));
+
+/* ---------------- alphabet tiles ---------------- */
+const LETTERS = [
+  ['Α','α','alpha','a, as in "father" when long'],
+  ['Β','β','beta','b'],
+  ['Γ','γ','gamma','g, as in "go"'],
+  ['Δ','δ','delta','d'],
+  ['Ε','ε','epsilon','short e, as in "pet"'],
+  ['Ω','ω','omega','long open o, as in "saw"'],
+];
+$('#letters').innerHTML = LETTERS.map(([U,l,n,s]) =>
+  `<button class="tile" type="button" aria-label="${n}: ${s}"><span class="in">
+     <span class="face"><span class="glyph" lang="grc">${U}<small>${l}</small></span></span>
+     <span class="face back"><b>${n}</b><span>${s}</span></span></span></button>`).join('');
+$$('.tile').forEach(t => t.addEventListener('click', () => t.classList.toggle('on')));
+
+/* ---------------- the passage + word look-up ---------------- */
+const LINES = [
+  [1,'μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος'],
+  [2,'οὐλομένην, ἣ μυρίʼ Ἀχαιοῖς ἄλγεʼ ἔθηκε,'],
+  [3,'πολλὰς δʼ ἰφθίμους ψυχὰς Ἄϊδι προΐαψεν'],
+  [4,'ἡρώων, αὐτοὺς δὲ ἑλώρια τεῦχε κύνεσσιν'],
+  [5,'οἰωνοῖσί τε πᾶσι, Διὸς δʼ ἐτελείετο βουλή,'],
+  [6,'ἐξ οὗ δὴ τὰ πρῶτα διαστήτην ἐρίσαντε'],
+  [7,'Ἀτρεΐδης τε ἄναξ ἀνδρῶν καὶ δῖος Ἀχιλλεύς.'],
+];
+// Hand-checked sample entries: [lemma, parsing, short meaning]
+const LEX = {
+  'μῆνιν':['μῆνις, -ιος, ἡ','noun · accusative singular feminine','wrath, especially lasting anger'],
+  'ἄειδε':['ἀείδω','present active imperative · 2nd person singular','sing'],
+  'θεὰ':['θεά, -ᾶς, ἡ','noun · vocative singular feminine','goddess'],
+  'Πηληϊάδεω':['Πηληϊάδης','noun · genitive singular masculine (Homeric form)','son of Peleus'],
+  'Ἀχιλῆος':['Ἀχιλλεύς','proper noun · genitive singular (Homeric form)','Achilles'],
+  'οὐλομένην':['ὄλλυμι','aorist middle participle · accusative singular feminine','accursed, destructive'],
+  'μυρίʼ':['μυρίος','adjective · accusative plural neuter (elided μυρία)','countless'],
+  'Ἀχαιοῖς':['Ἀχαιοί','noun · dative plural masculine','the Achaeans, Homer\'s Greeks'],
+  'ἄλγεʼ':['ἄλγος, -εος, τό','noun · accusative plural neuter (elided ἄλγεα)','pain, grief, woe'],
+  'ἔθηκε':['τίθημι','aorist active indicative · 3rd person singular','put, set; cause'],
+  'ψυχὰς':['ψυχή, -ῆς, ἡ','noun · accusative plural feminine','life, soul, spirit'],
+  'Ἄϊδι':['Ἅιδης','proper noun · dative singular (Homeric form)','Hades, god of the dead'],
+  'προΐαψεν':['προϊάπτω','aorist active indicative · 3rd person singular','send forth, hurl on ahead'],
+  'ἡρώων':['ἥρως, -ωος, ὁ','noun · genitive plural masculine','hero, warrior'],
+  'κύνεσσιν':['κύων, κυνός, ὁ/ἡ','noun · dative plural (Homeric form)','dog'],
+  'οἰωνοῖσί':['οἰωνός, -οῦ, ὁ','noun · dative plural masculine (Homeric form)','bird of prey'],
+  'Διὸς':['Ζεύς','proper noun · genitive singular','Zeus'],
+  'ἐτελείετο':['τελείω (= τελέω)','imperfect passive indicative · 3rd person singular','accomplish, fulfil'],
+  'βουλή':['βουλή, -ῆς, ἡ','noun · nominative singular feminine','plan, will, counsel'],
+  'διαστήτην':['διΐστημι','aorist active indicative · 3rd person dual','stand apart, part in hostility'],
+  'ἐρίσαντε':['ἐρίζω','aorist active participle · nominative dual masculine','quarrel, strive'],
+  'Ἀτρεΐδης':['Ἀτρεΐδης','noun · nominative singular masculine','son of Atreus (Agamemnon)'],
+  'ἄναξ':['ἄναξ, -ακτος, ὁ','noun · nominative singular masculine','lord, king'],
+  'ἀνδρῶν':['ἀνήρ, ἀνδρός, ὁ','noun · genitive plural masculine','man'],
+  'δῖος':['δῖος, -α, -ον','adjective · nominative singular masculine','brilliant, noble, godlike'],
+  'Ἀχιλλεύς':['Ἀχιλλεύς','proper noun · nominative singular','Achilles'],
+};
+const tok = /([Ͱ-Ͽἀ-῿̀-ͯʼ]+)/;
+$('#grc').innerHTML = LINES.map(([n, text]) =>
+  `<div class="row"><span class="n">${n % 5 === 0 || n === 1 ? n : ''}</span><span>${
+    text.split(tok).map(p => tok.test(p) ? `<span class="w${LEX[p] ? ' has' : ''}" tabindex="0" role="button" data-w="${p}">${p}</span>` : p).join('')
+  }</span></div>`).join('');
+
+const pop = $('#pop'); let selW = null;
+function openPop(el){
+  const w = el.dataset.w, e = LEX[w];
+  if (selW) selW.classList.remove('sel'); selW = el; el.classList.add('sel');
+  pop.innerHTML = e
+    ? `<div class="pw" lang="grc">${w}</div><div class="lem">from <span class="gr" lang="grc">${e[0]}</span></div>
+       <div class="parse">${e[1]}</div><div class="def">${e[2]}</div>
+       <div class="acts"><button type="button" data-a="save">Save word</button><button type="button" data-a="full">Full dictionary entry</button></div>
+       <div class="fine">Sample entry, checked by hand for this preview.</div>`
+    : `<div class="pw" lang="grc">${w}</div><div class="def" style="margin-top:10px">In the real site every word has an entry. This preview includes ${Object.keys(LEX).length} of them; the underlined words have one.</div>`;
+  const r = el.getBoundingClientRect(), pw = pop.offsetWidth || 340;
+  let left = Math.min(Math.max(16, r.left + r.width/2 - pw/2), innerWidth - pw - 16);
+  pop.style.left = left + 'px';
+  pop.classList.add('show');
+  const ph = pop.offsetHeight;
+  pop.style.top = (r.bottom + ph + 16 < innerHeight ? r.bottom + 10 : Math.max(16, r.top - ph - 10)) + 'px';
+}
+function closePop(){ pop.classList.remove('show'); if (selW) { selW.classList.remove('sel'); selW = null; } }
+$('#grc').addEventListener('click', e => { const w = e.target.closest('.w'); if (w) { e.stopPropagation(); openPop(w); } });
+$('#grc').addEventListener('keydown', e => { const w = e.target.closest('.w'); if (w && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openPop(w); } });
+pop.addEventListener('click', e => { e.stopPropagation(); const b = e.target.closest('button'); if (!b) return;
+  toast(b.dataset.a === 'save' ? 'Saved to your words (sample)' : 'Sample only. The full LSJ entry opens here.'); });
+document.addEventListener('click', closePop);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
+addEventListener('scroll', closePop, {passive:true});
+
+function aid(id, fn){ const b = $(id); b.addEventListener('click', () => { const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', String(on)); fn(on); }); }
+aid('#aidEng', on => $('#reading').classList.toggle('no-eng', !on));
+aid('#aidNum', on => $('#reading').classList.toggle('no-num', !on));
+aid('#aidHas', on => $('#reading').classList.toggle('show-has', on));
+$('#copyCite').addEventListener('click', () => {
+  const t = 'Homer, Iliad 1.1–7';
+  navigator.clipboard.writeText(t).then(() => toast('Citation copied: ' + t), () => toast('Copy was blocked. The citation is: ' + t));
+});
+
+/* ---------------- reveal on scroll (content is visible at rest) ---------------- */
+if (!reduce && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), {threshold:.15});
+  $$('.rv').forEach(el => { if (el.getBoundingClientRect().top > innerHeight) io.observe(el); });
+}
+
+/* =================================================================
+   B — the scroll: papyrus capitals → word spaces → accents
+   ================================================================= */
+const scrollLines = LINES.slice(0, 3);
+const toPapyrus = w => w.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ʼ/g, '').toUpperCase().replace(/Σ/g, 'Ϲ');
+$('#scrollLines').innerHTML = scrollLines.map(([, text]) =>
+  `<div class="ln">${text.split(' ').map(w => {
+      const clean = w.replace(/[,.;·]/g, '');
+      return `<span class="wd"><span class="up">${toPapyrus(clean)}</span><span class="lo">${w}</span></span>`;
+    }).join('')}</div>`).join('');
+const CAPS = {
+  1: 'Papyrus copies of Homer were written in capital letters with no spaces between words. Notice the curved "lunate" sigma, Ϲ.',
+  2: 'Separating words with spaces became normal only in the Middle Ages. It makes the text far easier to read.',
+  3: 'Lower-case letters and regular accents and breathings came with medieval minuscule handwriting, from the 9th century AD. Modern editions print Greek this way, and so will this site.<div class="tag legend">Ancient tradition</div> <span style="font-size:14px">The accent marks themselves are credited to Aristophanes of Byzantium, around 200 BC.</span>',
+};
+let stage = 3, stageTimers = [];
+function setStage(s, animate){
+  const sheet = $('#sheet');
+  const apply = () => { sheet.classList.remove('s1','s2','s3'); sheet.classList.add('s' + s); };
+  if (animate && ((stage === 3) !== (s === 3))) {
+    sheet.classList.add('fading');
+    setTimeout(() => { apply(); sheet.classList.remove('fading'); }, 300);
+  } else apply();
+  stage = s;
+  $$('.stepper button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.stage === s)));
+  $('#stageCap').innerHTML = CAPS[s];
+}
+$$('.stepper button').forEach(b => b.addEventListener('click', () => { stageTimers.forEach(clearTimeout); setStage(+b.dataset.stage, !reduce); }));
+function playScroll(skip){
+  stageTimers.forEach(clearTimeout); stageTimers = [];
+  const sc = $('#scroll');
+  if (reduce || skip) { sc.style.setProperty('--open', 1); setStage(3, false); return; }
+  setStage(1, false);
+  const t0 = performance.now(), dur = 1700;
+  (function step(t){ const k = Math.min(1, (t - t0) / dur); const e = 1 - Math.pow(1 - k, 3);
+    sc.style.setProperty('--open', (0.08 + 0.92 * e).toFixed(4)); if (k < 1) requestAnimationFrame(step); })(t0);
+  stageTimers.push(setTimeout(() => setStage(2, true), 3600));
+  stageTimers.push(setTimeout(() => setStage(3, true), 6600));
+}
+setStage(3, false);
+
+/* =================================================================
+   C — fresco: running spirals + cycling alphabet + parallax
+   ================================================================= */
+const NAMES = ['alpha','beta','gamma','delta','epsilon','zeta','eta','theta','iota','kappa','lambda','mu','nu','xi','omicron','pi','rho','sigma','tau','upsilon','phi','chi','psi','omega'];
+const LOWER = 'αβγδεζηθικλμνξοπρστυφχψω';
+let frescoOn = false, letterI = 0, letterTimer, spiralRAF;
+function startFresco(){
+  if (frescoOn) return; frescoOn = true;
+  const cv = $('#spirals'), cx = cv.getContext('2d');
+  function size(){ const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2); cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d,0,0,d,0,0); }
+  size(); addEventListener('resize', size);
+  function draw(t){
+    if (root.getAttribute('data-dir') !== 'c') { spiralRAF = requestAnimationFrame(draw); return; }
+    const W = cv.clientWidth, H = cv.clientHeight, cs = getComputedStyle(root);
+    cx.clearRect(0,0,W,H);
+    const ochre = cs.getPropertyValue('--ochre').trim(), light = '#F4EEDF';
+    const d = Math.max(100, H * 0.5), R = d * 0.42, amp = d * 0.16, shift = reduce ? 0 : ((t || 0) * 0.018) % (d * 2);
+    const rows = [H * 0.5];
+    // frame bands
+    cx.fillStyle = ochre; cx.fillRect(0, H*0.1, W, 5); cx.fillRect(0, H*0.9 - 5, W, 5);
+    cx.fillStyle = light; for (let x = -shift % 22; x < W; x += 22) { cx.beginPath(); cx.arc(x, H*0.1 - 10, 3, 0, 7); cx.arc(x + 11, H*0.9 + 10, 3, 0, 7); cx.fill(); }
+    rows.forEach(my => {
+      const centers = [];
+      for (let i = -2, x = -shift; x < W + d * 2; i++, x += d) centers.push([x + ((i + 100) % 2 ? 0 : 0), my + (i % 2 ? amp : -amp), i % 2 ? 1 : -1]);
+      cx.lineWidth = Math.max(3, R * 0.14); cx.lineCap = 'round'; cx.strokeStyle = light;
+      centers.forEach(([x, y, s], k) => {
+        // spiral from the centre outward
+        cx.beginPath();
+        const turns = 2.2 * Math.PI * 2, a0 = s > 0 ? Math.PI * 1.5 : Math.PI * 0.5;
+        for (let a = 0; a <= turns; a += 0.12) { const r = R * a / turns, ang = a0 + s * a; const px = x + r * Math.cos(ang), py = y + r * Math.sin(ang); a ? cx.lineTo(px, py) : cx.moveTo(px, py); }
+        cx.stroke();
+        cx.fillStyle = ochre; cx.beginPath(); cx.arc(x, y, R * 0.16, 0, 7); cx.fill();
+        // S-link to the next spiral
+        const nx = centers[k + 1]; if (!nx) return;
+        const ea = a0 + s * turns, ex = x + R * Math.cos(ea), ey = y + R * Math.sin(ea);
+        const na = (nx[2] > 0 ? Math.PI * 1.5 : Math.PI * 0.5) + nx[2] * turns, fx = nx[0] + R * Math.cos(na), fy = nx[1] + R * Math.sin(na);
+        cx.beginPath(); cx.moveTo(ex, ey); cx.bezierCurveTo(ex + d * 0.35, ey, fx - d * 0.35, fy, fx, fy); cx.stroke();
+      });
+    });
+    if (!reduce) spiralRAF = requestAnimationFrame(draw);
+  }
+  draw(0);
+  if (!reduce) {
+    letterTimer = setInterval(() => {
+      if (root.getAttribute('data-dir') !== 'c') return;
+      const bl = $('#bigLetter'); bl.classList.add('swap');
+      setTimeout(() => { letterI = (letterI + 1) % 24; bl.textContent = LOWER[letterI]; $('#letterName').textContent = `${NAMES[letterI]} · ${letterI + 1} of 24`; bl.classList.remove('swap'); }, 360);
+    }, 2300);
+    const frags = $('#frags');
+    frags.addEventListener('pointermove', e => { const r = frags.getBoundingClientRect(), dx = (e.clientX - r.left) / r.width - .5, dy = (e.clientY - r.top) / r.height - .5;
+      $$('.frag', frags).forEach(f => { const k = +f.dataset.depth; f.style.transform = `translate(${-dx * k}px, ${-dy * k}px)`; }); });
+    frags.addEventListener('pointerleave', () => $$('.frag', frags).forEach(f => f.style.transform = ''));
+  }
+}
+
+/* =================================================================
+   A — the black-figure amphora (three.js lathe)
+   ================================================================= */
+let vaseOn = false;
+function startVase(){
+  if (vaseOn || !window.THREE) return; vaseOn = true;
+  const stage = $('#vaseStage');
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  stage.prepend(renderer.domElement);
+  renderer.domElement.setAttribute('aria-label', 'A rotating black-figure amphora');
+  renderer.domElement.setAttribute('role', 'img');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+  camera.position.set(0, 1.15, 6.4); camera.lookAt(0, 1.02, 0);
+
+  // profile of a neck-amphora (radius, height), foot at y = 0
+  const prof = [[0.001,0],[0.34,0],[0.35,0.05],[0.27,0.11],[0.21,0.17],[0.26,0.28],[0.42,0.50],[0.56,0.78],[0.63,1.02],[0.62,1.2],[0.53,1.40],[0.38,1.56],[0.25,1.64],[0.21,1.72],[0.21,1.86],[0.24,1.97],[0.31,2.02],[0.32,2.08],[0.27,2.10],[0.22,2.06],[0.2,1.98]];
+  const spline = new THREE.SplineCurve(prof.map(p => new THREE.Vector2(p[0], p[1])));
+  const pts = spline.getSpacedPoints(220);
+  const geo = new THREE.LatheGeometry(pts, 160);
+
+  const TW = 2048, TH = 1024, N = pts.length - 1;
+  const tex = document.createElement('canvas'); tex.width = TW; tex.height = TH;
+  const g = tex.getContext('2d');
+  // v for a given height (profile is monotonic up to the lip)
+  const vOf = y => { for (let i = 0; i < N; i++) if (pts[i + 1].y >= y) return i / N; return 1; };
+  const rowOf = y => (1 - vOf(y)) * TH;
+  const rAt = y => { for (let i = 0; i < N; i++) if (pts[i + 1].y >= y) return pts[i].x; return 0.3; };
+  const L = pts.reduce((s, p, i) => i ? s + p.distanceTo(pts[i - 1]) : 0, 0);
+  const aspect = y => (TW / (2 * Math.PI * rAt(y))) / (TH / L);   // px-per-unit ratio u:v at height y
+
+  function paint(){
+    const CLAY = '#C8703A', GLOSS = '#15100c', RED = '#8e2a14', WHITE = '#efe3cf';
+    g.fillStyle = CLAY; g.fillRect(0, 0, TW, TH);
+    const band = (y0, y1, c) => { g.fillStyle = c; g.fillRect(0, rowOf(y1), TW, rowOf(y0) - rowOf(y1)); };
+    band(0, 0.17, GLOSS);                               // foot
+    // rays rising from the foot
+    { const y0 = rowOf(0.2), y1 = rowOf(0.44), n = 36, w = TW / n; g.fillStyle = GLOSS;
+      for (let i = 0; i < n; i++) { g.beginPath(); g.moveTo(i * w + 4, y0); g.lineTo(i * w + w / 2, y1); g.lineTo(i * w + w - 4, y0); g.fill(); } }
+    band(0.17, 0.2, GLOSS); band(0.46, 0.48, GLOSS);
+    // meander band
+    { const y0 = rowOf(0.64), y1 = rowOf(0.5), h = y0 - y1, cell = h * 1.0 * aspect(0.57), n = Math.round(TW / cell), cw = TW / n;
+      g.strokeStyle = GLOSS; g.lineWidth = h * 0.1; g.lineCap = 'square';
+      for (let i = 0; i < n; i++) { const x = i * cw, u = cw / 20, v = h / 20;
+        g.beginPath(); g.moveTo(x, y1 + 1 * v); g.lineTo(x + cw, y1 + 1 * v); g.moveTo(x, y1 + 19 * v); g.lineTo(x + cw, y1 + 19 * v);
+        g.moveTo(x + 3*u, y1 + 19*v); g.lineTo(x + 3*u, y1 + 4*v); g.lineTo(x + 16*u, y1 + 4*v); g.lineTo(x + 16*u, y1 + 16*v); g.lineTo(x + 7*u, y1 + 16*v); g.lineTo(x + 7*u, y1 + 8*v); g.lineTo(x + 12*u, y1 + 8*v); g.lineTo(x + 12*u, y1 + 12*v); g.stroke(); } }
+    band(0.66, 0.68, RED);
+    // black body with two reserved panels
+    band(0.68, 1.44, GLOSS);
+    const panel = (u0, u1, text) => {
+      const x0 = u0 * TW, x1 = u1 * TW, yT = rowOf(1.36), yB = rowOf(0.76);
+      g.fillStyle = CLAY; g.fillRect(x0, yT, x1 - x0, yB - yT);
+      // tongue frieze at the top of the panel
+      const th = (yB - yT) * 0.12, tw = th * 0.8 * aspect(1.3), tn = Math.round((x1 - x0) / tw), tww = (x1 - x0) / tn;
+      for (let i = 0; i < tn; i++) { g.fillStyle = i % 2 ? RED : GLOSS; g.beginPath(); g.moveTo(x0 + i * tww + 2, yT);
+        g.lineTo(x0 + (i + 1) * tww - 2, yT); g.lineTo(x0 + (i + 1) * tww - 2, yT + th * 0.55);
+        g.quadraticCurveTo(x0 + (i + .5) * tww, yT + th * 1.25, x0 + i * tww + 2, yT + th * 0.55); g.fill(); }
+      // the painted inscription, like the names painted on real vases
+      g.save(); const cxp = (x0 + x1) / 2, cyp = yT + (yB - yT) * 0.6, a = aspect(1.06);
+      g.translate(cxp, cyp); g.scale(a, 1);
+      let fs = (yB - yT) * 0.3; g.font = `700 ${fs}px "GFS Didot", "Gentium Book Plus", serif`;
+      const maxW = (x1 - x0) * 0.86 / a; const mw = g.measureText(text).width; if (mw > maxW) { fs *= maxW / mw; g.font = `700 ${fs}px "GFS Didot", "Gentium Book Plus", serif`; }
+      g.fillStyle = GLOSS; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, 0, 0);
+      g.fillStyle = RED; for (const dx of [-1, 1]) { g.beginPath(); g.arc(dx * (Math.min(mw, maxW) / 2 + fs * 0.35), 0, fs * 0.09, 0, 7); g.fill(); }
+      g.restore();
+      // incised frame
+      g.strokeStyle = GLOSS; g.lineWidth = 5; g.strokeRect(x0 + 10, yT + 4, x1 - x0 - 20, yB - yT - 8);
+    };
+    panel(0.13, 0.37, 'ΜΑΘΗΣΙΣ');
+    panel(0.63, 0.87, 'ΣΤΟΙΧΕΙΩΝ');
+    band(1.44, 1.46, RED);
+    // shoulder tongues
+    { const y1 = rowOf(1.62), y0 = rowOf(1.47), h = y0 - y1, tw = h * 0.55 * aspect(1.54), n = Math.round(TW / tw), w = TW / n;
+      for (let i = 0; i < n; i++) { g.fillStyle = i % 3 === 1 ? RED : GLOSS; g.beginPath(); g.moveTo(i * w + 3, y1); g.lineTo(i * w + w - 3, y1);
+        g.lineTo(i * w + w - 3, y1 + h * .5); g.quadraticCurveTo(i * w + w / 2, y0 + h * .15, i * w + 3, y1 + h * .5); g.fill(); } }
+    // neck: gloss with a reserved band of dots
+    band(1.62, 2.2, GLOSS);
+    { const yc = (rowOf(1.74) + rowOf(1.84)) / 2, h = rowOf(1.74) - rowOf(1.84); g.fillStyle = CLAY; g.fillRect(0, yc - h / 2, TW, h);
+      const n = 40, w = TW / n; for (let i = 0; i < n; i++) { g.fillStyle = i % 2 ? RED : GLOSS; g.beginPath(); g.ellipse(i * w + w / 2, yc, h * 0.28 * aspect(1.79), h * 0.28, 0, 0, 7); g.fill(); } }
+    // soft wear: speckles
+    for (let i = 0; i < 2600; i++) { g.fillStyle = `rgba(255,230,200,${Math.random() * 0.05})`; g.fillRect(Math.random() * TW, Math.random() * TH, 2, 2); }
+  }
+  const texture = new THREE.CanvasTexture(tex);
+  texture.encoding = THREE.sRGBEncoding; texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  const mat = new THREE.MeshStandardMaterial({map:texture, roughness:.42, metalness:.04, side:THREE.DoubleSide});
+  const vase = new THREE.Group();
+  vase.add(new THREE.Mesh(geo, mat));
+  // handles, neck to shoulder
+  const hMat = new THREE.MeshStandardMaterial({color:0x15100c, roughness:.4});
+  [1, -1].forEach(s => {
+    const c = new THREE.CatmullRomCurve3([[0.2,1.82],[0.42,1.86],[0.58,1.74],[0.57,1.56],[0.47,1.47]].map(([x, y]) => new THREE.Vector3(s * x, y, 0)));
+    vase.add(new THREE.Mesh(new THREE.TubeGeometry(c, 48, 0.034, 12), hMat));
+  });
+  scene.add(vase);
+  scene.add(new THREE.HemisphereLight(0xfff1e0, 0x3a2414, 0.75));
+  const key = new THREE.DirectionalLight(0xfff0dc, 1.25); key.position.set(-3, 4, 5); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffc89a, 0.8); rim.position.set(4, 2, -4); scene.add(rim);
+
+  function resize(){ const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+  resize(); addEventListener('resize', resize);
+
+  let rot = -0.6, vel = reduce ? 0 : 0.0045, drag = null, rise = reduce ? 1 : 0, visible = true;
+  new IntersectionObserver(e => { visible = e[0].isIntersecting; }).observe(stage);
+  const cv = renderer.domElement;
+  cv.addEventListener('pointerdown', e => { drag = {x:e.clientX, rot}; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointermove', e => { if (drag) { const nr = drag.rot + (e.clientX - drag.x) * 0.012; vel = (nr - rot) * 0.5; rot = nr; } });
+  cv.addEventListener('pointerup', () => { drag = null; });
+  function frame(){
+    requestAnimationFrame(frame);
+    if (!visible || root.getAttribute('data-dir') && root.getAttribute('data-dir') !== 'a') return;
+    if (!drag) { vel += ((reduce ? 0 : 0.0045) - vel) * 0.02; rot += vel; }
+    if (rise < 1) rise = Math.min(1, rise + 0.012);
+    const e = 1 - Math.pow(1 - rise, 3);
+    vase.rotation.y = rot; vase.position.y = -0.35 * (1 - e); vase.scale.setScalar(0.9 + 0.1 * e);
+    renderer.render(scene, camera);
+  }
+  const go = () => { paint(); texture.needsUpdate = true; frame(); };
+  (document.fonts && document.fonts.load) ? document.fonts.load('700 80px "GFS Didot"').then(go, go) : go();
+}
+
+/* ---------------- boot ---------------- */
+const fromHash = location.hash.replace('#', '');
+setDir(DIRS[fromHash] ? fromHash : (store.get('mathesis-dir') || 'a'), false);
+})();
+</script>

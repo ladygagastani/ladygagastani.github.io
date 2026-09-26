@@ -1,0 +1,9 @@
+.figure { margin: 0; }
+.stage { position: relative; height: clamp(400px, 50vw, 600px); }
+.canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; cursor: grab; touch-action: pan-y; }
+.canvas:active { cursor: grabbing; }
+.shadow {
+  position: absolute; left: 50%; bottom: 5%; width: 46%; height: 26px; transform: translateX(-50%); border-radius: 50%;
+  background: radial-gradient(closest-side, var(--shadow), transparent);
+}
+.cap { margin: 6px 0 0 auto; max-width: 36ch; font-size: 0.82rem; color: var(--ink-2); text-align: right; font-style: italic; }

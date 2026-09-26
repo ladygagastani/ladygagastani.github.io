@@ -1,0 +1,3 @@
+# local tool settings (contain machine-specific paths)
+.claude/
+node_modules/

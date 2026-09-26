@@ -1,0 +1,39 @@
+.sheet {
+  margin: 0 0 0 auto; height: 100%; max-height: 100dvh; width: min(420px, 100vw);
+  padding: 0; border: 0; border-left: 1px solid var(--rule);
+  background: var(--surface); color: var(--ink);
+  box-shadow: -30px 0 60px -30px var(--shadow);
+  transform: translateX(100%);
+  transition: transform 0.45s var(--ease), overlay 0.45s allow-discrete, display 0.45s allow-discrete;
+}
+.sheet[open] { transform: none; }
+@starting-style { .sheet[open] { transform: translateX(100%); } }
+.sheet::backdrop {
+  background: rgba(10, 6, 3, 0);
+  transition: background-color 0.45s, overlay 0.45s allow-discrete, display 0.45s allow-discrete;
+}
+.sheet[open]::backdrop { background: rgba(10, 6, 3, 0.35); }
+@starting-style { .sheet[open]::backdrop { background: rgba(10, 6, 3, 0); } }
+
+.inner { display: flex; flex-direction: column; gap: 28px; padding: 24px 26px calc(40px + env(safe-area-inset-bottom, 0px)); }
+.head { display: flex; justify-content: space-between; align-items: center; }
+.head h2 { font-size: var(--step-2); }
+.x { width: 40px; height: 40px; font-size: 26px; line-height: 1; background: transparent; border: 1px solid var(--rule); border-radius: var(--radius); }
+
+.group { display: flex; flex-direction: column; gap: 12px; }
+.group h3 { font-size: var(--step--1); }
+.hint { font-size: 0.9rem; color: var(--ink-2); }
+
+.seg { display: flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: var(--radius); }
+.seg button { flex: 1 1 auto; padding: 9px 10px; background: transparent; border: 0; font-size: 0.9rem; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-checked="true"] { background: var(--ink); color: var(--bg); }
+
+.sample { padding: 14px 16px; background: var(--bg); border-radius: var(--radius); transition: font-size 0.2s, line-height 0.2s; }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--rule); border-radius: var(--radius); }
+.stepper button { width: 38px; height: 36px; background: transparent; border: 0; font-size: 1.2rem; }
+.stepper button:disabled { opacity: 0.35; cursor: default; }
+.stepper output { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+
+.reset { align-self: flex-start; background: transparent; border: 0; padding: 0; text-decoration: underline; color: var(--ink-2); font-size: 0.9rem; }

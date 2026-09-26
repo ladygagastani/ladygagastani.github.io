@@ -1,0 +1,48 @@
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+.row { display: flex; align-items: center; gap: 20px; min-height: 68px; }
+
+.brand { display: flex; flex-direction: column; text-decoration: none; line-height: 1.1; flex: none; }
+.brandGr { font-family: var(--f-greek); font-size: 1.3rem; }
+.brandEn { font-family: var(--f-label); font-size: 0.75rem; letter-spacing: 0.14em; color: var(--ink-2); }
+
+.areas { display: flex; gap: 4px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+/* when the menu may not fit, fade its right edge so it reads as scrollable */
+@media (max-width: 1280px) {
+  .areas {
+    padding-right: 36px;
+    -webkit-mask: linear-gradient(90deg, #000 calc(100% - 36px), transparent);
+            mask: linear-gradient(90deg, #000 calc(100% - 36px), transparent);
+  }
+}
+.areas a {
+  position: relative; display: flex; flex-direction: column;
+  padding: 6px 12px; text-decoration: none; white-space: nowrap; line-height: 1.15;
+  border-radius: var(--radius); transition: background-color 0.2s;
+}
+.areas a:hover { background: var(--bg-2); }
+.areas b { font-weight: 600; font-size: 0.95rem; }
+.areas small { font-family: var(--f-label); font-size: 0.75rem; letter-spacing: 0.06em; color: var(--ink-2); }
+.areas a[aria-current="page"]::after {
+  content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--accent);
+}
+
+.tools { display: flex; gap: 8px; flex: none; }
+.tbtn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 38px;
+  padding: 7px 12px; border: 1px solid var(--rule); border-radius: var(--radius);
+  background: transparent; font-size: 0.875rem; text-decoration: none;
+}
+.tbtn:hover { border-color: var(--ink-2); }
+.tbtn svg { width: 16px; height: 16px; }
+
+@media (max-width: 1400px) { .txt { display: none; } }
+@media (max-width: 680px) {
+  .row { flex-wrap: wrap; gap: 8px 16px; padding-block: 8px; }
+  .areas { order: 3; flex-basis: 100%; }
+  .tools { margin-left: auto; }
+}

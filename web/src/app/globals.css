@@ -1,0 +1,221 @@
+/* =====================================================================
+   Mathesis Stoicheion — design system: "Black-Figure"
+   Light theme "Papyrus" = clay ground, black gloss ink.
+   Dark theme "Black-figure" = black gloss ground, clay-coloured ink.
+   Colours come from Attic pottery: clay, black gloss, added red, added white.
+   ===================================================================== */
+
+:root {
+  /* colour */
+  --bg: #E6C39B;          /* pale fired clay */
+  --bg-2: #DDB186;        /* deeper clay, hover and bands */
+  --surface: #F3E3CC;     /* slip-coated panel */
+  --ink: #1B1410;         /* black gloss */
+  --ink-2: #5A3E2B;       /* diluted gloss */
+  --accent: #A33A16;      /* added red */
+  --accent-ink: #F6ECDD;
+  --band: #1B1410;
+  --white-slip: #F6EEDF;  /* added white */
+  --blue: #2F4F6B;        /* certainty: well established */
+  --ochre: #8C5E17;       /* certainty: debated */
+  --rule: rgba(27, 20, 16, 0.28);
+  --shadow: rgba(40, 20, 5, 0.35);
+  --ok: #3F7A4F;
+
+  /* type */
+  --f-greek: var(--font-didot), "Gentium Book Plus", "Noto Serif", Georgia, serif;
+  --f-display: var(--font-didot), Georgia, serif;
+  --f-body: var(--font-alegreya), Georgia, serif;
+  --f-label: var(--font-alegreya-sc), var(--font-alegreya), system-ui, sans-serif;
+
+  /* reader settings (changed from the Settings panel) */
+  --greek-size: 1.25rem;
+  --reading-leading: 1.75;
+
+  /* scale */
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.3rem;
+  --step-2: 1.6rem;
+  --step-3: clamp(1.8rem, 3.4vw, 2.6rem);
+  --step-4: clamp(3.2rem, 7.4vw, 6.5rem);
+
+  --gutter: clamp(16px, 4vw, 48px);
+  --maxw: 1240px;
+  --radius: 2px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16110E; --bg-2: #1F1712; --surface: #241A14;
+    --ink: #EDCBA0; --ink-2: #BE9876; --accent: #E0673A; --accent-ink: #16110E;
+    --band: #C8703A; --white-slip: #2B2019; --blue: #8FB0CC; --ochre: #D9A15A;
+    --rule: rgba(237, 203, 160, 0.22); --shadow: rgba(0, 0, 0, 0.6); --ok: #7CC08E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #16110E; --bg-2: #1F1712; --surface: #241A14;
+  --ink: #EDCBA0; --ink-2: #BE9876; --accent: #E0673A; --accent-ink: #16110E;
+  --band: #C8703A; --white-slip: #2B2019; --blue: #8FB0CC; --ochre: #D9A15A;
+  --rule: rgba(237, 203, 160, 0.22); --shadow: rgba(0, 0, 0, 0.6); --ok: #7CC08E;
+  color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------- base */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 var(--step-0) / 1.6 var(--f-body);
+  transition: background-color 0.5s ease, color 0.5s ease;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4 { font-family: var(--f-display); font-weight: 400; line-height: 1.08; margin: 0; text-wrap: balance; }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-2); }
+p { margin: 0; }
+a { color: inherit; }
+button { font: inherit; color: inherit; cursor: pointer; }
+img { max-width: 100%; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+[lang="grc"] { font-family: var(--f-greek); }
+
+.wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gutter); }
+.label { font-family: var(--f-label); font-size: var(--step--1); letter-spacing: 0.08em; color: var(--ink-2); }
+.muted { color: var(--ink-2); }
+.skip { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--ink); color: var(--bg); padding: 8px 14px; }
+.skip:focus { left: 8px; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ------------------------------------------------------------- ornament */
+/* Bands are drawn with CSS masks so they take any colour. */
+.meander, .tongues, .rays {
+  background: var(--band);
+  -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
+}
+.meander {
+  height: 16px;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+  -webkit-mask-size: 16px 16px; mask-size: 16px 16px;
+}
+.tongues {
+  height: 14px;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14'%3E%3Cpath d='M1 0H11V6A5 5 0 0 1 1 6Z'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14'%3E%3Cpath d='M1 0H11V6A5 5 0 0 1 1 6Z'/%3E%3C/svg%3E");
+  -webkit-mask-size: 12px 14px; mask-size: 12px 14px;
+}
+.rays {
+  height: 22px;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 22'%3E%3Cpath d='M1 22L8 0L15 22Z'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 22'%3E%3Cpath d='M1 22L8 0L15 22Z'/%3E%3C/svg%3E");
+  -webkit-mask-size: 16px 22px; mask-size: 16px 22px;
+}
+.draw { animation: draw 1.4s cubic-bezier(0.6, 0, 0.2, 1) both; }
+@keyframes draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* ------------------------------------------------------------- buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 13px 22px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--bg);
+  border-radius: var(--radius); font-weight: 600; font-size: 1rem; text-decoration: none;
+  transition: transform 0.2s var(--ease), background-color 0.2s, color 0.2s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn .arr { transition: transform 0.25s var(--ease); }
+.btn:hover .arr { transform: translateX(4px); }
+.btn[aria-disabled="true"], .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px;
+  border: 1px solid var(--rule); border-radius: 999px; font-size: var(--step--1); background: transparent;
+}
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.5; }
+.chip[aria-pressed="true"] .dot { opacity: 1; }
+
+/* certainty labels */
+.tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-label); font-size: 0.8rem;
+  letter-spacing: 0.06em; padding: 2px 9px; border-radius: 999px; border: 1px solid currentColor; }
+.tag.well { color: var(--blue); }
+.tag.debated { color: var(--ochre); }
+.tag.legend { color: var(--accent); }
+
+/* --------------------------------------------------------- page turn */
+/* Route changes unroll the new page from the right, like turning to the next stretch of a scroll. */
+::view-transition-old(.page-turn) { animation: 260ms ease-in both turn-out; }
+::view-transition-new(.page-turn) { animation: 560ms cubic-bezier(0.6, 0, 0.2, 1) 80ms both turn-in; }
+@keyframes turn-out { to { opacity: 0; transform: translateX(-2%); } }
+@keyframes turn-in {
+  from { clip-path: inset(0 0 0 100%); filter: brightness(0.92); }
+  to { clip-path: inset(0 0 0 0); filter: none; }
+}
+
+/* reveal: visible at rest, the class only adds a lift-in */
+.rv.in { animation: lift 0.8s var(--ease) both; }
+@keyframes lift { from { transform: translateY(18px); opacity: 0.35; } to { transform: none; opacity: 1; } }
+
+html[data-motion="reduce"] *, html[data-motion="reduce"] *::before, html[data-motion="reduce"] *::after {
+  animation: none !important; transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) *, html:not([data-motion="full"]) *::before, html:not([data-motion="full"]) *::after {
+    animation: none !important; transition: none !important;
+  }
+  html:not([data-motion="full"]) ::view-transition-group(*),
+  html:not([data-motion="full"]) ::view-transition-old(*),
+  html:not([data-motion="full"]) ::view-transition-new(*) { animation: none !important; }
+}
+html[data-motion="reduce"] ::view-transition-group(*),
+html[data-motion="reduce"] ::view-transition-old(*),
+html[data-motion="reduce"] ::view-transition-new(*) { animation: none !important; }
+
+/* keep the header still while pages turn, and never swallow clicks */
+::view-transition { pointer-events: none; }
+::view-transition-group(site-header) { animation: none; z-index: 100; }
+::view-transition-old(site-header) { display: none; }
+::view-transition-new(site-header) { animation: none; }
+
+/* ------------------------------------------------------------- shell */
+main { display: block; min-height: 60vh; outline: none; }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 70;
+  transform: translate(-50%, 20px); opacity: 0; pointer-events: none; max-width: calc(100vw - 32px);
+  background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 6px; font-size: 0.95rem;
+  transition: opacity 0.25s, transform 0.25s var(--ease);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.site-footer { margin-top: clamp(48px, 8vw, 96px); }
+.site-footer .meander { opacity: 0.8; }
+.site-footer-in { display: grid; grid-template-columns: 1fr auto; gap: 16px 40px; padding-block: 32px 48px; font-size: 0.92rem; }
+.site-footer-name { font-size: 1.4rem; }
+.site-footer-links { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+.site-footer-src { grid-column: 1 / -1; max-width: 70ch; }
+@media (max-width: 680px) {
+  .site-footer-in { grid-template-columns: 1fr; }
+  .site-footer-links { align-items: flex-start; }
+}
+
+/* area header, shared by every area page */
+.area-head { padding-block: clamp(40px, 6vw, 72px) 0; }
+.area-kicker { display: flex; align-items: center; gap: 12px; }
+.area-kicker .tongues { width: 72px; }
+.area-head h1 { font-size: clamp(2.8rem, 6vw, 5rem); margin-top: 16px; }
+.area-greek { display: block; font-size: 0.42em; color: var(--accent); margin-top: 10px; letter-spacing: 0.02em; }
+.area-origin { max-width: 60ch; margin-top: 18px; font-size: 1.15rem; color: var(--ink-2); }
+.area-head .meander { margin-top: clamp(32px, 5vw, 56px); }
+
+.soon { padding-block: clamp(32px, 5vw, 56px); }
+.soon-card { max-width: 720px; display: grid; gap: 16px; justify-items: start; }
+.soon-card ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; color: var(--ink-2); }
+.soon-card li::marker { color: var(--accent); }
