@@ -24,7 +24,8 @@
     1. GLAUx in-context analysis (`pipeline/build_words.py` → `web/public/data/words/`, **345 MB, not committed**);
     2. LSJ (`pipeline/build_lsj.py` → `web/public/data/lsj/`, **75 MB, not committed**; citations link into the reader);
     3. live Wiktionary.
-  - **Still to do in Phase 2**: bookmarks, favourites, notes and highlights (store written: `lib/annotations.ts`); side-by-side reading; Share (link, text, image); a live passage of the day; offline download of the word and LSJ packs; library filters by genre, period and dialect (`works-meta.json` built); e2e tests for the reader.
+  - **Passage tools** (select words, or click a passage number): bookmark, favourite, note (inline, editable, deletable), highlight in 4 colours, Share (copy link, copy text, image with a highlight-or-skip step, preview, light/dark, clipboard with download fallback). Tested in the browser on 2026-09-27. Marks are stored in IndexedDB (`lib/annotations.ts`); the "Your marks" list is in the reader bar.
+  - **Still to do in Phase 2**: side-by-side reading and cross-references; a live passage of the day; offline download of the word and LSJ packs; library filters by genre, period and dialect (`works-meta.json` built); e2e tests for the reader.
 - **Not started:** Phases 3–9.
 
 ## Decisions log
@@ -63,7 +64,7 @@
 - **Hosting the generated data packs** (word analyses 345 MB and LSJ 75 MB, uncompressed; roughly 100 MB gzipped) is not decided. They are gitignored and must be rebuilt with the pipeline scripts. Options: Vercel static files (check the limits), GitHub Releases or jsDelivr, or Cloudflare R2. This needs the owner's input before launch.
 - GLAUx covers 1,186 of our 1,837 works; the rest show "no analysis yet" plus LSJ and Wiktionary.
 - The GLAUx tag "b" is read as "coordinating conjunction", confirmed in glaux-nlp `treebanks/Tagsets.py` ("coordinator").
-- The Bash tool mangles `` in heredocs into a control character. Never write regex back-references through a Bash heredoc; use the Edit tool or `chr(92)`. This bit `build_lsj.py` once; it was fixed and the output was verified clean.
+- The Bash tool turns a backslash followed by the digit 1, written inside a heredoc, into a control character. Never write regex back-references through a Bash heredoc; use the Edit tool or `chr(92)`. This bit `build_lsj.py` once; it was fixed and the output was verified clean.
 - Home page items the brief asks for that depend on later phases: "recent forum activity" (Phase 8), and daily rotation of the wiki cards (Phase 7, once real entries exist). The three current cards are fixed.
 - "Save word", "Load from a folder" and "Reconnect folders" show a toast saying which phase delivers them.
 - The passage of the day is hard-coded from the Perseus files (`src/data/iliad-sample.ts`). Phase 2 should load it live from the TEI file and choose a different passage each day.

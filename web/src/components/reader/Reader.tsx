@@ -18,6 +18,11 @@ import { AREAS } from "@/config/areas";
 import { Blocks } from "./Blocks";
 import WordPanel, { type WordContext } from "./WordPanel";
 import { norm } from "@/lib/lookup/words";
+import { useMarks, cmp, type Mark, type Colour } from "@/lib/annotations";
+import type { Block } from "@/lib/tei/types";
+import PassageToolbar, { type Selection } from "./PassageToolbar";
+import NoteEditor from "./NoteEditor";
+import ShareDialog, { type ShareData } from "./ShareDialog";
 import styles from "./Reader.module.css";
 
 type Load = { state: "loading"; step: string } | { state: "error"; message: string } | { state: "ready" };
@@ -38,17 +43,42 @@ function pickTranslation(w: CatWork, tr: string | null, remembered: string | nul
   return all.find((t) => versionOf(t.urn) === remembered) ?? all[0];
 }
 
-/** One passage row: reference in the margin, Greek, translation. */
-const RowView = memo(function RowView({ row, cite }: { row: Row; cite: string }) {
+const blockText = (bs: Block[]) => bs.map((b) => b.c.map((x) => (typeof x === "string" ? x : "")).join("")).join(" ").replace(/\s+/g, " ").trim();
+
+const MARK_ICON: Record<string, React.ReactNode> = {
+  bookmark: <path d="M6 3h12v18l-6-4-6 4z" />,
+  favourite: <path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" />,
+  note: <path d="M4 4h16v12H8l-4 4z" />,
+};
+
+/** One passage row: reference and your marks in the margin, Greek, translation, and any notes. */
+const RowView = memo(function RowView({ row, marks, openNote, onCloseNote }: { row: Row; marks: Mark[]; openNote: string | null; onCloseNote: () => void }) {
+  const notes = marks.filter((m) => m.kind === "note");
   return (
     <section className={styles.row} id={`r-${row.key}`} data-key={row.key}>
-      <div className={styles.ref}><button type="button" data-cite={`${cite} ${row.key}`} title="Copy this citation">{row.key}</button></div>
+      <div className={styles.ref}>
+        <button type="button" data-row={row.key} title="Actions for this passage">{row.key}</button>
+        {marks.some((m) => m.kind !== "highlight") && (
+          <span className={styles.marks}>
+            {marks.filter((m) => m.kind !== "highlight").map((m) => (
+              <button key={m.id} type="button" className={styles[`mk-${m.kind}`]} data-mark={m.id} title={m.kind === "note" ? (m.text || "Note") : m.kind === "bookmark" ? "Bookmark (click to remove)" : "Favourite (click to remove)"}>
+                <svg viewBox="0 0 24 24" aria-hidden="true">{MARK_ICON[m.kind]}</svg>
+              </button>
+            ))}
+          </span>
+        )}
+      </div>
       <div className={styles.grc} lang="grc">
         {row.greek.map((u) => <div key={u.ref.join(".")} data-u={u.ref.join(".")}><Blocks blocks={u.blocks} greek keyPrefix={u.ref.join(".")} /></div>)}
       </div>
       <div className={styles.tr}>
         {row.trans.length ? <Blocks blocks={row.trans} greek={false} keyPrefix={`t${row.key}`} /> : <span className={styles.none} aria-label="No translation for this passage">—</span>}
       </div>
+      {notes.length > 0 && (
+        <div className={styles.notes}>
+          {notes.map((m) => <NoteEditor key={`${m.id}-${openNote === m.id}`} mark={m} startOpen={openNote === m.id} onClose={onCloseNote} />)}
+        </div>
+      )}
     </section>
   );
 });
@@ -67,6 +97,12 @@ export default function Reader() {
   const [result, setResult] = useState<{ key: string; parsed?: Parsed; from?: { grc: From; tr: From | null }; error?: string } | null>(null);
   const [step, setStep] = useState<{ key: string; text: string } | null>(null);
   const [word, setWord] = useState<{ w: string; ctx: WordContext | null } | null>(null);
+  const [sel, setSel] = useState<Selection | null>(null);
+  const [share, setShare] = useState<ShareData | null>(null);
+  const [openNote, setOpenNote] = useState<string | null>(null);
+  const [marksOpen, setMarksOpen] = useState(false);
+  const allMarks = useMarks((s) => s.marks);
+  useEffect(() => { if (workId) useMarks.getState().load(workId); }, [workId]);
   const [goto, setGoto] = useState("");
   const [help, setHelp] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -189,7 +225,81 @@ export default function Reader() {
     return () => removeEventListener("keydown", onKey);
   }, [chunk]);
 
-  // clicks inside the text: words open the look-up, references copy a citation
+  // ------------------------------------------------------------ your marks
+  const order = useMemo(() => new Map(doc?.units.map((u, i) => [u.ref.join("."), i]) ?? []), [doc]);
+  const marks = useMemo(() => allMarks.filter((m) => m.ed === edV), [allMarks, edV]);
+  const marksByRow = useMemo(() => {
+    const byUnit = new Map<string, string>();
+    for (const r of rows) for (const u of r.greek) byUnit.set(u.ref.join("."), r.key);
+    const out = new Map<string, Mark[]>();
+    for (const m of marks) {
+      const rk = byUnit.get(m.start.u);
+      if (rk) out.set(rk, [...(out.get(rk) ?? []), m]);
+    }
+    return out;
+  }, [rows, marks]);
+  const noMarks = useMemo<Mark[]>(() => [], []);
+
+  // highlights are drawn onto the word spans after each render of the page
+  useEffect(() => {
+    document.querySelectorAll("[data-hl]").forEach((el) => el.removeAttribute("data-hl"));
+    for (const m of marks) {
+      if (m.kind !== "highlight") continue;
+      const a = order.get(m.start.u), b = order.get(m.end.u);
+      if (a === undefined || b === undefined) continue;
+      for (let i = a; i <= b; i++) {
+        const key = doc!.units[i].ref.join(".");
+        const unit = document.querySelector(`[data-u="${CSS.escape(key)}"]`);
+        if (!unit) continue;
+        const spans = unit.querySelectorAll<HTMLElement>("[data-w]");
+        const from = i === a ? m.start.i : 0, to = i === b ? m.end.i : spans.length - 1;
+        for (let j = from; j <= to && j < spans.length; j++) spans[j].dataset.hl = m.colour ?? "ochre";
+      }
+    }
+  }, [marks, rows, order, doc]);
+
+  const pointOf = (span: HTMLElement) => {
+    const unit = span.closest<HTMLElement>("[data-u]")!;
+    return { u: unit.dataset.u!, i: [...unit.querySelectorAll("[data-w]")].indexOf(span) };
+  };
+  const selectSpans = (spans: HTMLElement[], rect: DOMRect) => {
+    if (!spans.length) return;
+    const rowKeys = [...new Set(spans.map((s) => s.closest<HTMLElement>("[data-key]")!.dataset.key!))];
+    setSel({ start: pointOf(spans[0]), end: pointOf(spans[spans.length - 1]), quote: spans.map((s) => s.textContent).join(" "), rowKeys,
+      rect: { left: rect.left, top: rect.top, bottom: rect.bottom } });
+  };
+  const onTextMouseUp = () => {
+    const s = window.getSelection();
+    if (!s || s.isCollapsed || !s.rangeCount) return;
+    const range = s.getRangeAt(0);
+    const spans = [...document.querySelectorAll<HTMLElement>("article [data-u] [data-w]")].filter((sp) => range.intersectsNode(sp));
+    selectSpans(spans, range.getBoundingClientRect());
+  };
+
+  const rangeLabel = (a: string, b: string) => (a === b ? a : `${a}–${b}`);
+  async function act(a: "bookmark" | "favourite" | "note" | "share" | { highlight: Colour }) {
+    if (!sel || !edV) return;
+    const base = { work: workId, ed: edV, start: sel.start, end: sel.end, quote: sel.quote };
+    const where = rangeLabel(sel.start.u, sel.end.u);
+    if (a === "share") {
+      const rowsHit = rows.filter((r) => sel.rowKeys.includes(r.key));
+      const tr = rowsHit.map((r) => blockText(r.trans)).filter(Boolean).join(" ");
+      setShare({ words: sel.quote.split(" "), greekText: sel.quote, translation: tr || null, cite: `${cite} ${where}`,
+        link: `${location.origin}${href({ at: sel.start.u })}` });
+    } else if (typeof a === "object") {
+      await useMarks.getState().add({ ...base, kind: "highlight", colour: a.highlight });
+    } else if (a === "note") {
+      const m = await useMarks.getState().add({ ...base, kind: "note", text: "" });
+      setOpenNote(m.id);
+    } else {
+      await useMarks.getState().add({ ...base, kind: a });
+      toast(a === "bookmark" ? `Bookmarked ${where}.` : `Added ${where} to your favourite passages.`);
+    }
+    window.getSelection()?.removeAllRanges();
+    setSel(null);
+  }
+
+  // clicks inside the text: words open the look-up; margin references and marks act on the passage
   const onTextClick = (e: React.MouseEvent) => {
     const el = e.target as HTMLElement;
     const w = el.closest<HTMLElement>("[data-w]");
@@ -206,8 +316,20 @@ export default function Reader() {
       setWord({ w: w.dataset.w!, ctx });
       return;
     }
-    const c = el.closest<HTMLElement>("[data-cite]");
-    if (c) navigator.clipboard.writeText(c.dataset.cite!).then(() => toast(`Copied: ${c.dataset.cite}`), () => toast(c.dataset.cite!));
+    const r = el.closest<HTMLElement>("[data-row]");
+    if (r) {
+      const row = document.getElementById(`r-${r.dataset.row}`);
+      const spans = row ? [...row.querySelectorAll<HTMLElement>("[data-u] [data-w]")] : [];
+      selectSpans(spans, r.getBoundingClientRect());
+      return;
+    }
+    const mk = el.closest<HTMLElement>("[data-mark]");
+    if (mk) {
+      const m = marks.find((x) => x.id === mk.dataset.mark);
+      if (!m) return;
+      if (m.kind === "note") setOpenNote(openNote === m.id ? null : m.id);
+      else { useMarks.getState().remove(m.id); toast(m.kind === "bookmark" ? "Bookmark removed." : "Removed from favourites."); }
+    }
   };
 
   // ------------------------------------------------------------ render
@@ -282,12 +404,28 @@ export default function Reader() {
               <input ref={gotoRef} id="reader-goto" value={goto} onChange={(e) => setGoto(e.target.value)} placeholder={`Go to ${doc.levels.join(".")}`} aria-label="Go to reference" />
               <button type="submit">Go</button>
             </form>
+            <div className={styles.marksMenu}>
+              <button type="button" onClick={() => setMarksOpen(!marksOpen)} aria-expanded={marksOpen}>Your marks ({allMarks.length})</button>
+              {marksOpen && (
+                <ul>
+                  {!allMarks.length && <li className="muted">Select words in the Greek, or click a passage number, to bookmark, highlight or write a note.</li>}
+                  {[...allMarks].sort((a, b) => cmp(a.start, b.start, order)).map((m) => (
+                    <li key={m.id}>
+                      <button type="button" onClick={() => { setMarksOpen(false); router.replace(href({ at: m.start.u }), { scroll: false }); }}>
+                        <span className="label">{m.kind} · {rangeLabel(m.start.u, m.end.u)}</span>
+                        <span>{m.kind === "note" && m.text ? m.text.slice(0, 80) : <span lang="grc">{m.quote.slice(0, 60)}</span>}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <button type="button" className={styles.helpBtn} onClick={() => setHelp((h) => !h)} aria-expanded={help}>Keys <kbd>?</kbd></button>
           </div>
 
           {help && (
             <div className={`wrap ${styles.help}`} role="note">
-              <p><kbd>←</kbd> <kbd>→</kbd> previous / next page · <kbd>g</kbd> go to a reference · click a word to look it up · click a reference in the margin to copy its citation · <kbd>Esc</kbd> close</p>
+              <p><kbd>←</kbd> <kbd>→</kbd> previous / next page · <kbd>g</kbd> go to a reference · click a word to look it up · select words or click a passage number for bookmarks, notes, highlights and sharing · <kbd>Esc</kbd> close</p>
             </div>
           )}
 
@@ -303,9 +441,11 @@ export default function Reader() {
             <span className="label">{trText ? `English · ${describe(trText)}` : ""}</span>
           </div>
 
-          <article className={`wrap ${styles.text}`} onClick={onTextClick} aria-label={`${cite}, ${chunkInfo.label}`}>
-            {rows.map((r) => <RowView key={r.key} row={r} cite={cite} />)}
+          <article className={`wrap ${styles.text}`} onClick={onTextClick} onMouseUp={onTextMouseUp} aria-label={`${cite}, ${chunkInfo.label}`}>
+            {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} />)}
           </article>
+          {sel && <PassageToolbar sel={sel} onAction={act} onClose={() => setSel(null)} />}
+          {share && <ShareDialog data={share} onClose={() => setShare(null)} />}
 
           <div className={`wrap ${styles.bottom}`}>
             <button type="button" className="btn ghost" onClick={() => goChunk(chunk - 1)} disabled={chunk === 0}>← {chunk > 0 ? doc.chunks[chunk - 1].label : ""}</button>

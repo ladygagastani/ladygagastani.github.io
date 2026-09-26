@@ -148,3 +148,62 @@
 .cite { color: var(--ink-2); text-decoration-color: var(--accent); text-underline-offset: 2px; }
 .cite:hover { color: var(--accent); }
 .fine ul { margin: 4px 0 0; padding-left: 1.1em; }
+
+/* ------------------------------------------------------------ passage tools */
+.toolbar {
+  position: fixed; z-index: 55; opacity: 0; transition: opacity 0.15s;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 2px; max-width: calc(100vw - 24px);
+  padding: 5px; background: var(--ink); color: var(--bg); border-radius: 8px; box-shadow: 0 16px 36px -14px var(--shadow);
+}
+.toolbar button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; background: transparent; border: 0; border-radius: 6px; font-size: 0.86rem; color: inherit; }
+.toolbar button:hover:not(:disabled) { background: color-mix(in srgb, var(--bg) 16%, transparent); }
+.toolbar button:disabled { opacity: 0.45; cursor: default; }
+.toolbar svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+.swatches { display: inline-flex; gap: 4px; padding: 0 8px; border-left: 1px solid color-mix(in srgb, var(--bg) 30%, transparent); border-right: 1px solid color-mix(in srgb, var(--bg) 30%, transparent); }
+.swatches button { width: 20px; height: 20px; padding: 0; border-radius: 50%; border: 2px solid var(--bg); }
+.sw-red { background: #C0492B !important; } .sw-ochre { background: #D9A441 !important; } .sw-blue { background: #4F7CA8 !important; } .sw-green { background: #6E9A5B !important; }
+
+.w[data-hl] { border-radius: 2px; }
+.w[data-hl="red"] { background: color-mix(in srgb, #C0492B 32%, transparent); }
+.w[data-hl="ochre"] { background: color-mix(in srgb, #D9A441 42%, transparent); }
+.w[data-hl="blue"] { background: color-mix(in srgb, #4F7CA8 34%, transparent); }
+.w[data-hl="green"] { background: color-mix(in srgb, #6E9A5B 36%, transparent); }
+
+.ref { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.ref button[data-row] { cursor: pointer; }
+.marks { display: flex; flex-direction: column; gap: 4px; }
+.marks button { width: 22px; height: 22px; padding: 2px; background: transparent; border: 0; color: var(--accent); }
+.marks svg { width: 18px; height: 18px; fill: currentColor; stroke: none; }
+.mk-note svg { fill: none; stroke: currentColor; stroke-width: 2; }
+.mk-favourite { color: var(--ochre) !important; }
+
+.notes { grid-column: 2 / -1; display: grid; gap: 10px; margin-top: 12px; }
+.noteBox { padding: 12px 14px; background: var(--bg); border-left: 3px solid var(--accent); border-radius: var(--radius); display: grid; gap: 8px; }
+.noteHead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center; }
+.noteActs { display: inline-flex; gap: 6px; }
+.noteBox textarea { width: 100%; font: inherit; font-size: 1rem; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 10px; resize: vertical; }
+.noteText { white-space: pre-wrap; }
+
+.marksMenu { position: relative; }
+.marksMenu > button { height: 36px; padding: 0 12px; background: transparent; border: 1px solid var(--rule); border-radius: var(--radius); font-size: 0.9rem; }
+.marksMenu ul {
+  position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; width: min(380px, 90vw); max-height: 60vh; overflow-y: auto;
+  list-style: none; margin: 0; padding: 6px; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; box-shadow: 0 20px 40px -20px var(--shadow);
+}
+.marksMenu li > button { width: 100%; display: grid; gap: 2px; text-align: left; padding: 8px 10px; background: transparent; border: 0; border-radius: 4px; }
+.marksMenu li > button:hover { background: var(--bg-2); }
+.marksMenu li.muted { padding: 10px; font-size: 0.9rem; }
+
+/* ------------------------------------------------------------ share */
+.share { width: min(760px, calc(100vw - 32px)); padding: 0; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); color: var(--ink); box-shadow: 0 40px 80px -30px var(--shadow); }
+.share::backdrop { background: rgba(10, 6, 3, 0.45); }
+.shareIn { display: grid; gap: 16px; padding: 22px 24px; }
+.shareIn h2 { font-size: var(--step-1); }
+.shareMenu { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+.pickWords { display: flex; flex-wrap: wrap; gap: 4px; font-family: var(--f-greek); font-size: 1.3rem; }
+.pickWords button { padding: 2px 6px; background: transparent; border: 1px solid transparent; border-radius: 4px; font: inherit; }
+.pickWords button:hover { border-color: var(--rule); }
+.picked { background: color-mix(in srgb, var(--accent) 22%, transparent) !important; color: var(--accent); }
+.shareOpts { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.previewBox { max-height: 55vh; overflow: auto; border: 1px solid var(--rule); border-radius: 4px; background: var(--bg); display: grid; place-items: center; min-height: 120px; }
+.previewBox img { width: 100%; height: auto; display: block; }
