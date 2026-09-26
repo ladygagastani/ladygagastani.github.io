@@ -1,3 +1,8 @@
 # local tool settings (contain machine-specific paths)
 .claude/
 node_modules/
+
+# pipeline downloads and generated data packs (large; published separately)
+pipeline/.cache/
+web/public/data/words/
+web/public/data/lsj/

@@ -136,3 +136,15 @@
   .bar { top: calc(118px + env(safe-area-inset-top, 0px)); }
   .helpBtn { display: none; }
 }
+
+/* look-up: analysis and dictionary */
+.here { display: grid; gap: 6px; justify-items: start; }
+.lemmaBig { font-family: var(--f-greek); font-size: 1.7rem; line-height: 1.1; color: var(--accent); }
+.parse { font-size: 1rem; }
+.gloss { font-size: 1.02rem; }
+.lsj { display: grid; gap: 8px; font-size: 0.93rem; line-height: 1.55; max-height: 50vh; overflow-y: auto; padding-right: 6px; }
+.lsjGr { font-family: var(--f-greek); font-size: 1.05em; }
+.senseN { font-family: var(--f-label); color: var(--accent); }
+.cite { color: var(--ink-2); text-decoration-color: var(--accent); text-underline-offset: 2px; }
+.cite:hover { color: var(--accent); }
+.fine ul { margin: 4px 0 0; padding-left: 1.1em; }

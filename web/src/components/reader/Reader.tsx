@@ -16,7 +16,8 @@ import { useSettings, type Columns } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
 import { AREAS } from "@/config/areas";
 import { Blocks } from "./Blocks";
-import WordPanel from "./WordPanel";
+import WordPanel, { type WordContext } from "./WordPanel";
+import { norm } from "@/lib/lookup/words";
 import styles from "./Reader.module.css";
 
 type Load = { state: "loading"; step: string } | { state: "error"; message: string } | { state: "ready" };
@@ -43,7 +44,7 @@ const RowView = memo(function RowView({ row, cite }: { row: Row; cite: string })
     <section className={styles.row} id={`r-${row.key}`} data-key={row.key}>
       <div className={styles.ref}><button type="button" data-cite={`${cite} ${row.key}`} title="Copy this citation">{row.key}</button></div>
       <div className={styles.grc} lang="grc">
-        {row.greek.map((u) => <Blocks key={u.ref.join(".")} blocks={u.blocks} greek keyPrefix={u.ref.join(".")} />)}
+        {row.greek.map((u) => <div key={u.ref.join(".")} data-u={u.ref.join(".")}><Blocks blocks={u.blocks} greek keyPrefix={u.ref.join(".")} /></div>)}
       </div>
       <div className={styles.tr}>
         {row.trans.length ? <Blocks blocks={row.trans} greek={false} keyPrefix={`t${row.key}`} /> : <span className={styles.none} aria-label="No translation for this passage">—</span>}
@@ -65,7 +66,7 @@ export default function Reader() {
   const [catalogError, setCatalogError] = useState<string | null>(null);
   const [result, setResult] = useState<{ key: string; parsed?: Parsed; from?: { grc: From; tr: From | null }; error?: string } | null>(null);
   const [step, setStep] = useState<{ key: string; text: string } | null>(null);
-  const [word, setWord] = useState<string | null>(null);
+  const [word, setWord] = useState<{ w: string; ctx: WordContext | null } | null>(null);
   const [goto, setGoto] = useState("");
   const [help, setHelp] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -120,6 +121,7 @@ export default function Reader() {
   const startUnit = doc && target ? Math.max(0, findRef(doc, target)) : 0;
   const chunk = doc ? chunkOf(doc, startUnit) : 0;
   const placed = parsed?.placed ?? null;
+  const unitKeys = useMemo(() => new Set(doc?.units.map((u) => u.ref.join(".")) ?? []), [doc]);
   const rows = useMemo(() => (doc && doc.chunks[chunk] ? alignChunk(doc, doc.chunks[chunk], placed) : []), [doc, chunk, placed]);
   const cov = trText && placed ? coverage(rows) : 1;
   const startKey = doc && startUnit > 0 ? doc.units[startUnit].ref.join(".") : null;
@@ -191,7 +193,19 @@ export default function Reader() {
   const onTextClick = (e: React.MouseEvent) => {
     const el = e.target as HTMLElement;
     const w = el.closest<HTMLElement>("[data-w]");
-    if (w) { document.querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel)); w.classList.add(styles.sel); setWord(w.dataset.w!); return; }
+    if (w) {
+      document.querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel));
+      w.classList.add(styles.sel);
+      // which passage the word is in, and which occurrence of this form within it
+      const unit = w.closest<HTMLElement>("[data-u]");
+      let ctx: WordContext | null = null;
+      if (unit && doc) {
+        const same = [...unit.querySelectorAll<HTMLElement>("[data-w]")].filter((x) => norm(x.dataset.w!) === norm(w.dataset.w!));
+        ctx = { work: workId, unitKey: unit.dataset.u!, occurrence: same.indexOf(w), keys: unitKeys, depth: doc.levels.length };
+      }
+      setWord({ w: w.dataset.w!, ctx });
+      return;
+    }
     const c = el.closest<HTMLElement>("[data-cite]");
     if (c) navigator.clipboard.writeText(c.dataset.cite!).then(() => toast(`Copied: ${c.dataset.cite}`), () => toast(c.dataset.cite!));
   };
@@ -307,7 +321,7 @@ export default function Reader() {
         </>
       )}
 
-      <WordPanel word={word} onClose={() => { setWord(null); document.querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel)); }} />
+      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onClose={() => { setWord(null); document.querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel)); }} />
     </div>
   );
 }
