@@ -26,7 +26,7 @@ export const LAYERS: Layer[] = [
   {
     id: "sites", title: "Great sites", deposit: "wall foundations",
     blurb: "The places where digging has changed what we know: cemeteries, sanctuaries, mines and cities.",
-    slugs: ["knossos", "mycenae", "kerameikos", "delphi", "laurion"],
+    slugs: ["knossos", "mycenae", "troy", "kerameikos", "delphi", "laurion"],
   },
   {
     id: "finds", title: "Great finds", deposit: "a grave and its offerings",

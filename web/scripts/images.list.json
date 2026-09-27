@@ -211,5 +211,14 @@
   "date": "Original 5th century BC; modern cast",
   "place": "Acropolis Museum, Athens",
   "creator": "Photograph by Deiadameian"
+ },
+ {
+  "id": "troy-schliemann-trench",
+  "src": "commons:Troy Schliemann trench 2658.jpg",
+  "alt": "A deep grassy cut through an earth mound, its sides showing layers of soil and rough stone walling one above another; small signs fixed to the walls mark the levels with Roman numerals II, III and IV.",
+  "title": "Schliemann's trench at Troy (Hisarlik), cut through the mound in the 1870s",
+  "date": "Excavated 1870s",
+  "place": "Hisarlik, Çanakkale province, Turkey",
+  "creator": "Photograph by Dosseman"
  }
 ]

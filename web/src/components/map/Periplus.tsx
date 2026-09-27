@@ -378,7 +378,7 @@ function Intro({ places, meta, onPick }: { places: Place[]; meta: PlacesMeta; on
           The word analyses of the GLAUx project give every word of {fmt(meta.names)} different names in the library its dictionary form. A name is
           matched to the Pleiades gazetteer of ancient places when it is the same Greek word as a name Pleiades records for a place it has located
           (accents and breathings ignored). {fmt(meta.matched)} places were found this way. Where several places share a name, the one Pleiades connects
-          most other places to is shown. Names used mostly for people or gods rather than a place (Κῦρος the king, not the river) are left out. A few famous places that Pleiades records without the texts' Greek spelling (Κνωσσός, Μυκήνη, Τίρυνς) were joined to their Pleiades place by hand.
+          most other places to is shown. Names used mostly for people or gods rather than a place (Κῦρος the king, not the river) are left out. A few famous places that Pleiades records without the texts&apos; Greek spelling (Κνωσσός, Μυκήνη, Τίρυνς) were joined to their Pleiades place by hand.
         </p>
         <p>
           The {fmt(meta.checked)} places named at least {meta.checkedMin} times, and the great regions and rivers, were checked by hand; the rest are

@@ -348,5 +348,19 @@
   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
   "source": "https://commons.wikimedia.org/wiki/File:Block_IV_east_frieze_of_the_Parthenon_plaster_cast_Acropolis_Museum_03.jpg",
   "sourceName": "Wikimedia Commons"
+ },
+ "troy-schliemann-trench": {
+  "file": "troy-schliemann-trench.jpg",
+  "width": 1600,
+  "height": 1063,
+  "alt": "A deep grassy cut through an earth mound, its sides showing layers of soil and rough stone walling one above another; small signs fixed to the walls mark the levels with Roman numerals II, III and IV.",
+  "title": "Schliemann's trench at Troy (Hisarlik), cut through the mound in the 1870s",
+  "date": "Excavated 1870s",
+  "place": "Hisarlik, Çanakkale province, Turkey",
+  "creator": "Photograph by Dosseman",
+  "licence": "CC BY-SA 4.0",
+  "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Troy_Schliemann_trench_2658.jpg",
+  "sourceName": "Wikimedia Commons"
  }
 }

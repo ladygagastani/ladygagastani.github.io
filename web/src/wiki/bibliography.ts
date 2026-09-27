@@ -326,4 +326,16 @@ export const BIB: Record<string, Secondary> = {
     author: "Mary Beard", title: "The Parthenon (revised edition)", year: 2010,
     publisher: "Cambridge, MA: Harvard University Press; London: Profile Books", checked: "https://www.hup.harvard.edu/catalog.php?isbn=9780674055636",
   },
+  "cline-trojan-war": {
+    author: "Eric H. Cline", title: "The Trojan War: A Very Short Introduction", year: 2013,
+    publisher: "New York: Oxford University Press", checked: "https://global.oup.com/academic/product/the-trojan-war-9780199760275",
+  },
+  "latacz-troy": {
+    author: "Joachim Latacz", title: "Troy and Homer: Towards a Solution of an Old Mystery", year: 2004,
+    publisher: "Oxford: Oxford University Press", checked: "https://global.oup.com/academic/product/troy-and-homer-9780199263080",
+  },
+  "robinson-calvert": {
+    author: "Marcelle Robinson", title: "Schliemann's Silent Partner, Frank Calvert (1828–1908): Pioneer, Scholar and Survivor", year: 2006,
+    publisher: "Philadelphia: Xlibris", checked: "https://bmcr.brynmawr.edu/2009/2009.01.41/",
+  },
 };
