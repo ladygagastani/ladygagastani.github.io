@@ -1,7 +1,7 @@
 "use client";
 /**
  * Quick search, from any page: press "/" or Ctrl+K (⌘K on a Mac). Suggests passages (from a typed
- * reference), works and authors by name, and the full searches of the Oracle.
+ * reference), works and authors by name, Painted Stoa entries, and the full searches of the Oracle.
  */
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -10,6 +10,9 @@ import { detectScript, queryWords, toPattern } from "@/lib/search/input";
 import { loadAbbrevs, readReference, type Abbrevs } from "@/lib/search/refs";
 import { useUI } from "@/lib/ui";
 import styles from "./QuickSearch.module.css";
+
+/** What Quick search needs of each wiki entry; loaded only when the box opens. */
+type StoaItem = { slug: string; title: string; greek?: string; kicker: string };
 
 interface Option { id: string; href: string; kind: string; label: React.ReactNode; greek?: boolean }
 
@@ -38,12 +41,14 @@ function Box({ onClose }: { onClose: () => void }) {
   const [sel, setSel] = useState(0);
   const [idx, setIdx] = useState<CatalogIndex | null>(null);
   const [abbrevs, setAbbrevs] = useState<Abbrevs | null>(null);
+  const [stoa, setStoa] = useState<StoaItem[]>([]);
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     dialog.current?.showModal();
     loadCatalog().then(setIdx, () => undefined);
     loadAbbrevs().then(setAbbrevs);
+    import("@/wiki/index").then((m) => setStoa(m.ENTRIES.map(({ slug, title, greek, kicker }) => ({ slug, title, greek, kicker }))), () => undefined);
   }, []);
 
   const options = useMemo<Option[]>(() => {
@@ -62,6 +67,14 @@ function Box({ onClose }: { onClose: () => void }) {
       out.push({ id: "forms", kind: "Search the Greek", href: `/search?q=${e}`, label: <>for <b lang="grc">{shown}</b></>, greek: true });
       if (queryWords(t).length === 1) out.push({ id: "lemma", kind: "Every form of", href: `/search?m=lemma&q=${e}`, label: <b lang="grc">{shown}</b>, greek: true });
     }
+    if (stoa.length && !/\d/.test(t)) {
+      const n = fold(t);
+      if (n.length >= 3) {
+        for (const e of stoa.filter((e) => fold(`${e.title} ${e.greek ?? ""} ${e.kicker}`).includes(n)).slice(0, 4)) {
+          out.push({ id: `stoa:${e.slug}`, kind: "Painted Stoa", href: `/stoa/${e.slug}`, label: <><b>{e.title}</b> <span className={styles.muted}>{e.kicker}</span></> });
+        }
+      }
+    }
     if (idx) {
       const n = fold(t);
       if (n.length >= 3) {
@@ -79,7 +92,7 @@ function Box({ onClose }: { onClose: () => void }) {
     if (/[a-z]/i.test(t) && !/\d/.test(t)) out.push({ id: "english", kind: "Search the translations", href: `/search?m=english&q=${e}`, label: <>for <b>{t}</b></> });
     out.push({ id: "library", kind: "Search my library", href: `/search?m=library&q=${e}`, label: <>for <b>{t}</b></> });
     return out;
-  }, [q, idx, abbrevs]);
+  }, [q, idx, abbrevs, stoa]);
 
   const choose = (o: Option | undefined) => {
     if (!o) return;
@@ -110,7 +123,7 @@ function Box({ onClose }: { onClose: () => void }) {
             ))}
           </ul>
         ) : (
-          <p className={styles.help}>Type Greek, Latin letters or Beta Code, a reference such as <i>Il. 1.1</i>, or the name of an author or work. <kbd>↑</kbd> <kbd>↓</kbd> to choose, <kbd>Enter</kbd> to go, <kbd>Esc</kbd> to close.</p>
+          <p className={styles.help}>Type Greek, Latin letters or Beta Code, a reference such as <i>Il. 1.1</i>, the name of an author or work, or a subject in the Painted Stoa. <kbd>↑</kbd> <kbd>↓</kbd> to choose, <kbd>Enter</kbd> to go, <kbd>Esc</kbd> to close.</p>
         )}
       </div>
     </dialog>
