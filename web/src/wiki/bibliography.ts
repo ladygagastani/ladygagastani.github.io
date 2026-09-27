@@ -153,4 +153,20 @@ export const BIB: Record<string, Secondary> = {
     author: "John M. Camp", title: "The Archaeology of Athens", year: 2001,
     publisher: "New Haven: Yale University Press", checked: "https://bmcr.brynmawr.edu/2003/2003.05.16",
   },
+  "boardman-abfv": {
+    author: "John Boardman", title: "Athenian Black Figure Vases: A Handbook", year: 1974,
+    publisher: "London: Thames and Hudson", checked: "https://www.cambridge.org/core/journals/journal-of-hellenic-studies/article/abs/j-boardman-athenian-blackfigure-vases-a-handbook-london-thames-hudson-1974-pp-252-383-illus-250-cloth-150-paper-r-s-folsom-attic-blackfigured-pottery-noyes-classical-studies-park-ridge-nj-noyes-press-1975-pp-xvi-171-64-pl-38-text-figs-995/FCDE5C1F6892E63139586D41D9758191",
+  },
+  "boardman-arfv": {
+    author: "John Boardman", title: "Athenian Red Figure Vases: The Archaic Period: A Handbook", year: 1975,
+    publisher: "London: Thames and Hudson", checked: "https://thamesandhudson.com/athenian-red-figure-vases-the-archaic-period-a-handbook-9780500201435",
+  },
+  "noble-techniques": {
+    author: "Joseph Veach Noble", title: "The Techniques of Painted Attic Pottery (revised edition)", year: 1988,
+    publisher: "London: Thames and Hudson", checked: "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/S0009840X00272764",
+  },
+  "beazley-1911": {
+    author: "J. D. Beazley", title: "The Master of the Berlin Amphora", year: 1911,
+    publisher: "Journal of Hellenic Studies 31, 276–295", checked: "https://www.jstor.org/stable/624776",
+  },
 };

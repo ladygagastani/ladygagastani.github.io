@@ -113,7 +113,7 @@
   - **Drag a passage into a note**: a grip beside each passage number (on hover), or selected Greek, drags as the Greek in quotation marks followed by (Author, Work ref), which any note (or other text box) takes as a quotation. The forum and debates will take it too (Phase 8).
   - **Continue where you left off** (`lib/resume.ts`, `components/Resume.tsx`): the site remembers the pages visited (newest first; the reader once per set of books open) and how far down each was scrolled. The home page shows the last place (the reader resumes at its own remembered passage), the books in progress and the other recent pages (a lesson, a search with its filters, a Word Study...); following a link there restores the page's scroll. "Forget these pages" clears the list. Unsent drafts: notes already save as they are typed.
   - **Reading position is now measured from what is on screen** (the first passage showing below the sticky bar, on scroll), instead of an IntersectionObserver that only reported rows whose visibility changed; a passage brought into view is no longer hidden under the bar (its offset follows the bar's real height, `--bar-h`).
-- **Phase 7 (the Painted Stoa wiki, maps, archaeology, Census): in progress** (2026-09-27). Tests: 160 unit (plus 27 that need the network or the corpus cache; with `CORPUS=1` the wiki check runs 76 more) and 37 browser (no wiki browser tests yet). Commits "Phase 7 (1)" to "Phase 7 (8)".
+- **Phase 7 (the Painted Stoa wiki, maps, archaeology, Census): in progress** (2026-09-27). Tests: 164 unit (plus 29 that need the network or the corpus cache; with `CORPUS=1` the wiki check runs 82) and 37 browser (no wiki browser tests yet). Commits "Phase 7 (1)" to "Phase 7 (9)".
   - **Done: the wiki engine** (`web/src/wiki/`, `components/stoa/`):
     - `types.ts`: an `Entry` has slug, title, optional Greek, category, kicker, hook, body, quotes, timeline, "Read it yourself" passages, related entries, primary sources, secondary works (by bibliography id, with a note), optional image and places, and the date written. Certainty labels: `well` (well attested), `debated`, `legend`. The 11 categories are in `CATEGORIES`.
     - `markup.ts`: a small text format for entry bodies. Blocks: `##`/`###` headings, `- ` lists, `!!` "Did you know", `{{quote:id}}`, `{{figure:id}}`, `{{timeline}}`, and `{well}`/`{debated}`/`{legend}` at the start of a paragraph to tag it. Inline: `*italic*`, `**bold**`, a certainty tag, and links `[text](cts:work:ref[-to])` into the reader, `[text](wiki:slug)` to another entry, `[text](https://…)`. Anything unknown makes the build fail, so a typo cannot slip through.
@@ -126,18 +126,9 @@
     - `npm test` (`entries.test.ts`): every body parses; every quote is defined and used; every wiki, related, image and bibliography id exists; every cited work is in the catalogue; every bibliography item has a `checked` link and is used.
     - `CORPUS=1 npx vitest run src/wiki` (`entries.corpus.test.ts`, needs `pipeline/.cache/corpus`): every citation exists in the text; **every Greek quotation is found word for word** in the passage cited (accents and punctuation normalised); every translation marked as from the corpus is found in the translation file. Tested: changing one letter of a quotation makes it fail.
     - `npx tsx scripts/passage.ts <work> <ref> [to]` (in `web/`) prints a passage's Greek and its translation with the translator's name; `find <words>` finds a work id; `refs <work> [prefix]` lists valid references. **Quotations are copied from this output, never typed.**
-  - **Done: 12 entries** (in `src/wiki/entries/`), all passing both checks:
-    - melos (the Melian Dialogue), ostracism, laurion (the silver mines), linear-b, plague-of-athens, mytilene-debate, helots, diogenes, delphi, painted-statues, antikythera-mechanism, kerameikos.
-    - By category: dark side (melos, helots, laurion, plague-of-athens), democracy (ostracism, mytilene-debate), religion (delphi), beautiful (painted-statues), weird (diogenes), strange (antikythera-mechanism), archaeology (kerameikos), language (linear-b). **Still empty: people, education, daily life.**
-  - **Half done: entry 13, black-figure and red-figure pottery** (`entries/black-and-red-figure.ts`, committed as a draft, **not yet in `index.ts`**, so not on the site). To finish:
-    1. add to its `primary` list `{ work: "tlg0086.tlg003", ref: "60.1", to: "60.3", label: "Constitution of the Athenians 60" }`, and link "oil from Athena's sacred olive trees" in the body to `cts:tlg0086.tlg003:60.2` (Ath. Pol. 60.1–3 says the prize amphorae were made under the Council and filled with oil from the sacred olives, *moriai*, given to athletic and horse-race winners; checked with `passage.ts`);
-    2. add four items to `bibliography.ts` (all already verified):
-       - `boardman-abfv`: John Boardman, *Athenian Black Figure Vases: A Handbook*, London: Thames and Hudson, 1974 (checked via a Cambridge Core review);
-       - `boardman-arfv`: John Boardman, *Athenian Red Figure Vases: The Archaic Period: A Handbook*, London: Thames and Hudson, 1975;
-       - `noble-techniques`: Joseph Veach Noble, *The Techniques of Painted Attic Pottery*, revised edition, London: Thames and Hudson, 1988;
-       - `beazley-1911`: J. D. Beazley, "The Master of the Berlin Amphora", *Journal of Hellenic Studies* 31 (1911) 276–295, checked https://www.jstor.org/stable/624776;
-       - (fill in each `checked` link from a fresh search if the one above is missing);
-    3. import it in `index.ts`, run `npm test` and `CORPUS=1 npx vitest run src/wiki`, commit.
+  - **Done: 13 entries** (in `src/wiki/entries/`), all passing both checks:
+    - melos (the Melian Dialogue), ostracism, laurion (the silver mines), linear-b, plague-of-athens, mytilene-debate, helots, diogenes, delphi, painted-statues, antikythera-mechanism, kerameikos, black-and-red-figure (pottery).
+    - By category: dark side (melos, helots, laurion, plague-of-athens), democracy (ostracism, mytilene-debate), religion (delphi), beautiful (painted-statues), weird (diogenes), strange (antikythera-mechanism), archaeology (kerameikos, black-and-red-figure), language (linear-b). **Still empty: people, education, daily life.**
   - **Not started in Phase 7:**
     - **12+ more entries** to reach the 25+ goal. Ideas, each to be checked against the corpus first: the symposium, the Olympic Games, the allotment machine (kleroterion) and choosing by lot, the Arginusae trial, the trial of Socrates, Pythagoras and beans, Asclepius at Epidaurus (Pausanias 2.27), Schliemann and Troy, the Eleusinian Mysteries, Homer's similes, Sappho (check what the corpus has), exposure of infants, the *paidagogos* and schooling, a person (Pericles, or Hipparchia the Cynic). Fill the empty categories first.
     - **Lead images**: a `pipeline/fetch_images.py` that takes openly licensed pictures (the Met's Open Access CC0, Wikimedia Commons with their licences) into `src/data/images.json`, each credited on the entry and on the Credits page.
@@ -262,10 +253,9 @@
   - The existing "Parsing CSS" warnings in the build come from the older `::highlight` rules and are harmless.
 
 ## Next steps
-1. Finish the pottery entry (see Phase 7, "Half done", above for the exact steps).
-2. Write more entries to reach 25+, filling the empty categories (people, education, daily life) first.
-3. Lead images, then the Periplus map, the Kerameikos section and the Census.
-4. Wiki in Quick search, markers on entries, browser tests; update README and this file; report to the owner in plain English.
+1. Write more entries to reach 25+, filling the empty categories (people, education, daily life) first.
+2. Lead images, then the Periplus map, the Kerameikos section and the Census.
+3. Wiki in Quick search, markers on entries, browser tests; update README and this file; report to the owner in plain English.
 
 ## Review history
 - None yet.

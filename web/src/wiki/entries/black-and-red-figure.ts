@@ -26,13 +26,13 @@ Around 530 BC an Athenian workshop reversed the method. The painter now left the
 
 ## The oil that came in painted jars
 
-One kind of pot stayed black-figure for centuries after red-figure had taken over: the prize amphorae of the Panathenaic Games in Athens, filled with oil from Athena's sacred olive trees, with Athena on one side and the contest on the other. The conservatism was deliberate: the old style marked them as prizes. Pindar describes the prize that came home to Argos.
+One kind of pot stayed black-figure for centuries after red-figure had taken over: the prize amphorae of the Panathenaic Games in Athens, filled with [oil from Athena's sacred olive trees](cts:tlg0086.tlg003:60.2), with Athena on one side and the contest on the other. The conservatism was deliberate: the old style marked them as prizes. Pindar describes the prize that came home to Argos.
 
 {{quote:oil}}
 
 ## Who painted them?
 
-Most painters never signed their work. In the early twentieth century the Oxford scholar John Beazley began attributing unsigned vases to individual painters by the way they drew small details: ankles, ears, the folds at an elbow. He gave the anonymous artists names, many after a museum or a subject. The first he defined, in 1911, was the "Master of the Berlin Amphora", now called the Berlin Painter.
+Most painters never signed their work. In the early twentieth century the Oxford scholar John Beazley began attributing unsigned vases to individual painters by the way they drew small details: ankles, ears, the folds at an elbow. He gave the anonymous artists names, many after a museum or a subject. One of his earliest studies, in 1911, gathered the work of the "Master of the Berlin Amphora", now called the Berlin Painter.
 
 {debated} Beazley eventually attributed tens of thousands of vases. His method is still the basis of the subject, but scholars debate how far it recovers real individuals, and how far it fits workshops where several hands worked on one pot.
 
@@ -57,18 +57,21 @@ Because painting styles changed quickly and are well studied, a single sherd of 
     { when: "c. 550–525 BC", what: "Exekias at work.", certainty: "well" },
     { when: "c. 530 BC", what: "Red-figure is invented in Athens.", certainty: "well" },
     { when: "c. 500–460 BC", what: "The Berlin Painter at work.", certainty: "well" },
-    { when: "1911", what: "Beazley defines the Berlin Painter, beginning a century of attribution.", certainty: "well" },
+    { when: "1911", what: "Beazley publishes his study of the Berlin Painter, one of his first attributions.", certainty: "well" },
   ],
   readIt: [
     { work: "tlg0033.tlg003", ref: "10.1", to: "10.54", label: "Pindar, Nemean 10", why: "An ode for a wrestler of Argos who won the painted jars of oil at Athens." },
   ],
   related: ["kerameikos"],
-  primary: [{ work: "tlg0033.tlg003", ref: "10.33", to: "10.36", label: "Pindar, Nemean 10.33–36" }],
+  primary: [
+    { work: "tlg0033.tlg003", ref: "10.33", to: "10.36", label: "Pindar, Nemean 10.33–36" },
+    { work: "tlg0086.tlg003", ref: "60.1", to: "60.3", label: "Constitution of the Athenians 60" },
+  ],
   secondary: [
     { id: "boardman-abfv", note: "The standard handbook to black-figure." },
     { id: "boardman-arfv", note: "Its sequel for early red-figure." },
     { id: "noble-techniques", note: "How the pots were shaped, painted and fired." },
-    { id: "beazley-1911", note: "The first defined painter." },
+    { id: "beazley-1911", note: "Beazley's study of the Berlin Painter." },
   ],
   written: "2026-09-27",
 };
