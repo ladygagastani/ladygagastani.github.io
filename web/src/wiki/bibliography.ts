@@ -177,4 +177,12 @@ export const BIB: Record<string, Secondary> = {
     author: "Philip A. Stadter", title: "A Commentary on Plutarch's Pericles", year: 1989,
     publisher: "Chapel Hill: University of North Carolina Press", checked: "https://uncpress.org/9780807865972/a-commentary-on-plutarchs-pericles/",
   },
+  "marrou-education": {
+    author: "H. I. Marrou, translated by George Lamb", title: "A History of Education in Antiquity", year: 1956,
+    publisher: "London and New York: Sheed and Ward", checked: "https://philpapers.org/rec/MARAHO-9",
+  },
+  "beck-greek-education": {
+    author: "Frederick A. G. Beck", title: "Greek Education, 450–350 B.C.", year: 1964,
+    publisher: "London: Methuen", checked: "https://www.cambridge.org/core/journals/classical-review/article/abs/greek-education-beckfrederick-a-g-greek-education-450350-bc-pp-381-24-plates-london-methuen-1964-cloth-45s-net/996B00BB79F6008944DF2FECAA99678B",
+  },
 };
