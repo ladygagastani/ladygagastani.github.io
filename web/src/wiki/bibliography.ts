@@ -213,4 +213,12 @@ export const BIB: Record<string, Secondary> = {
     author: "Judith Swaddling", title: "The Ancient Olympic Games (2nd edition)", year: 1999,
     publisher: "London: British Museum Press", checked: "https://www.academia.edu/5153432/Review_of_Judith_Swaddling_The_Ancient_Olympic_Games_London_British_Museum_Press_1999",
   },
+  "dow-kleroteria": {
+    author: "Sterling Dow", title: "Aristotle, the Kleroteria, and the Courts", year: 1939,
+    publisher: "Harvard Studies in Classical Philology 50, 1–34", checked: "https://www.jstor.org/stable/310590",
+  },
+  "hansen-demosthenes": {
+    author: "Mogens Herman Hansen, translated by J. A. Crook", title: "The Athenian Democracy in the Age of Demosthenes: Structure, Principles and Ideology", year: 1991,
+    publisher: "Oxford: Blackwell", checked: "https://philpapers.org/rec/TODMHH-2",
+  },
 };
