@@ -169,4 +169,12 @@ export const BIB: Record<string, Secondary> = {
     author: "J. D. Beazley", title: "The Master of the Berlin Amphora", year: 1911,
     publisher: "Journal of Hellenic Studies 31, 276–295", checked: "https://www.jstor.org/stable/624776",
   },
+  "azoulay-pericles": {
+    author: "Vincent Azoulay, translated by Janet Lloyd", title: "Pericles of Athens", year: 2014,
+    publisher: "Princeton: Princeton University Press", checked: "https://press.princeton.edu/books/hardcover/9780691154596/pericles-of-athens",
+  },
+  "stadter-pericles": {
+    author: "Philip A. Stadter", title: "A Commentary on Plutarch's Pericles", year: 1989,
+    publisher: "Chapel Hill: University of North Carolina Press", checked: "https://uncpress.org/9780807865972/a-commentary-on-plutarchs-pericles/",
+  },
 };
