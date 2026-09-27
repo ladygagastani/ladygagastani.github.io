@@ -8,7 +8,7 @@ export type Inline =
 
 export type Block =
   | { t: "p"; c: Inline[]; speaker?: string }
-  | { t: "l"; n?: string; c: Inline[]; speaker?: string; para?: boolean }
+  | { t: "l"; n?: string; c: Inline[]; speaker?: string; para?: boolean; part?: string }   // part: the division's subtype (strophe, episode…)
   | { t: "head"; c: Inline[] };
 
 /** One citable passage: a line of verse, a section of prose… */

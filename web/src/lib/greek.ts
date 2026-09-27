@@ -28,3 +28,18 @@ export const isElided = (word: string) => /[ʼ’'᾽]$/.test(word);
 
 /** Lower-case the first letter, for words capitalised only because they begin a sentence. */
 export const decapitalise = (w: string) => w.charAt(0).toLocaleLowerCase("el") + w.slice(1);
+
+const ACCENT = /[́͂]/g;
+
+/**
+ * The "exact form" of a word, as Echoes compares it. Letters, breathings and accents count;
+ * these differences do not, because they depend only on the neighbouring words:
+ * capitals, a grave accent (written for an acute before another word), a second accent thrown
+ * back by a following enclitic (ἄνθρωπός τις), final sigma, and the elision mark.
+ */
+export function formKey(w: string): string {
+  let s = w.normalize("NFD").toLowerCase().replace(/[ʼ’'᾽]$/u, "").replace(/̀/g, "́").replace(/̀/g, "́").replace(/́/g, "́");
+  const accents = [...s.matchAll(ACCENT)];
+  if (accents.length > 1) { const last = accents[accents.length - 1].index!; s = s.slice(0, last) + s.slice(last + 1); }
+  return s.replace(/[ςϲ]/g, "σ").normalize("NFC");
+}

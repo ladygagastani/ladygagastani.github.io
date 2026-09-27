@@ -26,6 +26,11 @@ import ShareDialog, { type ShareData } from "./ShareDialog";
 import WorkPicker from "./WorkPicker";
 import VocabPanel from "./VocabPanel";
 import EchoesPanel, { type EchoMarks, type EchoQuery, type EchoTarget } from "./EchoesPanel";
+import MetreBar from "./MetreBar";
+import { metreIndex, publishedFor, loadLengths } from "@/lib/metre/load";
+import { renderPassages, type LineRender } from "@/lib/metre/render";
+import { lineHash, type MetreIndex } from "@/lib/metre/text";
+import { playLine as playLineRhythm } from "@/lib/metre/beat";
 import { loadWordPack, analyse as analyseWord } from "@/lib/lookup/words";
 import { caseOf } from "@/lib/lookup/postag";
 import styles from "./Reader.module.css";
@@ -59,7 +64,9 @@ const MARK_ICON: Record<string, React.ReactNode> = {
 };
 
 /** One passage row: reference and your marks in the margin, Greek, translation, and any notes. */
-const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, translit }: { row: Row; marks: Mark[]; openNote: string | null; onCloseNote: () => void; translit: boolean }) {
+const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, translit, metre }: {
+  row: Row; marks: Mark[]; openNote: string | null; onCloseNote: () => void; translit: boolean; metre: Map<string, (LineRender | null)[]> | null;
+}) {
   const notes = marks.filter((m) => m.kind === "note");
   return (
     <section className={styles.row} data-key={row.key}>
@@ -76,7 +83,7 @@ const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, trans
         )}
       </div>
       <div className={styles.grc} lang="grc">
-        {row.greek.map((u) => <div key={u.ref.join(".")} data-u={u.ref.join(".")}><Blocks blocks={u.blocks} greek keyPrefix={u.ref.join(".")} translit={translit} /></div>)}
+        {row.greek.map((u) => <div key={u.ref.join(".")} data-u={u.ref.join(".")}><Blocks blocks={u.blocks} greek keyPrefix={u.ref.join(".")} translit={translit} metre={metre?.get(u.ref.join("."))} /></div>)}
       </div>
       <div className={styles.tr}>
         {row.trans.length ? <Blocks blocks={row.trans} greek={false} keyPrefix={`t${row.key}`} /> : <span className={styles.none} aria-label="No translation for this passage">—</span>}
@@ -106,6 +113,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const setSettings = useSettings((s) => s.set);
   const translit = useSettings((s) => s.translit);
   const cases = useSettings((s) => s.cases);
+  const metreOn = useSettings((s) => s.metre);
   const [vocabOpen, setVocabOpen] = useState(false);
 
   const workId = P("w") ?? "";
@@ -189,6 +197,31 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const pageKeys = useMemo(() => new Set(doc && doc.chunks[chunk] ? doc.units.slice(doc.chunks[chunk].first, doc.chunks[chunk].last + 1).map((u) => u.ref.join(".")) : []), [doc, chunk]);
   const rows = useMemo(() => (doc && doc.chunks[chunk] ? alignChunk(doc, doc.chunks[chunk], placed) : []), [doc, chunk, placed]);
   const cov = trText && placed ? coverage(rows) : 1;
+
+  // ------------------------------------------------------------ metre
+  const [mIndex, setMIndex] = useState<MetreIndex | null>(null);
+  useEffect(() => { metreIndex().then(setMIndex, () => undefined); }, []);
+  const grcUrn = grcText?.urn;
+  const mInfo = grcUrn && mIndex ? mIndex.texts[grcUrn] : undefined;
+  const [mData, setMData] = useState<{ urn: string; pub: Map<string, string> } | null>(null);
+  useEffect(() => {
+    if (!metreOn || !mInfo || !grcUrn) return;
+    let live = true;
+    Promise.all([publishedFor(grcUrn, mInfo.pack), loadLengths()])
+      .then(([pub]) => { if (live) setMData({ urn: grcUrn, pub }); })
+      .catch(() => { if (live) toast("The metre data could not be loaded."); });
+    return () => { live = false; };
+  }, [metreOn, mInfo, grcUrn, toast]);
+  const metre = useMemo(() => {
+    if (!metreOn || !mInfo || !doc || !doc.chunks[chunk] || !grcUrn || mData?.urn !== grcUrn) return null;
+    const c = doc.chunks[chunk];
+    const pub = mData.pub;
+    return renderPassages(doc.units.slice(c.first, c.last + 1), mInfo.kind, (h) => pub.get(h), lineHash);
+  }, [metreOn, mInfo, doc, chunk, grcUrn, mData]);
+  const stopBeat = useRef<(() => void) | null>(null);
+  useEffect(() => () => stopBeat.current?.(), []);
+  /** Play a line's rhythm, lighting each syllable as it sounds. */
+  const playLine = (line: HTMLElement) => { stopBeat.current = playLineRhythm(line, { playing: styles.playing, now: styles.beatNow }); };
   const startKey = doc && startUnit > 0 ? doc.units[startUnit].ref.join(".") : null;
 
   // once the page is drawn, bring the requested passage into view (and briefly mark it if it was asked for)
@@ -422,6 +455,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   // clicks inside the text: words open the look-up; margin references and marks act on the passage
   const onTextClick = (e: React.MouseEvent) => {
     const el = e.target as HTMLElement;
+    const beat = el.closest<HTMLElement>("[data-beat]");
+    if (beat) { playLine(beat.closest<HTMLElement>(`.${styles.line}`)!); return; }
     const w = el.closest<HTMLElement>("[data-w]");
     if (w) {
       root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel));
@@ -620,6 +655,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
             <div className={styles.aids} role="group" aria-label="Reading aids">
               <button type="button" className="chip" aria-pressed={translit} onClick={() => setSettings({ translit: !translit })} title="Show each line in Latin letters">Transliteration</button>
               <button type="button" className="chip" aria-pressed={cases} onClick={() => setSettings({ cases: !cases })} title="Underline nouns, adjectives and participles in the colour of their case">Colour by case</button>
+              {mInfo && <button type="button" className="chip" aria-pressed={metreOn} onClick={() => setSettings({ metre: !metreOn })} title="Mark long and short syllables, feet and caesura">Metre</button>}
               <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setWord(null); setEcho(null); }}>Vocabulary</button>
             </div>
             <div className={styles.marksMenu}>
@@ -648,6 +684,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
               <span className="muted">From GLAUx&apos;s analyses of this text.</span>
             </p>
           )}
+          {metreOn && mInfo && <MetreBar info={mInfo} about={mIndex?.about ?? null} />}
           {translit && <p className={`wrap ${styles.legend}`}><span className="muted">Transliteration uses a simple scheme: η ē, ω ō, rough breathing h, υ y (u in diphthongs), χ ch, φ ph, θ th, iota subscript i; accents are left out.</span></p>}
           {help && (
             <div className={`wrap ${styles.help}`} role="note">
@@ -667,8 +704,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
             <span className="label">{trText ? `English · ${describe(trText)}` : ""}</span>
           </div>
 
-          <article className={`wrap ${styles.text}`} onClick={onTextClick} onMouseUp={onTextMouseUp} aria-label={`${cite}, ${chunkInfo.label}`}>
-            {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} translit={translit} />)}
+          <article className={`wrap ${styles.text} ${metre ? styles.metreOn : ""}`} onClick={onTextClick} onMouseUp={onTextMouseUp} aria-label={`${cite}, ${chunkInfo.label}`}>
+            {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} translit={translit} metre={metre} />)}
           </article>
           {sel && <PassageToolbar sel={sel} onAction={act} onClose={() => setSel(null)}
             xref={split ? (pendingXref && pendingXref.pane !== pane ? "here" : "start") : null} />}

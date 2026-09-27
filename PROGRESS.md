@@ -41,7 +41,7 @@
   - **Progress**: lessons done, words learned, cards due, streak, next step.
   - **Audio**: `public/audio/index.json` manifest; play buttons appear only where a recording exists. **Recording studio** `/academy/studio` (development only) records in the browser and saves `<key>.webm` plus the index into `web/public/audio/`.
   - **Tools**: `pipeline/find_sentences.py` finds short hand-annotated sentences with a given feature and common vocabulary, for new lessons.
-- **Phase 4 (search, Echoes, metre): search and Echoes done** (2026-09-27); metre is next. Tests: 74 unit (plus 3 that need the network or the corpus cache) and 24 browser.
+- **Phase 4 (search, Echoes, metre): done** (2026-09-27). Tests: 86 unit (plus 3 that need the network or the corpus cache) and 27 browser.
   - **Search index** (`web/scripts/build-search.ts`, run `npx tsx scripts/build-search.ts grc`, then `eng`, then `lem`, in `web/`; needs `pipeline/.cache/corpus` from `fetch_corpus.py` and the GLAUx word packs). Output goes to `web/public/data/search/`, **about 320 MB, not committed**:
     - Greek words of every edition: 33.7M words, 788k accent-free keys, 149 MB;
     - English words of every translation: 13.0M words, 46 MB;
@@ -66,6 +66,16 @@
     - **widen**: this book → all the author's works (compared word by word in the browser when the author has at most 40 works and 14 MB of Greek; Homer, Plato, the tragedians…) → all Greek texts (from the search index: counts by work, linked to the Oracle);
     - "What counts as a match" explains the rules on screen.
     - Checked on real texts: the dawn line (Il. 1.477) is found at Il. 24.788 and 20 times in the Odyssey; Achilles' reply formula (Il. 1.84) finds 9 exact repeats, 3 in other forms (τὴν δʼ…) and its variants (τὴν δὲ βαρὺ στενάχων…); Republic 327a κατέβην … εἰς Πειραιᾶ finds 328c καταβαίνων εἰς τὸν Πειραιᾶ.
+  - **Metre** in the reader (`src/lib/metre/`, `components/reader/MetreBar.tsx`). A **Metre** button appears on verse texts (131 editions):
+    - marks over every syllable: – long, ˘ short, × a free place whose vowel length the spelling doesn't show; | between feet (metra in trimeter); ‖ at the caesura; ochre marks where a licence is used (hover names it: correption, synizesis, stop + liquid, lengthening); **?** where the scanner is unsure (never guessed);
+    - a legend naming the metre and the source of the scansion, **How this metre works** (hexameter, elegiacs, iambic trimeter, comedy, lyric; long and short; licences; how the scanner works and how accurate it is), and a link to the new lesson;
+    - **▸ plays a line's rhythm** (long = two beats, short = one, a stronger tone at each foot), lighting each syllable as it sounds. It plays the rhythm only, not the words;
+    - the marks sweep in from left to right when Metre is switched on (one animation per line; none with reduced motion).
+    - **Where the scansion comes from.** The published scansion by David Chamberlain (hypotactic.com, CC BY 4.0) is used wherever its line has the same words as the edition shown: 110,000 lines of Homer, Hesiod, the Homeric Hymns, Apollonius, Quintus, Nonnus, Aratus, Callimachus, Theocritus, Oppian, Theognis, the Greek Anthology, three plays of Aeschylus, Lycophron and Pindar (lyric metres, named as Hypotactic names them; no feet marked). Everywhere else the site's own scanner is used: other hexameter and elegiac texts; iambic trimeter in the spoken parts of Aeschylus, Sophocles, Euripides and the other tragedies; the freer comic trimeter in Aristophanes (all 11 plays). Sung or chanted passages of plays (Perseus marks them: strophe, antistrophe, choral, lyric, anapaests, trochees…) are labelled, not scanned.
+    - **Accuracy**, checked on the site's own text against the published scansion (106,813 lines the scanner was sure of): hexameter 99.6%, elegiac pentameter 99.7%, iambic trimeter 96.9% (Aeschylus and Lycophron). The scanner is sure of 99.5% of hexameter lines and 98.9% of trimeter lines.
+    - **The scanner**: syllables and their possible lengths (nature, position, the accent where it proves a length, vowel lengths learned from the published scansions for 12,000 word forms), licences with costs by kind of verse (Homer vs. Attic drama), then a fit to every pattern the metre allows; lines split between two speakers (35 + 35b) are joined before scanning.
+    - **Lesson 9, "Hearing Homer's rhythm: the hexameter"** (`/academy/lesson/metre`): long and short, the six feet, caesura, correption and synizesis, with Iliad 1.1, Odyssey 1.1 and the Delphic oracle in Herodotus 1.47.3 shown scanned, and ▸ to hear them.
+    - Data: `python pipeline/fetch_hypotactic.py` (downloads the published scansions, 102 MB, into `pipeline/.cache/hypotactic`), then `npx tsx scripts/build-metre.ts` in `web/` → `public/data/metre/` (4 MB, committed): `_index.json` (which texts are verse, in which metre, with the accuracy figures), one file of published scansions per edition, `_lengths.json`. `npx tsx scripts/check-metre.ts errors 30` lists disagreements.
 - **Not started:** Phases 5–9.
 
 ## Decisions log
@@ -109,6 +119,10 @@
 | 2026-09-27 | GLAUx files the forms of εἶμι "go" under ἔρχομαι. The search page says so whenever εἰμί, εἶμι or ἔρχομαι is searched. | Found while testing; readers would otherwise miss them. |
 | 2026-09-27 | **Echoes matching rules.** Exact form: letters, breathings and accents count; capitals, grave-for-acute, a second (enclitic) accent, final sigma and the elision mark don't. Words are "the same" when GLAUx gives them the same dictionary word (else the same form). Near: an in-order match within a stretch at most a quarter longer than the phrase, rare words weighted more (log of words ÷ occurrences); likeness = weighted share found. Phrases may cross line and section breaks. | Brief (Homeric formulas); stated on screen. |
 | 2026-09-27 | **Echoes computes in the browser** for the book and for small authors, from the texts and the GLAUx word packs. GLAUx's words are placed on the text with the same stream alignment as the search index (`src/lib/search/place.ts`, shared by both), so any edition works. Wider searches use the search index. | No server; works for every edition; matches cross passages. |
+| 2026-09-27 | **Metre: the published scansion first, the site's scanner elsewhere.** David Chamberlain's scansions (hypotactic.com) are CC BY 4.0 ("All the data on this site is/are licensed as CC-BY 4.0", hypotactic.com/latin/about.html) and are credited on the Credits page and in the reader. They are matched to our editions line by line by their words (accents ignored), never by line number. | Plan: "checked against published scansions"; accuracy. |
+| 2026-09-27 | **Unsure lines are never guessed.** A line is scanned only when every best reading gives each syllable the same length; a free place (anceps) holding α, ι or υ of unknown length is shown as ×, not as long or short. | Plan §7. |
+| 2026-09-27 | **Which metre a text is in** is decided by the build: the published scansion's own tags where it covers the text, otherwise the share of lines the scanner can fit to each metre; Aristophanes and Menander are comedy. In plays, Perseus's division subtypes (strophe, choral, anapests…) mark the sung parts, which the parser now records on each verse line (`Block.part`). | Honest labels; the brief asks for the correct metre per text. |
+| 2026-09-27 | **Rhythm playback** sounds beats (long two, short one), not words: there is no recording of the lines, and the brief forbids faked audio. | Brief. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
 
 ## Known problems
@@ -131,6 +145,12 @@
   - The reader's word look-up still matches GLAUx by reference, so it finds less than the search index does. It could use the index's placement instead (stream alignment) for the 11% of works whose citation schemes differ.
   - Results show passages from the text file itself. If your downloaded copy of a text differs from the pinned commit the index was built from, the marked word can be off.
 - **Hosting**: the search index adds about 320 MB to the generated data (see above).
+- **Metre follow-ups**:
+  - The scanner's trimeter has been checked only on Aeschylus (3 plays) and Lycophron, where a published scansion exists (96.9% agree). Sophocles, Euripides and Aristophanes are unchecked: no published scansion covers them. A spot-check by a reader who knows metre would be valuable.
+  - Lyric metres are shown only where the published scansion covers the text (Pindar, parts of Aeschylus). Other choral odes are labelled "sung; not scanned".
+  - Hexameter or elegiac lines quoted inside prose (oracles in Herodotus, epigrams in Athenaeus) are scanned only in lessons, not in the reader.
+  - The rhythm player could later speak the line with the owner's recordings (in the chosen pronunciation) once they exist.
+  - The brief's "beat playback using the pronunciation system the user chose" is therefore only partly met: the rhythm is the same in every pronunciation, the sound of the words is not played.
 - **Echoes follow-ups**:
   - Across all Greek texts, and for very large authors (over 40 works or 14 MB, e.g. Galen, Plutarch, Aristotle), Echoes uses the search index, so it finds no near repetitions there, finds phrases only within one passage, and ignores accents. The panel says so.
   - Echoes results should appear as scrollbar markers (Phase 6, with the other markers).
@@ -139,10 +159,7 @@
   - A browser development server from another session may hold port 3000; `.claude/launch.json` has `web-prod` (built site on port 3100) for checking in the built-in browser.
 
 ## Next steps
-1. **Metre**:
-   - hexameter and elegiac first, then iambic trimeter; lyric only where reliable published scansions exist;
-   - uncertain lines marked; accuracy checked against published scansions and reported to the owner.
-2. Then Phase 5 (see `PLAN.md`).
+1. Phase 5: My Library (see `PLAN.md`).
 
 ## Review history
 - None yet.

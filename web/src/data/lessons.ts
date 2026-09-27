@@ -7,6 +7,8 @@
  *  - "real" items point to a passage (work + reference). The Greek shown is always read from the
  *    source file itself; `quote` only says which words to highlight, and a test checks that they are there.
  */
+import type { TextKind } from "@/lib/metre/text";
+
 export type Section =
   | { kind: "p"; text: string }
   | { kind: "tip"; text: string }
@@ -14,7 +16,7 @@ export type Section =
   | { kind: "made"; title?: string; items: { grc: string; en: string; note?: string }[] }
   | { kind: "reveal"; title: string; items: { grc: string; answer: string }[] }
   | { kind: "check"; items: { q: string; options: string[]; answer: number; why: string }[] }
-  | { kind: "real"; title?: string; items: { work: string; ref: string; quote: string; label: string; note: string }[] };
+  | { kind: "real"; title?: string; items: { work: string; ref: string; quote: string; label: string; note: string; metre?: TextKind }[] };
 
 export interface Lesson { id: string; title: string; greek: string; summary: string; minutes: number; words: string[]; sections: Section[] }
 
@@ -194,6 +196,38 @@ export const LESSONS: Lesson[] = [
       { kind: "real", title: "Read it yourself", items: [
         { work: "tlg0031.tlg004", ref: "4.17", quote: "Οὐκ ἔχω ἄνδρα", label: "Gospel of John 4.17",
           note: "«ἔχω» \"I have\", «οὐκ» \"not\", «ἄνδρα» \"husband, man\" (accusative): \"I have no husband.\" The phrase comes back later in the verse, in a different order." },
+      ] },
+    ],
+  },
+  {
+    id: "metre", title: "Hearing Homer's rhythm: the hexameter", greek: "ἑξάμετρος", minutes: 20,
+    summary: "Long and short syllables, six feet to a line, and the pause in the middle.",
+    words: ["μέτρον", "πούς", "ἔπος"],
+    sections: [
+      { kind: "p", text: "Greek poetry does not rhyme, and its rhythm is not a pattern of stressed and unstressed syllables, as in English verse. It is a pattern of **long** and **short** syllables. Ancient writers on metre counted a long syllable as two units of time and a short one as one." },
+      { kind: "p", text: "**Which syllables are long?** A syllable is long *by nature* if its vowel is long: «η» and «ω», any diphthong («αι», «ει», «οι», «ου», «αυ», «ευ»…), and any vowel with a circumflex «ῆ» or an iota subscript «ῳ». It is long *by position* if its vowel is followed by two consonants, even when one of them begins the next word; «ζ», «ξ» and «ψ» count as two. Every other syllable is short: «ε» and «ο» always, and «α», «ι», «υ» when they are short vowels." },
+      { kind: "tip", text: "«α», «ι» and «υ» can be long or short, and the spelling usually does not say which. The accent can help: a circumflex on the next-to-last syllable («Μοῦσα») means the last vowel is short. Often the metre itself decides." },
+      { kind: "reveal", title: "Scan these words (– long, ˘ short)", items: [
+        { grc: "μῆνιν", answer: "– ˘ : «ῆ» has a circumflex, so it is long; «ι» is followed by only one consonant before the next vowel, so it is short." },
+        { grc: "Ἀχαιοῖς", answer: "˘ – – : the first «α» is short; «αι» and «οῖ» are diphthongs, so long." },
+        { grc: "ἄνδρα", answer: "– ˘ : «ἄ» is followed by three consonants (ν, δ, ρ), so the syllable is long; the final «α» is short." },
+        { grc: "Μοῦσα", answer: "– ˘ : «οῦ» is a diphthong; the circumflex on it shows that the final «α» is short." },
+      ] },
+      { kind: "p", text: "**The hexameter** (\"six-measure\") is the metre of Homer, Hesiod and all Greek epic, and of oracles too. A line has six **feet**. Each of the first five is a *dactyl* (– ˘ ˘) or a *spondee* (– –); the fifth is nearly always a dactyl. The sixth foot has two syllables, and the last may be long or short. Say a long for two beats and a short for one: DUM-da-da DUM-da-da… and the rhythm appears." },
+      { kind: "p", text: "Most lines have a pause, the **caesura** (‖), where a word ends inside the third foot: after its long syllable, or after its first short. Poets also bend the rules in regular ways. A long vowel or diphthong at the end of a word can count as short before a vowel (*correption*), and two vowels can run together as one syllable (*synizesis*)." },
+      { kind: "check", items: [
+        { q: "How many feet does a hexameter have?", options: ["four", "five", "six", "seven"], answer: 2, why: "Hex- is \"six\": six feet to a line." },
+        { q: "A dactyl is…", options: ["– ˘ ˘", "– –", "˘ –", "˘ ˘ –"], answer: 0, why: "A dactyl is one long and two shorts, like the joints of a finger (δάκτυλος)." },
+        { q: "Why is the first syllable of «ἄνδρα» long, although «α» can be short?", options: ["Two or more consonants follow its vowel", "It has an accent", "It begins the word", "It has a breathing"], answer: 0, why: "Long by position: ν, δ, ρ follow the vowel." },
+        { q: "In «ἄνδρα μοι ἔννεπε», «μοι» counts as short. Why?", options: ["A diphthong at the end of a word can be shortened before a vowel", "«οι» is always short", "«μ» is a weak consonant", "Pronouns are always short"], answer: 0, why: "This is correption: «μοι» stands before «ἔννεπε», which begins with a vowel." },
+      ] },
+      { kind: "real", title: "Read it yourself, with the metre marked", items: [
+        { work: "tlg0012.tlg001", ref: "1.1", quote: "μῆνιν ἄειδε θεὰ", label: "Homer, Iliad 1.1", metre: "hexameter",
+          note: "Five dactyls and a final two-syllable foot. The caesura (‖) falls after «θεὰ», just after the long syllable of the third foot. The «-εω» of «Πηληϊάδεω» is one syllable (synizesis). Press ▸ to hear the beat." },
+        { work: "tlg0012.tlg002", ref: "1.1", quote: "ἄνδρα μοι ἔννεπε", label: "Homer, Odyssey 1.1", metre: "hexameter",
+          note: "Here «μοι» is shortened before «ἔννεπε» (correption), so the first foot is a dactyl: «ἄν-δρα-μοι»." },
+        { work: "tlg0016.tlg001", ref: "1.47.3", quote: "οἶδα δʼ ἐγὼ ψάμμου", label: "Herodotus 1.47.3: an oracle in hexameters", metre: "hexameter",
+          note: "Herodotus writes prose, but he says the Pythia at Delphi gave this answer «ἐν ἑξαμέτρῳ τόνῳ», \"in hexameter verse\" (1.47.2). The lines scan just like Homer's." },
       ] },
     ],
   },

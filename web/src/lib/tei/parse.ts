@@ -104,6 +104,10 @@ class Emitter {
   private block: Block | null = null;
   private speaker: string | undefined;
   private carry: Inline[] = [];          // markers from a block that had no text of its own
+  private parts: string[] = [];          // subtypes of the divisions we are inside (strophe, episode…)
+
+  enterDiv(subtype: string | undefined) { this.parts.push((subtype ?? "").toLowerCase()); }
+  leaveDiv() { this.parts.pop(); }
 
   private get blocks(): Block[] { return this.unit ? this.unit.blocks : this.pending; }
 
@@ -122,6 +126,8 @@ class Emitter {
     this.endBlock();
     const b: Block = t === "l" ? { t, n, c: [] } : t === "p" ? { t, c: [] } : { t, c: [] };
     if (this.speaker && t !== "head") { (b as { speaker?: string }).speaker = this.speaker; this.speaker = undefined; }
+    // the kind of passage a verse line sits in (Perseus marks strophe, antistrophe, lyric, episode…)
+    if (t === "l") { const part = this.parts.findLast((x) => x); if (part) (b as { part?: string }).part = part; }
     if (this.carry.length) { b.c.push(...this.carry); this.carry = []; }
     this.block = b;
     this.blocks.push(b);
@@ -185,6 +191,7 @@ function emitContent(el: El, out: Emitter) {
 
 /** Handles one element; `inner` emits its children in the current context. */
 function emitElement(k: El, out: Emitter, inner: () => void) {
+  if (k.name === "div") { out.enterDiv(k.attrs.subtype); inner(); out.leaveDiv(); return; }
   switch (k.name) {
     case "p": case "ab": out.startBlock("p"); inner(); out.endBlock(); break;
     case "l": out.startBlock("l", k.attrs.n); inner(); out.endBlock(); break;
@@ -245,7 +252,9 @@ export function parseTei(xml: string): TeiDoc {
           emitElement(c, out, () => emitContent(c, out));
           out.endUnit();
         } else {
+          out.enterDiv(c.name === "div" ? c.attrs.subtype : undefined);
           visit(c, k + 1, true, r);
+          out.leaveDiv();
         }
         continue;
       }

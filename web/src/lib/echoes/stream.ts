@@ -8,6 +8,9 @@ import { greekKey, unitWords } from "@/lib/search/codec";
 import { alignStream } from "@/lib/search/place";
 import type { WordPack } from "@/lib/lookup/words";
 import type { TeiDoc } from "@/lib/tei/types";
+import { formKey } from "@/lib/greek";
+
+export { formKey };
 
 export interface Stream {
   work: string;
@@ -34,21 +37,6 @@ export class Lexicon {
     if (i === undefined) { this.lemmas.set(l, (i = this.lemmas.size)); this.lemmaNames.push(l); }
     return i;
   }
-}
-
-const ACCENT = /[́͂]/g;
-
-/**
- * The "exact form" of a word, as Echoes compares it. Letters, breathings and accents count;
- * these differences do not, because they depend only on the neighbouring words:
- * capitals, a grave accent (written for an acute before another word), a second accent thrown
- * back by a following enclitic (ἄνθρωπός τις), final sigma, and the elision mark.
- */
-export function formKey(w: string): string {
-  let s = w.normalize("NFD").toLowerCase().replace(/[ʼ’'᾽]$/u, "").replace(/̀/g, "́").replace(/̀/g, "́").replace(/́/g, "́");
-  const accents = [...s.matchAll(ACCENT)];
-  if (accents.length > 1) { const last = accents[accents.length - 1].index!; s = s.slice(0, last) + s.slice(last + 1); }
-  return s.replace(/[ςϲ]/g, "σ").normalize("NFC");
 }
 
 /** The reader's words of a text, in order. */

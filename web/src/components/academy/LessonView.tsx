@@ -12,6 +12,10 @@ import { lsjEntries } from "@/lib/lookup/lsj";
 import { useAcademy } from "@/lib/academy";
 import { useUI } from "@/lib/ui";
 import { Blocks } from "@/components/reader/Blocks";
+import { metreIndex, publishedFor, loadLengths } from "@/lib/metre/load";
+import { renderPassages, type LineRender } from "@/lib/metre/render";
+import { lineHash } from "@/lib/metre/text";
+import { playLine } from "@/lib/metre/beat";
 import WordPanel, { type WordContext } from "@/components/reader/WordPanel";
 import { ParadigmTable } from "./Tables";
 import styles from "./Academy.module.css";
@@ -79,6 +83,21 @@ function RealPassage({ item, onWord }: { item: Extract<Section, { kind: "real" }
   const [error, setError] = useState<string | null>(null);
   useEffect(() => { loadPassage(item.work, item.ref).then(setData, (e: Error) => setError(e.message)); }, [item.work, item.ref]);
 
+  // the metre, marked over the lines (published scansion where it exists, else the site's scanner)
+  const [metre, setMetre] = useState<Map<string, (LineRender | null)[]> | null>(null);
+  useEffect(() => {
+    if (!data || !item.metre) return;
+    let live = true;
+    const kind = item.metre;
+    (async () => {
+      const idx = await metreIndex();
+      const info = idx.texts[data.grc.urn];
+      const [pub] = await Promise.all([publishedFor(data.grc.urn, !!info?.pack), loadLengths()]);
+      if (live) setMetre(renderPassages(data.rows.flatMap((r) => r.greek), kind, (h) => pub.get(h), lineHash));
+    })().catch(() => undefined);
+    return () => { live = false; };
+  }, [data, item.metre]);
+
   // highlight the first run of words that matches the quote
   useEffect(() => {
     if (!data) return;
@@ -92,6 +111,8 @@ function RealPassage({ item, onWord }: { item: Extract<Section, { kind: "real" }
   }, [data, item.work, item.ref, item.quote]);
 
   const click = (e: React.MouseEvent) => {
+    const beat = (e.target as HTMLElement).closest<HTMLElement>("[data-beat]");
+    if (beat) { playLine(beat.closest<HTMLElement>(`.${readerStyles.line}`)!, { playing: readerStyles.playing, now: readerStyles.beatNow }); return; }
     const w = (e.target as HTMLElement).closest<HTMLElement>("[data-w]");
     if (!w || !data) return;
     const unit = w.closest<HTMLElement>("[data-u]");
@@ -109,10 +130,11 @@ function RealPassage({ item, onWord }: { item: Extract<Section, { kind: "real" }
       {!data && !error && <p className="muted">Unrolling the passage…</p>}
       {data && (
         <div className={styles.realBody}>
-          <div className={`${readerStyles.grc} ${styles.realGr}`} lang="grc" onClick={click}>
+          <div className={`${readerStyles.grc} ${styles.realGr} ${metre ? readerStyles.metreOn : ""}`} lang="grc" onClick={click}>
             {data.rows.flatMap((r) => r.greek).map((u) => (
               <div key={u.ref.join(".")} data-u={u.ref.join(".")}>
-                <Blocks blocks={u.blocks.filter((b) => b.t !== "head")} greek keyPrefix={`lesson-${u.ref.join(".")}`} />
+                <Blocks blocks={u.blocks.filter((b) => b.t !== "head")} greek keyPrefix={`lesson-${u.ref.join(".")}`}
+                  metre={metre?.get(u.ref.join("."))?.filter((_, i) => u.blocks[i].t !== "head")} />
               </div>
             ))}
           </div>

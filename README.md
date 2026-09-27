@@ -31,6 +31,8 @@ Then open http://localhost:3000.
 | `npm test` | Unit tests (Vitest). |
 | `npm run e2e` | Click-through tests in Microsoft Edge (Playwright). The command builds and starts the site itself. |
 | `npx eslint` | Lint. |
+| `npx tsx scripts/build-metre.ts` | Rebuild the metre data (needs `pipeline/fetch_hypotactic.py` and `fetch_corpus.py` first). |
+| `node scripts/screenshot.mjs …` | Screenshot a page of the built site in Edge (see the file for options). |
 
 ## Where things live in `web/src`
 
