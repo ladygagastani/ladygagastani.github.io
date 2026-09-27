@@ -145,4 +145,12 @@ export const BIB: Record<string, Secondary> = {
     author: "T. Freeth and others", title: "A Model of the Cosmos in the ancient Greek Antikythera Mechanism", year: 2021,
     publisher: "Scientific Reports 11, 5821", checked: "https://www.nature.com/articles/s41598-021-84310-w",
   },
+  "knigge-kerameikos": {
+    author: "Ursula Knigge", title: "The Athenian Kerameikos: History, Monuments, Excavations", year: 1991,
+    publisher: "Athens: Krene, for the German Archaeological Institute at Athens", checked: "https://books.google.com/books/about/The_Athenian_Kerameikos.html?id=CDaHZwEACAAJ",
+  },
+  "camp-archaeology-athens": {
+    author: "John M. Camp", title: "The Archaeology of Athens", year: 2001,
+    publisher: "New Haven: Yale University Press", checked: "https://bmcr.brynmawr.edu/2003/2003.05.16",
+  },
 };

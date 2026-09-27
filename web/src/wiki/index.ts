@@ -15,8 +15,9 @@ import diogenes from "./entries/diogenes";
 import delphi from "./entries/delphi";
 import paintedStatues from "./entries/painted-statues";
 import antikythera from "./entries/antikythera";
+import kerameikos from "./entries/kerameikos";
 
-export const ENTRIES: Entry[] = [melos, ostracism, laurion, linearB, plague, mytilene, helots, diogenes, delphi, paintedStatues, antikythera];
+export const ENTRIES: Entry[] = [melos, ostracism, laurion, linearB, plague, mytilene, helots, diogenes, delphi, paintedStatues, antikythera, kerameikos];
 
 export const entryBySlug = new Map(ENTRIES.map((e) => [e.slug, e]));
 export const entriesIn = (c: CategoryId) => ENTRIES.filter((e) => e.category === c).sort((a, b) => a.title.localeCompare(b.title));
