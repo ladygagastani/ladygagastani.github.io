@@ -41,7 +41,7 @@
   - **Progress**: lessons done, words learned, cards due, streak, next step.
   - **Audio**: `public/audio/index.json` manifest; play buttons appear only where a recording exists. **Recording studio** `/academy/studio` (development only) records in the browser and saves `<key>.webm` plus the index into `web/public/audio/`.
   - **Tools**: `pipeline/find_sentences.py` finds short hand-annotated sentences with a given feature and common vocabulary, for new lessons.
-- **Phase 4 (search, Echoes, metre): search done** (2026-09-27); Echoes and metre are next. Tests: 64 unit (plus 3 that need the network or the corpus cache) and 21 browser.
+- **Phase 4 (search, Echoes, metre): search and Echoes done** (2026-09-27); metre is next. Tests: 74 unit (plus 3 that need the network or the corpus cache) and 24 browser.
   - **Search index** (`web/scripts/build-search.ts`, run `npx tsx scripts/build-search.ts grc`, then `eng`, then `lem`, in `web/`; needs `pipeline/.cache/corpus` from `fetch_corpus.py` and the GLAUx word packs). Output goes to `web/public/data/search/`, **about 320 MB, not committed**:
     - Greek words of every edition: 33.7M words, 788k accent-free keys, 149 MB;
     - English words of every translation: 13.0M words, 46 MB;
@@ -58,6 +58,14 @@
     - Results come grouped by work (sorted by most results or by date), each shown in context with the word marked. Every result links into the reader, where the word is highlighted with the CSS Custom Highlight API. Translation results find the right row even when the translation is cited by "card".
   - **Typed references** such as "Il. 1.1", "S. Ant. 332" or "Pl. R. 327a" go straight to the passage. The 4,320 abbreviations were learnt from LSJ's own citations (`web/scripts/build-abbrev.ts` → `public/data/abbrev.json`, committed); English titles work too.
   - **Quick search** from any page (press `/` or Ctrl+K): passages, works, authors, and the Oracle's searches.
+  - **Echoes** in the reader (`src/lib/echoes/`, `components/reader/EchoesPanel.tsx`). Open it from the passage toolbar (select words, or click a passage number) or from a word's look-up ("Echoes · where else it occurs"):
+    - a word: **this form**, or **every form of its dictionary word** (GLAUx);
+    - a phrase or sentence: **exact wording**, **Close** (likeness 75%+) or **Loose** (50%+), each match labelled exact / other forms / near with its likeness;
+    - the total, a **strip for the whole book** with a mark at every match (height = likeness; the book's pages as notches; hover names the place, click goes there), and a **list with context** where matching words are marked and differing ones pale;
+    - clicking goes there (a browser history step), and **"← Back to …"** returns; every match on the page is marked in the text;
+    - **widen**: this book → all the author's works (compared word by word in the browser when the author has at most 40 works and 14 MB of Greek; Homer, Plato, the tragedians…) → all Greek texts (from the search index: counts by work, linked to the Oracle);
+    - "What counts as a match" explains the rules on screen.
+    - Checked on real texts: the dawn line (Il. 1.477) is found at Il. 24.788 and 20 times in the Odyssey; Achilles' reply formula (Il. 1.84) finds 9 exact repeats, 3 in other forms (τὴν δʼ…) and its variants (τὴν δὲ βαρὺ στενάχων…); Republic 327a κατέβην … εἰς Πειραιᾶ finds 328c καταβαίνων εἰς τὸν Πειραιᾶ.
 - **Not started:** Phases 5–9.
 
 ## Decisions log
@@ -99,6 +107,8 @@
 | 2026-09-27 | By default, search covers the edition and translation the reader opens first (Perseus first), so parallel editions don't count twice. "Every edition" is a checkbox. | Honest counts. |
 | 2026-09-27 | GLAUx dates a work by its author's lifetime, by century. The site shows the whole span ("5th–4th c. BC" for Plato), never just the first century, with a note on hover. | Accuracy: a single century claimed too much. |
 | 2026-09-27 | GLAUx files the forms of εἶμι "go" under ἔρχομαι. The search page says so whenever εἰμί, εἶμι or ἔρχομαι is searched. | Found while testing; readers would otherwise miss them. |
+| 2026-09-27 | **Echoes matching rules.** Exact form: letters, breathings and accents count; capitals, grave-for-acute, a second (enclitic) accent, final sigma and the elision mark don't. Words are "the same" when GLAUx gives them the same dictionary word (else the same form). Near: an in-order match within a stretch at most a quarter longer than the phrase, rare words weighted more (log of words ÷ occurrences); likeness = weighted share found. Phrases may cross line and section breaks. | Brief (Homeric formulas); stated on screen. |
+| 2026-09-27 | **Echoes computes in the browser** for the book and for small authors, from the texts and the GLAUx word packs. GLAUx's words are placed on the text with the same stream alignment as the search index (`src/lib/search/place.ts`, shared by both), so any edition works. Wider searches use the search index. | No server; works for every edition; matches cross passages. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
 
 ## Known problems
@@ -121,17 +131,18 @@
   - The reader's word look-up still matches GLAUx by reference, so it finds less than the search index does. It could use the index's placement instead (stream alignment) for the 11% of works whose citation schemes differ.
   - Results show passages from the text file itself. If your downloaded copy of a text differs from the pinned commit the index was built from, the marked word can be off.
 - **Hosting**: the search index adds about 320 MB to the generated data (see above).
+- **Echoes follow-ups**:
+  - Across all Greek texts, and for very large authors (over 40 works or 14 MB, e.g. Galen, Plutarch, Aristotle), Echoes uses the search index, so it finds no near repetitions there, finds phrases only within one passage, and ignores accents. The panel says so.
+  - Echoes results should appear as scrollbar markers (Phase 6, with the other markers).
+  - The first Echoes in a long book prepares it on the main thread (about half a second for the Iliad). If this feels slow on phones, move it into the parsing worker.
+  - Near repetitions are looked for in selections of up to 40 words; Echoes takes at most 200 words.
+  - A browser development server from another session may hold port 3000; `.claude/launch.json` has `web-prod` (built site on port 3100) for checking in the built-in browser.
 
 ## Next steps
-1. **Echoes** in the reader:
-   - exact form, or every form of the dictionary word;
-   - a count, a strip showing where they fall in the book, and a list with context; jump there and back;
-   - near-repetitions (Homeric formulas), with an on-screen explanation of what counts as a match;
-   - widen to the same author, then the whole corpus. The search index already holds what is needed.
-2. **Metre**:
+1. **Metre**:
    - hexameter and elegiac first, then iambic trimeter; lyric only where reliable published scansions exist;
    - uncertain lines marked; accuracy checked against published scansions and reported to the owner.
-3. Then Phase 5 (see `PLAN.md`).
+2. Then Phase 5 (see `PLAN.md`).
 
 ## Review history
 - None yet.

@@ -17,7 +17,7 @@ const COLOURS: [Colour, string][] = [["red", "Red"], ["ochre", "Ochre"], ["blue"
 /** Floating toolbar for a selected passage. */
 export default function PassageToolbar({ sel, onAction, onClose, xref = null }: {
   sel: Selection;
-  onAction: (a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | { highlight: Colour }) => void;
+  onAction: (a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | "echoes" | { highlight: Colour }) => void;
   onClose: () => void;
   xref?: "start" | "here" | null;   // side-by-side only: begin a cross-reference, or finish one here
 }) {
@@ -59,7 +59,9 @@ export default function PassageToolbar({ sel, onAction, onClose, xref = null }: 
       </button>
       {xref === "start" && <button type="button" onClick={() => onAction("xref")} title="Link this passage to one in the other book"><span>Cross-reference</span></button>}
       {xref === "here" && <button type="button" className={styles.linkHere} onClick={() => onAction("xref-here")} title="Finish the cross-reference with this passage"><span>Link here</span></button>}
-      <button type="button" disabled title="Echoes arrive in Phase 4"><span>Echoes</span></button>
+      <button type="button" onClick={() => onAction("echoes")} title="Where these words recur, in this book and beyond">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h2M9 7v10M13 4v16M17 8v8M21 11v2" /></svg><span>Echoes</span>
+      </button>
       <button type="button" disabled title="The forum arrives in Phase 8"><span>Ask in the forum</span></button>
     </div>
   );

@@ -226,3 +226,15 @@ main { display: block; min-height: 60vh; outline: none; }
   text-decoration: underline 2px var(--accent);
   text-underline-offset: 4px;
 }
+
+/* words found by Echoes, marked in the reader */
+::highlight(echo-1), ::highlight(echo-2) {
+  background-color: color-mix(in srgb, var(--ochre) 26%, transparent);
+  text-decoration: underline 2px var(--ochre);
+  text-underline-offset: 4px;
+}
+::highlight(echo-self-1), ::highlight(echo-self-2) {
+  background-color: color-mix(in srgb, var(--accent) 22%, transparent);
+  text-decoration: underline 2px var(--accent);
+  text-underline-offset: 4px;
+}

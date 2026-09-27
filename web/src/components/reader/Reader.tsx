@@ -18,13 +18,14 @@ import { AREAS } from "@/config/areas";
 import { Blocks } from "./Blocks";
 import WordPanel, { type WordContext } from "./WordPanel";
 import { norm } from "@/lib/lookup/words";
-import { useMarks, cmp, type Mark, type Colour } from "@/lib/annotations";
+import { useMarks, cmp, type Mark, type Colour, type Point } from "@/lib/annotations";
 import type { Block } from "@/lib/tei/types";
 import PassageToolbar, { type Selection } from "./PassageToolbar";
 import NoteEditor from "./NoteEditor";
 import ShareDialog, { type ShareData } from "./ShareDialog";
 import WorkPicker from "./WorkPicker";
 import VocabPanel from "./VocabPanel";
+import EchoesPanel, { type EchoMarks, type EchoQuery, type EchoTarget } from "./EchoesPanel";
 import { loadWordPack, analyse as analyseWord } from "@/lib/lookup/words";
 import { caseOf } from "@/lib/lookup/postag";
 import styles from "./Reader.module.css";
@@ -113,7 +114,9 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const [catalogError, setCatalogError] = useState<string | null>(null);
   const [result, setResult] = useState<{ key: string; parsed?: Parsed; from?: { grc: From; tr: From | null }; error?: string } | null>(null);
   const [step, setStep] = useState<{ key: string; text: string } | null>(null);
-  const [word, setWord] = useState<{ w: string; ctx: WordContext | null } | null>(null);
+  const [word, setWord] = useState<{ w: string; ctx: WordContext | null; at: Point | null } | null>(null);
+  const [echo, setEcho] = useState<EchoQuery | null>(null);
+  const [echoMarks, setEchoMarks] = useState<EchoMarks | null>(null);
   const [sel, setSel] = useState<Selection | null>(null);
   const [share, setShare] = useState<ShareData | null>(null);
   const [openNote, setOpenNote] = useState<string | null>(null);
@@ -374,8 +377,12 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   };
 
   const rangeLabel = (a: string, b: string) => (a === b ? a : `${a}–${b}`);
-  async function act(a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | { highlight: Colour }) {
+  async function act(a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | "echoes" | { highlight: Colour }) {
     if (!sel || !edV) return;
+    if (a === "echoes") {
+      openEchoes(sel.start, sel.end);
+      window.getSelection()?.removeAllRanges(); setSel(null); return;
+    }
     if (a === "xref") {
       useUI.getState().setPendingXref({ pane, work: workId, ed: edV, start: sel.start, end: sel.end, quote: sel.quote, label: `${cite} ${rangeLabel(sel.start.u, sel.end.u)}` });
       toast("Now select the passage in the other book and choose \u201cLink here\u201d.");
@@ -426,7 +433,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
         const same = [...unit.querySelectorAll<HTMLElement>("[data-w]")].filter((x) => norm(x.dataset.w!) === norm(w.dataset.w!));
         ctx = { work: workId, unitKey: unit.dataset.u!, occurrence: same.indexOf(w), keys: unitKeys, depth: doc.levels.length };
       }
-      setWord({ w: w.dataset.w!, ctx });
+      setWord({ w: w.dataset.w!, ctx, at: unit ? { u: unit.dataset.u!, i: [...unit.querySelectorAll("[data-w]")].indexOf(w) } : null });
       return;
     }
     const r = el.closest<HTMLElement>("[data-row]");
@@ -445,6 +452,45 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       else { useMarks.getState().remove(m.id); toast(m.kind === "bookmark" ? "Bookmark removed." : "Removed from favourites."); }
     }
   };
+
+  // ------------------------------------------------------------ Echoes
+  function openEchoes(start: Point, end: Point) {
+    if (!doc || !grcText || !work) return;
+    setEcho({ work: workId, urn: grcText.urn, doc, title: work.title, start, end });
+    setWord(null); setVocabOpen(false);
+  }
+  const echoJump = (t: EchoTarget) => {
+    const q = new URLSearchParams(params.toString());
+    const k = (x: string) => (pane === 1 ? x : `${x}2`);
+    if (t.work !== workId) q.delete(k("tr"));
+    q.set(k("w"), t.work); q.set(k("ed"), t.ed); q.set(k("at"), t.at);
+    for (const x of ["hl", "find", "tu"]) q.delete(k(x));
+    router.push(`/read?${q}`, { scroll: false });
+  };
+  // the words Echoes found, marked wherever they are on the page
+  useEffect(() => {
+    const reg = typeof CSS !== "undefined" ? (CSS as unknown as { highlights?: Map<string, unknown> }).highlights : undefined;
+    const H = (globalThis as unknown as { Highlight?: new (...r: Range[]) => unknown }).Highlight;
+    const names = [`echo-${pane}`, `echo-self-${pane}`];
+    const here = grcText ? echoMarks?.get(grcText.urn) : undefined;
+    if (!reg || !H || !here || !rows.length) return;
+    const ranges: Range[] = [], self: Range[] = [];
+    root().querySelectorAll<HTMLElement>("[data-u]").forEach((unit) => {
+      const ws = here.get(unit.dataset.u!);
+      if (!ws) return;
+      const spans = unit.querySelectorAll("[data-w]");
+      for (const { i, self: me } of ws) {
+        const sp = spans[i];
+        if (!sp) continue;
+        const r = new Range(); r.selectNodeContents(sp);
+        (me ? self : ranges).push(r);
+      }
+    });
+    reg.set(names[0], new H(...ranges));
+    reg.set(names[1], new H(...self));
+    return () => { for (const n of names) reg.delete(n); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [echoMarks, rows, grcText?.urn, pane]);
 
   /** Show a passage in the given pane (opening the second pane if needed). */
   const openInPane = (target: 1 | 2, w: string, ed: string, u: string) => {
@@ -505,7 +551,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const setCols = (c: Columns) => setSettings({ columns: c });
 
   return (
-    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${word ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""}`}
+    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${word || echo || vocabOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""}`}
       onPointerDown={() => useUI.getState().setActivePane(pane)} onFocusCapture={() => useUI.getState().setActivePane(pane)}>
       {split && (
         <div className={styles.paneBar}>
@@ -574,7 +620,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
             <div className={styles.aids} role="group" aria-label="Reading aids">
               <button type="button" className="chip" aria-pressed={translit} onClick={() => setSettings({ translit: !translit })} title="Show each line in Latin letters">Transliteration</button>
               <button type="button" className="chip" aria-pressed={cases} onClick={() => setSettings({ cases: !cases })} title="Underline nouns, adjectives and participles in the colour of their case">Colour by case</button>
-              <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setWord(null); }}>Vocabulary</button>
+              <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setWord(null); setEcho(null); }}>Vocabulary</button>
             </div>
             <div className={styles.marksMenu}>
               <button type="button" onClick={() => setMarksOpen(!marksOpen)} aria-expanded={marksOpen}>Your marks ({allMarks.length})</button>
@@ -605,7 +651,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           {translit && <p className={`wrap ${styles.legend}`}><span className="muted">Transliteration uses a simple scheme: η ē, ω ō, rough breathing h, υ y (u in diphthongs), χ ch, φ ph, θ th, iota subscript i; accents are left out.</span></p>}
           {help && (
             <div className={`wrap ${styles.help}`} role="note">
-              <p><kbd>←</kbd> <kbd>→</kbd> previous / next page · <kbd>g</kbd> go to a reference · click a word to look it up · select words or click a passage number for bookmarks, notes, highlights and sharing · <kbd>Esc</kbd> close</p>
+              <p><kbd>←</kbd> <kbd>→</kbd> previous / next page · <kbd>g</kbd> go to a reference · click a word to look it up · select words or click a passage number for bookmarks, notes, highlights, sharing and Echoes · <kbd>Esc</kbd> close</p>
             </div>
           )}
 
@@ -644,9 +690,10 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
 
       {vocabOpen && doc && !word && (
         <VocabPanel work={workId} pageKeys={pageKeys} keys={unitKeys} depth={doc.levels.length}
-          onClose={() => setVocabOpen(false)} onPick={(lemma) => setWord({ w: lemma, ctx: null })} />
+          onClose={() => setVocabOpen(false)} onPick={(lemma) => setWord({ w: lemma, ctx: null, at: null })} />
       )}
-      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onClose={() => { setWord(null); root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel)); }} />
+      {echo && !word && <EchoesPanel q={echo} onJump={echoJump} onMarks={setEchoMarks} onClose={() => setEcho(null)} />}
+      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onEchoes={word?.at ? () => openEchoes(word.at!, word.at!) : undefined} onClose={() => { setWord(null); root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel)); }} />
     </div>
   );
 }

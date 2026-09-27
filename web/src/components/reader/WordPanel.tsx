@@ -82,7 +82,7 @@ function LsjEntryView({ e, full }: { e: LsjEntry; full: boolean }) {
 
 type Loaded<T> = { key: string; value: T | null; error?: string };
 
-export default function WordPanel({ word, ctx, onClose }: { word: string | null; ctx: WordContext | null; onClose: () => void }) {
+export default function WordPanel({ word, ctx, onClose, onEchoes }: { word: string | null; ctx: WordContext | null; onClose: () => void; onEchoes?: () => void }) {
   const toast = useUI((s) => s.showToast);
   const ref = useRef<HTMLElement>(null);
   const [analysis, setAnalysis] = useState<Loaded<Analysis>>({ key: "", value: null });
@@ -182,6 +182,12 @@ export default function WordPanel({ word, ctx, onClose }: { word: string | null;
           </div>
         )}
       </section>}
+
+      {onEchoes && (
+        <button type="button" className="chip" onClick={onEchoes} title="Every place this word occurs in the book, marked along a strip">
+          Echoes · where else it occurs
+        </button>
+      )}
 
       {core.key === lsjKey && core.value && (
         <section className={styles.sec}>
