@@ -125,4 +125,24 @@ export const BIB: Record<string, Secondary> = {
     author: "G. Verri", title: "The spatially resolved characterisation of Egyptian blue, Han blue and Han purple by photo-induced luminescence digital imaging", year: 2009,
     publisher: "Analytical and Bioanalytical Chemistry 394, 1011–1021", checked: "https://link.springer.com/article/10.1007/s00216-009-2693-0",
   },
+  "jones-portable-cosmos": {
+    author: "Alexander Jones", title: "A Portable Cosmos: Revealing the Antikythera Mechanism, Scientific Wonder of the Ancient World", year: 2017,
+    publisher: "New York: Oxford University Press", checked: "https://www.journals.uchicago.edu/doi/full/10.1086/701586",
+  },
+  "price-gears": {
+    author: "Derek de Solla Price", title: "Gears from the Greeks: The Antikythera Mechanism, a Calendar Computer from ca. 80 B.C.", year: 1974,
+    publisher: "Transactions of the American Philosophical Society 64.7", checked: "https://www.amphilsoc.org/news/gears-greeks-antikythera-mechanism-derek-de-solla-price",
+  },
+  "freeth-2006": {
+    author: "T. Freeth and others", title: "Decoding the ancient Greek astronomical calculator known as the Antikythera Mechanism", year: 2006,
+    publisher: "Nature 444, 587–591", checked: "https://www.nature.com/articles/nature05357",
+  },
+  "freeth-2008": {
+    author: "T. Freeth, A. Jones, J. Steele and Y. Bitsakis", title: "Calendars with Olympiad display and eclipse prediction on the Antikythera Mechanism", year: 2008,
+    publisher: "Nature 454, 614–617", checked: "https://www.nature.com/articles/nature07130",
+  },
+  "freeth-2021": {
+    author: "T. Freeth and others", title: "A Model of the Cosmos in the ancient Greek Antikythera Mechanism", year: 2021,
+    publisher: "Scientific Reports 11, 5821", checked: "https://www.nature.com/articles/s41598-021-84310-w",
+  },
 };
