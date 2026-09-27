@@ -12,6 +12,7 @@ export const metadata: Metadata = { title: `${AREAS.study.name} · ${AREAS.study
 const TOOLS = [
   { href: "/academy/alphabet", title: "The alphabet", gr: "τὰ γράμματα", text: "Every letter: how to write it, its name, and how it sounded." },
   { href: "/academy/review", title: "Daily review", gr: "ἀνάμνησις", text: "Flashcards that come back just before you would forget them." },
+  { href: "/academy/practice", title: "Practice", gr: "ἄσκησις", text: "Quick drills on endings, and parsing real words in real sentences." },
   { href: "/academy/tables", title: "Tables of forms", gr: "παραδείγματα", text: "Every standard declension and conjugation, searchable and checked against real texts." },
   { href: "/academy/vocabulary", title: "Vocabulary by frequency", gr: "λέξεις", text: "The commonest words first, and how much of a text you can already read." },
 ];

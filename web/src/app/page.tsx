@@ -55,9 +55,9 @@ export default function Home() {
               <h2 id="learn-title" className={styles.h2}>Start with the letters</h2>
               <p className={styles.lede}>Twenty-four letters, seven of them vowels. Many will look familiar from maths and science; a few will surprise you.</p>
               <ol className={styles.path}>
-                <li><b>Meet the alphabet</b><span>Shapes, names and sounds, and the order each letter is written in.</span></li>
-                <li><b>Accents and breathings</b><span>What the small marks above the letters do, and how much they matter to a beginner.</span></li>
-                <li><b>Your first real sentence</b><span>A genuine line of Homer by the end of lesson one, linked to the library.</span></li>
+                <li><Link href="/academy/alphabet" transitionTypes={["page-turn"]}><b>Meet the alphabet</b></Link><span>Shapes, names and sounds, and the order each letter is written in.</span></li>
+                <li><Link href="/academy/lesson/marks" transitionTypes={["page-turn"]}><b>Accents and breathings</b></Link><span>What the small marks above the letters do, and how much they matter to a beginner.</span></li>
+                <li><Link href="/academy/lesson/letters" transitionTypes={["page-turn"]}><b>Your first real sentence</b></Link><span>A genuine line of Homer by the end of lesson one, linked to the library.</span></li>
               </ol>
             </div>
             <div className="rv">

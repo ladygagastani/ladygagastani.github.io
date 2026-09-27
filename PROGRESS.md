@@ -31,7 +31,16 @@
   - **Passage tools**: bookmark, favourite, notes (inline, editable, deletable), highlights in 4 colours, Share (link, text, image with a highlight-or-skip step), a "Your marks" list, and cross-references between panes.
   - **Side-by-side**: two panes, each with its own navigation; synced scrolling for the same work; Shift-click on a citation opens it beside.
   - **Reading aids** (learning first): transliteration in the site's documented simple scheme; colour by case from GLAUx; a vocabulary list for the page.
-- **Phase 3 (the Academy): in progress.**
+- **Phase 3 (the Academy): first version done** (2026-09-27). Tests: 53 unit and 17 browser.
+  - **Alphabet** `/academy/alphabet`: 24 letters plus final sigma, with animated stroke order (`data/strokes.ts`, 49 paths inspected visually), names (including the Classical names εἶ, οὖ, ὖ, ὦ, λάβδα), and sounds in three systems (`data/alphabet.ts`, after Allen's *Vox Graeca*); diphthongs; example words from the DCC core list.
+  - **8 lessons** (`data/lessons.ts`): letters, marks, case, article, 2nd and 1st declension, εἰμί, present tense. Real sentences are shown live from the source files and verified by `NETWORK=1 npx vitest run src/data/lessons.test.ts`. Made-up practice sentences are labelled as such. Each lesson has word lists that go into the review deck.
+  - **Daily review** `/academy/review`: FSRS via ts-fsrs. Lesson words, "Learn" in the vocabulary list and the reader's "Save word" all feed it.
+  - **Tables of forms** `/academy/tables`: `data/paradigms.ts`, 225 forms, checked by `pipeline/check_paradigms.py` against GLAUx (216 attested; the rest reviewed in `pipeline/PARADIGM-REVIEW.md`). Endings are highlighted and attestation counts shown.
+  - **Vocabulary** `/academy/vocabulary`: the DCC core list, and "how much can you read" per text from GLAUx lemma counts.
+  - **Practice** `/academy/practice`: an endings drill from the checked tables, and parsing of real words in John using hand-checked PROIEL analyses.
+  - **Progress**: lessons done, words learned, cards due, streak, next step.
+  - **Audio**: `public/audio/index.json` manifest; play buttons appear only where a recording exists. **Recording studio** `/academy/studio` (development only) records in the browser and saves `<key>.webm` plus the index into `web/public/audio/`.
+  - **Tools**: `pipeline/find_sentences.py` finds short hand-annotated sentences with a given feature and common vocabulary, for new lessons.
 - **Not started:** Phases 4–9.
 
 ## Decisions log
@@ -71,6 +80,11 @@
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
 
 ## Known problems
+- **Phase 3 follow-ups**:
+  - More lessons are needed beyond lesson 8. Planned: genitive and dative with prepositions, adjectives, third declension, imperfect, aorist, middle and passive, participles, infinitives, contract verbs, -μι verbs, metre (for Phase 4).
+  - More tables: contract verbs, the middle and passive, participles, more of the third declension.
+  - The owner is recording the audio (letters, diphthongs, top 100 words) in `/academy/studio`.
+  - Studio recordings are WebM/Opus. Older Safari may not play WebM, so convert them to AAC/M4A in the pipeline before launch (for example with ffmpeg).
 - **Corpus health check** (`python pipeline/fetch_corpus.py`, then `CORPUS=1 npx vitest run src/lib/tei/corpus.test.ts` in `web/`; report in `pipeline/.cache/corpus-report.json`). On 2026-09-27, 2,774 Greek and English texts were checked and 4 remain flagged, all because of the source files:
   - Andocides' English translations (tlg0027.tlg001, tlg002, tlg004 perseus-eng2) are divided into "Intro / Narrative / Proof / Conclusion" with no section numbers, so they can only sit at the start of the text.
   - tlg0541.tlg042.1st1K-grc2 has 28 numbered "sentence" divisions with no text.

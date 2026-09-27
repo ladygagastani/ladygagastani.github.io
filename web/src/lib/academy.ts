@@ -25,6 +25,7 @@ interface AcademyState {
   days: string[];
   deck: Record<string, DeckCard>;
   completeLesson: (id: string) => void;
+  markActive: () => void;
   addCard: (lemma: string, gloss: string, source: Source) => boolean;
   review: (id: string, grade: Grade) => void;
   removeCard: (id: string) => void;
@@ -37,6 +38,7 @@ export const useAcademy = create<AcademyState>()(
       days: [],
       deck: {},
       completeLesson: (id) => set((s) => ({ completed: { ...s.completed, [id]: s.completed[id] ?? Date.now() }, days: markToday(s.days) })),
+      markActive: () => set((s) => ({ days: markToday(s.days) })),
       addCard: (lemma, gloss, source) => {
         const id = lemma.normalize("NFC");
         if (get().deck[id]) return false;
