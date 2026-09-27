@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useSettings, LIMITS, applySettings, type ThemePref, type MotionPref } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
+import { useAcademy } from "@/lib/academy";
 import OfflineActions from "./OfflineActions";
 import styles from "./SettingsPanel.module.css";
 
@@ -18,6 +19,7 @@ export function SettingsApplier() {
   useEffect(() => {
     const unsubscribe = useSettings.subscribe((s) => applySettings(s));
     useSettings.persist.rehydrate();
+    useAcademy.persist.rehydrate();
     return unsubscribe;
   }, []);
   return null;

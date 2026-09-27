@@ -10,6 +10,7 @@ import { lsjEntries, citationHref, LSJ_CREDIT, type LsjEntry, type Seg } from "@
 import { readTag } from "@/lib/lookup/postag";
 import { coreEntry, CORE_CREDIT, type CoreEntry } from "@/lib/lookup/core";
 import { useUI } from "@/lib/ui";
+import { useAcademy } from "@/lib/academy";
 import styles from "./Reader.module.css";
 
 export interface WordContext { work: string; unitKey: string; occurrence: number; keys: Set<string>; depth: number }
@@ -223,7 +224,12 @@ export default function WordPanel({ word, ctx, onClose }: { word: string | null;
         </ul>
       </section>
 
-      <button type="button" className="btn ghost" onClick={() => toast("Saving words arrives with the Treasury in Phase 5.")}>Save word</button>
+      <button type="button" className="btn ghost" onClick={() => {
+        // save the dictionary form, with the clearest short definition we have
+        const gloss = (core.key === lsjKey && core.value?.def) || l?.value?.entries[0]?.s || "";
+        const added = useAcademy.getState().addCard(headword, gloss, "saved");
+        toast(added ? `Saved ${headword} to your daily review.` : `${headword} is already in your daily review.`);
+      }}>Save word to my review</button>
     </aside>
   );
 }

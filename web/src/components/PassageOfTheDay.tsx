@@ -2,11 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { loadCatalog, greekEditions, translations, describe, versionOf, type CatText } from "@/lib/catalog";
-import { getXml } from "@/lib/texts/source";
-import { parseInWorker } from "@/lib/tei/client";
-import { alignChunk, type Row } from "@/lib/tei/align";
-import { findRef } from "@/lib/tei/refs";
+import { describe, versionOf } from "@/lib/catalog";
+import { loadPassage, type LoadedPassage } from "@/lib/passage";
 import { norm } from "@/lib/lookup/words";
 import { PASSAGES, todaysIndex, type DailyPassage } from "@/data/passages";
 import { Blocks } from "@/components/reader/Blocks";
@@ -16,25 +13,15 @@ import { AREAS } from "@/config/areas";
 import styles from "./PassageOfTheDay.module.css";
 import readerStyles from "./reader/Reader.module.css";
 
-interface Loaded { p: DailyPassage; rows: Row[]; grc: CatText; tr: CatText | null; keys: Set<string>; depth: number }
+interface Loaded extends LoadedPassage { p: DailyPassage }
 
 /** Load today's passage; if it can't be read (offline and not downloaded), try the next ones. */
 async function loadToday(): Promise<Loaded> {
-  const idx = await loadCatalog();
   let lastError: Error | null = null;
   for (let k = 0; k < PASSAGES.length; k++) {
     const p = PASSAGES[(todaysIndex() + k) % PASSAGES.length];
-    try {
-      const w = idx.work.get(p.work)!;
-      const grc = greekEditions(w).find((t) => t.col === "perseus") ?? greekEditions(w)[0];
-      const tr = translations(w)[0] ?? null;
-      const [g, t] = await Promise.all([getXml(idx, grc), tr ? getXml(idx, tr).catch(() => null) : null]);
-      const parsed = await parseInWorker(g.xml, t?.xml ?? null);
-      const a = findRef(parsed.doc, p.from), b = findRef(parsed.doc, p.to);
-      if (a < 0 || b < a) throw new Error(`reference ${p.from} not found`);
-      const rows = alignChunk(parsed.doc, { first: a, last: b }, t ? parsed.placed : null);
-      return { p, rows, grc, tr: t ? tr : null, keys: new Set(parsed.doc.units.map((u) => u.ref.join("."))), depth: parsed.doc.levels.length };
-    } catch (e) { lastError = e as Error; }
+    try { return { p, ...(await loadPassage(p.work, p.from, p.to)) }; }
+    catch (e) { lastError = e as Error; }
   }
   throw lastError ?? new Error("No passage could be loaded.");
 }
