@@ -229,4 +229,12 @@ export const BIB: Record<string, Secondary> = {
     author: "Walter Burkert", title: "Ancient Mystery Cults", year: 1987,
     publisher: "Cambridge, MA: Harvard University Press", checked: "https://www.hup.harvard.edu/books/9780674033870",
   },
+  "brickhouse-smith-trial": {
+    author: "Thomas C. Brickhouse and Nicholas D. Smith", title: "Socrates on Trial", year: 1989,
+    publisher: "Princeton: Princeton University Press", checked: "https://press.princeton.edu/books/paperback/9780691019000/socrates-on-trial",
+  },
+  "wilson-death-socrates": {
+    author: "Emily Wilson", title: "The Death of Socrates", year: 2007,
+    publisher: "Cambridge, MA: Harvard University Press", checked: "https://bmcr.brynmawr.edu/2009/2009.09.31/",
+  },
 };
