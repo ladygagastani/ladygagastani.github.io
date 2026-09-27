@@ -306,4 +306,16 @@ export const BIB: Record<string, Secondary> = {
     author: "Charlotte L. Pearson and others", title: "Annual radiocarbon record indicates 16th century BCE date for the Thera eruption", year: 2018,
     publisher: "Science Advances 4, eaar8241", checked: "https://www.science.org/doi/10.1126/sciadv.aar8241",
   },
+  "gere-knossos": {
+    author: "Cathy Gere", title: "Knossos and the Prophets of Modernism", year: 2009,
+    publisher: "Chicago: University of Chicago Press", checked: "https://bmcr.brynmawr.edu/2009/2009.08.20/",
+  },
+  "macgillivray-minotaur": {
+    author: "J. A. MacGillivray", title: "Minotaur: Sir Arthur Evans and the Archaeology of the Minoan Myth", year: 2000,
+    publisher: "London: Jonathan Cape; New York: Hill and Wang", checked: "https://bmcr.brynmawr.edu/2001/2001.02.18",
+  },
+  "kotsonas-2016": {
+    author: "Antonis Kotsonas", title: "Greek and Roman Knossos: The Pioneering Investigations of Minos Kalokairinos", year: 2016,
+    publisher: "Annual of the British School at Athens 111, 299–324", checked: "https://www.cambridge.org/core/journals/annual-of-the-british-school-at-athens/article/abs/greek-and-roman-knossos-the-pioneering-investigations-of-minos-kalokairinos/C8BF525B055D28DD5AF108D921114550",
+  },
 };

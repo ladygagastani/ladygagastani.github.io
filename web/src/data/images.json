@@ -320,5 +320,19 @@
   "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
   "source": "https://www.metmuseum.org/art/collection/search/248904",
   "sourceName": "The Metropolitan Museum of Art"
+ },
+ "knossos-north-entrance": {
+  "file": "knossos-north-entrance.jpg",
+  "width": 1600,
+  "height": 1065,
+  "alt": "A rebuilt portico on a stone terrace above tumbled ruins: three dark-red columns that taper downwards, with black capitals, hold up a cream roof beam painted with white discs; behind them a painted relief shows a charging red bull under an olive tree against a blue ground.",
+  "title": "The North Entrance of the palace at Knossos, as reconstructed for Arthur Evans, with a copy of the charging-bull relief",
+  "date": "Bronze Age palace, reconstructed in the 20th century",
+  "place": "Knossos, Crete",
+  "creator": "Photograph by Jebulon",
+  "licence": "CC0",
+  "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "source": "https://commons.wikimedia.org/wiki/File:Knossos_North_entrance_bull_fresco.jpg",
+  "sourceName": "Wikimedia Commons"
  }
 }
