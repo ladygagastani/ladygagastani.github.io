@@ -52,6 +52,13 @@ export default function CreditsPage() {
             Keersmaekers, A. (2021), &ldquo;The GLAUx corpus: methodological issues in designing a long-term, diverse, multi-layered corpus of
             Ancient Greek&rdquo;, <i>Proceedings of the 2nd International Workshop on Computational Approaches to Historical Language Change</i>, 39–50.
           </li>
+          <li>
+            <b>The Census&apos;s sorting</b> of names into people, places and peoples, and of nouns into ships, weapons, animals and other
+            groups, uses the class (animacy) and the word sense GLAUx gives each noun, and the groups of meanings in{" "}
+            <a href="https://wordnet.princeton.edu/" rel="noopener">Princeton WordNet 3.0</a>. WordNet 3.0 Copyright 2006 by Princeton
+            University. All rights reserved. WordNet is provided &ldquo;as is&rdquo;, and Princeton University makes no representations or
+            warranties, express or implied (<a href="https://wordnet.princeton.edu/license-and-commercial-use" rel="noopener">the WordNet licence</a>).
+          </li>
           <li><b>Liddell–Scott–Jones Greek-English Lexicon (LSJ)</b>: {LSJ_CREDIT}</li>
           <li><b>Short definitions of the commonest words</b> and their frequency ranks: <a href="https://dcc.dickinson.edu/greek-core-list" rel="noopener">Dickinson College Commentaries Greek Core Vocabulary</a>, by Christopher Francese and collaborators, CC BY-SA 3.0.</li>
           <li><b>Scansion of verse</b> (long and short syllables, and the metre of each line) for Homer, Hesiod, Apollonius, Nonnus, Pindar, Theognis, the Greek Anthology, three plays of Aeschylus and other poets: <a href="https://hypotactic.com" rel="noopener">hypotactic.com</a>, by David Chamberlain, CC BY 4.0. The vowel lengths the site&apos;s own scanner uses for other texts were also learned from these scansions.</li>

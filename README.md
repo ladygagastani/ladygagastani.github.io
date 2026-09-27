@@ -63,6 +63,7 @@ Rebuilding the committed data, only when its sources change:
 | `python pipeline/build_core.py` | `core.json`: the DCC core vocabulary. |
 | `npx tsx scripts/build-abbrev.ts` | `abbrev.json`: abbreviations such as "Il." (needs the LSJ files). |
 | `python pipeline/fetch_hypotactic.py`, then `npx tsx scripts/build-metre.ts` | The metre data in `public/data/metre/` (also needs step 1). |
+| `python pipeline/build_census.py` | The Census (Most Mentioned) data in `public/data/census/` (committed, about 10 MB): ranked names, things, words and phrases for the whole library, each kind of writing and period, each author and each work. Needs steps 1–3 and 6 of the table above (GLAUx files, word packs, LSJ, Word Study index) and `pip install nltk` (WordNet). Hand-checked lists are in `pipeline/census_lists.py`. The first run scans GLAUx into `pipeline/.cache/census/` (2 minutes); `--rescan` repeats it. |
 | `python pipeline/build_map.py` | The Periplus map data in `public/data/map/`: the sea and lakes (AWMC geodata) and the places the texts name (Pleiades), plus every capitalised name with its count per work in `pipeline/.cache/map/names.json` for the Census (needs step 2). Hand-checked matches are in its `OVERRIDES` and `NOT_PLACES` tables. |
 | `npx tsx scripts/fetch-images.ts` | The wiki's pictures and their credits (`public/images/`, `src/data/images.json`) from the list in `scripts/images.list.json`. |
 | `npx tsx scripts/check-metre.ts` | Checks the site's scansion against the published scansions. |
@@ -84,6 +85,7 @@ Rebuilding the committed data, only when its sources change:
 - `wiki/` is the Painted Stoa: `entries/` (one file per entry; list new ones in `index.ts`), `bibliography.ts` (every modern work cited, each with the link it was checked against), `markup.ts` (the entry text format) and the tests that check entries against the texts; `components/stoa/` draws them.
 - `wiki/kerameikos.ts` lists the archaeology section's layers and dig sites; `components/stoa/Kerameikos.tsx` draws it.
 - `lib/map.ts` and `components/map/Periplus.tsx` are the Periplus map; saved places show in the Treasury (`components/treasury/PlacesSection.tsx`).
+- `lib/census.ts` and `components/census/` are the Census (Most Mentioned); how it counts is written on the page itself (`Method.tsx`).
 - `data/` holds hand-checked content: the alphabet, stroke order, lessons, tables of forms and passages of the day.
 
 ## Content rules

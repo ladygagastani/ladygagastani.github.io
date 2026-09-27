@@ -72,7 +72,7 @@
 .barRow:focus-visible { outline: 2px solid var(--accent); }
 .barLabel { font-size: 0.92rem; line-height: 1.2; }
 .barLabel small { display: block; font-size: 0.78rem; color: var(--ink-2); }
-.barTrack { position: relative; height: 16px; display: flex; align-items: center; }
+.barTrack { position: relative; height: 16px; display: flex; align-items: center; margin-right: 3.6em; }   /* room for the longest bar's value */
 /* one baseline on the left (square), a 4px rounded data-end on the right */
 .bar { display: block; height: 16px; width: var(--w); min-width: 2px; background: var(--accent); border-radius: 0 4px 4px 0;
   transform-origin: left; animation: grow 0.8s var(--ease) both; animation-delay: calc(0.1s + var(--i) * 60ms); }
