@@ -7,7 +7,7 @@
  */
 import { create } from "zustand";
 
-export type Kind = "bookmark" | "favourite" | "note" | "highlight";
+export type Kind = "bookmark" | "favourite" | "note" | "highlight" | "xref";
 export type Colour = "red" | "ochre" | "blue" | "green";
 export interface Point { u: string; i: number }
 export interface Mark {
@@ -20,6 +20,7 @@ export interface Mark {
   quote: string;         // the Greek words marked, for lists and search
   text?: string;         // note text
   colour?: Colour;       // highlight colour
+  link?: { work: string; ed: string; start: Point; label: string };   // cross-reference: the other passage
   created: number;
   updated: number;
 }
@@ -56,8 +57,7 @@ export function cmp(a: Point, b: Point, order: Map<string, number>) {
 }
 
 interface MarksState {
-  work: string | null;
-  marks: Mark[];
+  byWork: Record<string, Mark[]>;   // marks of every work opened so far (two books can be open)
   error: string | null;
   load: (work: string) => Promise<void>;
   add: (m: Omit<Mark, "id" | "created" | "updated">) => Promise<Mark>;
@@ -65,35 +65,37 @@ interface MarksState {
   remove: (id: string) => Promise<void>;
 }
 
+const put = (byWork: Record<string, Mark[]>, work: string, marks: Mark[]) => ({ byWork: { ...byWork, [work]: marks } });
+const find = (byWork: Record<string, Mark[]>, id: string) => Object.values(byWork).flat().find((m) => m.id === id);
+
 export const useMarks = create<MarksState>()((set, get) => ({
-  work: null,
-  marks: [],
+  byWork: {},
   error: null,
   async load(work) {
-    set({ work });
     try {
       const marks = await marksFor(work);
-      if (get().work === work) set({ marks: marks.sort((a, b) => a.created - b.created), error: null });
+      set((s) => ({ ...put(s.byWork, work, marks.sort((a, b) => a.created - b.created)), error: null }));
     } catch {
-      set({ marks: [], error: "Your notes could not be opened in this browser." });
+      set({ error: "Your notes could not be opened in this browser." });
     }
   },
   async add(m) {
     const now = Date.now();
     const mark: Mark = { ...m, id: `${now.toString(36)}-${Math.random().toString(36).slice(2, 8)}`, created: now, updated: now };
     await run("readwrite", (s) => s.put(mark));
-    if (get().work === m.work) set((s) => ({ marks: [...s.marks, mark] }));
+    set((s) => (s.byWork[m.work] ? put(s.byWork, m.work, [...s.byWork[m.work], mark]) : s));
     return mark;
   },
   async update(id, patch) {
-    const m = get().marks.find((x) => x.id === id);
+    const m = find(get().byWork, id);
     if (!m) return;
     const next = { ...m, ...patch, updated: Date.now() };
     await run("readwrite", (s) => s.put(next));
-    set((s) => ({ marks: s.marks.map((x) => (x.id === id ? next : x)) }));
+    set((s) => put(s.byWork, m.work, s.byWork[m.work].map((x) => (x.id === id ? next : x))));
   },
   async remove(id) {
+    const m = find(get().byWork, id);
     await run("readwrite", (s) => s.delete(id));
-    set((s) => ({ marks: s.marks.filter((x) => x.id !== id) }));
+    if (m) set((s) => put(s.byWork, m.work, s.byWork[m.work].filter((x) => x.id !== id)));
   },
 }));

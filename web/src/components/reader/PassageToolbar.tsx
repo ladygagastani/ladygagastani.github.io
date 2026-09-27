@@ -15,10 +15,11 @@ export interface Selection {
 const COLOURS: [Colour, string][] = [["red", "Red"], ["ochre", "Ochre"], ["blue", "Blue"], ["green", "Green"]];
 
 /** Floating toolbar for a selected passage. */
-export default function PassageToolbar({ sel, onAction, onClose }: {
+export default function PassageToolbar({ sel, onAction, onClose, xref = null }: {
   sel: Selection;
-  onAction: (a: "bookmark" | "favourite" | "note" | "share" | { highlight: Colour }) => void;
+  onAction: (a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | { highlight: Colour }) => void;
   onClose: () => void;
+  xref?: "start" | "here" | null;   // side-by-side only: begin a cross-reference, or finish one here
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -56,6 +57,8 @@ export default function PassageToolbar({ sel, onAction, onClose }: {
       <button type="button" onClick={() => onAction("share")} title="Share this passage">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12h8M14 8l4 4-4 4M4 4v16" /></svg><span>Share</span>
       </button>
+      {xref === "start" && <button type="button" onClick={() => onAction("xref")} title="Link this passage to one in the other book"><span>Cross-reference</span></button>}
+      {xref === "here" && <button type="button" className={styles.linkHere} onClick={() => onAction("xref-here")} title="Finish the cross-reference with this passage"><span>Link here</span></button>}
       <button type="button" disabled title="Echoes arrive in Phase 4"><span>Echoes</span></button>
       <button type="button" disabled title="The forum arrives in Phase 8"><span>Ask in the forum</span></button>
     </div>

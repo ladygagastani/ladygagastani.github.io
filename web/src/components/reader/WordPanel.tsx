@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { decapitalise, isElided, lookupForm } from "@/lib/greek";
 import { lookUpWiktionary, type WiktResult, type WiktSense } from "@/lib/lookup/wiktionary";
@@ -35,14 +36,30 @@ function Senses({ senses }: { senses: WiktSense[] }) {
   );
 }
 
+/** Shift- or Alt-click a citation to open it beside the current text instead of replacing it. */
+function useCiteClick() {
+  const router = useRouter();
+  return (e: React.MouseEvent, href: string) => {
+    if (!(e.shiftKey || e.altKey) || location.pathname !== "/read") return;
+    e.preventDefault();
+    const target = new URL(href, location.origin).searchParams;
+    const q = new URLSearchParams(location.search);
+    q.set("w2", target.get("w") ?? "");
+    for (const k of ["ed2", "tr2", "at2"]) q.delete(k);
+    if (target.get("at")) q.set("at2", target.get("at")!);
+    router.replace(`/read?${q}`, { scroll: false });
+  };
+}
+
 function Segs({ segs }: { segs: Seg[] }) {
+  const onCite = useCiteClick();
   return (
     <>
       {segs.map((s, i) => {
         if (typeof s === "string") return <span key={i}>{s}</span>;
         if ("g" in s) return <span key={i} lang="grc" className={styles.lsjGr}>{s.g}</span>;
         const href = citationHref(s.u);
-        return href ? <Link key={i} href={href} className={styles.cite} title="Open this passage in the reader">{s.c}</Link> : <span key={i}>{s.c}</span>;
+        return href ? <Link key={i} href={href} className={styles.cite} onClick={(e) => onCite(e, href)} title="Open this passage in the reader (Shift-click: beside this one)">{s.c}</Link> : <span key={i}>{s.c}</span>;
       })}
     </>
   );

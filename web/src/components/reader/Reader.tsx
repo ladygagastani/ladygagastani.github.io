@@ -23,6 +23,7 @@ import type { Block } from "@/lib/tei/types";
 import PassageToolbar, { type Selection } from "./PassageToolbar";
 import NoteEditor from "./NoteEditor";
 import ShareDialog, { type ShareData } from "./ShareDialog";
+import WorkPicker from "./WorkPicker";
 import styles from "./Reader.module.css";
 
 type Load = { state: "loading"; step: string } | { state: "error"; message: string } | { state: "ready" };
@@ -43,25 +44,27 @@ function pickTranslation(w: CatWork, tr: string | null, remembered: string | nul
   return all.find((t) => versionOf(t.urn) === remembered) ?? all[0];
 }
 
+const NO_MARKS: Mark[] = [];
 const blockText = (bs: Block[]) => bs.map((b) => b.c.map((x) => (typeof x === "string" ? x : "")).join("")).join(" ").replace(/\s+/g, " ").trim();
 
 const MARK_ICON: Record<string, React.ReactNode> = {
   bookmark: <path d="M6 3h12v18l-6-4-6 4z" />,
   favourite: <path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" />,
   note: <path d="M4 4h16v12H8l-4 4z" />,
+  xref: <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" />,
 };
 
 /** One passage row: reference and your marks in the margin, Greek, translation, and any notes. */
 const RowView = memo(function RowView({ row, marks, openNote, onCloseNote }: { row: Row; marks: Mark[]; openNote: string | null; onCloseNote: () => void }) {
   const notes = marks.filter((m) => m.kind === "note");
   return (
-    <section className={styles.row} id={`r-${row.key}`} data-key={row.key}>
+    <section className={styles.row} data-key={row.key}>
       <div className={styles.ref}>
         <button type="button" data-row={row.key} title="Actions for this passage">{row.key}</button>
         {marks.some((m) => m.kind !== "highlight") && (
           <span className={styles.marks}>
             {marks.filter((m) => m.kind !== "highlight").map((m) => (
-              <button key={m.id} type="button" className={styles[`mk-${m.kind}`]} data-mark={m.id} title={m.kind === "note" ? (m.text || "Note") : m.kind === "bookmark" ? "Bookmark (click to remove)" : "Favourite (click to remove)"}>
+              <button key={m.id} type="button" className={styles[`mk-${m.kind}`]} data-mark={m.id} title={m.kind === "note" ? (m.text || "Note") : m.kind === "xref" ? `Cross-reference to ${m.link?.label ?? "another passage"} (click to open it beside this one)` : m.kind === "bookmark" ? "Bookmark (click to remove)" : "Favourite (click to remove)"}>
                 <svg viewBox="0 0 24 24" aria-hidden="true">{MARK_ICON[m.kind]}</svg>
               </button>
             ))}
@@ -83,15 +86,23 @@ const RowView = memo(function RowView({ row, marks, openNote, onCloseNote }: { r
   );
 });
 
-export default function Reader() {
+export interface PaneProps { pane: 1 | 2; split: boolean; onOpenSecond: () => void }
+
+/** One reading pane. With two panes, pane 2 uses the same query keys with a "2" on the end. */
+function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const params = useSearchParams();
+  const P = (k: string) => params.get(pane === 1 ? k : `${k}2`);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const root = () => rootRef.current ?? document;
+  const active = useUI((s) => s.activePane === pane);
+  const pendingXref = useUI((s) => s.pendingXref);
   const router = useRouter();
   const toast = useUI((s) => s.showToast);
   const columns = useSettings((s) => s.columns);
   const setSettings = useSettings((s) => s.set);
 
-  const workId = params.get("w") ?? "";
-  const at = params.get("at");
+  const workId = P("w") ?? "";
+  const at = P("at");
   const [idx, setIdx] = useState<CatalogIndex | null>(null);
   const [catalogError, setCatalogError] = useState<string | null>(null);
   const [result, setResult] = useState<{ key: string; parsed?: Parsed; from?: { grc: From; tr: From | null }; error?: string } | null>(null);
@@ -101,7 +112,7 @@ export default function Reader() {
   const [share, setShare] = useState<ShareData | null>(null);
   const [openNote, setOpenNote] = useState<string | null>(null);
   const [marksOpen, setMarksOpen] = useState(false);
-  const allMarks = useMarks((s) => s.marks);
+  const allMarks = useMarks((s) => s.byWork[workId]) ?? NO_MARKS;
   useEffect(() => { if (workId) useMarks.getState().load(workId); }, [workId]);
   const [goto, setGoto] = useState("");
   const [help, setHelp] = useState(false);
@@ -117,8 +128,8 @@ export default function Reader() {
 
   const work = idx?.work.get(workId);
   const author = idx?.authorOf.get(workId);
-  const grcText = work ? pickEdition(work, params.get("ed"), remembered?.ed ?? null) : undefined;
-  const trText = work ? pickTranslation(work, params.get("tr"), remembered ? remembered.tr : undefined) : null;
+  const grcText = work ? pickEdition(work, P("ed"), remembered?.ed ?? null) : undefined;
+  const trText = work ? pickTranslation(work, P("tr"), remembered ? remembered.tr : undefined) : null;
   const cite = `${author?.name ?? ""}, ${work?.title ?? ""}`;
   const loadKey = grcText && snap?.work === workId ? `${grcText.urn}|${trText?.urn ?? ""}|${retry}` : null;
 
@@ -165,13 +176,13 @@ export default function Reader() {
   // once the page is drawn, bring the requested passage into view (and briefly mark it if it was asked for)
   useEffect(() => {
     if (!rows.length) return;
-    if (!startKey) { window.scrollTo({ top: 0 }); return; }
+    if (!startKey) { if (split) rootRef.current?.scrollTo({ top: 0 }); else window.scrollTo({ top: 0 }); return; }
     const row = rows.find((r) => r.greek.some((u) => u.ref.join(".") === startKey));
-    const el = row && document.getElementById(`r-${row.key}`);
+    const el = row && root().querySelector<HTMLElement>(`[data-key="${CSS.escape(row.key)}"]`);
     if (!el) return;
     requestAnimationFrame(() => el.scrollIntoView({ block: "start" }));
     if (at) { el.classList.remove(styles.flash); void el.offsetWidth; el.classList.add(styles.flash); }
-  }, [rows, startKey, at]);
+  }, [rows, startKey, at, split]);
 
   // ------------------------------------------------------------ remember where the reader is
   const edV = grcText ? versionOf(grcText.urn) : null;
@@ -181,18 +192,20 @@ export default function Reader() {
     const io = new IntersectionObserver((entries) => {
       const top = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
       if (top) savePosition(workId, { ed: edV, tr: trV, at: (top.target as HTMLElement).dataset.key! });
-    }, { rootMargin: "-80px 0px -70% 0px" });
-    document.querySelectorAll("[data-key]").forEach((el) => io.observe(el));
+    }, { root: split ? rootRef.current : null, rootMargin: split ? "-60px 0px -70% 0px" : "-80px 0px -70% 0px" });
+    root().querySelectorAll("[data-key]").forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, [rows, workId, edV, trV]);
+  }, [rows, workId, edV, trV, split]);
 
   // ------------------------------------------------------------ navigation
   const href = (o: { ed?: string; tr?: string | null; at?: string }) => {
-    const q = new URLSearchParams({ w: workId });
+    const q = new URLSearchParams(params.toString());
+    const k = (x: string) => (pane === 1 ? x : `${x}2`);
+    q.set(k("w"), workId);
     const ed = o.ed ?? edV;
-    if (ed) q.set("ed", ed);
-    q.set("tr", o.tr === undefined ? (trV ?? "none") : (o.tr ?? "none"));
-    if (o.at) q.set("at", o.at);
+    if (ed) q.set(k("ed"), ed);
+    q.set(k("tr"), o.tr === undefined ? (trV ?? "none") : (o.tr ?? "none"));
+    if (o.at) q.set(k("at"), o.at); else q.delete(k("at"));
     return `/read?${q}`;
   };
   const goChunk = (i: number) => {
@@ -215,6 +228,7 @@ export default function Reader() {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement;
       if (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (split && useUI.getState().activePane !== pane) return;
       if (e.key === "ArrowRight") { e.preventDefault(); goChunkRef.current(chunk + 1); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); goChunkRef.current(chunk - 1); }
       else if (e.key === "g") { e.preventDefault(); gotoRef.current?.focus(); }
@@ -223,7 +237,7 @@ export default function Reader() {
     };
     addEventListener("keydown", onKey);
     return () => removeEventListener("keydown", onKey);
-  }, [chunk]);
+  }, [chunk, split, pane]);
 
   // ------------------------------------------------------------ your marks
   const order = useMemo(() => new Map(doc?.units.map((u, i) => [u.ref.join("."), i]) ?? []), [doc]);
@@ -242,14 +256,14 @@ export default function Reader() {
 
   // highlights are drawn onto the word spans after each render of the page
   useEffect(() => {
-    document.querySelectorAll("[data-hl]").forEach((el) => el.removeAttribute("data-hl"));
+    root().querySelectorAll("[data-hl]").forEach((el) => el.removeAttribute("data-hl"));
     for (const m of marks) {
       if (m.kind !== "highlight") continue;
       const a = order.get(m.start.u), b = order.get(m.end.u);
       if (a === undefined || b === undefined) continue;
       for (let i = a; i <= b; i++) {
         const key = doc!.units[i].ref.join(".");
-        const unit = document.querySelector(`[data-u="${CSS.escape(key)}"]`);
+        const unit = root().querySelector(`[data-u="${CSS.escape(key)}"]`);
         if (!unit) continue;
         const spans = unit.querySelectorAll<HTMLElement>("[data-w]");
         const from = i === a ? m.start.i : 0, to = i === b ? m.end.i : spans.length - 1;
@@ -272,13 +286,29 @@ export default function Reader() {
     const s = window.getSelection();
     if (!s || s.isCollapsed || !s.rangeCount) return;
     const range = s.getRangeAt(0);
-    const spans = [...document.querySelectorAll<HTMLElement>("article [data-u] [data-w]")].filter((sp) => range.intersectsNode(sp));
+    const spans = [...root().querySelectorAll<HTMLElement>("article [data-u] [data-w]")].filter((sp) => range.intersectsNode(sp));
     selectSpans(spans, range.getBoundingClientRect());
   };
 
   const rangeLabel = (a: string, b: string) => (a === b ? a : `${a}–${b}`);
-  async function act(a: "bookmark" | "favourite" | "note" | "share" | { highlight: Colour }) {
+  async function act(a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | { highlight: Colour }) {
     if (!sel || !edV) return;
+    if (a === "xref") {
+      useUI.getState().setPendingXref({ pane, work: workId, ed: edV, start: sel.start, end: sel.end, quote: sel.quote, label: `${cite} ${rangeLabel(sel.start.u, sel.end.u)}` });
+      toast("Now select the passage in the other book and choose \u201cLink here\u201d.");
+      window.getSelection()?.removeAllRanges(); setSel(null); return;
+    }
+    if (a === "xref-here" && pendingXref) {
+      const here = { work: workId, ed: edV, start: sel.start, end: sel.end, quote: sel.quote, label: `${cite} ${rangeLabel(sel.start.u, sel.end.u)}` };
+      const { add } = useMarks.getState();
+      await add({ kind: "xref", work: pendingXref.work, ed: pendingXref.ed, start: pendingXref.start, end: pendingXref.end, quote: pendingXref.quote,
+        link: { work: here.work, ed: here.ed, start: here.start, label: here.label } });
+      await add({ kind: "xref", ...here, link: { work: pendingXref.work, ed: pendingXref.ed, start: pendingXref.start, label: pendingXref.label } });
+      useUI.getState().setPendingXref(null);
+      toast(`Linked ${pendingXref.label} with ${here.label}.`);
+      window.getSelection()?.removeAllRanges(); setSel(null); return;
+    }
+    if (a === "xref-here") return;   // no first passage chosen yet
     const base = { work: workId, ed: edV, start: sel.start, end: sel.end, quote: sel.quote };
     const where = rangeLabel(sel.start.u, sel.end.u);
     if (a === "share") {
@@ -304,7 +334,7 @@ export default function Reader() {
     const el = e.target as HTMLElement;
     const w = el.closest<HTMLElement>("[data-w]");
     if (w) {
-      document.querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel));
+      root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel));
       w.classList.add(styles.sel);
       // which passage the word is in, and which occurrence of this form within it
       const unit = w.closest<HTMLElement>("[data-u]");
@@ -318,7 +348,7 @@ export default function Reader() {
     }
     const r = el.closest<HTMLElement>("[data-row]");
     if (r) {
-      const row = document.getElementById(`r-${r.dataset.row}`);
+      const row = root().querySelector(`[data-key="${CSS.escape(r.dataset.row!)}"]`);
       const spans = row ? [...row.querySelectorAll<HTMLElement>("[data-u] [data-w]")] : [];
       selectSpans(spans, r.getBoundingClientRect());
       return;
@@ -328,9 +358,54 @@ export default function Reader() {
       const m = marks.find((x) => x.id === mk.dataset.mark);
       if (!m) return;
       if (m.kind === "note") setOpenNote(openNote === m.id ? null : m.id);
+      else if (m.kind === "xref" && m.link) openInPane(pane === 1 ? 2 : 1, m.link.work, m.link.ed, m.link.start.u);
       else { useMarks.getState().remove(m.id); toast(m.kind === "bookmark" ? "Bookmark removed." : "Removed from favourites."); }
     }
   };
+
+  /** Show a passage in the given pane (opening the second pane if needed). */
+  const openInPane = (target: 1 | 2, w: string, ed: string, u: string) => {
+    const q = new URLSearchParams(params.toString());
+    const k = (x: string) => (target === 1 ? x : `${x}2`);
+    q.set(k("w"), w); q.set(k("ed"), ed); q.set(k("at"), u);
+    if (!q.get(k("tr"))) q.delete(k("tr"));
+    router.replace(`/read?${q}`, { scroll: false });
+  };
+  const closePane = () => {
+    const q = new URLSearchParams(params.toString());
+    for (const k of ["w2", "ed2", "tr2", "at2"]) q.delete(k);
+    router.replace(`/read?${q}`, { scroll: false });
+  };
+
+  // ------------------------------------------------------------ synced scrolling (same work in both panes)
+  const sync = useUI((s) => s.syncScroll);
+  const otherWork = params.get(pane === 1 ? "w2" : "w");
+  const canSync = split && otherWork === workId;
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!canSync || !sync || !el) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const onScroll = () => {
+      if (useUI.getState().activePane !== pane) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const top = el.getBoundingClientRect().top + 70;
+        const row = [...el.querySelectorAll<HTMLElement>("[data-key]")].find((r) => r.getBoundingClientRect().bottom > top);
+        if (row) useUI.getState().setScrollAnchor({ pane, key: row.dataset.key! });
+      }, 60);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    const unsub = useUI.subscribe((s, prev) => {
+      const a = s.scrollAnchor;
+      if (!a || a === prev.scrollAnchor || a.pane === pane) return;
+      // find the row here that contains the other pane's passage, or the nearest before it
+      const idxOf = order.get(a.key);
+      if (idxOf === undefined) return;
+      const target = [...el.querySelectorAll<HTMLElement>("[data-u]")].reverse().find((u) => (order.get(u.dataset.u!) ?? Infinity) <= idxOf);
+      target?.closest<HTMLElement>("[data-key]")?.scrollIntoView({ block: "start" });
+    });
+    return () => { el.removeEventListener("scroll", onScroll); unsub(); clearTimeout(timer); };
+  }, [canSync, sync, pane, order]);
 
   // ------------------------------------------------------------ render
   if (!workId || (idx && !work)) {
@@ -347,7 +422,15 @@ export default function Reader() {
   const setCols = (c: Columns) => setSettings({ columns: c });
 
   return (
-    <div className={`${styles.reader} ${styles["cols-" + columns]} ${word ? styles.withPanel : ""}`}>
+    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${word ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""}`}
+      onPointerDown={() => useUI.getState().setActivePane(pane)} onFocusCapture={() => useUI.getState().setActivePane(pane)}>
+      {split && (
+        <div className={styles.paneBar}>
+          <span className="label">{pane === 1 ? "Left book" : "Right book"}</span>
+          {canSync && <button type="button" className="chip" aria-pressed={sync} onClick={() => useUI.getState().setSyncScroll(!sync)}>Sync scrolling</button>}
+          {pane === 2 && <button type="button" className="chip" onClick={closePane}>Close this book</button>}
+        </div>
+      )}
       <header className={`wrap ${styles.top}`}>
         <nav className={styles.crumbs} aria-label="Breadcrumbs">
           <Link href={AREAS.library.href} transitionTypes={["page-turn"]}>{AREAS.library.name}</Link>
@@ -370,6 +453,7 @@ export default function Reader() {
                 {translations(work).map((t) => <option key={t.urn} value={versionOf(t.urn)}>{describe(t)}</option>)}
               </select>
             </label>
+            {!split && <button type="button" className="chip" onClick={onOpenSecond}>Open a second book beside this one</button>}
             <div className={styles.seg} role="radiogroup" aria-label="Columns">
               {([["both", "Both"], ["greek", "Greek"], ["trans", "English"]] as [Columns, string][]).map(([c, l]) => (
                 <button key={c} type="button" role="radio" aria-checked={columns === c} onClick={() => setCols(c)} disabled={c !== "greek" && !trText}>{l}</button>
@@ -444,7 +528,8 @@ export default function Reader() {
           <article className={`wrap ${styles.text}`} onClick={onTextClick} onMouseUp={onTextMouseUp} aria-label={`${cite}, ${chunkInfo.label}`}>
             {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} />)}
           </article>
-          {sel && <PassageToolbar sel={sel} onAction={act} onClose={() => setSel(null)} />}
+          {sel && <PassageToolbar sel={sel} onAction={act} onClose={() => setSel(null)}
+            xref={split ? (pendingXref && pendingXref.pane !== pane ? "here" : "start") : null} />}
           {share && <ShareDialog data={share} onClose={() => setShare(null)} />}
 
           <div className={`wrap ${styles.bottom}`}>
@@ -461,7 +546,29 @@ export default function Reader() {
         </>
       )}
 
-      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onClose={() => { setWord(null); document.querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel)); }} />
+      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onClose={() => { setWord(null); root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel)); }} />
+    </div>
+  );
+}
+
+/** The reader: one pane, or two side by side (when the address has w2=…). */
+export default function Reader() {
+  const params = useSearchParams();
+  const router = useRouter();
+  const split = !!params.get("w2");
+  const [picking, setPicking] = useState(false);
+  const open = (w: string) => {
+    const q = new URLSearchParams(params.toString());
+    q.set("w2", w);
+    for (const k of ["ed2", "tr2", "at2"]) q.delete(k);
+    router.replace(`/read?${q}`, { scroll: false });
+    setPicking(false);
+  };
+  return (
+    <div className={split ? styles.split : undefined}>
+      <ReaderPane pane={1} split={split} onOpenSecond={() => setPicking(true)} />
+      {split && <ReaderPane pane={2} split onOpenSecond={() => undefined} />}
+      {picking && <WorkPicker onPick={open} onClose={() => setPicking(false)} />}
     </div>
   );
 }
