@@ -69,4 +69,24 @@ export const BIB: Record<string, Secondary> = {
     author: "Beth Shapiro, Andrew Rambaut and M. Thomas P. Gilbert", title: "No proof that typhoid caused the Plague of Athens (a reply to Papagrigorakis et al.)", year: 2006,
     publisher: "International Journal of Infectious Diseases 10, 334–335", checked: "https://www.ijidonline.com/article/S1201-9712(06)00053-1/fulltext",
   },
+  "hct-2": {
+    author: "A. W. Gomme", title: "A Historical Commentary on Thucydides, Volume II: The Ten Years' War, Books II–III", year: 1956,
+    publisher: "Oxford: Clarendon Press", checked: "https://philpapers.org/rec/HAMACO-4",
+  },
+  "kagan-archidamian": {
+    author: "Donald Kagan", title: "The Archidamian War", year: 1974,
+    publisher: "Ithaca: Cornell University Press", checked: "https://cornellpress.cornell.edu/book/9780801408892/the-archidamian-war/",
+  },
+  "hornblower-thuc-2": {
+    author: "Simon Hornblower", title: "A Commentary on Thucydides, Volume II: Books IV–V.24", year: 1996,
+    publisher: "Oxford: Clarendon Press", checked: "https://philpapers.org/rec/HORACO-12",
+  },
+  "luraghi-alcock-helots": {
+    author: "Nino Luraghi and Susan E. Alcock (eds.)", title: "Helots and Their Masters in Laconia and Messenia: Histories, Ideologies, Structures", year: 2003,
+    publisher: "Washington, DC: Center for Hellenic Studies", checked: "https://chs.harvard.edu/book/luraghi-nino-and-susan-e-alcock-eds-helots-and-the-masters-in-laconia-and-messenia/",
+  },
+  "cartledge-sparta-lakonia": {
+    author: "Paul Cartledge", title: "Sparta and Lakonia: A Regional History 1300–362 BC (2nd edition)", year: 2002,
+    publisher: "London: Routledge", checked: "https://www.routledge.com/Sparta-and-Lakonia-A-Regional-History-1300-362-BC/Cartledge/p/book/9780415262767",
+  },
 };
