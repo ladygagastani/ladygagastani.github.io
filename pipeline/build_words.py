@@ -1,5 +1,5 @@
 """
-Build the word-analysis pack from GLAUx (Keersmaekers 2021, CC BY-SA 4.0; see README credits).
+Build the word-analysis pack from GLAUx (Keersmaekers 2021, CC BY-SA 4.0; credited on the site's Credits page, web/src/app/credits/page.tsx).
 
 For every work that is both in GLAUx and in our catalogue, write
   web/public/data/words/<work>.json
