@@ -185,4 +185,16 @@ export const BIB: Record<string, Secondary> = {
     author: "Frederick A. G. Beck", title: "Greek Education, 450–350 B.C.", year: 1964,
     publisher: "London: Methuen", checked: "https://www.cambridge.org/core/journals/classical-review/article/abs/greek-education-beckfrederick-a-g-greek-education-450350-bc-pp-381-24-plates-london-methuen-1964-cloth-45s-net/996B00BB79F6008944DF2FECAA99678B",
   },
+  "kennell-gymnasium": {
+    author: "Nigel M. Kennell", title: "The Gymnasium of Virtue: Education and Culture in Ancient Sparta", year: 1995,
+    publisher: "Chapel Hill: University of North Carolina Press", checked: "https://bmcr.brynmawr.edu/1996/1996.09.28",
+  },
+  "ducat-spartan-education": {
+    author: "Jean Ducat, translated by Emma Stafford, P.-J. Shaw and Anton Powell", title: "Spartan Education: Youth and Society in the Classical Period", year: 2006,
+    publisher: "Swansea: Classical Press of Wales", checked: "https://www.jstor.org/stable/j.ctvvn9g2",
+  },
+  "dawkins-orthia": {
+    author: "R. M. Dawkins (ed.)", title: "The Sanctuary of Artemis Orthia at Sparta, Excavated and Described by Members of the British School at Athens, 1906–1910", year: 1929,
+    publisher: "London: Society for the Promotion of Hellenic Studies (Macmillan)", checked: "https://www.cambridge.org/core/journals/antiquity/article/sanctuary-of-artemis-orthia-at-sparta-excavated-and-described-by-members-of-the-british-school-at-athens-19061910-edited-by-r-m-dawkins-published-by-the-society-for-the-promotion-of-hellenic-stzldies-macmillan-1929-pp-420-with-frontispiece-148-illustrations-in-the-text-208-plates-5-5s/1E05AA4C95F03A16238F72B33B0EAAE5",
+  },
 };
