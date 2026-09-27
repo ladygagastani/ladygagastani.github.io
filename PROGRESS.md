@@ -31,7 +31,7 @@
   - **Passage tools**: bookmark, favourite, notes (inline, editable, deletable), highlights in 4 colours, Share (link, text, image with a highlight-or-skip step), a "Your marks" list, and cross-references between panes.
   - **Side-by-side**: two panes, each with its own navigation; synced scrolling for the same work; Shift-click on a citation opens it beside.
   - **Reading aids** (learning first): transliteration in the site's documented simple scheme; colour by case from GLAUx; a vocabulary list for the page.
-- **Phase 3 (the Academy): first version done** (2026-09-27). Tests: 53 unit and 17 browser.
+- **Phase 3 (the Academy): first version done** (2026-09-27). Tests: 52 unit (plus 3 that need the network or the corpus cache) and 17 browser.
   - **Alphabet** `/academy/alphabet`: 24 letters plus final sigma, with animated stroke order (`data/strokes.ts`, 49 paths inspected visually), names (including the Classical names εἶ, οὖ, ὖ, ὦ, λάβδα), and sounds in three systems (`data/alphabet.ts`, after Allen's *Vox Graeca*); diphthongs; example words from the DCC core list.
   - **8 lessons** (`data/lessons.ts`): letters, marks, case, article, 2nd and 1st declension, εἰμί, present tense. Real sentences are shown live from the source files and verified by `NETWORK=1 npx vitest run src/data/lessons.test.ts`. Made-up practice sentences are labelled as such. Each lesson has word lists that go into the review deck.
   - **Daily review** `/academy/review`: FSRS via ts-fsrs. Lesson words, "Learn" in the vocabulary list and the reader's "Save word" all feed it.
