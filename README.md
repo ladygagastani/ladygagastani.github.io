@@ -31,6 +31,8 @@ Then open http://localhost:3000.
 | `npm test` | Unit tests (Vitest). |
 | `NETWORK=1 npx vitest run src/data/lessons.test.ts` | Also checks the lessons' real sentences against the source files online. |
 | `CORPUS=1 npx vitest run src/lib/tei/corpus.test.ts` | Corpus health check of every text (needs `pipeline/fetch_corpus.py` first). |
+| `CORPUS=1 npx vitest run src/wiki` | Checks every wiki quotation word for word against the texts (needs `pipeline/fetch_corpus.py` first). |
+| `npx tsx scripts/passage.ts <work> <ref> [to]` | Prints a passage's Greek and translation from the local corpus, for copying into wiki entries (also `find <words>` and `refs <work> [prefix]`). |
 | `npm run e2e` | Click-through tests in Microsoft Edge (Playwright). The command builds and starts the site itself, and needs internet for GitHub. |
 | `npm run lint` | Lint (ESLint). |
 | `node scripts/screenshot.mjs …` | Screenshot a page of the built site in Edge (see the file for options). |
@@ -77,6 +79,7 @@ Rebuilding the committed data, only when its sources change:
 - `lib/lexicon.ts` reads the Word Study index and lays out forms as tables; `components/treasury/` is the Treasury and Word Study.
 - `public/sw.js` is the offline helper (service worker); `config/pages.ts` lists the pages it keeps; `lib/connection.ts` and `components/ConnectionLight.tsx` are the connection light and Reconnect.
 - `lib/float.ts` and `components/reader/FloatingReader.tsx` are the floating reader; `lib/resume.ts` and `components/Resume.tsx` remember where you left off.
+- `wiki/` is the Painted Stoa: `entries/` (one file per entry; list new ones in `index.ts`), `bibliography.ts` (every modern work cited, each with the link it was checked against), `markup.ts` (the entry text format) and the tests that check entries against the texts; `components/stoa/` draws them.
 - `data/` holds hand-checked content: the alphabet, stroke order, lessons, tables of forms and passages of the day.
 
 ## Content rules

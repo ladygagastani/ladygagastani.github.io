@@ -113,7 +113,39 @@
   - **Drag a passage into a note**: a grip beside each passage number (on hover), or selected Greek, drags as the Greek in quotation marks followed by (Author, Work ref), which any note (or other text box) takes as a quotation. The forum and debates will take it too (Phase 8).
   - **Continue where you left off** (`lib/resume.ts`, `components/Resume.tsx`): the site remembers the pages visited (newest first; the reader once per set of books open) and how far down each was scrolled. The home page shows the last place (the reader resumes at its own remembered passage), the books in progress and the other recent pages (a lesson, a search with its filters, a Word Study...); following a link there restores the page's scroll. "Forget these pages" clears the list. Unsent drafts: notes already save as they are typed.
   - **Reading position is now measured from what is on screen** (the first passage showing below the sticky bar, on scroll), instead of an IntersectionObserver that only reported rows whose visibility changed; a passage brought into view is no longer hidden under the bar (its offset follows the bar's real height, `--bar-h`).
-- **Not started:** Phases 7–9.
+- **Phase 7 (the Painted Stoa wiki, maps, archaeology, Census): in progress** (2026-09-27). Tests: 160 unit (plus 27 that need the network or the corpus cache; with `CORPUS=1` the wiki check runs 76 more) and 37 browser (no wiki browser tests yet). Commits "Phase 7 (1)" to "Phase 7 (8)".
+  - **Done: the wiki engine** (`web/src/wiki/`, `components/stoa/`):
+    - `types.ts`: an `Entry` has slug, title, optional Greek, category, kicker, hook, body, quotes, timeline, "Read it yourself" passages, related entries, primary sources, secondary works (by bibliography id, with a note), optional image and places, and the date written. Certainty labels: `well` (well attested), `debated`, `legend`. The 11 categories are in `CATEGORIES`.
+    - `markup.ts`: a small text format for entry bodies. Blocks: `##`/`###` headings, `- ` lists, `!!` "Did you know", `{{quote:id}}`, `{{figure:id}}`, `{{timeline}}`, and `{well}`/`{debated}`/`{legend}` at the start of a paragraph to tag it. Inline: `*italic*`, `**bold**`, a certainty tag, and links `[text](cts:work:ref[-to])` into the reader, `[text](wiki:slug)` to another entry, `[text](https://…)`. Anything unknown makes the build fail, so a typo cannot slip through.
+    - `bibliography.ts` (`BIB`): every modern book or article cited, **each checked on a publisher's page, library catalogue or JSTOR before use; the link is kept in `checked`**. Nothing is added from memory.
+    - `images.ts` and `src/data/images.json`: lead images with their credit and licence (the file is still `{}`, no images yet).
+    - `index.ts`: the list of entries (`ENTRIES`), `entryBySlug`, `entriesIn`, `categoryOf`.
+    - Pages: `/stoa` (`StoaIndex.tsx`: a colonnade of painted panels, one per category, with search and a featured entry) and `/stoa/<slug>` (`EntryView.tsx`: hook, "on this page" contents that follow your scroll, the body with Greek quotations beside their translations, timeline, Read it yourself, sources, related entries). Every entry page is pre-built and kept for offline use (`config/pages.ts`).
+    - The home page's three wiki cards now open real entries: Laurion, Linear B and ostracism.
+  - **Done: the checks that keep entries honest.**
+    - `npm test` (`entries.test.ts`): every body parses; every quote is defined and used; every wiki, related, image and bibliography id exists; every cited work is in the catalogue; every bibliography item has a `checked` link and is used.
+    - `CORPUS=1 npx vitest run src/wiki` (`entries.corpus.test.ts`, needs `pipeline/.cache/corpus`): every citation exists in the text; **every Greek quotation is found word for word** in the passage cited (accents and punctuation normalised); every translation marked as from the corpus is found in the translation file. Tested: changing one letter of a quotation makes it fail.
+    - `npx tsx scripts/passage.ts <work> <ref> [to]` (in `web/`) prints a passage's Greek and its translation with the translator's name; `find <words>` finds a work id; `refs <work> [prefix]` lists valid references. **Quotations are copied from this output, never typed.**
+  - **Done: 12 entries** (in `src/wiki/entries/`), all passing both checks:
+    - melos (the Melian Dialogue), ostracism, laurion (the silver mines), linear-b, plague-of-athens, mytilene-debate, helots, diogenes, delphi, painted-statues, antikythera-mechanism, kerameikos.
+    - By category: dark side (melos, helots, laurion, plague-of-athens), democracy (ostracism, mytilene-debate), religion (delphi), beautiful (painted-statues), weird (diogenes), strange (antikythera-mechanism), archaeology (kerameikos), language (linear-b). **Still empty: people, education, daily life.**
+  - **Half done: entry 13, black-figure and red-figure pottery** (`entries/black-and-red-figure.ts`, committed as a draft, **not yet in `index.ts`**, so not on the site). To finish:
+    1. add to its `primary` list `{ work: "tlg0086.tlg003", ref: "60.1", to: "60.3", label: "Constitution of the Athenians 60" }`, and link "oil from Athena's sacred olive trees" in the body to `cts:tlg0086.tlg003:60.2` (Ath. Pol. 60.1–3 says the prize amphorae were made under the Council and filled with oil from the sacred olives, *moriai*, given to athletic and horse-race winners; checked with `passage.ts`);
+    2. add four items to `bibliography.ts` (all already verified):
+       - `boardman-abfv`: John Boardman, *Athenian Black Figure Vases: A Handbook*, London: Thames and Hudson, 1974 (checked via a Cambridge Core review);
+       - `boardman-arfv`: John Boardman, *Athenian Red Figure Vases: The Archaic Period: A Handbook*, London: Thames and Hudson, 1975;
+       - `noble-techniques`: Joseph Veach Noble, *The Techniques of Painted Attic Pottery*, revised edition, London: Thames and Hudson, 1988;
+       - `beazley-1911`: J. D. Beazley, "The Master of the Berlin Amphora", *Journal of Hellenic Studies* 31 (1911) 276–295, checked https://www.jstor.org/stable/624776;
+       - (fill in each `checked` link from a fresh search if the one above is missing);
+    3. import it in `index.ts`, run `npm test` and `CORPUS=1 npx vitest run src/wiki`, commit.
+  - **Not started in Phase 7:**
+    - **12+ more entries** to reach the 25+ goal. Ideas, each to be checked against the corpus first: the symposium, the Olympic Games, the allotment machine (kleroterion) and choosing by lot, the Arginusae trial, the trial of Socrates, Pythagoras and beans, Asclepius at Epidaurus (Pausanias 2.27), Schliemann and Troy, the Eleusinian Mysteries, Homer's similes, Sappho (check what the corpus has), exposure of infants, the *paidagogos* and schooling, a person (Pericles, or Hipparchia the Cynic). Fill the empty categories first.
+    - **Lead images**: a `pipeline/fetch_images.py` that takes openly licensed pictures (the Met's Open Access CC0, Wikimedia Commons with their licences) into `src/data/images.json`, each credited on the entry and on the Credits page.
+    - **The Periplus map** (`/stoa/periplus`, still a "coming" page): MapLibre with AWMC geodata (coastlines, rivers, roads; ODbL) and Pleiades places (CC BY; the full dump is about 136 MB gzipped at atlantides.org). Place pages link to the texts and entries that mention them; the Treasury's Places section waits for this. Map tiles or data from another server must be listed on the Credits & Privacy page (no-trackers rule).
+    - **The Kerameikos section** (`/stoa/kerameikos`, still a "coming" page; the archaeology category links there): an archaeology front page for the archaeology entries.
+    - **The Census** (`/stoa/census`, still a "coming" page): most mentioned words from the Word Study index counts, and names (people, gods, places) as PLAN.md §3 item 6 describes, with a plain statement of how the counting was done and how complete it is.
+    - Wiki entries in Quick search (`/` or Ctrl+K); scrollbar markers on long entries; browser tests for the wiki; rotating the home page's wiki cards daily; updating README and this file when done.
+- **Not started:** Phases 8–9.
 
 ## Decisions log
 | Date | Decision | Reason |
@@ -169,6 +201,10 @@
 | 2026-09-27 | **The connection light checks with a real request**, not only the browser's online flag, which can say "online" on a network that reaches nothing. | Honest status. |
 | 2026-09-27 | **The floating reader is the same reader**, given a different place to keep what it shows (`ReaderNav`), not a second copy. It lives in the root layout, so page changes never reset it. After floating, the site returns to the last page that was not the reader (never off the site). | Everything the reader does keeps working while floating. |
 | 2026-09-27 | **Passages are dragged by a grip**, not by their number: browsers do not start a drag from a button. The Float button sits in the sticky bar, so floating keeps the passage being read. | Found while testing. |
+| 2026-09-27 | **How a wiki entry is written.** (1) Find the passages with `scripts/passage.ts` and copy the Greek and translation from its output. (2) Check every modern book or article by web search and record the page used as `checked`. (3) Write the entry; anything that cannot be traced to a source is left out or softened (e.g. "and others" for co-authors not verified). (4) Run `npm test` and `CORPUS=1 npx vitest run src/wiki`. (5) Commit. | Real facts only; the checks make a wrong quotation fail the build. |
+| 2026-09-27 | **Translations in quotations**: the corpus translation when it exists (credited with translator and year, checked word for word); otherwise the site's own plain translation, labelled "this site". | Brief: translations are never altered; honest labels. |
+| 2026-09-27 | **Certainty is shown, not hidden**: paragraphs and timeline items are tagged well attested / debated / legend, and debates give both sides. | Brief. |
+| 2026-09-27 | Entries live in TypeScript files in the code (`src/wiki/entries/`), not a database, so the build can check every link and quotation. | Accuracy; no server. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
 
 ## Known problems
@@ -219,8 +255,17 @@
   - With the floating reader open, the page-turning keys go to whichever reader has the focus.
   - Python edits run through a Bash heredoc can break in two ways: a backslash before b or 1 becomes a control character, and some long heredocs fail to parse. Write such edit scripts to a file first.
 
+- **Phase 7 follow-ups**:
+  - After rebuilding the site (`npm run build`), restart the preview server, or it serves a stale mix of old and new files (blank pages).
+  - `npm run e2e` needs port 3100 free.
+  - On Windows, Git Bash's `/tmp` is not visible to Windows Python; put temporary scripts in the session's scratchpad folder. Commands that take a path such as `/stoa` need `MSYS_NO_PATHCONV=1` in Git Bash.
+  - The existing "Parsing CSS" warnings in the build come from the older `::highlight` rules and are harmless.
+
 ## Next steps
-1. Phase 7: the Painted Stoa (wiki), maps and archaeology, with 25+ fully sourced flagship entries (see `PLAN.md`).
+1. Finish the pottery entry (see Phase 7, "Half done", above for the exact steps).
+2. Write more entries to reach 25+, filling the empty categories (people, education, daily life) first.
+3. Lead images, then the Periplus map, the Kerameikos section and the Census.
+4. Wiki in Quick search, markers on entries, browser tests; update README and this file; report to the owner in plain English.
 
 ## Review history
 - None yet.
