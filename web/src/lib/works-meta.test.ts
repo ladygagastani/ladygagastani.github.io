@@ -24,3 +24,13 @@ describe("work metadata", () => {
     expect(FAMILIES.length).toBeGreaterThan(8);
   });
 });
+
+describe("date spans", () => {
+  it("reads GLAUx's span by century", async () => {
+    const { centuries } = await import("./works-meta");
+    expect(centuries(-500, -301)).toBe("5th–4th c. BC");
+    expect(centuries(-800, -701)).toBe("8th c. BC");
+    expect(centuries(-100, 100)).toBe("1st c. BC – 1st c. AD");
+    expect(centuries(101, 300)).toBe("2nd–3rd c. AD");
+  });
+});

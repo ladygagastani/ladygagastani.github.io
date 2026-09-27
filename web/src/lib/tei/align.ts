@@ -16,19 +16,19 @@ export interface Row {
   trans: Block[];         // empty when the translation has nothing for this stretch
 }
 
-interface Piece { key: string | null; blocks: Block[] }
+interface Piece { key: string | null; blocks: Block[]; src: number }   // src: the translation unit it comes from
 
 const keyOf = (ref: string[]) => ref.join(".");
 
 /** Cut a translation unit at markers naming the Greek's finest level (e.g. unit="line"). */
-function splitAtMarkers(u: Unit, marker: string, prefix: string[]): Piece[] {
-  const pieces: Piece[] = [{ key: null, blocks: [] }];
+function splitAtMarkers(u: Unit, marker: string, prefix: string[], src: number): Piece[] {
+  const pieces: Piece[] = [{ key: null, blocks: [], src }];
   for (const b of u.blocks) {
     let cur: Block = { ...b, c: [] } as Block;
     pieces[pieces.length - 1].blocks.push(cur);
     for (const x of b.c) {
       if (typeof x !== "string" && "m" in x && x.m === marker && x.n) {
-        const piece: Piece = { key: keyOf([...prefix, x.n]), blocks: [] };
+        const piece: Piece = { key: keyOf([...prefix, x.n]), blocks: [], src };
         pieces.push(piece);
         // the block continues in the new piece: same kind of block, no repeated speaker label
         cur = { ...b, c: [], ...("speaker" in b ? { speaker: undefined } : {}) } as Block;
@@ -53,31 +53,31 @@ export function translationPieces(grc: TeiDoc, tr: TeiDoc): Piece[] {
 
   const finer = common === gl.length && tl.length > gl.length;   // e.g. English book.section.subsection, Greek book.section
   const pieces: Piece[] = [];
-  for (const u of tr.units) {
-    if (sameScheme) { pieces.push({ key: keyOf(u.ref), blocks: u.blocks }); continue; }
+  tr.units.forEach((u, src) => {
+    if (sameScheme) { pieces.push({ key: keyOf(u.ref), blocks: u.blocks, src }); return; }
     // a finer translation sits beside the Greek passage that contains it
-    if (finer) { pieces.push({ key: keyOf(u.ref.slice(0, gl.length)), blocks: u.blocks }); continue; }
+    if (finer) { pieces.push({ key: keyOf(u.ref.slice(0, gl.length)), blocks: u.blocks, src }); return; }
     const prefix = u.ref.slice(0, Math.min(common, gl.length - 1));
-    const parts = splitAtMarkers(u, leaf, prefix);
+    const parts = splitAtMarkers(u, leaf, prefix, src);
     // A coarser translation with no inner markers (English "chapter 5" against Greek 5.1, 5.2…)
     // starts at the first Greek passage of the division with the same number.
     if (tl.length < gl.length && parts.length === 1 && parts[0].key === null) {
-      pieces.push({ key: keyOf([...u.ref, "?"]), blocks: parts[0].blocks });
-      continue;
+      pieces.push({ key: keyOf([...u.ref, "?"]), blocks: parts[0].blocks, src });
+      return;
     }
     // text before the first marker continues the previous piece, unless the unit starts a new division
     for (const p of parts) {
       if (p.key === null) {
         const prev = pieces[pieces.length - 1];
         if (prev && prev.key?.startsWith(keyOf(prefix) + ".")) prev.blocks.push(...p.blocks);
-        else pieces.push({ key: prefix.length ? keyOf([...prefix, "?"]) : null, blocks: p.blocks });
+        else pieces.push({ key: prefix.length ? keyOf([...prefix, "?"]) : null, blocks: p.blocks, src });
       } else pieces.push(p);
     }
-  }
+  });
   return pieces;
 }
 
-export interface Placed { at: number; blocks: Block[] }
+export interface Placed { at: number; blocks: Block[]; src: number }   // src: translation unit index
 
 /**
  * Decide which Greek unit each translation piece starts at, for the whole text at once.
@@ -99,7 +99,7 @@ export function placePieces(grc: TeiDoc, pieces: Piece[]): Placed[] {
     if (at === undefined) at = prev;
     // never let a piece jump backwards past the one before it
     if (at < prev && placed.length) at = prev;
-    placed.push({ at, blocks: p.blocks });
+    placed.push({ at, blocks: p.blocks, src: p.src });
     prev = at;
   }
   return placed;

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { loadCatalog, fold, greekEditions, hasTranslation, type CatalogIndex, type CatAuthor, type CatWork } from "@/lib/catalog";
-import { loadWorksMeta, FAMILIES, PERIODS, familyOf, periodOf, century, type WorkMeta } from "@/lib/works-meta";
+import { loadWorksMeta, FAMILIES, PERIODS, familyOf, periodOf, centuries, type WorkMeta } from "@/lib/works-meta";
 import styles from "./Library.module.css";
 
 /**
@@ -30,7 +30,7 @@ function WorkItem({ w, author, meta }: { w: CatWork; author?: CatAuthor; meta?: 
         {grc?.label && grc.label !== w.title && <span className={styles.workGr} lang="grc">{grc.label}</span>}
       </Link>
       <span className={styles.meta}>
-        {meta?.genre && <span className={styles.genre}>{meta.genre}{meta.from !== null ? ` · ${century(meta.from)}` : ""}</span>}
+        {meta?.genre && <span className={styles.genre}>{meta.genre}{meta.from !== null ? ` · ${centuries(meta.from, meta.to)}` : ""}</span>}
         {tr ? <span className={styles.badge}>English</span> : <span className={`${styles.badge} ${styles.off}`}>Greek only</span>}
         {grc && <span>{kb(grc.size)}</span>}
       </span>

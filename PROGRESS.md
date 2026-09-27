@@ -41,7 +41,24 @@
   - **Progress**: lessons done, words learned, cards due, streak, next step.
   - **Audio**: `public/audio/index.json` manifest; play buttons appear only where a recording exists. **Recording studio** `/academy/studio` (development only) records in the browser and saves `<key>.webm` plus the index into `web/public/audio/`.
   - **Tools**: `pipeline/find_sentences.py` finds short hand-annotated sentences with a given feature and common vocabulary, for new lessons.
-- **Not started:** Phases 4–9.
+- **Phase 4 (search, Echoes, metre): search done** (2026-09-27); Echoes and metre are next. Tests: 65 unit (plus 3 that need the network or the corpus cache) and 21 browser.
+  - **Search index** (`web/scripts/build-search.ts`, run `npx tsx scripts/build-search.ts grc`, then `eng`, then `lem`, in `web/`; needs `pipeline/.cache/corpus` from `fetch_corpus.py` and the GLAUx word packs). Output goes to `web/public/data/search/`, **about 320 MB, not committed**:
+    - Greek words of every edition: 33.7M words, 788k accent-free keys, 149 MB;
+    - English words of every translation: 13.0M words, 46 MB;
+    - dictionary words (lem, 75 MB) and grammar (tag, 52 MB) from GLAUx.
+    - The format is small binary "shards" (`src/lib/search/codec.ts`). A search downloads only the shards it needs.
+  - **GLAUx words placed on the reader's words**: 95.3% (15.6M). The rest are mostly passages that the reader's edition does not contain: Diodorus books 1–10 and 18–20, most of Pollux, parts of Hippocrates and Origen.
+  - **The Oracle** `/search`:
+    - Greek words, with accents ignored, as a phrase or with the `*` and `?` wildcards;
+    - dictionary word, with grammar, or grammar alone;
+    - translations;
+    - My library (notes, marks, saved words).
+    - You can type Greek, Latin letters (the site's transliteration; a plain e or o also finds η or ω) or Beta Code, and the page shows back what it will search for. There is an on-screen Greek keyboard.
+    - Filters: author, work, kind of writing, period, dialect, and all editions.
+    - Results come grouped by work (sorted by most results or by date), each shown in context with the word marked. Every result links into the reader, where the word is highlighted with the CSS Custom Highlight API. Translation results find the right row even when the translation is cited by "card".
+  - **Typed references** such as "Il. 1.1", "S. Ant. 332" or "Pl. R. 327a" go straight to the passage. The 4,320 abbreviations were learnt from LSJ's own citations (`web/scripts/build-abbrev.ts` → `public/data/abbrev.json`, committed); English titles work too.
+  - **Quick search** from any page (press `/` or Ctrl+K): passages, works, authors, and the Oracle's searches.
+- **Not started:** Phases 5–9.
 
 ## Decisions log
 | Date | Decision | Reason |
@@ -77,6 +94,11 @@
 | 2026-09-27 | **Audio: the owner records it.** The site gets a built-in recording studio (script, pronunciation guide, record, listen, save correctly named files into `web/public/audio/`). Play buttons appear only where a recording exists. | Owner's choice; the brief forbids faked audio. |
 | 2026-09-27 | **Git**: the owner allows local commits (version snapshots). Commit at the end of each piece of work; don't push (there is no remote). | Owner's instruction. |
 | 2026-09-27 | **Phase reviews by a fresh session are optional**, the owner's own workflow. Don't wait for them. | Owner's instruction. |
+| 2026-09-27 | **Search runs in the browser from a pre-built index** of static shard files (by the first two letters of the key), so it needs no server and can work offline later. Keys are accent-free (`greekKey`: fold, σ for ς and ϲ, letters only). Dictionary words are stored with their accents (εἰμί "be" and εἶμι "go" stay apart) and found by their accent-free key. | No server, no trackers; accuracy. |
+| 2026-09-27 | **GLAUx analyses are placed on the reader's words by walking both texts in reading order**, re-finding the place with a five-word run when they drift apart. GLAUx's own references are not used for this: they often follow another citation scheme. | Raised the placement rate from 88% to 95%. |
+| 2026-09-27 | By default, search covers the edition and translation the reader opens first (Perseus first), so parallel editions don't count twice. "Every edition" is a checkbox. | Honest counts. |
+| 2026-09-27 | GLAUx dates a work by its author's lifetime, by century. The site shows the whole span ("5th–4th c. BC" for Plato), never just the first century, with a note on hover. | Accuracy: a single century claimed too much. |
+| 2026-09-27 | GLAUx files the forms of εἶμι "go" under ἔρχομαι. The search page says so whenever εἰμί, εἶμι or ἔρχομαι is searched. | Found while testing; readers would otherwise miss them. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
 
 ## Known problems
@@ -93,19 +115,23 @@
 - The GLAUx tag "b" is read as "coordinating conjunction", confirmed in glaux-nlp `treebanks/Tagsets.py` ("coordinator").
 - The Bash tool turns a backslash followed by the digit 1, written inside a heredoc, into a control character. Never write regex back-references through a Bash heredoc; use the Edit tool or `chr(92)`. This bit `build_lsj.py` once; it was fixed and the output was verified clean.
 - Home page items the brief asks for that depend on later phases: "recent forum activity" (Phase 8), and daily rotation of the wiki cards (Phase 7, once real entries exist). The three current cards are fixed.
-- "Save word", "Load from a folder" and "Reconnect folders" show a toast saying which phase delivers them.
-- The passage of the day is hard-coded from the Perseus files (`src/data/iliad-sample.ts`). Phase 2 should load it live from the TEI file and choose a different passage each day.
-- The word entries in `iliad-sample.ts` were checked by hand; Phase 2 replaces them with the word pack plus live look-ups.
+- **Search follow-ups**:
+  - The search index (about 320 MB) can't be downloaded for offline use yet. It should join the Scroll Case downloads, like the word packs. Its `_index.json` holds [bytes, keys], whereas the packs' index holds [bytes, sha1], so a checksum is needed first.
+  - Phrases are found only within one passage (one verse line, one prose section).
+  - The reader's word look-up still matches GLAUx by reference, so it finds less than the search index does. It could use the index's placement instead (stream alignment) for the 11% of works whose citation schemes differ.
+  - Results show passages from the text file itself. If your downloaded copy of a text differs from the pinned commit the index was built from, the marked word can be off.
+- **Hosting**: the search index adds about 320 MB to the generated data (see above).
 
 ## Next steps
-1. *(Optional; the owner's own workflow, not a blocker.)* A fresh session could review Phase 1: run the tests, click through at every width in both themes, and check the facts in `src/config/areas.ts`, the wiki cards and `iliad-sample.ts`.
-2. **Phase 2 (Library and reader):**
-   - the catalogue from both repos' `__cts__.xml` files;
-   - reading TEI from GitHub raw online, and from a folder or ZIP offline (File System Access API, with handles remembered in IndexedDB, which is what the Reconnect button restores);
-   - parsing in a Web Worker;
-   - the reader in B's layout with A's colours;
-   - word look-up: a word-pack pipeline in `pipeline/`, plus live Wiktionary;
-   - bookmarks, favourites, notes and highlights, side-by-side reading, and Share.
+1. **Echoes** in the reader:
+   - exact form, or every form of the dictionary word;
+   - a count, a strip showing where they fall in the book, and a list with context; jump there and back;
+   - near-repetitions (Homeric formulas), with an on-screen explanation of what counts as a match;
+   - widen to the same author, then the whole corpus. The search index already holds what is needed.
+2. **Metre**:
+   - hexameter and elegiac first, then iambic trimeter; lyric only where reliable published scansions exist;
+   - uncertain lines marked; accuracy checked against published scansions and reported to the owner.
+3. Then Phase 5 (see `PLAN.md`).
 
 ## Review history
 - None yet.

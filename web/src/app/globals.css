@@ -219,3 +219,10 @@ main { display: block; min-height: 60vh; outline: none; }
 .soon-card { max-width: 720px; display: grid; gap: 16px; justify-items: start; }
 .soon-card ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; color: var(--ink-2); }
 .soon-card li::marker { color: var(--accent); }
+
+/* words found by a search, marked in the reader (CSS Custom Highlight API) */
+::highlight(search-hit-1), ::highlight(search-hit-2) {
+  background-color: color-mix(in srgb, var(--accent) 28%, transparent);
+  text-decoration: underline 2px var(--accent);
+  text-underline-offset: 4px;
+}

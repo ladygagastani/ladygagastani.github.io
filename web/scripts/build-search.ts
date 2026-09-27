@@ -51,7 +51,7 @@ class KeyWriter {
   }
 }
 
-function writeShards(dir: string, keys: Map<string, KeyWriter>, shardFor: (k: string) => string, display?: Map<string, Set<string>>) {
+function writeShards(dir: string, keys: Map<string, KeyWriter>, shardFor: (k: string) => string) {
   rmSync(join(OUT, dir), { recursive: true, force: true });
   mkdirSync(join(OUT, dir), { recursive: true });
   const byShard = new Map<string, string[]>();
@@ -60,13 +60,12 @@ function writeShards(dir: string, keys: Map<string, KeyWriter>, shardFor: (k: st
   const index: Record<string, [number, number]> = {};
   for (const [s, ks] of byShard) {
     ks.sort();
-    const header = { k: [] as string[], o: [] as number[], n: [] as number[], ...(display ? { d: [] as string[][] } : {}) };
+    const header = { k: [] as string[], o: [] as number[], n: [] as number[] };
     const parts: Uint8Array[] = [];
     let off = 0;
     for (const k of ks) {
       const w = keys.get(k)!;
       header.k.push(k); header.o.push(off); header.n.push(w.count);
-      if (display) header.d!.push([...(display.get(k) ?? [])]);
       parts.push(w.bytes.subarray(0, w.len)); off += w.len;
     }
     const body = new Uint8Array(off);
@@ -158,7 +157,6 @@ function alignStream(glaux: string[], tei: string[]): Int32Array {
 /** GLAUx analyses, placed on the exact word of the reader's text. */
 function passLemmas() {
   const lemmas = new Map<string, KeyWriter>();
-  const display = new Map<string, Set<string>>();
   const tagIds = new Map<string, number>();
   const tagKeys = new Map<string, KeyWriter>();
   let placed = 0, missed = 0;
@@ -190,13 +188,12 @@ function passLemmas() {
       const ui = posUnit[hit], wi = posWord[hit];
       let tagId = tagIds.get(t.tag);
       if (tagId === undefined) { tagId = tagIds.size; tagIds.set(t.tag, tagId); }
-      const lk = greekKey(t.lemma);
-      if (!lk) return;
+      // keyed by the dictionary form itself, accents and all: εἰμί "be" and εἶμι "go" stay apart
+      const lk = t.lemma.normalize("NFC");
+      if (!greekKey(lk)) return;
       let lw = lemmas.get(lk);
       if (!lw) lemmas.set(lk, (lw = new KeyWriter()));
       lw.add(e.id, ui, wi, [tagId]);
-      if (!display.has(lk)) display.set(lk, new Set());
-      display.get(lk)!.add(t.lemma);
       let tw = tagKeys.get(t.tag);
       if (!tw) tagKeys.set(t.tag, (tw = new KeyWriter()));
       tw.add(e.id, ui, wi);
@@ -206,7 +203,7 @@ function passLemmas() {
   }
   writeFileSync(join(OUT, "lem-report.json"), JSON.stringify(perWork.sort((x, y) => y[2] - x[2])));
   console.log(`Lemmas: ${placed.toLocaleString()} analysed words placed on the text, ${missed.toLocaleString()} not matched (${((100 * missed) / (placed + missed)).toFixed(1)}%)`);
-  writeShards("lem", lemmas, shardOf, display);
+  writeShards("lem", lemmas, (k) => shardOf(greekKey(k)));   // found by accent-free key, then told apart
   const tags = [...tagIds.keys()];
   writeFileSync(join(OUT, "tags.json"), JSON.stringify(tags));
   const tagByKey = new Map([...tagKeys].map(([t, w]) => [String(tagIds.get(t)), w]));

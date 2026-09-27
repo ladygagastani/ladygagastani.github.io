@@ -171,9 +171,17 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
 
   // ------------------------------------------------------------ which page, and which passage to show
   const target = at ?? remembered?.at ?? null;
-  const startUnit = doc && target ? Math.max(0, findRef(doc, target)) : 0;
-  const chunk = doc ? chunkOf(doc, startUnit) : 0;
   const placed = parsed?.placed ?? null;
+  // a search hit in the translation (?tu=its passage number there): open beside the Greek it translates
+  const tu = P("tu");
+  const tuAt = useMemo(() => {
+    if (tu === null || !placed) return undefined;
+    let best: number | undefined;
+    for (const p of placed) { if (p.src > Number(tu)) break; best = p.at; }
+    return best;
+  }, [tu, placed]);
+  const startUnit = tuAt !== undefined ? tuAt : doc && target ? Math.max(0, findRef(doc, target)) : 0;
+  const chunk = doc ? chunkOf(doc, startUnit) : 0;
   const unitKeys = useMemo(() => new Set(doc?.units.map((u) => u.ref.join(".")) ?? []), [doc]);
   const pageKeys = useMemo(() => new Set(doc && doc.chunks[chunk] ? doc.units.slice(doc.chunks[chunk].first, doc.chunks[chunk].last + 1).map((u) => u.ref.join(".")) : []), [doc, chunk]);
   const rows = useMemo(() => (doc && doc.chunks[chunk] ? alignChunk(doc, doc.chunks[chunk], placed) : []), [doc, chunk, placed]);
@@ -188,8 +196,50 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     const el = row && root().querySelector<HTMLElement>(`[data-key="${CSS.escape(row.key)}"]`);
     if (!el) return;
     requestAnimationFrame(() => el.scrollIntoView({ block: "start" }));
-    if (at) { el.classList.remove(styles.flash); void el.offsetWidth; el.classList.add(styles.flash); }
-  }, [rows, startKey, at, split]);
+    if (at || tu) { el.classList.remove(styles.flash); void el.offsetWidth; el.classList.add(styles.flash); }
+  }, [rows, startKey, at, tu, split]);
+
+  // words found by a search: ?hl= their positions in the passage (Greek), ?find= the words (translation)
+  const hl = P("hl"), find = P("find");
+  useEffect(() => {
+    const reg = typeof CSS !== "undefined" ? (CSS as unknown as { highlights?: Map<string, unknown> }).highlights : undefined;
+    const H = (globalThis as unknown as { Highlight?: new (...r: Range[]) => unknown }).Highlight;
+    const name = `search-hit-${pane}`;
+    if (!reg || !H || !doc || !rows.length || (!hl && !find)) return;
+    const unitKey = doc.units[startUnit]?.ref.join(".");
+    const row = rows.find((r) => r.greek.some((u) => u.ref.join(".") === unitKey));
+    const ranges: Range[] = [];
+    if (hl && unitKey) {
+      const spans = root().querySelector(`[data-u="${CSS.escape(unitKey)}"]`)?.querySelectorAll("[data-w]");
+      for (const i of hl.split(",").map(Number)) {
+        const sp = spans?.[i];
+        if (sp) { const r = new Range(); r.selectNodeContents(sp); ranges.push(r); }
+      }
+    }
+    const words = (find ?? "").split(/\s+/).filter((w) => /^[A-Za-z’']+$/.test(w));   // letters only: safe in a pattern
+    if (words.length && row) {
+      // a translation passage can run over several rows: mark the words in the first row that has them
+      const re = new RegExp(`\\b(?:${words.join("|")})\\b`, "gi");
+      const first = rows.indexOf(row);
+      for (let i = first; i < Math.min(rows.length, first + 60); i++) {
+        const el = root().querySelector<HTMLElement>(`[data-key="${CSS.escape(rows[i].key)}"]`);
+        const trEl = el?.querySelector(`.${styles.tr}`);
+        if (!el || !trEl) continue;
+        const walk = document.createTreeWalker(trEl, NodeFilter.SHOW_TEXT);
+        for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+          for (const m of n.textContent!.matchAll(re)) {
+            const r = new Range(); r.setStart(n, m.index!); r.setEnd(n, m.index! + m[0].length); ranges.push(r);
+          }
+        }
+        if (ranges.length) {
+          if (i !== first) requestAnimationFrame(() => requestAnimationFrame(() => el.scrollIntoView({ block: "center" })));
+          break;
+        }
+      }
+    }
+    reg.set(name, new H(...ranges));
+    return () => { reg.delete(name); };
+  }, [rows, hl, find, doc, startUnit, pane]);
 
   // ------------------------------------------------------------ remember where the reader is
   const edV = grcText ? versionOf(grcText.urn) : null;
@@ -213,6 +263,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     if (ed) q.set(k("ed"), ed);
     q.set(k("tr"), o.tr === undefined ? (trV ?? "none") : (o.tr ?? "none"));
     if (o.at) q.set(k("at"), o.at); else q.delete(k("at"));
+    for (const x of ["hl", "find", "tu"]) q.delete(k(x));   // a search's marks belong to the passage it found
     return `/read?${q}`;
   };
   const goChunk = (i: number) => {

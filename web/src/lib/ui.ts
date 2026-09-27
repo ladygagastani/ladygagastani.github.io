@@ -14,6 +14,9 @@ interface UIStore {
   closeSettings: () => void;
   toast: { id: number; text: string } | null;
   showToast: (text: string) => void;
+  /** The quick-search box (Ctrl+K or "/" anywhere). */
+  searchOpen: boolean;
+  setSearchOpen: (v: boolean) => void;
 
   // side-by-side reading
   activePane: 1 | 2;
@@ -39,6 +42,9 @@ export const useUI = create<UIStore>()((set) => ({
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => set((s) => (s.toast?.id === id ? { toast: null } : s)), 2800);
   },
+
+  searchOpen: false,
+  setSearchOpen: (searchOpen) => set({ searchOpen }),
 
   activePane: 1,
   setActivePane: (activePane) => set((s) => (s.activePane === activePane ? s : { activePane })),

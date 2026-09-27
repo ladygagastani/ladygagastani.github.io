@@ -2,7 +2,7 @@
  * The search index format, shared by the builder (scripts/build-search.ts) and the site.
  *
  * Each shard file: [uint32 little-endian header length][header JSON][postings bytes].
- * header = { k: keys[], o: byte offsets into postings, n: posting counts, d?: display forms }
+ * header = { k: keys[], o: byte offsets into postings, n: posting counts }
  * Postings for a key are varint-encoded, sorted by (text, unit, word):
  *   Δtext, (unit if Δtext > 0 else Δunit), word [, extra…]
  */
@@ -11,7 +11,7 @@ import { GREEK_WORD, isGreekWord } from "@/lib/greek";
 import type { Unit } from "@/lib/tei/types";
 
 export interface Posting { text: number; unit: number; word: number; extra: number[] }
-export interface ShardHeader { k: string[]; o: number[]; n: number[]; d?: string[][] }
+export interface ShardHeader { k: string[]; o: number[]; n: number[] }
 
 /** Search key for a Greek word: no accents, breathings, case or elision mark; final sigma folded. */
 export const greekKey = (w: string) => fold(w).replace(/[^α-ωϝ]/g, "");

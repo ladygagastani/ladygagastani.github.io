@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import SettingsPanel, { SettingsApplier } from "@/components/SettingsPanel";
 import Toast from "@/components/Toast";
 import Reveal from "@/components/Reveal";
+import QuickSearch from "@/components/search/QuickSearch";
 import { SITE } from "@/config/areas";
 import { BOOT_SCRIPT } from "@/lib/settings";
 import "./globals.css";
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SettingsPanel />
         <Toast />
         <Reveal />
+        <QuickSearch />
       </body>
     </html>
   );

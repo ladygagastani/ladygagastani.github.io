@@ -40,7 +40,22 @@ export const periodOf = (from: number | null) => (from === null ? null : PERIODS
 /** -500 → "5th c. BC", 101 → "2nd c. AD" */
 export function century(from: number | null): string | null {
   if (from === null) return null;
-  const n = from < 0 ? Math.round(-from / 100) : Math.floor((from - 1) / 100) + 1;
+  const n = from < 0 ? Math.ceil(-from / 100) : Math.floor((from - 1) / 100) + 1;   // 500–401 BC is the 5th century
   const suf = n % 10 === 1 && n !== 11 ? "st" : n % 10 === 2 && n !== 12 ? "nd" : n % 10 === 3 && n !== 13 ? "rd" : "th";
   return `${n}${suf} c. ${from < 0 ? "BC" : "AD"}`;
 }
+
+/**
+ * The span GLAUx gives, by century: {from: -500, to: -301} → "5th–4th c. BC". GLAUx dates a work
+ * by its author's lifetime, so a span is the honest reading; a single century would claim too much.
+ */
+export function centuries(from: number | null, to: number | null): string | null {
+  const a = century(from);
+  if (!a || to === null) return a;
+  const b = century(to);
+  if (!b || a === b) return a;
+  const [na, ea] = [a.replace(/ c\. (BC|AD)$/, ""), a.slice(-2)];
+  return ea === b.slice(-2) ? `${na}–${b}` : `${a} – ${b}`;
+}
+export const DATE_NOTE = "Date span as GLAUx gives it, by century of the author's life";
+
