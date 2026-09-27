@@ -31,7 +31,8 @@
   - **Passage tools**: bookmark, favourite, notes (inline, editable, deletable), highlights in 4 colours, Share (link, text, image with a highlight-or-skip step), a "Your marks" list, and cross-references between panes.
   - **Side-by-side**: two panes, each with its own navigation; synced scrolling for the same work; Shift-click on a citation opens it beside.
   - **Reading aids** (learning first): transliteration in the site's documented simple scheme; colour by case from GLAUx; a vocabulary list for the page.
-- **Not started:** Phases 3–9. **Next: Phase 3, the Academy (Study).**
+- **Phase 3 (the Academy): in progress.**
+- **Not started:** Phases 4–9.
 
 ## Decisions log
 | Date | Decision | Reason |
@@ -63,6 +64,8 @@
 | 2026-09-27 | The reader is one static page, `/read?w=<work>&ed=<version>&tr=<version or none>&at=<ref>`, so a cached shell works offline. | Offline-friendly. |
 | 2026-09-27 | **Display rules for TEI** (the text is never changed, but not every element is printed text): `<reg>` is not shown, because Perseus uses it for gazetteer data such as "Bodrum [27.466,37.5]…" beside "Halicarnassus". Where two text pieces meet at a markup boundary, a doubled space is collapsed and a space before punctuation is removed. Backslashes in cRefPattern are ignored (the Theogony header escapes its quotes). | Found while testing; covered by tests. |
 | 2026-09-27 | **Library filters** use GLAUx metadata (genre grouped into 12 families, period by century, dialect) for 1,186 works. **Passage of the day** is live from the files, from a curated list of 10 verified references (`src/data/passages.ts`; `NETWORK=1 npx vitest run src/data/passages.test.ts` re-checks them). | Brief. |
+| 2026-09-27 | **Default pronunciation: reconstructed Classical Attic** (after W. S. Allen, *Vox Graeca*, 3rd ed. 1987). Erasmian and Modern Greek are selectable. | Owner's choice. |
+| 2026-09-27 | **Audio: the owner records it.** The site gets a built-in recording studio (script, pronunciation guide, record, listen, save correctly named files into `web/public/audio/`). Play buttons appear only where a recording exists. | Owner's choice; the brief forbids faked audio. |
 | 2026-09-27 | **Git**: the owner allows local commits (version snapshots). Commit at the end of each piece of work; don't push (there is no remote). | Owner's instruction. |
 | 2026-09-27 | **Phase reviews by a fresh session are optional**, the owner's own workflow. Don't wait for them. | Owner's instruction. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
