@@ -318,4 +318,12 @@ export const BIB: Record<string, Secondary> = {
     author: "Antonis Kotsonas", title: "Greek and Roman Knossos: The Pioneering Investigations of Minos Kalokairinos", year: 2016,
     publisher: "Annual of the British School at Athens 111, 299–324", checked: "https://www.cambridge.org/core/journals/annual-of-the-british-school-at-athens/article/abs/greek-and-roman-knossos-the-pioneering-investigations-of-minos-kalokairinos/C8BF525B055D28DD5AF108D921114550",
   },
+  "stclair-elgin": {
+    author: "William St Clair", title: "Lord Elgin and the Marbles (3rd edition)", year: 1998,
+    publisher: "Oxford: Oxford University Press", checked: "https://global.oup.com/academic/product/lord-elgin-and-the-marbles-9780192880536",
+  },
+  "beard-parthenon": {
+    author: "Mary Beard", title: "The Parthenon (revised edition)", year: 2010,
+    publisher: "Cambridge, MA: Harvard University Press; London: Profile Books", checked: "https://www.hup.harvard.edu/catalog.php?isbn=9780674055636",
+  },
 };

@@ -334,5 +334,19 @@
   "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
   "source": "https://commons.wikimedia.org/wiki/File:Knossos_North_entrance_bull_fresco.jpg",
   "sourceName": "Wikimedia Commons"
+ },
+ "parthenon-frieze-cast": {
+  "file": "parthenon-frieze-cast.jpg",
+  "width": 1600,
+  "height": 1113,
+  "alt": "A white plaster relief of two figures seated side by side on stools, their faces broken away: on the left a figure in heavy folded drapery holds a long torch; on the right a bare-chested man leans back with his hands clasped around one raised knee. Part of a third seated figure is at the left edge.",
+  "title": "Plaster cast in the Acropolis Museum of part of block IV of the Parthenon's east frieze; the marble original is in the British Museum",
+  "date": "Original 5th century BC; modern cast",
+  "place": "Acropolis Museum, Athens",
+  "creator": "Photograph by Deiadameian",
+  "licence": "CC BY-SA 4.0",
+  "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Block_IV_east_frieze_of_the_Parthenon_plaster_cast_Acropolis_Museum_03.jpg",
+  "sourceName": "Wikimedia Commons"
  }
 }

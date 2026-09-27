@@ -16,7 +16,7 @@ export const LAYERS: Layer[] = [
   {
     id: "trouble", title: "The trouble with digging", deposit: "topsoil, cut by a pit",
     blurb: "Excavation destroys what it records. Early diggers hunted treasure and heroes, looters still dig for the market, and who should keep what was found is argued to this day.",
-    slugs: [],
+    slugs: ["parthenon-marbles"],
   },
   {
     id: "how", title: "How we know", deposit: "sherds in a clay layer",
