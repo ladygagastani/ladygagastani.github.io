@@ -197,4 +197,12 @@ export const BIB: Record<string, Secondary> = {
     author: "R. M. Dawkins (ed.)", title: "The Sanctuary of Artemis Orthia at Sparta, Excavated and Described by Members of the British School at Athens, 1906–1910", year: 1929,
     publisher: "London: Society for the Promotion of Hellenic Studies (Macmillan)", checked: "https://www.cambridge.org/core/journals/antiquity/article/sanctuary-of-artemis-orthia-at-sparta-excavated-and-described-by-members-of-the-british-school-at-athens-19061910-edited-by-r-m-dawkins-published-by-the-society-for-the-promotion-of-hellenic-stzldies-macmillan-1929-pp-420-with-frontispiece-148-illustrations-in-the-text-208-plates-5-5s/1E05AA4C95F03A16238F72B33B0EAAE5",
   },
+  "murray-sympotica": {
+    author: "Oswyn Murray (ed.)", title: "Sympotica: A Symposium on the Symposion", year: 1990,
+    publisher: "Oxford: Clarendon Press", checked: "https://bmcr.brynmawr.edu/1991/1991.05.13/",
+  },
+  "lissarrague-banquet": {
+    author: "François Lissarrague, translated by Andrew Szegedy-Maszak", title: "The Aesthetics of the Greek Banquet: Images of Wine and Ritual", year: 1990,
+    publisher: "Princeton: Princeton University Press", checked: "https://press.princeton.edu/books/hardcover/9780691633268/the-aesthetics-of-the-greek-banquet",
+  },
 };
