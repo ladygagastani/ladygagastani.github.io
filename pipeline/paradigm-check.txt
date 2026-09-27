@@ -1,0 +1,10 @@
+225 forms checked; 216 attested with the expected analysis; 9 to review:
+  doron      vocative     plural     δῶρα         tag n-p---nv-  seen as: {'n-p---na-': 677, 'n-p---nn-': 111}
+  chora      vocative     singular   χώρα         tag n-s---fv-  seen as: {'n-s---fn-': 631}
+  chora      vocative     plural     χῶραι        tag n-p---fv-  seen as: {'n-p---fn-': 77}
+  doxa       vocative     plural     δόξαι        tag n-p---fv-  seen as: {'n-p---fn-': 92, 'n-s---fd-': 2}
+  soma       vocative     plural     σώματα       tag n-p---nv-  seen as: {'n-p---na-': 1598, 'n-p---nn-': 725}
+  agathos    vocative     fem. pl    ἀγαθαί       tag a-p---fv-  seen as: {'a-p---fn-': 94}
+  agathos    vocative     neut. pl   ἀγαθά        tag a-p---nv-  seen as: {'a-p---na-': 1039, 'a-p---nn-': 487, 'a-s---fn-': 3}
+  luo        he, she, it  imperfect  ἔλυε         tag v3siia---  seen as: {}
+  luo        you (all)    imperfect  ἐλύετε       tag v2piia---  seen as: {}

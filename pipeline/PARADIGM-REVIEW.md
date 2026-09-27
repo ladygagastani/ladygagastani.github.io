@@ -1,0 +1,13 @@
+# Paradigm review
+
+`python pipeline/check_paradigms.py` checks every form in `web/src/data/paradigms.ts` against GLAUx
+and writes how often each is attested to `web/src/data/paradigms-attested.json`.
+
+Review of the forms not attested with exactly the expected analysis (2026-09-27, 216 of 225 attested):
+
+| Form(s) | Why it is correct |
+|---|---|
+| δῶρα, χώρα, χῶραι, δόξαι, σώματα, ἀγαθαί, ἀγαθά as **vocatives** | Identical in spelling to the nominative (and for neuters the accusative); vocatives of these words are rare and annotators tag the identical form by its commoner use. Standard in every grammar (e.g. Smyth §§ 212–230). |
+| ἔλυε, ἐλύετε (imperfect of λύω) | Regular forms of the model verb; this particular verb is rare in these forms. The endings are attested on countless other verbs. |
+
+Any new form that shows up in the check's list must be reviewed here before it is published.

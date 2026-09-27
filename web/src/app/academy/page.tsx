@@ -1,24 +1,62 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Page from "@/components/Page";
 import AreaHeader from "@/components/AreaHeader";
-import ComingSoon from "@/components/ComingSoon";
+import AcademyProgress from "@/components/academy/AcademyProgress";
 import { AREAS } from "@/config/areas";
+import { LESSONS } from "@/data/lessons";
+import styles from "@/components/academy/Academy.module.css";
 
 export const metadata: Metadata = { title: `${AREAS.study.name} · ${AREAS.study.english}` };
 
-const ITEMS = [
-  "The alphabet, with shapes, names, sounds and the order each letter is written in",
-  "Accents and breathings, explained simply",
-  "Short graded lessons, each ending with a real sentence from the library",
-  "Flashcards with spaced repetition, parsing drills and paradigm tables",
-  "Vocabulary by frequency, with a count of how much of a text you can already read"
+const TOOLS = [
+  { href: "/academy/alphabet", title: "The alphabet", gr: "τὰ γράμματα", text: "Every letter: how to write it, its name, and how it sounded." },
+  { href: "/academy/review", title: "Daily review", gr: "ἀνάμνησις", text: "Flashcards that come back just before you would forget them." },
+  { href: "/academy/tables", title: "Tables of forms", gr: "παραδείγματα", text: "Every standard declension and conjugation, searchable and checked against real texts." },
+  { href: "/academy/vocabulary", title: "Vocabulary by frequency", gr: "λέξεις", text: "The commonest words first, and how much of a text you can already read." },
 ];
 
 export default function AcademyPage() {
   return (
     <Page>
       <AreaHeader id="study" />
-      <ComingSoon id="study" items={ITEMS} />
+      <div className="wrap" style={{ display: "grid", gap: 40, paddingBlock: 40 }}>
+        <AcademyProgress />
+
+        <section style={{ display: "grid", gap: 18 }} aria-labelledby="lessons-title">
+          <div>
+            <span className="label">A path from nothing to Homer</span>
+            <h2 id="lessons-title" style={{ marginTop: 8 }}>Lessons</h2>
+          </div>
+          <ol className={styles.path}>
+            {LESSONS.map((l, i) => (
+              <li key={l.id}>
+                <Link href={`/academy/lesson/${l.id}`} transitionTypes={["page-turn"]} className={styles.pathItem}>
+                  <span className={styles.pathNo}>{i + 1}</span>
+                  <span>
+                    <b>{l.title}</b> <span lang="grc" className={styles.pathGr}>{l.greek}</span>
+                    <span className={styles.pathAbout}>{l.summary}</span>
+                  </span>
+                  <span className={styles.pathMin}>{l.minutes} min</span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section style={{ display: "grid", gap: 18 }} aria-labelledby="tools-title">
+          <h2 id="tools-title">Practice and reference</h2>
+          <div className={styles.hub}>
+            {TOOLS.map((t) => (
+              <Link key={t.href} href={t.href} transitionTypes={["page-turn"]} className={styles.card}>
+                <span className={styles.cardGr} lang="grc">{t.gr}</span>
+                <h3>{t.title}</h3>
+                <p className="muted">{t.text}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </div>
     </Page>
   );
 }

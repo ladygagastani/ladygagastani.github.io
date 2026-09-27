@@ -26,3 +26,9 @@ export async function coreEntry(lemma: string): Promise<CoreEntry | null> {
   const { exact, folded } = await load();
   return exact.get(lemma.normalize("NFC")) ?? folded.get(fold(lemma)) ?? null;
 }
+
+/** All core words, commonest first. */
+export async function coreWords(): Promise<{ lemma: string; entry: CoreEntry }[]> {
+  const { exact } = await load();
+  return [...exact.entries()].map(([lemma, entry]) => ({ lemma, entry })).sort((a, b) => a.entry.rank - b.entry.rank);
+}
