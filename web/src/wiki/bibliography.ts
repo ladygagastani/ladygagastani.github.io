@@ -221,4 +221,12 @@ export const BIB: Record<string, Secondary> = {
     author: "Mogens Herman Hansen, translated by J. A. Crook", title: "The Athenian Democracy in the Age of Demosthenes: Structure, Principles and Ideology", year: 1991,
     publisher: "Oxford: Blackwell", checked: "https://philpapers.org/rec/TODMHH-2",
   },
+  "mylonas-eleusis": {
+    author: "George E. Mylonas", title: "Eleusis and the Eleusinian Mysteries", year: 1961,
+    publisher: "Princeton: Princeton University Press", checked: "https://press.princeton.edu/books/hardcover/9780691648873/eleusis-and-the-eleusinian-mysteries",
+  },
+  "burkert-mystery": {
+    author: "Walter Burkert", title: "Ancient Mystery Cults", year: 1987,
+    publisher: "Cambridge, MA: Harvard University Press", checked: "https://www.hup.harvard.edu/books/9780674033870",
+  },
 };

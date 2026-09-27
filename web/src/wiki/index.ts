@@ -24,8 +24,9 @@ import spartanUpbringing from "./entries/spartan-upbringing";
 import symposium from "./entries/symposium";
 import olympicGames from "./entries/olympic-games";
 import kleroterion from "./entries/kleroterion";
+import eleusinianMysteries from "./entries/eleusinian-mysteries";
 
-export const ENTRIES: Entry[] = [melos, ostracism, laurion, linearB, plague, mytilene, helots, diogenes, delphi, paintedStatues, antikythera, kerameikos, blackAndRedFigure, pericles, hipparchia, school, spartanUpbringing, symposium, olympicGames, kleroterion];
+export const ENTRIES: Entry[] = [melos, ostracism, laurion, linearB, plague, mytilene, helots, diogenes, delphi, paintedStatues, antikythera, kerameikos, blackAndRedFigure, pericles, hipparchia, school, spartanUpbringing, symposium, olympicGames, kleroterion, eleusinianMysteries];
 
 export const entryBySlug = new Map(ENTRIES.map((e) => [e.slug, e]));
 export const entriesIn = (c: CategoryId) => ENTRIES.filter((e) => e.category === c).sort((a, b) => a.title.localeCompare(b.title));
