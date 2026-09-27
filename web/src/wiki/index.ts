@@ -18,8 +18,9 @@ import antikythera from "./entries/antikythera";
 import kerameikos from "./entries/kerameikos";
 import blackAndRedFigure from "./entries/black-and-red-figure";
 import pericles from "./entries/pericles";
+import hipparchia from "./entries/hipparchia";
 
-export const ENTRIES: Entry[] = [melos, ostracism, laurion, linearB, plague, mytilene, helots, diogenes, delphi, paintedStatues, antikythera, kerameikos, blackAndRedFigure, pericles];
+export const ENTRIES: Entry[] = [melos, ostracism, laurion, linearB, plague, mytilene, helots, diogenes, delphi, paintedStatues, antikythera, kerameikos, blackAndRedFigure, pericles, hipparchia];
 
 export const entryBySlug = new Map(ENTRIES.map((e) => [e.slug, e]));
 export const entriesIn = (c: CategoryId) => ENTRIES.filter((e) => e.category === c).sort((a, b) => a.title.localeCompare(b.title));
