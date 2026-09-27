@@ -28,8 +28,8 @@ export interface Mark {
   updated: number;
 }
 
-/** A note on an author ("author:tlg0012") or on a dictionary word ("word:λόγος"). */
-export interface PageNote { id: string; kind: "author" | "word"; target: string; text: string; tags?: string[]; created: number; updated: number }
+/** A note on an author ("author:tlg0012"), a dictionary word ("word:λόγος") or a section of a Painted Stoa entry ("stoa:melos#the-dialogue"; "#top" is the opening). */
+export interface PageNote { id: string; kind: "author" | "word" | "stoa"; target: string; text: string; tags?: string[]; created: number; updated: number }
 export const pageNoteId = (kind: PageNote["kind"], target: string) => `${kind}:${kind === "word" ? target.normalize("NFC") : target}`;
 
 const DB = "mathesis-user", STORE = "marks", NOTES = "notes";

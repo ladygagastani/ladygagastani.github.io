@@ -100,7 +100,7 @@ export default function Treasury() {
         )}
       </section>
 
-      <KeepSafe t={t} summary={`${plural(marks.length, "mark")}, ${plural(Object.keys(pageNotes).length, "note")} on authors and words, ${plural(Object.keys(deck).length, "word")} in your review deck`} />
+      <KeepSafe t={t} summary={`${plural(marks.length, "mark")}, ${plural(Object.keys(pageNotes).length, "note")} on authors, words and the Painted Stoa, ${plural(Object.keys(deck).length, "word")} in your review deck`} />
     </div>
   );
 }

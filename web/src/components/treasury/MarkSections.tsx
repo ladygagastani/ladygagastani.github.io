@@ -10,6 +10,7 @@ import NoteEditor from "@/components/reader/NoteEditor";
 import RichText from "@/components/notes/RichText";
 import notesCss from "@/components/notes/Notes.module.css";
 import { ago, byWorkSorted, plural, readHref, wordHref, workName, type TreasuryState } from "./data";
+import { stoaLabel, useStoaTitles } from "@/wiki/useTitles";
 import styles from "./Treasury.module.css";
 
 function WorkHead({ t, work, n }: { t: TreasuryState; work: string; n?: number }) {
@@ -71,6 +72,7 @@ export function ContinueReading({ t, limit }: { t: TreasuryState; limit?: number
 const KIND_LABEL: Record<Mark["kind"], string> = { note: "Note", favourite: "In your anthology", bookmark: "Bookmark", highlight: "Highlight", xref: "Cross-reference" };
 
 export function RecentSection({ t }: { t: TreasuryState }) {
+  const stoa = useStoaTitles(Object.values(t.pageNotes).some((n) => n.kind === "stoa"));
   const latest = useMemo(() => {
     const items: { t: number; key: string; node: React.ReactNode }[] = [];
     for (const m of t.marks) {
@@ -96,16 +98,18 @@ export function RecentSection({ t }: { t: TreasuryState }) {
     for (const n of Object.values(t.pageNotes)) items.push({
       t: n.updated, key: n.id, node: (
         <>
-          <span className="label">{n.kind === "author" ? "Note on an author" : "Note on a word"} · {ago(n.updated)}</span>
+          <span className="label">{n.kind === "author" ? "Note on an author" : n.kind === "stoa" ? "Note in the Painted Stoa" : "Note on a word"} · {ago(n.updated)}</span>
           <p>{n.kind === "author"
             ? <Link href={`/treasury?s=authors&a=${n.target}`}>{t.idx?.author.get(n.target)?.name ?? n.target}</Link>
+            : n.kind === "stoa"
+            ? <Link href={`/stoa/${n.target.replace("#top", "")}`} transitionTypes={["page-turn"]}>{stoaLabel(stoa, n.target)}</Link>
             : <Link href={wordHref(n.target)} lang="grc" className={styles.lemma} transitionTypes={["page-turn"]}>{n.target}</Link>}</p>
           <RichText text={n.text.length > 220 ? n.text.slice(0, 220) + "…" : n.text} className={notesCss.rich} />
         </>
       ),
     });
     return items.sort((a, b) => b.t - a.t).slice(0, 9);
-  }, [t.marks, t.deck, t.pageNotes, t.idx]);
+  }, [t.marks, t.deck, t.pageNotes, t.idx, stoa]);
 
   return (
     <>

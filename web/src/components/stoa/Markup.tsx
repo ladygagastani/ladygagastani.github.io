@@ -8,6 +8,7 @@ import type { Blk, Inl } from "@/wiki/markup";
 import { CERTAINTY, type Certainty, type Entry } from "@/wiki/types";
 import { IMAGES } from "@/wiki/images";
 import { entryBySlug } from "@/wiki/index";
+import { SectionNote } from "./EntryNotes";
 import styles from "./Stoa.module.css";
 
 const GREEK_RUN = /((?:[Ͱ-Ͽἀ-῿][̀-ͯͰ-Ͽἀ-῿’ʼ]*[\s,·;.]*)+)/u;
@@ -89,7 +90,12 @@ export function Blocks({ bs, entry }: { bs: Blk[]; entry: Entry }) {
   return (
     <>
       {bs.map((b, i) => {
-        if ("h2" in b) return <h2 key={i} id={b.id} className={`${styles.h2} rv`}>{greekAware(b.h2, "h")}</h2>;
+        if ("h2" in b) return (
+          <Fragment key={i}>
+            <h2 id={b.id} data-key={b.id} className={`${styles.h2} rv`}>{greekAware(b.h2, "h")}</h2>
+            <SectionNote slug={entry.slug} section={b.id} title={b.h2} />
+          </Fragment>
+        );
         if ("h3" in b) return <h3 key={i} className={styles.h3}>{greekAware(b.h3, "h")}</h3>;
         if ("quote" in b) return <Quote key={i} q={entry.quotes![b.quote]} />;
         if ("figure" in b) return <Figure key={i} id={b.figure} />;

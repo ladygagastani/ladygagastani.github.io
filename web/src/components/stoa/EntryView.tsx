@@ -9,6 +9,7 @@ import { BIB } from "@/wiki/bibliography";
 import { entryBySlug, categoryOf } from "@/wiki/index";
 import { Blocks, Figure, Inline, CertTag, readHref, greekAware } from "./Markup";
 import Contents from "./Contents";
+import { EntryMarkers, SectionNote } from "./EntryNotes";
 import styles from "./Stoa.module.css";
 
 export default function EntryView({ e }: { e: Entry }) {
@@ -18,7 +19,8 @@ export default function EntryView({ e }: { e: Entry }) {
   const certs = new Set([...e.body.matchAll(/\{(well|debated|legend)\}/g)].map((m) => m[1] as keyof typeof CERTAINTY));
   const related = e.related.map((s) => entryBySlug.get(s)!).filter(Boolean);
   return (
-    <article className={styles.entry}>
+    <article className={styles.entry} data-entry={e.slug}>
+      <EntryMarkers slug={e.slug} heads={heads} />
       <header className={`wrap ${styles.entryHead}`}>
         <p className={styles.crumbs}><Link href="/stoa" transitionTypes={["page-turn"]}>The Painted Stoa</Link> › <Link href={cat.href ?? `/stoa#${cat.id}`} transitionTypes={["page-turn"]}>{cat.title}</Link></p>
         <h1 className={styles.title}>{e.title}{e.greek && <span className={styles.titleGr} lang="grc">{e.greek}</span>}</h1>
@@ -28,7 +30,8 @@ export default function EntryView({ e }: { e: Entry }) {
 
       <div className={`wrap ${styles.entryGrid}`}>
         <div className={styles.entryMain}>
-          <p className={styles.hook}><Inline xs={inline(e.hook)} /></p>
+          <p className={styles.hook} data-key="top"><Inline xs={inline(e.hook)} /></p>
+          <SectionNote slug={e.slug} section="top" title={e.title} />
           <Blocks bs={body} entry={e} />
 
           <section className={`${styles.readIt} rv`} aria-labelledby="read-it">

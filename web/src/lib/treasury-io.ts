@@ -103,7 +103,7 @@ export function parseExport(text: string): TreasuryData {
   };
 }
 const isMark = (m: Mark) => !!m && typeof m.id === "string" && typeof m.work === "string" && typeof m.kind === "string" && !!m.start && typeof m.updated === "number";
-const isPageNote = (n: PageNote) => !!n && typeof n.id === "string" && (n.kind === "author" || n.kind === "word") && typeof n.updated === "number";
+const isPageNote = (n: PageNote) => !!n && typeof n.id === "string" && (n.kind === "author" || n.kind === "word" || n.kind === "stoa") && typeof n.updated === "number";
 
 // ------------------------------------------------------------ writing the readable file
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
@@ -157,7 +157,7 @@ export function exportHtml(d: TreasuryData, idx: CatalogIndex | null, origin: st
   const words = Object.values(d.academy.deck).sort((a, b) => a.lemma.localeCompare(b.lemma, "el"))
     .map((c) => `<li><a href="${esc(`${origin}/treasury/word?l=${encodeURIComponent(c.lemma)}`)}" class="grc" lang="grc">${esc(c.lemma)}</a> ${esc(c.gloss)} <span class="muted">${c.source === "saved" ? "saved from the reader" : c.source === "lesson" ? "from a lesson" : "core vocabulary"}</span></li>`).join("");
   const pageNotes = (k: PageNote["kind"]) => d.notes.filter((n) => n.kind === k).sort((a, b) => a.target.localeCompare(b.target, "el"))
-    .map((n) => `<h3${k === "word" ? ' class="grc" lang="grc"' : ""}>${esc(k === "author" ? idx?.author.get(n.target)?.name ?? n.target : n.target)}</h3><div class="note">${noteHtml(n.text)}${tags(n.tags)}</div>`).join("");
+    .map((n) => `<h3${k === "word" ? ' class="grc" lang="grc"' : ""}>${k === "stoa" ? `<a href="${esc(`${origin}/stoa/${n.target.replace("#top", "")}`)}">${esc(n.target.replace("#top", "").replace("#", " › ").replace(/-/g, " "))}</a>` : esc(k === "author" ? idx?.author.get(n.target)?.name ?? n.target : n.target)}</h3><div class="note">${noteHtml(n.text)}${tags(n.tags)}</div>`).join("");
   const positions = Object.entries(d.positions).sort((a, b) => b[1].t - a[1].t)
     .map(([w, p]) => `<li><a href="${esc(`${origin}/read?w=${encodeURIComponent(w)}&ed=${encodeURIComponent(p.ed)}&at=${encodeURIComponent(p.at)}`)}">${esc(title(w))}</a>, at ${esc(p.at)} <span class="muted">(${when(p.t)})</span></li>`).join("");
 
@@ -183,6 +183,7 @@ ${section("Cross-references", xrefs ? `<ul>${xrefs}</ul>` : "")}
 ${section("Saved words", words ? `<ul>${words}</ul>` : "")}
 ${section("Notes on words", pageNotes("word"))}
 ${section("Notes on authors", pageNotes("author"))}
+${section("Notes on the Painted Stoa", pageNotes("stoa"))}
 ${section("Where you stopped reading", positions ? `<ul>${positions}</ul>` : "")}
 <script type="application/json" id="mathesis-data">${data}</script>
 </body></html>

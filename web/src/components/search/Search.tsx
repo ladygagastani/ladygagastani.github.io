@@ -21,6 +21,7 @@ import { useAcademy } from "@/lib/academy";
 import type { TeiDoc } from "@/lib/tei/types";
 import GreekKeyboard from "./GreekKeyboard";
 import styles from "./Search.module.css";
+import { stoaLabel, useStoaTitles } from "@/wiki/useTitles";
 
 type Tab = Mode | "library";
 const TABS: { id: Tab; label: string; hint: string }[] = [
@@ -471,17 +472,18 @@ function TagLabel({ id }: { id: number }) {
 function LibraryResults({ q, idx }: { q: string; idx: CatalogIndex | null }) {
   const [marks, setMarks] = useState<Mark[] | null>(null);
   const [pageNotes, setPageNotes] = useState<PageNote[]>([]);
+  const stoa = useStoaTitles(pageNotes.some((p) => p.kind === "stoa"));
   const deck = useAcademy((s) => s.deck);
   useEffect(() => { allMarks().then(setMarks, () => setMarks([])); allPageNotes().then(setPageNotes, () => {}); }, []);
   const n = fold(q).trim().replace(/^#/, "");
   if (!n) return <p className={styles.status}>Type a word to look for in your notes (and their tags), bookmarks, highlights and saved words.</p>;
   const found = (marks ?? []).filter((m) => [m.quote, m.text, m.link?.label, idx?.work.get(m.work)?.title, ...(m.tags ?? []), ...(m.collections ?? [])].some((s) => s && fold(s).includes(n)));
-  const others = pageNotes.filter((p) => [p.text, p.target, p.kind === "author" ? idx?.author.get(p.target)?.name : null, ...(p.tags ?? [])].some((s) => s && fold(s).includes(n)));
+  const others = pageNotes.filter((p) => [p.text, p.target, p.kind === "author" ? idx?.author.get(p.target)?.name : p.kind === "stoa" ? stoaLabel(stoa, p.target) : null, ...(p.tags ?? [])].some((s) => s && fold(s).includes(n)));
   const words = Object.values(deck).filter((c) => fold(c.lemma).includes(n) || fold(c.gloss).includes(n));
   const KIND: Record<Mark["kind"], string> = { bookmark: "Bookmark", favourite: "Favourite", note: "Note", highlight: "Highlight", xref: "Cross-reference" };
   return (
     <div className={styles.found}>
-      <p className={styles.count}><b>{found.length}</b> in your notes and marks · <b>{others.length}</b> notes on authors and words · <b>{words.length}</b> saved words</p>
+      <p className={styles.count}><b>{found.length}</b> in your notes and marks · <b>{others.length}</b> notes on authors, words and the Painted Stoa · <b>{words.length}</b> saved words</p>
       {found.length > 0 && (
         <ol className={styles.libList}>
           {found.map((m) => (
@@ -500,9 +502,9 @@ function LibraryResults({ q, idx }: { q: string; idx: CatalogIndex | null }) {
         <ol className={styles.libList}>
           {others.map((p) => (
             <li key={p.id}>
-              <Link href={p.kind === "author" ? `/treasury?s=authors&a=${p.target}` : `/treasury/word?l=${encodeURIComponent(p.target)}`} transitionTypes={["page-turn"]}>
-                <span className="label">{p.kind === "author" ? "Note on an author" : "Note on a word"}</span>{" "}
-                <b lang={p.kind === "word" ? "grc" : undefined}>{p.kind === "author" ? idx?.author.get(p.target)?.name ?? p.target : p.target}</b>
+              <Link href={p.kind === "author" ? `/treasury?s=authors&a=${p.target}` : p.kind === "stoa" ? `/stoa/${p.target.replace("#top", "")}` : `/treasury/word?l=${encodeURIComponent(p.target)}`} transitionTypes={["page-turn"]}>
+                <span className="label">{p.kind === "author" ? "Note on an author" : p.kind === "stoa" ? "Note in the Painted Stoa" : "Note on a word"}</span>{" "}
+                <b lang={p.kind === "word" ? "grc" : undefined}>{p.kind === "author" ? idx?.author.get(p.target)?.name ?? p.target : p.kind === "stoa" ? stoaLabel(stoa, p.target) : p.target}</b>
               </Link>
               <p>{p.text.length > 240 ? p.text.slice(0, 240) + "…" : p.text}</p>
             </li>

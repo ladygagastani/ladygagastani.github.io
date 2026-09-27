@@ -146,3 +146,12 @@
 .contents a[aria-current="location"] { color: var(--ink); border-left-color: var(--accent); }
 .certKey { display: grid; gap: 8px; font-size: 0.88rem; color: var(--ink-2); }
 .certKey p { margin: 0; display: grid; gap: 4px; justify-items: start; }
+
+/* ---------------------------------------------------------------- the reader's own notes on an entry */
+.noteBtn { justify-self: end; margin-top: -12px; font-size: 0.82rem; opacity: 0.55; transition: opacity 0.2s; }
+.noteBtn:hover, .noteBtn:focus-visible { opacity: 1; }
+.entryMain > .noteBtn { justify-self: end; }
+.sectionNote { margin-top: -6px; padding: 12px 16px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--radius) var(--radius) 0; font-size: 1rem; animation: noteIn 0.35s var(--ease) both; }
+@keyframes noteIn { from { opacity: 0; transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .sectionNote { animation: none; } }
+.markersKey { position: fixed; right: 26px; bottom: 18px; z-index: 5; }

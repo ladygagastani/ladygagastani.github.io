@@ -4,15 +4,15 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { fold } from "@/lib/catalog";
-import { usePageNotes } from "@/lib/annotations";
+import { usePageNotes, type PageNote } from "@/lib/annotations";
 import NoteField from "@/components/notes/NoteField";
 import RichText from "@/components/notes/RichText";
 import notesCss from "@/components/notes/Notes.module.css";
 import { ago, plural, type TreasuryState } from "./data";
 import styles from "./Treasury.module.css";
 
-/** A note on one author or word, saved as you type. Used here and on Word Study pages. */
-export function PageNoteEditor({ kind, target, label, startOpen = false }: { kind: "author" | "word"; target: string; label: string; startOpen?: boolean }) {
+/** A note on one author, word or wiki section, saved as you type. Used here, on Word Study pages and in the Painted Stoa. */
+export function PageNoteEditor({ kind, target, label, startOpen = false }: { kind: PageNote["kind"]; target: string; label: string; startOpen?: boolean }) {
   const id = `${kind}:${kind === "word" ? target.normalize("NFC") : target}`;
   const note = usePageNotes((s) => s.notes[id]);
   const save = usePageNotes((s) => s.save);
@@ -42,7 +42,7 @@ export function PageNoteEditor({ kind, target, label, startOpen = false }: { kin
   return (
     <div className={styles.pageNote}>
       <NoteField label={label} value={text} onChange={setDraft} rows={6} onEscape={() => setEditing(false)}
-        placeholder={kind === "author" ? "What you think of this author, what to read next, questions…" : "Where you met this word, a memory aid, a nuance…"} />
+        placeholder={kind === "author" ? "What you think of this author, what to read next, questions…" : kind === "stoa" ? "Your thoughts on this section, questions, passages to follow up…" : "Where you met this word, a memory aid, a nuance…"} />
       <p className={styles.pageNoteFoot}>
         <button type="button" className="chip" onClick={() => { if (!synced) save(kind, target, text); setEditing(false); }}>{synced ? "Done" : "Saving…"}</button>
         <span className="muted">Saved in this browser as you type. An empty note is deleted.</span>
