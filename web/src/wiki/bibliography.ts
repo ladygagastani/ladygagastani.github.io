@@ -261,4 +261,29 @@ export const BIB: Record<string, Secondary> = {
     author: "William C. Scott", title: "The Oral Nature of the Homeric Simile (Mnemosyne Supplement 28)", year: 1974,
     publisher: "Leiden: Brill", checked: "https://digitalcommons.dartmouth.edu/facoa/4333/",
   },
+  "traill-schliemann": {
+    author: "David A. Traill", title: "Schliemann of Troy: Treasure and Deceit", year: 1995,
+    publisher: "London: John Murray; New York: St. Martin's Press", checked: "https://bmcr.brynmawr.edu/1996/1996.03.09/",
+  },
+  "gere-tomb-agamemnon": {
+    author: "Cathy Gere", title: "The Tomb of Agamemnon", year: 2006,
+    publisher: "Cambridge, MA: Harvard University Press", checked: "https://bmcr.brynmawr.edu/2006/2006.12.22/",
+  },
+  "french-mycenae": {
+    author: "Elizabeth French", title: "Mycenae: Agamemnon's Capital. The Site in Its Setting", year: 2002,
+    publisher: "Stroud: Tempus", checked: "https://search.worldcat.org/title/mycenae-agamemnons-capital-the-site-and-its-setting/oclc/48486605",
+  },
+  "dickinson-aegean": {
+    author: "Oliver Dickinson", title: "The Aegean Bronze Age", year: 1994,
+    publisher: "Cambridge: Cambridge University Press", checked: "https://www.cambridge.org/9780521456647",
+  },
+  "papazoglou-2009": {
+    author: "Lena Papazoglou-Manioudaki, Argyro Nafplioti, J. H. Musgrave, R. A. H. Neave, Denise Smith and A. J. N. W. Prag",
+    title: "Mycenae Revisited Part 1. The Human Remains from Grave Circle A: Stamatakis, Schliemann and Two New Faces from Shaft Grave VI", year: 2009,
+    publisher: "Annual of the British School at Athens 104, 233–277", checked: "https://www.cambridge.org/core/journals/annual-of-the-british-school-at-athens/article/abs/mycenae-revisited-part-1-the-human-remains-from-grave-circle-a-stamatakis-schliemann-and-two-new-faces-from-shaft-grave-vi1/5A01D8318A269071A9DB1EBD6391BF8F",
+  },
+  "harrington-1999": {
+    author: "Spencer P. M. Harrington", title: "Behind the Mask of Agamemnon", year: 1999,
+    publisher: "Archaeology 52.4 (July/August 1999)", checked: "https://archive.archaeology.org/9907/etc/mask.html",
+  },
 };

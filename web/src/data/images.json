@@ -292,5 +292,19 @@
   "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0",
   "source": "https://commons.wikimedia.org/wiki/File:Fresco_painting_from_lateral_walls_of_the_Tomb_of_the_Diver_depicting_a_symposium_scene,_5th_century_BC,_Paestum_Archaeological_Museum.jpg",
   "sourceName": "Wikimedia Commons"
+ },
+ "mask-of-agamemnon": {
+  "file": "mask-of-agamemnon.jpg",
+  "width": 1600,
+  "height": 1600,
+  "alt": "A sheet of beaten gold shaped into a bearded man's face, with closed eyes, a long straight nose, a thin moustache curling up at the ends, and large ears; the edges are torn and crumpled.",
+  "title": "Gold funeral mask from Shaft Grave V at Mycenae, the so-called Mask of Agamemnon",
+  "date": "16th century BC",
+  "place": "National Archaeological Museum, Athens (NAMA 624)",
+  "creator": "Photograph by Jebulon",
+  "licence": "CC0",
+  "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "source": "https://commons.wikimedia.org/wiki/File:Agamemnon_mask_NAMA_Athens_Greece.jpg",
+  "sourceName": "Wikimedia Commons"
  }
 }
