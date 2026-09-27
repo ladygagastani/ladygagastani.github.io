@@ -22,6 +22,8 @@ export default function ScrollCase() {
   const [q, setQ] = useState("");
   const [where, setWhere] = useState<"browser" | "folder">("browser");
   const [confirm, setConfirm] = useState<CollectionId | null>(null);
+  const [lookups, setLookups] = useState(true);
+  const [lookupBytes, setLookupBytes] = useState<number | null>(null);
   const zipInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => { loadCatalog().then(setIdx).catch(() => undefined); useOffline.getState().refresh().catch(() => undefined); }, []);
@@ -39,6 +41,13 @@ export default function ScrollCase() {
   }, [scope, picked, idx]);
   const plan = useMemo(() => (idx ? planDownload(idx, { cols, langs, workIds }) : null), [idx, cols, langs, workIds]);
 
+  // size of the word analyses (for the works chosen) and the LSJ, for the tick box
+  useEffect(() => {
+    let live = true;
+    useOffline.getState().lookupsSize({ cols, langs, workIds }).then((n) => { if (live) setLookupBytes(n); }).catch(() => undefined);
+    return () => { live = false; };
+  }, [cols, langs, workIds]);
+
   const authors = useMemo(() => {
     const f = fold(q.trim());
     return (idx?.catalog.authors ?? []).filter((a) => a.works.some((w) => w.texts.some((t) => cols.includes(t.col))) && (!f || fold(a.name).includes(f)));
@@ -50,10 +59,10 @@ export default function ScrollCase() {
   async function start() {
     if (!plan?.texts.length) return;
     const label = scope === "all" ? `Downloading ${cols.map((c) => COLLECTIONS.find((x) => x.id === c)!.name).join(" and ")}` : `Downloading ${picked.size} author${picked.size === 1 ? "" : "s"}`;
-    if (where === "browser") return s.download({ cols, langs, workIds, label });
+    if (where === "browser") return s.download({ cols, langs, workIds, label, lookups });
     let handle: FileSystemDirectoryHandle;
     try { handle = await window.showDirectoryPicker!({ id: "mathesis-save", mode: "readwrite" }); } catch { return; }
-    await s.download({ cols, langs, workIds, label: `${label} into "${handle.name}"` }, { kind: "folder", handle, id: `folder:${handle.name}` });
+    await s.download({ cols, langs, workIds, label: `${label} into "${handle.name}"`, lookups }, { kind: "folder", handle, id: `folder:${handle.name}` });
     toast(`Saved into "${handle.name}". Connect that folder with "Load from a folder" to read from it.`);
   }
 
@@ -87,6 +96,9 @@ export default function ScrollCase() {
                 );
               })}
             </ul>
+            {(s.lookups.words > 0 || s.lookups.lsj > 0) && (
+              <p className={styles.small}>Word look-ups offline: analyses for {s.lookups.words.toLocaleString()} work{s.lookups.words === 1 ? "" : "s"}, {s.lookups.lsj} of the dictionary&apos;s 362 parts.</p>
+            )}
             {s.usage && s.usage.quota > 0 && <p className={styles.small}>This site uses {mb(s.usage.used)} of the {mb(s.usage.quota)} your browser allows it.</p>}
           </div>
           <div>
@@ -160,6 +172,14 @@ export default function ScrollCase() {
             <label className={styles.check}><input type="radio" name="where" checked={where === "browser"} onChange={() => setWhere("browser")} /> In this browser <span className="muted">— simplest; nothing to manage</span></label>
             <label className={styles.check}><input type="radio" name="where" checked={where === "folder"} disabled={!s.supportsFolders} onChange={() => setWhere("folder")} /> In a folder on this computer <span className="muted">— survives clearing browser data (Chrome and Edge)</span></label>
           </div>
+        </fieldset>
+
+        <fieldset className={styles.fs}>
+          <legend className="label">Word look-ups</legend>
+          <label className={styles.check}><input type="checkbox" checked={lookups} onChange={() => setLookups(!lookups)} />
+            Also save the word analyses for these works and the LSJ dictionary, so clicking a word works offline
+            <span className="muted">{lookupBytes !== null ? ` — about ${mb(transferEstimate(lookupBytes))} to download` : ""}</span></label>
+          <p className={styles.small}>These are kept in this browser, whichever place you choose for the texts.</p>
         </fieldset>
 
         <div className={styles.go}>

@@ -54,8 +54,12 @@ export default function OfflineActions({ compact = false }: { compact?: boolean 
   useEffect(() => { useOffline.getState().refresh().catch(() => undefined); }, []);
   useEffect(() => {
     let live = true;
-    const { plan } = useOffline.getState();
-    Promise.all(COLLECTIONS.map(async (c) => [c.id, (await plan({ cols: [c.id], langs: ["grc", "eng"] })).bytes] as const))
+    const { plan, lookupsSize } = useOffline.getState();
+    // texts plus the word look-ups that come with them
+    Promise.all(COLLECTIONS.map(async (c) => {
+      const o = { cols: [c.id], langs: ["grc", "eng"] };
+      return [c.id, (await plan(o)).bytes + (await lookupsSize(o))] as const;
+    }))
       .then((r) => { if (live) setSizes(Object.fromEntries(r)); }).catch(() => undefined);
     return () => { live = false; };
   }, []);
@@ -72,7 +76,7 @@ export default function OfflineActions({ compact = false }: { compact?: boolean 
         {svg(ICON.download)}
         <div>
           <b>Download the library</b>
-          <span>Only the Greek and English text files, straight from GitHub, each checked against the original.</span>
+          <span>The Greek and English text files straight from GitHub, each checked against the original, plus the word analyses and dictionary for offline look-ups.</span>
           <div className={styles.quick}>
             {COLLECTIONS.map((c) => {
               const have = saved(c.id);

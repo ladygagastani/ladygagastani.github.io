@@ -51,11 +51,20 @@ export function translationPieces(grc: TeiDoc, tr: TeiDoc): Piece[] {
   const sameScheme = common === gl.length && tl.length === gl.length;
   const leaf = gl[gl.length - 1];
 
+  const finer = common === gl.length && tl.length > gl.length;   // e.g. English book.section.subsection, Greek book.section
   const pieces: Piece[] = [];
   for (const u of tr.units) {
     if (sameScheme) { pieces.push({ key: keyOf(u.ref), blocks: u.blocks }); continue; }
+    // a finer translation sits beside the Greek passage that contains it
+    if (finer) { pieces.push({ key: keyOf(u.ref.slice(0, gl.length)), blocks: u.blocks }); continue; }
     const prefix = u.ref.slice(0, Math.min(common, gl.length - 1));
     const parts = splitAtMarkers(u, leaf, prefix);
+    // A coarser translation with no inner markers (English "chapter 5" against Greek 5.1, 5.2…)
+    // starts at the first Greek passage of the division with the same number.
+    if (tl.length < gl.length && parts.length === 1 && parts[0].key === null) {
+      pieces.push({ key: keyOf([...u.ref, "?"]), blocks: parts[0].blocks });
+      continue;
+    }
     // text before the first marker continues the previous piece, unless the unit starts a new division
     for (const p of parts) {
       if (p.key === null) {

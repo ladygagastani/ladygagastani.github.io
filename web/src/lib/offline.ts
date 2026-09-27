@@ -11,6 +11,7 @@ import {
 } from "@/lib/texts/local";
 import { importZip } from "@/lib/texts/zip";
 import { kvGet, kvSet } from "@/lib/texts/kv";
+import { planPacks, runPackDownload, packsDownloaded } from "@/lib/texts/packs";
 
 export interface BrowserCopy { col: CollectionId; files: number; bytes: number }
 
@@ -23,10 +24,13 @@ interface OfflineState {
   browser: BrowserCopy[];               // what is saved in browser storage, per collection
   zipImported: Record<string, number>;  // repo → files imported from a ZIP
   usage: { used: number; quota: number } | null;
+  lookups: { words: number; lsj: number };   // word-analysis files and LSJ shards saved for offline use
   job: { label: string; progress: Progress | null; running: boolean; error: string | null; kind: "download" | "zip" } | null;
 
   refresh: () => Promise<void>;
-  download: (o: PlanOptions & { label: string }, target?: Target) => Promise<void>;
+  /** Download texts; unless `lookups` is false, also the word analyses for those works and the LSJ. */
+  download: (o: PlanOptions & { label: string; lookups?: boolean }, target?: Target) => Promise<void>;
+  lookupsSize: (o: PlanOptions) => Promise<number>;
   cancel: () => void;
   connect: () => Promise<string>;
   reconnect: () => Promise<string>;
@@ -47,6 +51,7 @@ export const useOffline = create<OfflineState>()((set, get) => ({
   browser: [],
   zipImported: {},
   usage: null,
+  lookups: { words: 0, lsj: 0 },
   job: null,
 
   async refresh() {
@@ -61,6 +66,8 @@ export const useOffline = create<OfflineState>()((set, get) => ({
       by[col].bytes += t?.size ?? 0;
     }
     const est = await storageEstimate();
+    const packs = await packsDownloaded();
+    const packKeys = Object.keys(packs);
     set({
       ready: true,
       supportsFolders: canUseFolders(),
@@ -70,10 +77,17 @@ export const useOffline = create<OfflineState>()((set, get) => ({
       browser: Object.values(by),
       zipImported: (await kvGet<Record<string, number>>("zip-imported")) ?? {},
       usage: est ? { used: est.usage ?? 0, quota: est.quota ?? 0 } : null,
+      lookups: { words: packKeys.filter((k) => k.startsWith("words/")).length, lsj: packKeys.filter((k) => k.startsWith("lsj/")).length },
     });
   },
 
   async plan(o) { return planDownload(await loadCatalog(), o); },
+
+  async lookupsSize(o) {
+    const plan = planDownload(await loadCatalog(), o);
+    const files = await planPacks(new Set(plan.texts.map((t) => t.path.split("/").slice(1, 3).join("."))));
+    return files.reduce((n, f) => n + f.size, 0);
+  },
 
   async download(o, target = { kind: "browser" }) {
     if (get().job?.running) return;
@@ -83,7 +97,18 @@ export const useOffline = create<OfflineState>()((set, get) => ({
     set({ job: { label: o.label, progress: null, running: true, error: null, kind: "download" } });
     try {
       const p = await runDownload(idx, plan, target, (progress) => set((s) => ({ job: s.job && { ...s.job, progress } })), controller.signal);
-      set((s) => ({ job: s.job && { ...s.job, progress: p, running: false } }));
+      if (o.lookups !== false && !controller.signal.aborted) {
+        // then the word analyses for these works and the dictionary, so look-ups work offline too
+        const works = new Set(plan.texts.map((t) => t.path.split("/").slice(1, 3).join(".")));
+        const files = await planPacks(works);
+        set({ job: { label: "Downloading word analyses and the LSJ dictionary", progress: null, running: true, error: null, kind: "download" } });
+        const r = await runPackDownload(files, (n, total, bytes, totalBytes) => set((s) => ({
+          job: s.job && { ...s.job, progress: { files: n, totalFiles: total, bytes, totalBytes, skipped: 0, failed: [] } },
+        })), controller.signal);
+        set((s) => ({ job: s.job && { ...s.job, running: false,
+          label: `${o.label.replace(/^Downloading/, "Downloaded")}, with word look-ups`,
+          progress: { files: p.files, totalFiles: p.totalFiles, bytes: p.bytes, totalBytes: p.totalBytes, skipped: p.skipped, failed: [...p.failed, ...Array.from({ length: r.failed }, () => ({ path: "look-up file", reason: "failed" }))] } } }));
+      } else set((s) => ({ job: s.job && { ...s.job, progress: p, running: false } }));
     } catch (e) {
       const paused = controller.signal.aborted;
       set((s) => ({ job: s.job && { ...s.job, running: false, error: paused ? null : (e as Error).message } }));

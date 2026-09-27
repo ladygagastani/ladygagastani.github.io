@@ -272,10 +272,30 @@ function makeChunks(units: Unit[], levels: string[], containers: number[]): TeiD
     return x === y ? x : `${x}–${y}`;
   };
   if (levels.length >= 2) {
+    // one page per top-level division; a very long one is split by the next level down, and
+    // anything still too long into runs, so no page becomes unwieldy
+    const MAX = 1500, RUN = 600;
+    const group = (a: number, b: number, depth: number, label: string) => {
+      if (b - a + 1 <= MAX) { chunks.push({ label, first: a, last: b }); return; }
+      if (depth < levels.length - 1) {
+        let s = a;
+        for (let i = a + 1; i <= b + 1; i++) {
+          if (i > b || units[i].ref[depth] !== units[s].ref[depth]) {
+            group(s, i - 1, depth + 1, `${label}, ${levels[depth]} ${units[s].ref[depth]}`);
+            s = i;
+          }
+        }
+        return;
+      }
+      for (let s = a; s <= b; s += RUN) {
+        const e = Math.min(b, s + RUN - 1);
+        chunks.push({ label: `${label} (${range(s, e)})`, first: s, last: e });
+      }
+    };
     let first = 0;
     for (let i = 1; i <= units.length; i++) {
       if (i === units.length || units[i].ref[0] !== units[first].ref[0]) {
-        chunks.push({ label: `${cap(levels[0])} ${units[first].ref[0]}`, first, last: i - 1 });
+        group(first, i - 1, 1, `${cap(levels[0])} ${units[first].ref[0]}`);
         first = i;
       }
     }
