@@ -113,4 +113,16 @@ export const BIB: Record<string, Secondary> = {
     author: "J. Foster and D. Lehoux", title: "The Delphic oracle and the ethylene-intoxication hypothesis", year: 2007,
     publisher: "Clinical Toxicology 45, 85–89", checked: "https://pubmed.ncbi.nlm.nih.gov/17357391/",
   },
+  "brinkmann-gods-in-color": {
+    author: "Vinzenz Brinkmann and Raimund Wünsche (eds.)", title: "Gods in Color: Painted Sculpture of Classical Antiquity", year: 2007,
+    publisher: "Munich: Stiftung Archäologie", checked: "https://harvardartmuseums.org/exhibitions/3418/gods-in-color-painted-sculpture-of-classical-antiquity",
+  },
+  "chroma-2025": {
+    author: "Seán Hemingway, Sarah Lepinski and Vinzenz Brinkmann (eds.)", title: "Chroma: Sculpture in Color from Antiquity to Today", year: 2025,
+    publisher: "New York: The Metropolitan Museum of Art", checked: "https://yalebooks.yale.edu/book/9781588397966/chroma/",
+  },
+  "verri-2009": {
+    author: "G. Verri", title: "The spatially resolved characterisation of Egyptian blue, Han blue and Han purple by photo-induced luminescence digital imaging", year: 2009,
+    publisher: "Analytical and Bioanalytical Chemistry 394, 1011–1021", checked: "https://link.springer.com/article/10.1007/s00216-009-2693-0",
+  },
 };
