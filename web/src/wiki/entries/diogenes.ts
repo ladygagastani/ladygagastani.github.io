@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "Διογένης ὁ κύων",
   category: "weird",
   kicker: "The philosopher who lived in a jar and told Alexander to move",
+  image: "gerome-diogenes",
   hook: `Diogenes of Sinope owned a cloak, a staff, a bag and, for a while, a cup, until he saw a child drinking from its hands and threw the cup away. He slept in a large storage jar in the middle of Athens, ate and did everything else in public, and answered kings and philosophers with insults. People called him "the Dog", *kyōn*, and "Cynic", doglike, became the name for those who followed his way of life. Almost everything we know about him comes as anecdotes, and the good ones are too good to be entirely true.`,
   body: `## A man with a past
 

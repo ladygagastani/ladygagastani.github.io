@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "τὰ Ἐλευσίνια μυστήρια",
   category: "religion",
   kicker: "The secret kept by thousands for a thousand years",
+  image: "great-eleusinian-relief",
   hook: `Every autumn for about a thousand years, crowds walked the fourteen miles from Athens to Eleusis to be initiated into the Mysteries of Demeter and her daughter Persephone. Men and women, citizens, foreigners and even slaves could take part, and many thousands did. They were promised a better lot after death. What happened in the great hall at Eleusis was never to be told, and it very nearly never was.`,
   body: `## The story behind the rite
 

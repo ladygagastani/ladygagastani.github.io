@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "εἰς διδασκάλου",
   category: "education",
   kicker: "Three teachers, a slave to walk you there, and Homer by heart",
+  image: "douris-school-cup",
   hook: `There were no state schools in classical Athens. A boy whose father could pay was walked each morning by a slave to three different teachers: one for reading and writing, one for the lyre and the poets, and one for wrestling and exercise. He learned his letters by tracing them on a wax tablet, and then learned Homer by heart. Much of what he learned was meant to make him not clever but good, and the teachers were expected to beat him when he was not.`,
   body: `## The slave at your side
 

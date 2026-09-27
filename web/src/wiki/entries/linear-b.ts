@@ -5,6 +5,7 @@ const entry: Entry = {
   title: "Linear B",
   category: "language",
   kicker: "The oldest written Greek, read at last in 1952",
+  image: "linear-b-pylos",
   hook: `For half a century after they were dug up, thousands of clay tablets from the Bronze Age palaces of Crete and mainland Greece kept their secret. Their script, which the archaeologist Arthur Evans called "Linear B", matched no known language. In 1952 an English architect, Michael Ventris, showed that it was Greek: Greek written some five hundred years before Homer, in the accounts of palace clerks counting sheep, bronze, perfume and slaves.`,
   body: `## Tablets that were never meant to last
 

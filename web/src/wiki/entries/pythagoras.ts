@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "Πυθαγόρας",
   category: "weird",
   kicker: "The mathematician who would not eat beans, and who remembered his past lives",
+  image: "pythagoras-capitoline",
   hook: `Every schoolchild knows Pythagoras' theorem. Fewer know that the Greeks remembered Pythagoras less as a mathematician than as a holy man: a teacher who said the soul is reborn in other bodies, recognised a dead friend in the yelp of a beaten puppy, founded a secretive brotherhood in southern Italy, and forbade his followers to eat beans. One story says he died rather than run through a bean field.`,
   body: `## A man who wrote nothing
 

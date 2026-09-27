@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "Ἀσκληπιός",
   category: "daily",
   kicker: "Where Greeks went when doctors failed: a night in the god's hall",
+  image: "asklepios-epidaurus",
   hook: `A sick Greek who could afford the journey might go to a sanctuary of Asclepius, the god of healing, wash, make an offering, and lie down for the night in a special hall, hoping the god would come in a dream and cure him. At Epidaurus, the god's greatest sanctuary, the priests set up stone slabs recording the cures: a blind man given sight, a woman who had been pregnant for five years. Doctors swore their oath in his name, and Socrates' last words were about a debt to him.`,
   body: `## From physician to god
 

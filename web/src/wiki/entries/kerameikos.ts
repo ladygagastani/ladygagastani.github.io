@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "Κεραμεικός",
   category: "archaeology",
   kicker: "The potters' quarter and cemetery of Athens, dug for over 150 years",
+  image: "kerameikos-street",
   hook: `Just outside the city wall of Athens, where the Sacred Way left for Eleusis and the road ran out to Plato's Academy, lay the Kerameikos: the quarter of the potters, and for more than a thousand years the city's great cemetery. The Athenians buried their war dead here, heard Pericles' funeral speech here, and threw their used ostracism ballots into its ditches. Its excavation, still going on, has turned up some of the most famous vases and gravestones of Greece.`,
   body: `## Potters and a hero
 

@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "ὡς δʼ ὅτε…",
   category: "beautiful",
   kicker: "Windows onto a world at peace, opened in the middle of a war",
+  image: "octopus-stirrup-jar",
   hook: `The *Iliad* is a poem about a few weeks of killing outside Troy. Yet again and again, just as the fighting is at its fiercest, Homer stops and says "as when…", and for a few lines we are somewhere else: on a mountain under the stars, in a snowstorm, beside a mother with a crying child. These long comparisons, the Homeric similes, are among the most beautiful things in Greek, and they are a good reason to learn to read it.`,
   body: `## "As when…"
 

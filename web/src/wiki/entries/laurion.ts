@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "Λαύρειον",
   category: "dark",
   kicker: "The mines that paid for Athens' fleet, and the slaves who worked them",
+  image: "athenian-owl",
   hook: `The fleet that beat the Persians at Salamis in 480 BC was paid for with silver dug out of the hills of southern Attica. So were the owl coins that carried Athens' name across the Mediterranean, and much of the wealth of its richest men. The digging was done by enslaved people, rented out by the hundred at an obol a day, in shafts and galleries that can still be walked into today.`,
   body: `## A strike of silver
 

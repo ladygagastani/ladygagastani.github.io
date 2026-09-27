@@ -5,6 +5,7 @@ const entry: Entry = {
   title: "Greek statues were painted",
   category: "beautiful",
   kicker: "The white marble we admire is what time left behind",
+  image: "peplos-kore-colour",
   hook: `The gleaming white marble of Greek sculpture, admired for centuries as the image of classical purity, is a modern accident. Greek statues and temples were painted: skin tinted, eyes coloured, clothes patterned in red, blue, green and gold. The paint has mostly worn away, but traces survive, the Greeks themselves mention it, and scientists can now make invisible pigments glow.`,
   body: `## What the Greeks said
 

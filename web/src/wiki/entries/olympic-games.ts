@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "τὰ Ὀλύμπια",
   category: "daily",
   kicker: "A crown of wild olive, a truce, and statues paid for by cheats",
+  image: "panathenaic-runners",
   hook: `Every four years for more than a thousand years, Greeks from all over the Mediterranean travelled to the sanctuary of Zeus at Olympia to watch naked men run, wrestle, box and race chariots. The prize was a wreath of wild olive. The Games were a religious festival first, and they came with rules: a sacred truce for travellers, fines for cheats, and death for any married woman caught watching.`,
   body: `## Beginnings
 

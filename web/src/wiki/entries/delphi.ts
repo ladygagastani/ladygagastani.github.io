@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "Δελφοί",
   category: "religion",
   kicker: "Where kings asked Apollo, and the answers could ruin them",
+  image: "themis-aigeus",
   hook: `On a ledge of Mount Parnassus, for a thousand years and more, a woman sat on a tripod in the innermost room of Apollo's temple and spoke for the god. Cities asked her where to found colonies, kings asked whether to go to war, and ordinary people asked about marriages and debts. What happened in that room is still argued over: divine inspiration, theatre, trance, or, as geologists proposed in 2001, gas rising through a crack in the rock.`,
   body: `## The priestess on the tripod
 

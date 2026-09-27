@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "ἡ Λακωνικὴ ἀγωγή",
   category: "education",
   kicker: "Barefoot, hungry and encouraged to steal: the most famous education in history",
+  image: "orthia-temple",
   hook: `Everywhere else in Greece a father decided how to bring up his son. In Sparta the state took the boys at seven, put them into packs, and raised them together: barefoot, in one cloak a year, never quite fed, and expected to steal the rest and be beaten if caught. Admirers from Xenophon onwards held it up as a school of courage and obedience. But the fullest accounts were written long after classical Sparta was gone, and historians still argue over how much of the famous picture is true.`,
   body: `## Not like other Greeks
 

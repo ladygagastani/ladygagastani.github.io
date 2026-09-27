@@ -70,6 +70,8 @@
 
 .lead { margin: 0 0 12px; display: grid; gap: 8px; }
 .lead img { width: 100%; height: auto; max-height: 72vh; object-fit: cover; border-radius: var(--radius); background: var(--bg-2); animation: develop 1.2s var(--ease) both; }
+/* tall objects (vases, busts) are shown whole on a panel rather than cropped */
+.lead img.tall, .figure img.tall { object-fit: contain; max-height: 72vh; padding: clamp(8px, 2vw, 20px); }
 @keyframes develop { from { filter: sepia(0.6) blur(4px); opacity: 0.4; } }
 .lead figcaption, .figure figcaption { font-size: 0.86rem; color: var(--ink-2); max-width: 90ch; }
 .figTitle { color: var(--ink); }

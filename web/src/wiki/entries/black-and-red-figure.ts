@@ -5,6 +5,7 @@ const entry: Entry = {
   title: "Black-figure and red-figure",
   category: "archaeology",
   kicker: "How Athenian potters made pictures that have lasted 2,500 years",
+  image: "berlin-painter-amphora",
   hook: `The painted pots of Athens are the largest body of Greek pictures to survive: gods and heroes, athletes and drinkers, weddings, funerals and battles, on thousands of vessels that were made to be used. They were made in two main styles, black figures on the red clay and, from about 530 BC, red figures on a black ground. Both depended on the same trick of the kiln, and both tell archaeologists how old a layer of earth is.`,
   body: `## The same clay, two colours
 

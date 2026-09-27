@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "κληρωτήριον",
   category: "democracy",
   kicker: "How Athens trusted chance, and built a machine to make sure nobody cheated it",
+  image: "kleroterion",
   hook: `Modern democracies choose their officials by election. The Athenians thought elections favoured the rich, the famous and the well-connected, and chose most of their officials, their Council and every jury by lot. To stop anyone rigging the draw, they built a machine: a stone slab full of slots for citizens' name-tickets, with a tube down the side into which black and white balls were dropped. Pieces of these machines, and the bronze tickets, have been found in the Agora of Athens.`,
   body: `## Why chance?
 

@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "Ἱππαρχία",
   category: "people",
   kicker: "The woman who left the loom for philosophy",
+  image: "crates-hipparchia",
   hook: `Around 300 BC a young woman from Thrace threatened to kill herself unless she was allowed to marry a penniless philosopher. She got her way, put on the Cynic's rough cloak, and went everywhere her husband went, including the drinking parties that respectable Greek women never attended. Hipparchia is the only woman to whom Diogenes Laertius, the ancient historian of philosophy, gives a life of her own.`,
   body: `## A choice of husband
 

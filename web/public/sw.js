@@ -8,7 +8,8 @@
  *
  * - Pages: from the network when it answers within a few seconds, else the kept copy.
  * - /_next/static (code, styles, fonts): never change once built, so the kept copy is used first.
- * - /data and /audio: the network first, the kept copy when offline. The search index is only
+ * - /data, /audio and /images (the wiki's pictures, kept once seen): the network first, the kept
+ *   copy when offline. The search index is only
  *   fetched, never kept here (it is far too big).
  * - Anything from another site (GitHub, Wiktionary) is left alone.
  */
@@ -126,7 +127,7 @@ self.addEventListener("fetch", (e) => {
   if (request.mode === "navigate") { e.respondWith(page(request)); return; }
   if (url.pathname.startsWith("/_next/static/")) { e.respondWith(staticFile(request)); return; }
   if (url.pathname.startsWith("/data/search/")) return;
-  if (url.pathname.startsWith("/data/") || url.pathname.startsWith("/audio/")) { e.respondWith(dataFile(request)); return; }
+  if (url.pathname.startsWith("/data/") || url.pathname.startsWith("/audio/") || url.pathname.startsWith("/images/")) { e.respondWith(dataFile(request)); return; }
 });
 
 self.addEventListener("message", (e) => {

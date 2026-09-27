@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "ἡ Σωκράτους δίκη",
   category: "democracy",
   kicker: "The democracy that put a philosopher to death",
+  image: "socrates-louvre",
   hook: `In the spring of 399 BC, a jury of about five hundred Athenian citizens found the philosopher Socrates, aged about seventy, guilty of not believing in the city's gods, of bringing in new divine beings, and of corrupting the young. They sentenced him to death, and a month later he drank the poison in prison, surrounded by his friends. No trial in history has been argued over longer. Was it a democracy murdering free speech, a city settling political scores after a civil war, or something else?`,
   body: `## The charge
 

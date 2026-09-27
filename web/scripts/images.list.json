@@ -1,0 +1,181 @@
+[
+ {
+  "id": "berlin-painter-amphora",
+  "src": "met:254896",
+  "alt": "A black-glazed amphora with a single red figure on its side: a young man in a long robe, singing and playing the kithara.",
+  "title": "Red-figure amphora attributed to the Berlin Painter",
+  "date": "c. 490 BC"
+ },
+ {
+  "id": "panathenaic-runners",
+  "src": "met:248902",
+  "alt": "A black-figure amphora with a band of five bearded runners in full stride, painted black on the orange clay.",
+  "title": "Panathenaic prize amphora attributed to the Euphiletos Painter",
+  "date": "c. 530 BC"
+ },
+ {
+  "id": "athenian-owl",
+  "src": "met:330160",
+  "alt": "A worn, thick silver coin showing the head of Athena in a crested helmet, facing right.",
+  "title": "Silver tetradrachm of Athens",
+  "date": "c. 440–404 BC"
+ },
+ {
+  "id": "octopus-stirrup-jar",
+  "src": "met:254779",
+  "alt": "A round pale clay jar with a small spout and stirrup-shaped handle, painted in brown with an octopus whose curling arms wrap around the body.",
+  "title": "Mycenaean stirrup jar painted with an octopus",
+  "date": "c. 1200–1100 BC"
+ },
+ {
+  "id": "great-eleusinian-relief",
+  "src": "met:248899",
+  "alt": "A marble relief: two tall women in long robes, Demeter and Persephone, stand on either side of a naked boy, Triptolemus.",
+  "title": "Fragments of a Roman copy of the Great Eleusinian Relief",
+  "date": "c. 27 BC–AD 14"
+ },
+ {
+  "id": "kerameikos-street",
+  "src": "commons:Wall street of the tombs sacred way Kerameikos Athens.jpg",
+  "alt": "A long wall of close-fitted limestone blocks, with a small plant growing from a joint, beside the Street of the Tombs.",
+  "title": "The Street of the Tombs in the Kerameikos, where the Sacred Way to Eleusis began",
+  "date": "",
+  "place": "Kerameikos, Athens",
+  "creator": "Photograph by Jebulon"
+ },
+ {
+  "id": "pericles-bust",
+  "src": "commons:Pericles Townley BM 549.jpg",
+  "alt": "A marble portrait bust of a bearded man wearing a helmet pushed back on his head; the name Pericles is carved below.",
+  "title": "Pericles, Roman marble copy of a Greek portrait of about 440–430 BC",
+  "date": "2nd century AD",
+  "place": "British Museum, London",
+  "creator": "Photograph by Marie-Lan Nguyen"
+ },
+ {
+  "id": "socrates-louvre",
+  "src": "commons:Socrates Louvre.jpg",
+  "alt": "A marble head of an old man with a broad flat nose, bulging eyes and a thick curly beard.",
+  "title": "Socrates, Roman marble portrait",
+  "date": "1st century AD",
+  "place": "Musée du Louvre, Paris",
+  "creator": "Photograph by Eric Gaba"
+ },
+ {
+  "id": "douris-school-cup",
+  "src": "commons:School cup by Douris Antikensammlung Berlin.jpg",
+  "alt": "A shallow two-handled drinking cup seen from the side, painted in red-figure with seated teachers and standing pupils.",
+  "title": "School scenes on a red-figure drinking cup by Douris",
+  "date": "c. 480 BC",
+  "place": "Antikensammlung, Berlin (F 2285)",
+  "creator": "Photograph by Marcus Cyron"
+ },
+ {
+  "id": "kleroterion",
+  "src": "commons:AGMA Kleroterion.jpg",
+  "alt": "A slab of stone cut with many rows of narrow rectangular slots.",
+  "title": "Fragment of a stone allotment machine (kleroterion)",
+  "date": "",
+  "place": "Museum of the Ancient Agora, Athens",
+  "creator": "Photograph by Marsyas"
+ },
+ {
+  "id": "themistocles-ostraka",
+  "src": "commons:Ostraka against Themistocles, 482 BC, Agora Museum Athens, 080635.jpg",
+  "alt": "Round fragments of black-glazed pottery displayed on a wall, each scratched with a name in Greek letters.",
+  "title": "Ostraka inscribed with the name of Themistocles",
+  "date": "5th century BC",
+  "place": "Museum of the Ancient Agora, Athens",
+  "creator": "Photograph by Zde"
+ },
+ {
+  "id": "antikythera-fragment-a",
+  "src": "commons:Antikythera Fragment A (Front).webp",
+  "alt": "A corroded, greenish lump of bronze in which the outline of a large toothed wheel with four spokes can still be seen.",
+  "title": "The Antikythera mechanism, fragment A",
+  "date": "2nd–1st century BC",
+  "place": "National Archaeological Museum, Athens",
+  "creator": "Photograph by Logg Tandy"
+ },
+ {
+  "id": "linear-b-pylos",
+  "src": "commons:NAMA Linear B tablet of Pylos.jpg",
+  "alt": "A flat clay tablet, broken into three pieces, covered with lines of small signs scratched between ruled lines.",
+  "title": "Clay tablet inscribed in Linear B, from the palace of Pylos",
+  "date": "13th century BC",
+  "place": "National Archaeological Museum, Athens",
+  "creator": "Photograph by Sharon Mollerus"
+ },
+ {
+  "id": "gerome-diogenes",
+  "src": "commons:Jean-Léon Gérôme - Diogenes - Walters 37131.jpg",
+  "alt": "A painting: a bearded man sits in the mouth of a huge clay jar, trimming a lamp in daylight, with four dogs around him.",
+  "title": "Diogenes, by Jean-Léon Gérôme",
+  "date": "1860",
+  "place": "Walters Art Museum, Baltimore",
+  "creator": "Jean-Léon Gérôme"
+ },
+ {
+  "id": "crates-hipparchia",
+  "src": "commons:Crates and Hipparchia Villa Farnesina.jpg",
+  "alt": "A faded Roman wall painting: a bearded man with a staff and a bag walks towards a young woman who carries a basket on her head.",
+  "title": "Roman wall painting identified as Crates and Hipparchia, from the Villa Farnesina",
+  "date": "1st century BC–1st century AD",
+  "place": "Museo Nazionale Romano, Palazzo Massimo, Rome",
+  "creator": "Unknown"
+ },
+ {
+  "id": "pythagoras-capitoline",
+  "src": "commons:Bust of Pythagoras at the Capitoline Museum.jpg",
+  "alt": "A marble bust of a bearded man wearing a soft cap or turban.",
+  "title": "Pythagoras, Roman marble portrait",
+  "date": "2nd century AD",
+  "place": "Capitoline Museums, Rome",
+  "creator": "Photograph by Cmick25"
+ },
+ {
+  "id": "orthia-temple",
+  "src": "commons:The remains of the Temple of Artemis Orthia in Sparta on 15 May 2019.jpg",
+  "alt": "A grassy field with the low stone foundations of a small temple, trees behind it and mountains in the distance.",
+  "title": "The remains of the sanctuary of Artemis Orthia at Sparta",
+  "date": "",
+  "place": "Sparta",
+  "creator": "Photograph by George E. Koronaios"
+ },
+ {
+  "id": "asklepios-epidaurus",
+  "src": "commons:Statue of Asklepios, found in the Sanctuary of Asklepios at Epidaurus, Roman copy of 4th century BC original, about 160 AD, National Archaeological Museum of Athens.jpg",
+  "alt": "A marble statue of a bearded god in a cloak draped over one shoulder, a snake coiled around the staff at his side.",
+  "title": "Asclepius, from his sanctuary at Epidaurus; Roman copy of a 4th-century BC original",
+  "date": "c. AD 160",
+  "place": "National Archaeological Museum, Athens",
+  "creator": "Photograph by Carole Raddato"
+ },
+ {
+  "id": "peplos-kore-colour",
+  "src": "commons:NAMABG-Peplos Kore as Athena.JPG",
+  "alt": "A life-size painted copy of an archaic statue of a young woman with long red-brown braids, in a yellow dress with a red patterned panel down the front.",
+  "title": "Painted reconstruction of the Peplos Kore (original c. 530 BC) by Vinzenz Brinkmann and Ulrike Koch-Brinkmann",
+  "date": "",
+  "place": "Exhibition \"Gods in Color\"",
+  "creator": "Photograph by Marsyas"
+ },
+ {
+  "id": "themis-aigeus",
+  "src": "commons:Themis Aigeus Antikensammlung Berlin F2538.jpg",
+  "alt": "A drawing of the inside of a painted cup: a woman sits on a tall tripod holding a shallow bowl and a sprig of laurel, and a bearded king stands before her; a column stands between them.",
+  "title": "King Aegeus consults the Delphic oracle; the goddess Themis sits on the tripod. After a red-figure cup by the Kodros Painter, c. 440–430 BC",
+  "date": "drawing published 1846",
+  "place": "Antikensammlung, Berlin (F 2538)",
+  "creator": "Drawing from Eduard Gerhard, Das Orakel der Themis (1846)"
+ },
+ {
+  "id": "tomb-of-the-diver",
+  "src": "commons:Fresco painting from lateral walls of the Tomb of the Diver depicting a symposium scene, 5th century BC, Paestum Archaeological Museum.jpg",
+  "alt": "A painted tomb wall: young men reclining in pairs on couches, one of them flicking the last drops from his cup.",
+  "title": "Symposium scene from the Tomb of the Diver at Paestum",
+  "date": "c. 470 BC",
+  "place": "Archaeological Museum, Paestum",
+  "creator": "Photograph by Carole Raddato"
+ }
+]

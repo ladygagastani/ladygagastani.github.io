@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "Περικλῆς",
   category: "people",
   kicker: "The aristocrat who led the Athenian democracy for a generation",
+  image: "pericles-bust",
   hook: `For about thirty years in the middle of the fifth century BC, the most powerful man in Athens held only an office the Assembly filled by vote every year: general. Pericles was re-elected again and again, persuaded the Assembly to build the Parthenon, and led the city into the war with Sparta that would end its empire. His admirers called him "the Olympian"; the comic poets called him "squill-head". Thucydides, who lived through those years, thought he was the only thing holding Athens together.`,
   body: `## A family at the top
 

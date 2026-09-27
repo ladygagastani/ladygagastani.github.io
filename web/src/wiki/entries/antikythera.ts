@@ -5,6 +5,7 @@ const entry: Entry = {
   title: "The Antikythera mechanism",
   category: "strange",
   kicker: "A bronze calculator of the heavens, from a shipwreck of about 60 BC",
+  image: "antikythera-fragment-a",
   hook: `In 1901, divers working a shipwreck off the small island of Antikythera brought up bronze and marble statues, glass and pottery, and a shapeless lump of corroded bronze and wood. A year later someone noticed a gearwheel inside it. More than a century of study, lately with X-ray scanning, has shown that it was a hand-cranked machine that modelled the movements of the sun and moon, predicted eclipses and counted the years to the next Olympic Games. Nothing remotely like it survives from the ancient world.`,
   body: `## A wreck full of treasure
 

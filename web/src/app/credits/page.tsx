@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Page from "@/components/Page";
 import { COLLECTIONS, repoUrl } from "@/config/sources";
 import { LSJ_CREDIT } from "@/lib/lookup/lsj";
+import { IMAGES } from "@/wiki/images";
+import { ENTRIES } from "@/wiki/index";
 import styles from "../prose.module.css";
 
 export const metadata: Metadata = { title: "Credits, licences & privacy" };
@@ -54,6 +56,25 @@ export default function CreditsPage() {
           <li><b>Short definitions of the commonest words</b> and their frequency ranks: <a href="https://dcc.dickinson.edu/greek-core-list" rel="noopener">Dickinson College Commentaries Greek Core Vocabulary</a>, by Christopher Francese and collaborators, CC BY-SA 3.0.</li>
           <li><b>Scansion of verse</b> (long and short syllables, and the metre of each line) for Homer, Hesiod, Apollonius, Nonnus, Pindar, Theognis, the Greek Anthology, three plays of Aeschylus and other poets: <a href="https://hypotactic.com" rel="noopener">hypotactic.com</a>, by David Chamberlain, CC BY 4.0. The vowel lengths the site&apos;s own scanner uses for other texts were also learned from these scansions.</li>
           <li><b>Wiktionary</b> entries, fetched live when you look up a word, and each word&apos;s origin, related Greek words and English descendants on its Word Study page: English Wiktionary contributors, CC BY-SA 4.0.</li>
+        </ul>
+
+        <h2>Pictures</h2>
+        <p>
+          Every picture in the Painted Stoa comes from a collection that states its licence, and the licence is copied from that record
+          by the script that fetched it (<code>web/scripts/fetch-images.ts</code>). Pictures from The Metropolitan Museum of Art are from its
+          Open Access programme (CC0: free for any use). Photographs from Wikimedia Commons keep their photographers&apos; licences.
+        </p>
+        <ul>
+          {Object.entries(IMAGES).map(([id, im]) => {
+            const used = ENTRIES.find((e) => e.image === id);
+            return (
+              <li key={id}>
+                <b>{im.title}</b>{im.date && <>, {im.date}</>}. {im.place}. {im.creator !== "Unknown" && <>{im.creator}. </>}
+                <a href={im.source} rel="noopener">{im.sourceName}</a>, <a href={im.licenceUrl} rel="noopener">{im.licence}</a>.
+                {used && <> Used in <a href={`/stoa/${used.slug}`}>{used.title}</a>.</>}
+              </li>
+            );
+          })}
         </ul>
 
         <h2>Fonts and software</h2>

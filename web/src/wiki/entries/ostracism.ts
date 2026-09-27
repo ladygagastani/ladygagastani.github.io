@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "ὀστρακισμός",
   category: "democracy",
   kicker: "Voting a man out of Athens for ten years, on a broken pot",
+  image: "themistocles-ostraka",
   hook: `Once a year the citizens of Athens could decide to hold a strange election. No one was charged and no one was tried. Each voter scratched a name on a broken piece of pottery, an *ostrakon*, and the man named most often had to leave the city for ten years. Thousands of those sherds have come out of the ground, and some of them still show who wrote them in a hurry, and who wrote them in bulk.`,
   body: `## A law against tyrants
 

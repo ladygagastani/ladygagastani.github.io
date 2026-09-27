@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "τὸ συμπόσιον",
   category: "daily",
   kicker: "Wine, water, song and argument: the Greek drinking party",
+  image: "tomb-of-the-diver",
   hook: `A *symposion* means "drinking together". After dinner, a small group of men reclined on couches around the walls of a room, poured a little wine for the gods, sang a hymn, and settled down to drink wine mixed with water from a great bowl in the middle. There were rules for how strong the wine should be, games, flute-girls and songs, and sometimes serious talk. Much of Greek lyric poetry was written for these evenings, and so were the painted cups they drank from. Plato set his greatest dialogue about love at one.`,
   body: `## The order of the evening
 
