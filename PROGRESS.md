@@ -41,7 +41,7 @@
   - **Progress**: lessons done, words learned, cards due, streak, next step.
   - **Audio**: `public/audio/index.json` manifest; play buttons appear only where a recording exists. **Recording studio** `/academy/studio` (development only) records in the browser and saves `<key>.webm` plus the index into `web/public/audio/`.
   - **Tools**: `pipeline/find_sentences.py` finds short hand-annotated sentences with a given feature and common vocabulary, for new lessons.
-- **Phase 4 (search, Echoes, metre): search done** (2026-09-27); Echoes and metre are next. Tests: 65 unit (plus 3 that need the network or the corpus cache) and 21 browser.
+- **Phase 4 (search, Echoes, metre): search done** (2026-09-27); Echoes and metre are next. Tests: 64 unit (plus 3 that need the network or the corpus cache) and 21 browser.
   - **Search index** (`web/scripts/build-search.ts`, run `npx tsx scripts/build-search.ts grc`, then `eng`, then `lem`, in `web/`; needs `pipeline/.cache/corpus` from `fetch_corpus.py` and the GLAUx word packs). Output goes to `web/public/data/search/`, **about 320 MB, not committed**:
     - Greek words of every edition: 33.7M words, 788k accent-free keys, 149 MB;
     - English words of every translation: 13.0M words, 46 MB;
