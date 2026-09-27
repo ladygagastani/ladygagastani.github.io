@@ -75,6 +75,7 @@ Many who slept in the god's hall had already tried the doctors. How many went ho
     { work: "tlg0525.tlg001", ref: "2.26.1", to: "2.28.1", label: "Pausanias 2.26–27", why: "Epidaurus and the birth of Asclepius, as the locals told it." },
   ],
   related: ["trial-of-socrates", "plague-of-athens", "delphi"],
+  places: ["570228"],
   primary: [
     { work: "tlg0525.tlg001", ref: "2.27.1", to: "2.27.3", label: "Pausanias 2.27.1–3" },
     { work: "tlg0019.tlg011", ref: "653", to: "747", label: "Aristophanes, Wealth 653–747" },

@@ -79,6 +79,7 @@ The chosen jurors were given a staff painted [the colour of their court](cts:tlg
     { work: "tlg0016.tlg001", ref: "3.80.1", to: "3.82.5", label: "Herodotus 3.80–82", why: "Three Persians debate democracy, oligarchy and monarchy." },
   ],
   related: ["ostracism", "pericles"],
+  places: ["579885"],
   primary: [
     { work: "tlg0086.tlg003", ref: "63.1", to: "66.3", label: "Constitution of the Athenians 63–66" },
     { work: "tlg0086.tlg003", ref: "22.5", label: "Constitution of the Athenians 22.5" },

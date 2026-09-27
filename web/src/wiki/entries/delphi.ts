@@ -70,6 +70,7 @@ However it worked, Delphi mattered because the Greeks believed it. It sanctioned
     { work: "tlg0007.tlg092", ref: "50", to: "51", label: "Plutarch, On the Obsolescence of Oracles 50–51", why: "The fragrance, and the priestess who died." },
   ],
   related: [],
+  places: ["540726"],
   primary: [
     { work: "tlg0016.tlg001", ref: "1.46.1", to: "1.56.3", label: "Herodotus 1.46–56" },
     { work: "tlg0016.tlg001", ref: "1.91.1", to: "1.91.6", label: "Herodotus 1.91" },

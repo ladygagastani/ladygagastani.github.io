@@ -97,6 +97,7 @@ These two passages are among the earliest mentions of schools in Greek, and they
     { work: "tlg0059.tlg020", ref: "207", to: "210", label: "Plato, Lysis 207d–210d", why: "Socrates and a boy who is not allowed to do anything." },
   ],
   related: ["ostracism"],
+  places: ["579885"],
   primary: [
     { work: "tlg0059.tlg022", ref: "325", to: "326", label: "Plato, Protagoras 325c–326e" },
     { work: "tlg0059.tlg020", ref: "208", label: "Plato, Lysis 208" },

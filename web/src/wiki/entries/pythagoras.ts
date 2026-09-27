@@ -77,6 +77,7 @@ Other writers said he [starved himself to death](cts:tlg0004.tlg001:8.1.40) in a
     { work: "tlg0004.tlg001", ref: "8.1.1", to: "8.1.50", label: "Diogenes Laertius 8.1–50", why: "The life, with the rules, the theorem and the deaths." },
   ],
   related: ["diogenes", "kleroterion"],
+  places: ["452317", "599926"],
   primary: [
     { work: "tlg0004.tlg001", ref: "8.1.1", to: "8.1.50", label: "Diogenes Laertius 8.1–50" },
   ],

@@ -1,0 +1,110 @@
+/* The Periplus: clay land, black-gloss sea, places in added red, as on a painted vase. */
+.layout {
+  --map-land: var(--bg-2);
+  --map-sea: var(--ink);
+  --map-coast: var(--ink);
+  --map-wave: rgba(230, 195, 155, 0.10);
+  --map-name: var(--ink);
+  --map-halo: var(--bg-2);
+  --map-sea-name: #E6C39B;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); gap: clamp(18px, 3vw, 36px); align-items: start;
+  padding-bottom: 60px;
+}
+:global([data-theme="dark"]) .layout {
+  --map-land: #2A1F18; --map-sea: #0B0806; --map-coast: #C8703A; --map-wave: rgba(200, 112, 58, 0.10);
+  --map-name: #EDCBA0; --map-halo: #2A1F18; --map-sea-name: #C8703A;
+}
+@media (prefers-color-scheme: dark) {
+  :global(html:not([data-theme="light"])) .layout {
+    --map-land: #2A1F18; --map-sea: #0B0806; --map-coast: #C8703A; --map-wave: rgba(200, 112, 58, 0.10);
+    --map-name: #EDCBA0; --map-halo: #2A1F18; --map-sea-name: #C8703A;
+  }
+}
+@media (max-width: 980px) { .layout { grid-template-columns: 1fr; } }
+
+.mapCol { display: grid; gap: 12px; min-width: 0; }
+.stage {
+  position: relative; height: min(74vh, 760px); min-height: 420px; overflow: hidden; touch-action: none; cursor: grab;
+  border-radius: var(--radius); box-shadow: 0 0 0 1px var(--rule), 0 18px 40px -26px var(--shadow);
+  background: var(--map-land); animation: unroll 0.9s var(--ease) both;
+}
+.stage:active { cursor: grabbing; }
+.stage:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@keyframes unroll { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+.svg { display: block; user-select: none; }
+.land { fill: var(--map-land); }
+.sea { fill: var(--map-sea); fill-rule: evenodd; }   /* islands are holes in the sea */
+.waves { stroke: none; opacity: 0.9; fill-rule: evenodd; }
+.wave { fill: none; stroke: var(--map-wave); stroke-width: 1; }
+.lake { fill: var(--map-sea); opacity: 0.85; }
+.coast { fill: none; stroke: var(--map-coast); stroke-width: 0.8; vector-effect: non-scaling-stroke; opacity: 0.55; }
+
+.dot { cursor: pointer; stroke-width: 1.4; transition: r 0.25s var(--ease); animation: ink 0.5s var(--ease) both; animation-delay: calc(var(--i) * 12ms); }
+.dot:hover { stroke-width: 2.5; }
+.checked { fill: var(--accent); stroke: var(--map-halo); }
+.auto { fill: var(--map-halo); stroke: var(--accent); }
+.saved { stroke: var(--ink); stroke-width: 2.4; }
+@keyframes ink { from { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(0.2); } }
+.ring { fill: none; stroke: var(--accent); stroke-width: 2; animation: pulse 1.8s var(--ease) infinite; pointer-events: none; }
+@keyframes pulse { 0% { opacity: 1; } 70% { opacity: 0.25; } 100% { opacity: 1; } }
+
+.name, .regionName, .waterName { paint-order: stroke; stroke: var(--map-halo); stroke-width: 3px; stroke-linejoin: round; cursor: pointer; }
+.name { font-family: var(--f-greek); font-size: 12.5px; fill: var(--map-name); }
+.regionName { font-family: var(--f-label); font-size: 12px; letter-spacing: 0.22em; fill: var(--ink-2); text-transform: uppercase; }
+.waterName { font-family: var(--f-greek); font-style: italic; font-size: 13px; letter-spacing: 0.08em; fill: var(--map-sea-name); stroke: var(--map-sea); }
+.selName { fill: var(--accent); font-weight: 700; }
+.autoName { opacity: 0.6; }   /* a river or region matched automatically, like the hollow dots */
+
+.controls { position: absolute; right: 12px; top: 12px; display: grid; gap: 6px; }
+.controls button {
+  width: 34px; height: 34px; border: 0; border-radius: var(--radius); background: var(--surface); color: var(--ink);
+  font: 1.2rem/1 var(--f-display); cursor: pointer; box-shadow: 0 2px 8px -2px var(--shadow); transition: transform 0.2s var(--ease), background 0.2s;
+}
+.controls button:hover { transform: translateY(-1px); background: var(--white-slip); }
+.compass { position: absolute; left: 14px; bottom: 12px; font: 0.8rem var(--f-label); letter-spacing: 0.2em; color: var(--map-sea-name); opacity: 0.8; pointer-events: none; }
+.compass::before { content: ""; display: block; width: 1px; height: 22px; margin: 0 auto 2px; background: currentColor; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.panel { position: sticky; top: 88px; display: grid; gap: 14px; }
+@media (max-width: 980px) { .panel { position: static; } }
+.search { position: relative; }
+.search input { width: 100%; padding: 10px 12px; font: inherit; background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: var(--radius); }
+.found, .top { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.found { position: absolute; z-index: 3; left: 0; right: 0; top: calc(100% + 4px); background: var(--surface); box-shadow: 0 12px 28px -12px var(--shadow); padding: 4px; }
+.found button, .top button {
+  width: 100%; display: flex; gap: 8px; align-items: baseline; padding: 7px 8px; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; border-radius: var(--radius);
+}
+.found button:hover, .top button:hover { background: var(--bg-2); }
+.found b, .top b { font-family: var(--f-greek); font-weight: 400; font-size: 1.08rem; }
+.found span, .top span { color: var(--ink-2); flex: 1; }
+.found small, .top small { font-family: var(--f-label); color: var(--accent); }
+
+.card { display: grid; gap: 10px; padding: 18px 20px; background: var(--surface); border-top: 3px solid var(--ink); border-radius: var(--radius); animation: cardIn 0.4s var(--ease) both; }
+@keyframes cardIn { from { opacity: 0; transform: translateY(6px); } }
+.card p { margin: 0; }
+.placeName { margin: 0; display: grid; font: 400 2rem/1.1 var(--f-greek); }
+.placeName small { font: 1rem var(--f-body); color: var(--ink-2); margin-top: 4px; }
+.count b { font-family: var(--f-display); font-weight: 400; font-size: 1.15rem; color: var(--accent); }
+.caveat { font-size: 0.92rem; color: var(--ink-2); border-left: 2px solid var(--ochre); padding-left: 10px; }
+.entries { display: grid; gap: 4px; }
+.entries a { color: var(--accent); }
+.works { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+.works li { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 0.95rem; }
+.works a { color: inherit; }
+.works small { font-family: var(--f-label); color: var(--ink-2); grid-row: 1; grid-column: 2; }
+.bar { grid-column: 1 / -1; height: 3px; background: var(--accent); border-radius: 2px; transform-origin: left; animation: grow 0.6s var(--ease) both; }
+@keyframes grow { from { transform: scaleX(0); } }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.small { font-size: 0.88rem; color: var(--ink-2); }
+.small a { color: inherit; }
+.linkBtn { border: 0; background: none; padding: 0; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
+.key { display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.88rem; color: var(--ink-2); }
+.keyDot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: -1px; margin-right: 4px; border: 1.5px solid var(--accent); }
+.keyDot.checked { background: var(--accent); }
+.method summary { cursor: pointer; font-family: var(--f-label); letter-spacing: 0.04em; }
+.method p { margin: 8px 0 0; font-size: 0.93rem; line-height: 1.55; }
+
+.status { padding: 60px 0; display: flex; gap: 12px; align-items: center; color: var(--ink-2); }
+.spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--rule); border-top-color: var(--accent); animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+/* reduced motion is handled site-wide (globals.css), honouring the reader's own setting */

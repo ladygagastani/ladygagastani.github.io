@@ -62,6 +62,7 @@ Greek excavations began in 1870 and the German Archaeological Institute has exca
     { work: "tlg0525.tlg001", ref: "1.29.2", to: "1.29.16", label: "Pausanias 1.29", why: "A walk along the road of tombs to the Academy." },
   ],
   related: ["ostracism", "plague-of-athens"],
+  places: ["97294452"],
   primary: [
     { work: "tlg0525.tlg001", ref: "1.3.1", label: "Pausanias 1.3.1" },
     { work: "tlg0525.tlg001", ref: "1.29.2", to: "1.29.16", label: "Pausanias 1.29" },

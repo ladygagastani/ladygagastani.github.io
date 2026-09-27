@@ -155,3 +155,7 @@
 @keyframes noteIn { from { opacity: 0; transform: translateY(-4px); } }
 @media (prefers-reduced-motion: reduce) { .sectionNote { animation: none; } }
 .markersKey { position: fixed; right: 26px; bottom: 18px; z-index: 5; }
+.onMap { display: grid; gap: 4px; }
+.onMap a { color: var(--accent); text-decoration: none; }
+.onMap a:hover { text-decoration: underline; }
+.onMap span { font-family: var(--f-greek); }

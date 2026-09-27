@@ -76,6 +76,7 @@ The execution had to wait: while the sacred ship Athens sent to Delos every year
     { work: "tlg0059.tlg004", ref: "115", to: "118", label: "Plato, Phaedo 115b–118a", why: "The last hour." },
   ],
   related: ["diogenes", "delphi", "school"],
+  places: ["579885"],
   primary: [
     { work: "tlg0059.tlg002", ref: "17", to: "42", label: "Plato, Apology" },
     { work: "tlg0059.tlg004", ref: "115", to: "118", label: "Plato, Phaedo 115–118" },

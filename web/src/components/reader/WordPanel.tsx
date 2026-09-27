@@ -11,6 +11,7 @@ import { readTag } from "@/lib/lookup/postag";
 import { coreEntry, CORE_CREDIT, type CoreEntry } from "@/lib/lookup/core";
 import { useUI } from "@/lib/ui";
 import { useAcademy } from "@/lib/academy";
+import { placeNamed, type Place } from "@/lib/map";
 import styles from "./Reader.module.css";
 
 export interface WordContext { work: string; unitKey: string; occurrence: number; keys: Set<string>; depth: number }
@@ -106,6 +107,16 @@ export default function WordPanel({ word, ctx, onClose, onEchoes }: { word: stri
   const lemma = analysis.key === key ? analysis.value?.lemma ?? null : null;
   const analysisDone = analysis.key === key;
 
+  // a name that is a place on the Periplus map
+  const [placeHit, setPlaceHit] = useState<{ lemma: string; value: Place | null }>({ lemma: "", value: null });
+  useEffect(() => {
+    if (!lemma || lemma === lemma.toLocaleLowerCase("el")) return;
+    let live = true;
+    placeNamed(lemma).then((value) => { if (live) setPlaceHit({ lemma, value }); });
+    return () => { live = false; };
+  }, [lemma]);
+  const place = lemma && placeHit.lemma === lemma ? placeHit.value : null;
+
   // 2. LSJ for the dictionary form (or the word itself when there is no analysis)
   const lsjKey = !ctx ? `${key}|` : analysisDone ? `${key}|${lemma ?? ""}` : "";
   useEffect(() => {
@@ -188,6 +199,11 @@ export default function WordPanel({ word, ctx, onClose, onEchoes }: { word: stri
           <button type="button" className="chip" onClick={onEchoes} title="Every place this word occurs in the book, marked along a strip">
             Echoes · where else it occurs
           </button>
+        )}
+        {place && (
+          <Link className="chip" href={`/stoa/periplus?p=${place.id}`} transitionTypes={["page-turn"]} title={`${place.en}: where it is, and which works name it most`}>
+            On the map · <span lang="grc">{place.grc}</span>
+          </Link>
         )}
         {(lemma || l?.value) && (
           <Link className="chip" href={`/treasury/word?l=${encodeURIComponent(headword)}`} transitionTypes={["page-turn"]}

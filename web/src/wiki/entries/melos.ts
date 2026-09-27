@@ -87,6 +87,7 @@ When news of the final defeat at Aegospotami reached Athens in 405 BC, Xenophon 
     { work: "tlg0032.tlg001", ref: "2.2.3", label: "Xenophon, Hellenica 2.2.3", why: "The night Athens feared the same fate." },
   ],
   related: [],
+  places: ["570475"],
   primary: [
     { work: "tlg0003.tlg001", ref: "3.91.1", label: "Thucydides 3.91" },
     { work: "tlg0003.tlg001", ref: "5.84.1", to: "5.116.4", label: "Thucydides 5.84–116" },

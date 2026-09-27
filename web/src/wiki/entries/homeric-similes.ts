@@ -91,6 +91,7 @@ Homer's word for the octopus, *polypous*, means "many-foot". Anyone who has pull
     { work: "tlg0012.tlg001", ref: "16.1", to: "16.100", label: "Iliad 16.1–100", why: "Patroclus begs Achilles to let him fight." },
   ],
   related: ["black-and-red-figure", "school"],
+  places: ["550595"],
   primary: [
     { work: "tlg0012.tlg001", ref: "6.144", to: "6.151", label: "Iliad 6.144–151" },
     { work: "tlg0012.tlg001", ref: "8.553", to: "8.565", label: "Iliad 8.553–565" },

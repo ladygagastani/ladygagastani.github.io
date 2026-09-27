@@ -79,6 +79,7 @@ The most famous story of all is his meeting with Alexander the Great at Corinth.
     { work: "tlg0004.tlg001", ref: "6.2.76", to: "6.2.79", label: "Diogenes Laertius 6.76–79", why: "The competing stories of his death." },
   ],
   related: ["hipparchia"],
+  places: ["857321", "570182"],
   primary: [{ work: "tlg0004.tlg001", ref: "6.2.20", to: "6.2.81", label: "Diogenes Laertius, Lives of the Philosophers 6.20–81" }],
   secondary: [
     { id: "branham-cynics", note: "The Cynic movement, from Diogenes onwards." },

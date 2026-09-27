@@ -11,6 +11,9 @@ import { BIB } from "./bibliography";
 import { blocks, inline, linksIn } from "./markup";
 import { CATEGORIES } from "./types";
 import { IMAGES } from "./images";
+import mapData from "../../public/data/map/places.json";
+
+const MAP_PLACES = new Set((mapData as { places: { id: string }[] }).places.map((p) => p.id));
 
 const idx = indexCatalog(JSON.parse(readFileSync("public/data/catalog.json", "utf8")) as Catalog);
 
@@ -51,6 +54,7 @@ describe.each(ENTRIES.map((e) => [e.slug, e] as const))("entry %s", (slug, e) =>
     if (e.image) expect(IMAGES[e.image], e.image).toBeTruthy();
     for (const s of e.secondary) expect(BIB[s.id], s.id).toBeTruthy();
     if (body.some((b) => "timeline" in b)) expect(e.timeline?.length).toBeGreaterThan(0);
+    for (const p of e.places ?? []) expect(MAP_PLACES.has(p), `${slug}: Pleiades ${p} is not on the map`).toBe(true);
   });
   it("cites only works in the catalogue", () => {
     const works = [...cites.map((c) => c.work), ...Object.values(e.quotes ?? {}).map((q) => q.work), ...e.readIt.map((c) => c.work), ...e.primary.map((c) => c.work)];

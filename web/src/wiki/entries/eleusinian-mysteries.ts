@@ -81,6 +81,7 @@ Hippolytus, quoting the writings of a Gnostic sect, says that the highest revela
     { work: "tlg0003.tlg001", ref: "6.27.1", to: "6.29.3", label: "Thucydides 6.27–29", why: "The scandal of 415 BC." },
   ],
   related: ["delphi"],
+  places: ["579920"],
   primary: [
     { work: "tlg0013.tlg002", ref: "473", to: "482", label: "Homeric Hymn to Demeter 473–482" },
     { work: "tlg0010.tlg011", ref: "28", label: "Isocrates, Panegyricus 28" },

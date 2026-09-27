@@ -83,6 +83,7 @@ Women could, however, win. A victory in the chariot race went to the owner of th
     { work: "tlg0016.tlg001", ref: "8.26.1", to: "8.26.3", label: "Herodotus 8.26", why: "The Persians learn what the Greeks compete for." },
   ],
   related: ["symposium", "black-and-red-figure"],
+  places: ["570531"],
   primary: [
     { work: "tlg0525.tlg001", ref: "5.6.7", to: "5.6.8", label: "Pausanias 5.6.7–8" },
     { work: "tlg0525.tlg001", ref: "5.8.6", label: "Pausanias 5.8.6" },

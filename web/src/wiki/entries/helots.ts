@@ -109,6 +109,7 @@ After a great earthquake in the 460s BC the helots of Messenia rose and held out
     { work: "tlg0525.tlg001", ref: "4.14.4", to: "4.14.5", label: "Pausanias 4.14", why: "Tyrtaeus on the conquered Messenians." },
   ],
   related: ["laurion"],
+  places: ["570406", "570480"],
   primary: [
     { work: "tlg0525.tlg001", ref: "4.14.4", to: "4.14.5", label: "Pausanias 4.14.4–5 (quoting Tyrtaeus)" },
     { work: "tlg0003.tlg001", ref: "1.101.2", label: "Thucydides 1.101" },

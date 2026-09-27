@@ -7,16 +7,18 @@ import { allPositions, setAllPositions } from "@/lib/position";
 import {
   EXPORT_APP, EXPORT_FORMAT, ImportProblem, exportHtml, mergeAcademy, mergeById, mergePositions, parseExport, type TreasuryData,
 } from "@/lib/treasury-io";
+import { loadMap, loadSavedPlaces, useSavedPlaces } from "@/lib/map";
 import { plural, type TreasuryState } from "./data";
 import styles from "./Treasury.module.css";
 
 async function gather(): Promise<TreasuryData> {
   await useAcademy.persist.rehydrate();
+  await loadSavedPlaces();
   const { completed, days, deck } = useAcademy.getState();
   return {
     app: EXPORT_APP, format: EXPORT_FORMAT, exported: new Date().toISOString(),
     marks: await allMarks(), notes: await allPageNotes(),
-    academy: { completed, days, deck }, positions: allPositions(),
+    academy: { completed, days, deck }, positions: allPositions(), places: useSavedPlaces.getState().saved,
   };
 }
 
@@ -29,7 +31,8 @@ export default function KeepSafe({ t, summary }: { t: TreasuryState; summary: st
     setBusy(true);
     try {
       const d = await gather();
-      const html = exportHtml(d, t.idx, location.origin);
+      const names = await loadMap().then((m) => new Map(m.places.map((p) => [p.id, `${p.grc} (${p.en.split("/")[0]})`])), () => new Map<string, string>());
+      const html = exportHtml(d, t.idx, location.origin, (id) => names.get(id) ?? `Pleiades place ${id}`);
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([html], { type: "text/html" }));
       a.download = `my-treasury-${d.exported.slice(0, 10)}.html`;
@@ -56,6 +59,7 @@ export default function KeepSafe({ t, summary }: { t: TreasuryState; summary: st
       await useMarks.getState().loadAll();
       await usePageNotes.getState().load();
       t.setPositions(pos.positions);
+      const placesAdded = useSavedPlaces.getState().merge(incoming.places ?? {});
       const line = (what: string, r: { added: number; updated: number; unchanged: number }) =>
         `${what}: ${r.added} added, ${r.updated} updated to a newer copy, ${r.unchanged} already here.`;
       setResult({
@@ -65,6 +69,7 @@ export default function KeepSafe({ t, summary }: { t: TreasuryState; summary: st
           line("Notes on authors and words", notes.report),
           line("Words in your review deck", deck),
           `Places you stopped reading: ${pos.changed} updated.`,
+          `Saved places on the map: ${placesAdded} added.`,
           "Nothing already in this browser was deleted.",
         ],
       });

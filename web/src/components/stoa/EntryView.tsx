@@ -10,7 +10,10 @@ import { entryBySlug, categoryOf } from "@/wiki/index";
 import { Blocks, Figure, Inline, CertTag, readHref, greekAware } from "./Markup";
 import Contents from "./Contents";
 import { EntryMarkers, SectionNote } from "./EntryNotes";
+import mapData from "../../../public/data/map/places.json";
 import styles from "./Stoa.module.css";
+
+const PLACE_NAME = new Map((mapData as { places: { id: string; grc: string; en: string }[] }).places.map((p) => [p.id, p]));
 
 export default function EntryView({ e }: { e: Entry }) {
   const body = blocks(e.body);
@@ -83,6 +86,12 @@ export default function EntryView({ e }: { e: Entry }) {
 
         <aside className={styles.entryAside}>
           {heads.length > 1 && <Contents heads={heads} />}
+          {(e.places?.length ?? 0) > 0 && (
+            <div className={styles.onMap}>
+              <p className="label">On the map</p>
+              {e.places!.map((id) => { const p = PLACE_NAME.get(id); return p && <Link key={id} href={`/stoa/periplus?p=${id}`} transitionTypes={["page-turn"]}><span lang="grc">{p.grc}</span> {p.en.split("/")[0].replace(/ \(.*\)$/, "")} →</Link>; })}
+            </div>
+          )}
           {certs.size > 0 && (
             <div className={styles.certKey}>
               <p className="label">How sure is this?</p>

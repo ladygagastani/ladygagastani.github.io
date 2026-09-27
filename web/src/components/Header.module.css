@@ -41,6 +41,8 @@
 .tbtn svg { width: 16px; height: 16px; }
 
 @media (max-width: 1400px) { .txt { display: none; } }
+/* the button labels need more room than the page's column, so the header row widens where they show */
+@media (min-width: 1401px) { .top .row { max-width: max(var(--maxw), 1400px); } }
 @media (max-width: 680px) {
   .row { flex-wrap: wrap; gap: 8px 16px; padding-block: 8px; }
   .areas { order: 3; flex-basis: 100%; }

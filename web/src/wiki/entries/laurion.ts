@@ -75,6 +75,7 @@ The Laurion district is still scarred by ancient mining: vertical shafts, galler
     { work: "tlg0086.tlg003", ref: "22.7", label: "Constitution of the Athenians 22.7", why: "The same story, with a hundred ships." },
   ],
   related: ["ostracism", "melos"],
+  places: ["580010"],
   primary: [
     { work: "tlg0086.tlg003", ref: "22.7", label: "Constitution of the Athenians 22.7" },
     { work: "tlg0016.tlg001", ref: "7.144.1", to: "7.144.3", label: "Herodotus 7.144" },

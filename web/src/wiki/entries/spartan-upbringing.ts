@@ -88,6 +88,7 @@ Xenophon describes a ritual at the sanctuary of Artemis Orthia: boys tried to [s
     { work: "tlg0007.tlg004", ref: "16.1", to: "18.4", label: "Plutarch, Lycurgus 16–18", why: "The fullest account, from the Roman period." },
   ],
   related: ["helots", "school"],
+  places: ["570685"],
   primary: [
     { work: "tlg0032.tlg010", ref: "2.1", to: "2.14", label: "Xenophon, Constitution of the Spartans 2" },
     { work: "tlg0007.tlg004", ref: "16.1", to: "18.4", label: "Plutarch, Lycurgus 16–18" },

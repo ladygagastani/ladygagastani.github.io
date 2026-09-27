@@ -6,7 +6,7 @@
  */
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTreasury, plural } from "./data";
 import { NotesSection, BookmarksSection, HighlightsSection, XrefsSection, RecentSection } from "./MarkSections";
 import AnthologySection from "./AnthologySection";
@@ -14,6 +14,8 @@ import WordsSection from "./WordsSection";
 import AuthorsSection from "./AuthorsSection";
 import KeepSafe from "./KeepSafe";
 import styles from "./Treasury.module.css";
+import PlacesSection from "./PlacesSection";
+import { loadSavedPlaces, useSavedPlaces } from "@/lib/map";
 
 export type SectionId = "recent" | "notes" | "anthology" | "bookmarks" | "highlights" | "xrefs" | "words" | "authors" | "places";
 
@@ -22,6 +24,8 @@ export default function Treasury() {
   const router = useRouter();
   const t = useTreasury();
   const { marks, deck, pageNotes } = t;
+  const savedPlaces = Object.keys(useSavedPlaces((s) => s.saved)).length;
+  useEffect(() => { loadSavedPlaces(); }, []);
   const section = (params.get("s") ?? "recent") as SectionId;
 
   const counts = useMemo(() => {
@@ -41,7 +45,7 @@ export default function Treasury() {
     { id: "xrefs", label: "Cross-references", n: counts.xrefs, hint: "between passages" },
     { id: "words", label: "Words", n: counts.words, hint: "saved, with Word Study" },
     { id: "authors", label: "Authors", n: counts.authors, hint: "your notes on them" },
-    { id: "places", label: "Places", n: null, hint: "with the map" },
+    { id: "places", label: "Places", n: savedPlaces, hint: "on your own map" },
   ];
   const go = (id: SectionId) => {
     const q = new URLSearchParams(params.toString());
@@ -49,7 +53,7 @@ export default function Treasury() {
     for (const k of ["tag", "c", "a"]) q.delete(k);
     router.replace(`/treasury${q.size ? `?${q}` : ""}`, { scroll: false });
   };
-  const empty = t.ready && !marks.length && !Object.keys(deck).length && !Object.keys(pageNotes).length;
+  const empty = t.ready && !marks.length && !Object.keys(deck).length && !Object.keys(pageNotes).length && !savedPlaces;
 
   return (
     <div className={`wrap ${styles.treasury}`}>
@@ -91,16 +95,10 @@ export default function Treasury() {
         {section === "xrefs" && <XrefsSection t={t} />}
         {section === "words" && <WordsSection t={t} />}
         {section === "authors" && <AuthorsSection t={t} />}
-        {section === "places" && (
-          <div className={styles.soon}>
-            <h2>Places</h2>
-            <p>Saving places, and seeing them on your own map, arrives with the Periplus, the site&apos;s map of the Greek world (Phase 7).
-              Until then, a note on a passage or on an author is the place to keep them.</p>
-          </div>
-        )}
+        {section === "places" && <PlacesSection />}
       </section>
 
-      <KeepSafe t={t} summary={`${plural(marks.length, "mark")}, ${plural(Object.keys(pageNotes).length, "note")} on authors, words and the Painted Stoa, ${plural(Object.keys(deck).length, "word")} in your review deck`} />
+      <KeepSafe t={t} summary={`${plural(marks.length, "mark")}, ${plural(Object.keys(pageNotes).length, "note")} on authors, words and the Painted Stoa, ${plural(Object.keys(deck).length, "word")} in your review deck, ${plural(savedPlaces, "saved place")}`} />
     </div>
   );
 }

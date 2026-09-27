@@ -79,6 +79,7 @@ Thucydides' dry comment is that people remember a prophecy to fit what they are 
     { work: "tlg0007.tlg012", ref: "38.1", to: "38.4", label: "Plutarch, Pericles 38", why: "Pericles' last illness." },
   ],
   related: ["melos"],
+  places: ["579885", "580062"],
   primary: [
     { work: "tlg0003.tlg001", ref: "2.47.3", to: "2.54.5", label: "Thucydides 2.47–54" },
     { work: "tlg0003.tlg001", ref: "3.87.1", to: "3.87.4", label: "Thucydides 3.87" },

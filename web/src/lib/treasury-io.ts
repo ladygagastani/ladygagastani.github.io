@@ -22,6 +22,8 @@ export interface TreasuryData {
   notes: PageNote[];
   academy: { completed: Record<string, number>; days: string[]; deck: Record<string, DeckCard> };
   positions: Record<string, Position>;
+  /** saved places on the Periplus: Pleiades id → when saved */
+  places?: Record<string, number>;
 }
 
 // ------------------------------------------------------------ merging
@@ -100,6 +102,7 @@ export function parseExport(text: string): TreasuryData {
       deck: d.academy?.deck && typeof d.academy.deck === "object" ? d.academy.deck : {},
     },
     positions: d.positions && typeof d.positions === "object" ? d.positions : {},
+    places: d.places && typeof d.places === "object" ? Object.fromEntries(Object.entries(d.places).filter(([k, v]) => /^\d+$/.test(k) && typeof v === "number")) : {},
   };
 }
 const isMark = (m: Mark) => !!m && typeof m.id === "string" && typeof m.work === "string" && typeof m.kind === "string" && !!m.start && typeof m.updated === "number";
@@ -129,7 +132,7 @@ export function noteHtml(text: string): string {
   return out.join("");
 }
 
-export function exportHtml(d: TreasuryData, idx: CatalogIndex | null, origin: string): string {
+export function exportHtml(d: TreasuryData, idx: CatalogIndex | null, origin: string, placeName: (id: string) => string = (id) => id): string {
   const title = (work: string) => {
     const w = idx?.work.get(work), a = idx?.authorOf.get(work);
     return w ? `${a ? `${a.name}, ` : ""}${w.title}` : work;
@@ -161,6 +164,8 @@ export function exportHtml(d: TreasuryData, idx: CatalogIndex | null, origin: st
   const positions = Object.entries(d.positions).sort((a, b) => b[1].t - a[1].t)
     .map(([w, p]) => `<li><a href="${esc(`${origin}/read?w=${encodeURIComponent(w)}&ed=${encodeURIComponent(p.ed)}&at=${encodeURIComponent(p.at)}`)}">${esc(title(w))}</a>, at ${esc(p.at)} <span class="muted">(${when(p.t)})</span></li>`).join("");
 
+  const places = Object.entries(d.places ?? {}).sort((a, b) => b[1] - a[1])
+    .map(([id, t]) => `<li><a href="${esc(`${origin}/stoa/periplus?p=${id}`)}">${esc(placeName(id))}</a> <span class="muted">(saved ${when(t)})</span></li>`).join("");
   const data = JSON.stringify(d).replace(/</g, "\\u003c");
   return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -184,6 +189,7 @@ ${section("Saved words", words ? `<ul>${words}</ul>` : "")}
 ${section("Notes on words", pageNotes("word"))}
 ${section("Notes on authors", pageNotes("author"))}
 ${section("Notes on the Painted Stoa", pageNotes("stoa"))}
+${section("Saved places", places ? `<ul>${places}</ul>` : "")}
 ${section("Where you stopped reading", positions ? `<ul>${positions}</ul>` : "")}
 <script type="application/json" id="mathesis-data">${data}</script>
 </body></html>

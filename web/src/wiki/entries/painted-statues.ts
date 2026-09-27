@@ -64,6 +64,7 @@ What is not in doubt is the main point: to the Greeks, a finished statue was a p
     { work: "tlg0006.tlg014", ref: "255", to: "305", label: "Euripides, Helen 255–305", why: "Helen's lament about her own beauty." },
   ],
   related: [],
+  places: ["579885"],
   primary: [
     { work: "tlg0059.tlg030", ref: "4.420", label: "Plato, Republic 420c–d" },
     { work: "tlg0006.tlg014", ref: "262", to: "263", label: "Euripides, Helen 262–263" },

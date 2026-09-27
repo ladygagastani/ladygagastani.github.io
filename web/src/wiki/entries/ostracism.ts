@@ -82,6 +82,7 @@ The institution died of ridicule. According to Plutarch, Alcibiades and Nicias, 
     { work: "tlg0003.tlg001", ref: "8.73.3", label: "Thucydides 8.73", why: "Thucydides' verdict on Hyperbolus." },
   ],
   related: ["melos"],
+  places: ["579885"],
   primary: [
     { work: "tlg0086.tlg003", ref: "22.1", to: "22.8", label: "Constitution of the Athenians 22" },
     { work: "tlg0086.tlg003", ref: "43.5", label: "Constitution of the Athenians 43.5" },

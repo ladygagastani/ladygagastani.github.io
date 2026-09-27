@@ -83,7 +83,7 @@
     - **Bookmarks** with Continue reading; **Highlights** by colour; **Cross-references** shown as pairs (each is stored on both passages; removing removes both).
     - **Words**: saved words (optionally lesson and core words too), with review status, each opening Word Study; a box to study any word (Greek or Beta Code).
     - **Authors**: the reader's own notes on authors, with an author finder.
-    - **Places**: not yet; it arrives with the map (Phase 7), and the page says so.
+    - **Places** (since Phase 7): the places saved on the Periplus, on a small map of your own, with a list (`PlacesSection.tsx`). Saved places are in the Download / Restore file.
     - **Keep your Treasury safe**: **Download my Treasury** saves one HTML file that reads as a tidy document in any browser and carries the same data as JSON inside it; **Restore from a file** merges it back (adds what is missing, replaces only with newer copies, never deletes) and reports what changed. `lib/treasury-io.ts`.
   - **Notes** now have light formatting (**bold**, *italic*, "- " lists; toolbar and Ctrl+B / Ctrl+I), a **Greek typing box** (Beta Code, e.g. `mh=nin` → μῆνιν, with a live preview) and **tags**, in the reader and the Treasury alike (`components/notes/`).
   - **Notes on authors and on words** are stored in a second IndexedDB store (`mathesis-user` version 2, store `notes`, ids `author:tlg0012` / `word:λόγος`).
@@ -113,7 +113,7 @@
   - **Drag a passage into a note**: a grip beside each passage number (on hover), or selected Greek, drags as the Greek in quotation marks followed by (Author, Work ref), which any note (or other text box) takes as a quotation. The forum and debates will take it too (Phase 8).
   - **Continue where you left off** (`lib/resume.ts`, `components/Resume.tsx`): the site remembers the pages visited (newest first; the reader once per set of books open) and how far down each was scrolled. The home page shows the last place (the reader resumes at its own remembered passage), the books in progress and the other recent pages (a lesson, a search with its filters, a Word Study...); following a link there restores the page's scroll. "Forget these pages" clears the list. Unsent drafts: notes already save as they are typed.
   - **Reading position is now measured from what is on screen** (the first passage showing below the sticky bar, on scroll), instead of an IntersectionObserver that only reported rows whose visibility changed; a passage brought into view is no longer hidden under the bar (its offset follows the bar's real height, `--bar-h`).
-- **Phase 7 (the Painted Stoa wiki, maps, archaeology, Census): in progress** (2026-09-27). Tests: 212 unit (plus 53 that need the network or the corpus cache; with `CORPUS=1` the wiki check runs 154) and 43 browser (6 for the wiki, `e2e/stoa.spec.ts`). Commits "Phase 7 (1)" to "Phase 7 (25)".
+- **Phase 7 (the Painted Stoa wiki, maps, archaeology, Census): in progress** (2026-09-27). Tests: 212 unit (plus 53 that need the network or the corpus cache; with `CORPUS=1` the wiki check runs 154) and 47 browser (6 for the wiki, `e2e/stoa.spec.ts`; 4 for the map, `e2e/map.spec.ts`). Commits "Phase 7 (1)" onwards.
   - **Done: the wiki engine** (`web/src/wiki/`, `components/stoa/`):
     - `types.ts`: an `Entry` has slug, title, optional Greek, category, kicker, hook, body, quotes, timeline, "Read it yourself" passages, related entries, primary sources, secondary works (by bibliography id, with a note), optional image and places, and the date written. Certainty labels: `well` (well attested), `debated`, `legend`. The 11 categories are in `CATEGORIES`.
     - `markup.ts`: a small text format for entry bodies. Blocks: `##`/`###` headings, `- ` lists, `!!` "Did you know", `{{quote:id}}`, `{{figure:id}}`, `{{timeline}}`, and `{well}`/`{debated}`/`{legend}` at the start of a paragraph to tag it. Inline: `*italic*`, `**bold**`, a certainty tag, and links `[text](cts:work:ref[-to])` into the reader, `[text](wiki:slug)` to another entry, `[text](https://…)`. Anything unknown makes the build fail, so a typo cannot slip through.
@@ -132,8 +132,12 @@
     - Wiki entries in Quick search (`/` or Ctrl+K); the wiki's data loads only when the box opens.
     - The home page's three wiki cards change each day (the same for everyone), always one from the dark side and one from archaeology (`components/StoaCards.tsx`).
     - **Notes on wiki entries**: a "✎ Note" button under each section heading (and after the opening) writes a note, saved with the reader's other notes (`PageNote` kind `stoa`, id `stoa:<slug>#<section>`). The notes show beside the scroll bar with "where you left off" (`components/stoa/EntryNotes.tsx`, reusing the reader's markers), and appear in the Treasury's Latest list, the Oracle's "My library" search and the Treasury export.
+  - **Done: the Periplus map** `/stoa/periplus` (`components/map/Periplus.tsx`, `lib/map.ts`):
+    - Drawn by the site itself as SVG in the black-figure look (black-gloss sea with a wave pattern, clay land, red dots), from files served by this site: no map tiles from other servers. Wheel, drag, pinch, double-click, the + / − / ⌂ buttons, or the keyboard (arrows, + and −) to move; places fly into view. Filters by kind (cities, islands, regions, rivers and seas, mountains…) and names in Greek or English. `?p=<Pleiades id>` opens a place.
+    - A place's panel: its Greek and English name, kind, how often the library names it and in how many works, its Painted Stoa entries, the twelve works that name it most (each opening the Oracle's search for it in that work), **Save this place**, "Every mention", and a link to Pleiades.
+    - Data: `python pipeline/build_map.py` → `web/public/data/map/` (committed, 0.8 MB): `base.json` (sea and lakes from AWMC geodata's open-water polygons, ODbL, simplified to about 1 km) and `places.json`. Places are GLAUx dictionary words written with a capital, matched to Pleiades Greek names (accents ignored): 1,315 places from 35,073 names. The 249 places named at least 52 times (and the great regions and rivers, `OVERRIDES`) were checked by hand; 73 names used mostly for people, gods, peoples or constellations are left out (`NOT_PLACES`). Automatically matched places show as hollow dots, their river and region names paler, and their panel says so. The builder warns if a place over the cut-off is not checked. `pipeline/.cache/map/names.json` keeps every capitalised name with its count per work, for the Census.
+    - Links: an entry's `places` shows "On the map" in its side column, and the place's panel lists the entry; the reader's word look-up shows "On the map · <name>" when the dictionary word is a place (`placeNamed` in `lib/map.ts`). Saved places live in localStorage `mathesis:places`.
   - **Not started in Phase 7:**
-    - **The Periplus map** (`/stoa/periplus`, still a "coming" page). Plan: our own map drawn from AWMC geodata (shorelines, inland water, roads; ODbL, github.com/AWMC/geodata), simplified and served from this site (no map tiles from other servers), with Pleiades places (CC BY) matched to the texts. Place pages link to the texts and entries that mention them; the Treasury's Places section waits for this.
     - **The Kerameikos section** (`/stoa/kerameikos`, still a "coming" page; the archaeology category links there): an archaeology front page for the archaeology entries.
     - **The Census** (`/stoa/census`, still a "coming" page): most mentioned words from the Word Study index counts, and names (people, gods, places) as PLAN.md §3 item 6 describes, with a plain statement of how the counting was done and how complete it is.
     - Updating README when done.
@@ -197,6 +201,8 @@
 | 2026-09-27 | **Translations in quotations**: the corpus translation when it exists (credited with translator and year, checked word for word); otherwise the site's own plain translation, labelled "this site". | Brief: translations are never altered; honest labels. |
 | 2026-09-27 | **Certainty is shown, not hidden**: paragraphs and timeline items are tagged well attested / debated / legend, and debates give both sides. | Brief. |
 | 2026-09-27 | Entries live in TypeScript files in the code (`src/wiki/entries/`), not a database, so the build can check every link and quotation. | Accuracy; no server. |
+| 2026-09-27 | **The map is drawn by the site from its own files** (AWMC open-water polygons, simplified, as SVG), not from map tiles or MapLibre. | No-trackers rule (no third-party tile servers); the black-figure look; works offline. Replaces PLAN.md's MapLibre + AWMC tiles. |
+| 2026-09-27 | **Places come from the texts' own names**: GLAUx capitalised dictionary words matched to Pleiades Greek names. The most-named places are checked by hand; the rest are shown as matched automatically. Peoples go to the Census, not the map. | Real counts from the corpus; honest about what is unchecked. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
 
 ## Known problems
@@ -233,7 +239,6 @@
   - A browser development server from another session may hold port 3000; `.claude/launch.json` has `web-prod` (built site on port 3100) for checking in the built-in browser.
 
 - **Treasury follow-ups**:
-  - Places (saved places on a personal map) come with the Periplus map in Phase 7.
   - Word Study's examples need the search index, and its family needs Wiktionary, so those two parts need a connection. (Its index downloads with the look-ups since Phase 6.)
   - Word Study needs the dictionary form (λόγος, not λόγου). A typed inflected form could be resolved to its dictionary word via GLAUx later.
   - Empty anthology collections live in localStorage, not in the export (collections that hold passages are exported with them).
@@ -252,9 +257,11 @@
   - `npm run e2e` needs port 3100 free.
   - On Windows, Git Bash's `/tmp` is not visible to Windows Python; put temporary scripts in the session's scratchpad folder. Commands that take a path such as `/stoa` need `MSYS_NO_PATHCONV=1` in Git Bash.
   - The existing "Parsing CSS" warnings in the build come from the older `::highlight` rules and are harmless.
+  - `e2e/echoes.spec.ts` "Echoes of a line" once failed when the whole suite ran together (timing under load) and passed when run again alone. Watch it; if it recurs, give its first check a longer wait.
+  - **Map follow-ups**: the 1,066 automatically matched places below the cut-off are unchecked (the map marks them); a later pass could check more by hand. Roads are not drawn yet (AWMC has them). A place's panel does not yet say "what happened there" (the brief): that needs written, sourced text per place, best done as Painted Stoa entries for the major places.
 
 ## Next steps
-1. The Periplus map, then the Kerameikos section and the Census.
+1. The Kerameikos section, then the Census.
 2. Update README and this file; report to the owner in plain English.
 3. Phase 8 (Town Hall, the Pnyx, accounts) needs the owner's decisions first: which sign-in methods, and who moderates.
 

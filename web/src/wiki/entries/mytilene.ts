@@ -92,6 +92,7 @@ No contrary wind blew, and the first ship, on its horrible errand, was in no hur
     { work: "tlg0003.tlg001", ref: "3.42.1", to: "3.48.2", label: "Thucydides 3.42–48", why: "Diodotus' speech: the case for sparing the city." },
   ],
   related: ["melos", "ostracism"],
+  places: ["550763"],
   primary: [{ work: "tlg0003.tlg001", ref: "3.36.1", to: "3.50.3", label: "Thucydides 3.36–50" }],
   secondary: [
     { id: "hornblower-thuc-1", note: "On the speeches and the number of the executed." },

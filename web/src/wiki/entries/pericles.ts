@@ -107,6 +107,7 @@ Thucydides' judgement, written after Athens had lost the war, is that Pericles w
     { work: "tlg0007.tlg012", ref: "1.1", to: "39.5", label: "Plutarch, Pericles", why: "The only ancient biography, full of anecdotes, some reliable." },
   ],
   related: ["ostracism", "plague-of-athens", "mytilene-debate"],
+  places: ["579885"],
   primary: [
     { work: "tlg0003.tlg001", ref: "2.35.1", to: "2.65.13", label: "Thucydides 2.35–65" },
     { work: "tlg0007.tlg012", ref: "1.1", to: "39.5", label: "Plutarch, Pericles" },

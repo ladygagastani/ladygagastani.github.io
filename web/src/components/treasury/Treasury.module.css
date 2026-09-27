@@ -212,3 +212,22 @@
 .keepResult[data-ok="false"] { border-left-color: var(--accent); }
 .keepResult :global(.muted) { color: color-mix(in srgb, var(--bg) 70%, var(--ink)); }
 @media (max-width: 760px) { .keep { grid-template-columns: 1fr; } }
+
+/* ---------------------------------------------------------------- Places: saved places on a map of your own */
+.places { display: grid; gap: 16px; }
+.places h2 { margin: 0; }
+.miniMap { width: 100%; height: auto; max-height: 460px; border-radius: var(--radius); box-shadow: 0 0 0 1px var(--rule); background: var(--bg-2); }
+.mmLand { fill: var(--bg-2); }
+.mmSea { fill: var(--ink); fill-rule: evenodd; }
+:global([data-theme="dark"]) .mmSea { fill: #0B0806; }
+.mmPlace { animation: mmIn 0.5s var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
+.mmPlace circle { fill: var(--accent); stroke: var(--bg-2); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.mmPlace text { font-family: var(--f-greek); fill: var(--ink); paint-order: stroke; stroke: var(--bg-2); stroke-linejoin: round; }
+@keyframes mmIn { from { opacity: 0; } }
+.placeList { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.placeList li { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center; padding: 10px 14px; background: var(--surface); border-radius: var(--radius); }
+.placeList a { text-decoration: none; color: inherit; }
+.placeList b { font-family: var(--f-greek); font-weight: 400; font-size: 1.15rem; }
+.placeList span { color: var(--ink-2); }
+.placeList small { grid-row: 2; color: var(--ink-2); font-size: 0.86rem; }
+.placeList button { grid-row: 1 / span 2; grid-column: 2; }
