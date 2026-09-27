@@ -73,7 +73,7 @@ export default function Home() {
         <div className="wrap">
           <div className={`${styles.secHead} rv`}>
             <div><span className="label">{AREAS.reader.name} · {AREAS.reader.english}</span><h2 id="passage-title" className={styles.h2}>Passage of the day</h2></div>
-            <p className="muted">The opening of the Iliad. Every word can be looked up.</p>
+            <p className="muted">A different famous passage each day, read live from the original files. Every word can be looked up.</p>
           </div>
           <div className="rv"><PassageOfTheDay /></div>
         </div>

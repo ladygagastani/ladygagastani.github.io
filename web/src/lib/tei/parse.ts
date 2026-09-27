@@ -52,7 +52,8 @@ function buildTree(xml: string): { body: El | null; patterns: { n: string; rp: s
 
 // ------------------------------------------------------------------ 2. citation scheme
 function parsePattern(rp: string): Step[] | null {
-  const m = /#xpath\((.*)\)\s*$/.exec(rp.trim());
+  // some headers escape the quotes, e.g. tei:l[@n=\'$1\']; the backslashes carry no meaning here
+  const m = /#xpath\((.*)\)\s*$/.exec(rp.replace(/\\/g, "").trim());
   if (!m) return null;
   const steps: Step[] = [];
   for (const [, axis, raw] of m[1].matchAll(/(\/\/?)([^/[\]]+(?:\[[^\]]*\])*)/g)) {
@@ -70,7 +71,7 @@ function parsePattern(rp: string): Step[] | null {
 }
 
 const isEl = (k: El | string): k is El => typeof k !== "string";
-const textOf = (el: El): string => el.kids.map((k) => (isEl(k) ? textOf(k) : k)).join("");
+const textOf = (el: El): string => el.kids.map((k) => (isEl(k) ? (k.name === "reg" ? "" : textOf(k)) : k)).join("");
 
 /** Fallback when the header has no pattern: nested numbered textpart divs, then numbered lines. */
 function inferSteps(edition: El): { steps: Step[]; levels: string[] } {
@@ -154,7 +155,15 @@ class Emitter {
     const c = this.block!.c;
     if (typeof x === "string") {
       const s = x.replace(/\s+/g, " ");
-      if (typeof c[c.length - 1] === "string") c[c.length - 1] = (c[c.length - 1] as string) + s; else c.push(s);
+      const last = c[c.length - 1];
+      if (typeof last === "string") {
+        // where two pieces of text meet at a markup boundary, markup whitespace must not
+        // double a space or push punctuation away from its word ("Halicarnassus ,")
+        let prev = last, next = s;
+        if (/\s$/.test(prev) && /^\s/.test(next)) next = next.replace(/^\s+/, "");
+        if (/\s$/.test(prev) && /^[,.;:·!?)\]]/.test(next)) prev = prev.replace(/\s+$/, "");
+        c[c.length - 1] = prev + next;
+      } else c.push(s);
     } else c.push(x);
   }
   finish() {
@@ -186,6 +195,9 @@ function emitElement(k: El, out: Emitter, inner: () => void) {
     case "pb": if (k.attrs.n) out.inline({ m: "page", n: k.attrs.n }); break;
     case "gap": out.inline({ gap: true }); break;
     case "lb": out.inline(" "); break;
+    // A regularised form is metadata, not printed text: Perseus uses <reg> for gazetteer entries
+    // ("Bodrum [27.466,37.5] (inhabited place)…" beside "Halicarnassus"). The printed text stays.
+    case "reg": break;
     default: inner();
   }
 }

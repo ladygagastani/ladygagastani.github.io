@@ -25,7 +25,7 @@
     2. LSJ (`pipeline/build_lsj.py` → `web/public/data/lsj/`, **75 MB, not committed**; citations link into the reader);
     3. live Wiktionary.
   - **Passage tools** (select words, or click a passage number): bookmark, favourite, note (inline, editable, deletable), highlight in 4 colours, Share (copy link, copy text, image with a highlight-or-skip step, preview, light/dark, clipboard with download fallback). Tested in the browser on 2026-09-27. Marks are stored in IndexedDB (`lib/annotations.ts`); the "Your marks" list is in the reader bar.
-  - **Still to do in Phase 2**: side-by-side reading and cross-references; a live passage of the day; offline download of the word and LSJ packs; library filters by genre, period and dialect (`works-meta.json` built); e2e tests for the reader.
+  - **Still to do in Phase 2**: side-by-side reading and cross-references; offline download of the word and LSJ packs; e2e tests for the reader.
 - **Not started:** Phases 3–9.
 
 ## Decisions log
@@ -56,6 +56,8 @@
 | 2026-09-27 | **Offline downloads fetch only the original text XML files, one by one** from GitHub raw (pinned SHA), each verified by git blob SHA-1, into browser storage (OPFS) or a chosen folder. Full-repository ZIPs remain as an option. | Owner's choice; much smaller than the ZIPs. |
 | 2026-09-27 | **Word analyses come from GLAUx** (in context; hand-checked treebank sentences flagged; stated accuracy: lemma 98.8%, morphology 97.2%). **Dictionary: LSJ** from PerseusDL/lexica. Wiktionary is live when online. Logeion and Perseus are links. | The most scholarly open sources; context beats out-of-context analysis. |
 | 2026-09-27 | The reader is one static page, `/read?w=<work>&ed=<version>&tr=<version or none>&at=<ref>`, so a cached shell works offline. | Offline-friendly. |
+| 2026-09-27 | **Display rules for TEI** (the text is never changed, but not every element is printed text): `<reg>` is not shown, because Perseus uses it for gazetteer data such as "Bodrum [27.466,37.5]…" beside "Halicarnassus". Where two text pieces meet at a markup boundary, a doubled space is collapsed and a space before punctuation is removed. Backslashes in cRefPattern are ignored (the Theogony header escapes its quotes). | Found while testing; covered by tests. |
+| 2026-09-27 | **Library filters** use GLAUx metadata (genre grouped into 12 families, period by century, dialect) for 1,186 works. **Passage of the day** is live from the files, from a curated list of 10 verified references (`src/data/passages.ts`; `NETWORK=1 npx vitest run src/data/passages.test.ts` re-checks them). | Brief. |
 | 2026-09-27 | **Git**: the owner allows local commits (version snapshots). Commit at the end of each piece of work; don't push (there is no remote). | Owner's instruction. |
 | 2026-09-27 | **Phase reviews by a fresh session are optional**, the owner's own workflow. Don't wait for them. | Owner's instruction. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |

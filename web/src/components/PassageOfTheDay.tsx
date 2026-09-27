@@ -1,149 +1,112 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
-import { PASSAGE, LEXICON, referenceLinks } from "@/data/iliad-sample";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { loadCatalog, greekEditions, translations, describe, versionOf, type CatText } from "@/lib/catalog";
+import { getXml } from "@/lib/texts/source";
+import { parseInWorker } from "@/lib/tei/client";
+import { alignChunk, type Row } from "@/lib/tei/align";
+import { findRef } from "@/lib/tei/refs";
+import { norm } from "@/lib/lookup/words";
+import { PASSAGES, todaysIndex, type DailyPassage } from "@/data/passages";
+import { Blocks } from "@/components/reader/Blocks";
+import WordPanel, { type WordContext } from "@/components/reader/WordPanel";
 import { useUI } from "@/lib/ui";
+import { AREAS } from "@/config/areas";
 import styles from "./PassageOfTheDay.module.css";
+import readerStyles from "./reader/Reader.module.css";
 
-// Greek letters, combining accents and the elision mark count as part of a word.
-const WORD = /([Ͱ-Ͽἀ-῿̀-ͯʼ]+)/;
+interface Loaded { p: DailyPassage; rows: Row[]; grc: CatText; tr: CatText | null; keys: Set<string>; depth: number }
 
-interface Open { word: string; el: HTMLElement }
-
-function Popover({ open, onClose }: { open: Open; onClose: () => void }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
-  const toast = useUI((s) => s.showToast);
-  const entry = LEXICON[open.word];
-
-  // Sit below the word, or above it when there is no room; follow it while the page scrolls,
-  // and close once the word has scrolled out of view.
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const place = () => {
-      const rect = open.el.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > innerHeight) { onClose(); return; }
-      const w = el.offsetWidth, h = el.offsetHeight;
-      const left = Math.min(Math.max(16, rect.left + rect.width / 2 - w / 2), innerWidth - w - 16);
-      const top = rect.bottom + h + 16 < innerHeight ? rect.bottom + 10 : Math.max(16, rect.top - h - 10);
-      setPos({ left, top });
-    };
-    place();
-    el.focus({ preventScroll: true });
-    addEventListener("scroll", place, { passive: true });
-    addEventListener("resize", place);
-    return () => { removeEventListener("scroll", place); removeEventListener("resize", place); };
-  }, [open, onClose]);
-
-  return (
-    <div
-      ref={ref}
-      className={`${styles.pop} ${pos ? styles.show : ""}`}
-      style={pos ?? undefined}
-      role="dialog"
-      aria-label={`Look-up: ${open.word}`}
-      tabIndex={-1}
-      onClick={(e) => e.stopPropagation()}
-      onKeyDown={(e) => { if (e.key === "Escape") { onClose(); open.el.focus(); } }}
-    >
-      <div className={styles.pw} lang="grc">{open.word}</div>
-      {entry ? (
-        <>
-          <div className={styles.lem}>from <span lang="grc">{entry.head}</span></div>
-          <div className={styles.parse}>{entry.parse}</div>
-          <div className={styles.def}>{entry.gloss}</div>
-          <div className={styles.acts}>
-            <button type="button" onClick={() => toast("Saving words arrives with the Treasury in Phase 5.")}>Save word</button>
-          </div>
-          <div className={styles.refs}>
-            <span className="label">Look it up in</span>
-            {referenceLinks(entry.lemma, open.word).map((r) => (
-              <a key={r.name} href={r.href} target="_blank" rel="noopener noreferrer" title={r.note}>{r.name}</a>
-            ))}
-          </div>
-        </>
-      ) : (
-        <p className={styles.def}>
-          From Phase 2 every word has an entry. This sample includes {Object.keys(LEXICON).length} of them;
-          switch on &ldquo;Underline words with entries&rdquo; to see which.
-        </p>
-      )}
-    </div>
-  );
+/** Load today's passage; if it can't be read (offline and not downloaded), try the next ones. */
+async function loadToday(): Promise<Loaded> {
+  const idx = await loadCatalog();
+  let lastError: Error | null = null;
+  for (let k = 0; k < PASSAGES.length; k++) {
+    const p = PASSAGES[(todaysIndex() + k) % PASSAGES.length];
+    try {
+      const w = idx.work.get(p.work)!;
+      const grc = greekEditions(w).find((t) => t.col === "perseus") ?? greekEditions(w)[0];
+      const tr = translations(w)[0] ?? null;
+      const [g, t] = await Promise.all([getXml(idx, grc), tr ? getXml(idx, tr).catch(() => null) : null]);
+      const parsed = await parseInWorker(g.xml, t?.xml ?? null);
+      const a = findRef(parsed.doc, p.from), b = findRef(parsed.doc, p.to);
+      if (a < 0 || b < a) throw new Error(`reference ${p.from} not found`);
+      const rows = alignChunk(parsed.doc, { first: a, last: b }, t ? parsed.placed : null);
+      return { p, rows, grc, tr: t ? tr : null, keys: new Set(parsed.doc.units.map((u) => u.ref.join("."))), depth: parsed.doc.levels.length };
+    } catch (e) { lastError = e as Error; }
+  }
+  throw lastError ?? new Error("No passage could be loaded.");
 }
 
 export default function PassageOfTheDay() {
+  const [data, setData] = useState<Loaded | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [showEng, setShowEng] = useState(true);
   const [showNums, setShowNums] = useState(true);
-  const [showHas, setShowHas] = useState(false);
-  const [open, setOpen] = useState<Open | null>(null);
+  const [word, setWord] = useState<{ w: string; ctx: WordContext | null } | null>(null);
   const toast = useUI((s) => s.showToast);
 
-  const close = useCallback(() => setOpen(null), []);
-  useEffect(() => {
-    if (!open) return;
-    document.addEventListener("click", close);
-    return () => document.removeEventListener("click", close);
-  }, [open, close]);
+  useEffect(() => { loadToday().then(setData, (e: Error) => setError(e.message)); }, []);
 
-  const pick = (el: HTMLElement) => setOpen({ word: el.dataset.w!, el });
+  const translation = useMemo(() => data?.rows.flatMap((r) => r.trans) ?? [], [data]);
 
-  const cite = `${PASSAGE.author}, ${PASSAGE.work} ${PASSAGE.ref}`;
-  const copy = () => navigator.clipboard.writeText(cite).then(
-    () => toast(`Citation copied: ${cite}`),
-    () => toast(`Copying was blocked. The citation is: ${cite}`),
-  );
+  if (error) {
+    return (
+      <div className={styles.passage}>
+        <p className="muted">Today&apos;s passage could not be loaded ({error}). If you are offline, download the library in <Link href={AREAS.downloads.href}>{AREAS.downloads.name}</Link>.</p>
+      </div>
+    );
+  }
+  if (!data) return <div className={styles.passage}><span className={`meander ${styles.loading}`} aria-hidden="true" /><p className="muted">Unrolling today&apos;s passage…</p></div>;
+
+  const { p, rows, grc, tr } = data;
+  const cite = p.label;
+  const copy = () => navigator.clipboard.writeText(cite).then(() => toast(`Citation copied: ${cite}`), () => toast(`Copying was blocked. The citation is: ${cite}`));
+
+  const onClick = (e: React.MouseEvent) => {
+    const w = (e.target as HTMLElement).closest<HTMLElement>("[data-w]");
+    if (!w) return;
+    document.querySelectorAll(`.${readerStyles.sel}`).forEach((x) => x.classList.remove(readerStyles.sel));
+    w.classList.add(readerStyles.sel);
+    const unit = w.closest<HTMLElement>("[data-u]");
+    const same = unit ? [...unit.querySelectorAll<HTMLElement>("[data-w]")].filter((x) => norm(x.dataset.w!) === norm(w.dataset.w!)) : [];
+    setWord({ w: w.dataset.w!, ctx: unit ? { work: p.work, unitKey: unit.dataset.u!, occurrence: same.indexOf(w), keys: data.keys, depth: data.depth } : null });
+  };
 
   return (
     <div className={styles.passage}>
       <div className={styles.aids} role="group" aria-label="Reading aids">
-        <button className="chip" type="button" aria-pressed={showEng} onClick={() => setShowEng(!showEng)}><span className="dot" />Translation</button>
+        {tr && <button className="chip" type="button" aria-pressed={showEng} onClick={() => setShowEng(!showEng)}><span className="dot" />Translation</button>}
         <button className="chip" type="button" aria-pressed={showNums} onClick={() => setShowNums(!showNums)}><span className="dot" />Line numbers</button>
-        <button className="chip" type="button" aria-pressed={showHas} onClick={() => setShowHas(!showHas)}><span className="dot" />Underline words with entries</button>
       </div>
 
-      <div className={`${styles.reading} ${showEng ? "" : styles.noEng} ${showNums ? "" : styles.noNum} ${showHas ? styles.showHas : ""}`}>
-        <div className={styles.grc} lang="grc"
-          onClick={(e) => { const w = (e.target as HTMLElement).closest<HTMLElement>("[data-w]"); if (w) { e.stopPropagation(); pick(w); } }}
-          onKeyDown={(e) => { const w = (e.target as HTMLElement).closest<HTMLElement>("[data-w]"); if (w && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); e.stopPropagation(); pick(w); } }}>
-          {PASSAGE.lines.map(([n, text]) => (
-            <div className={styles.row} key={n}>
-              <span className={styles.n} aria-hidden={n % 5 !== 0 && n !== 1}>{n % 5 === 0 || n === 1 ? n : ""}</span>
-              <span className={styles.line}>
-                {text.split(WORD).map((part, i) => WORD.test(part)
-                  ? <span key={i} data-w={part} tabIndex={0} role="button"
-                      className={`${styles.w} ${LEXICON[part] ? styles.has : ""} ${open?.el.dataset.w === part ? styles.sel : ""}`}>{part}</span>
-                  : <Fragment key={i}>{part}</Fragment>)}
-              </span>
-            </div>
+      <div className={`${styles.reading} ${showEng && tr ? "" : styles.noEng} ${showNums ? "" : styles.noNum}`}>
+        <div className={`${styles.grc} ${readerStyles.grc}`} lang="grc" onClick={onClick}>
+          {rows.flatMap((r) => r.greek).map((u) => (
+            <div key={u.ref.join(".")} data-u={u.ref.join(".")}><Blocks blocks={u.blocks} greek keyPrefix={`pd${u.ref.join(".")}`} /></div>
           ))}
         </div>
-
-        <div className={styles.eng}>
-          <span className="label">{PASSAGE.translator}</span>
-          <p>{PASSAGE.english}</p>
-        </div>
-
-        <aside className={styles.scholia} aria-label="Notes in the margin">
+        {tr && (
+          <div className={styles.eng}>
+            <span className="label">{describe(tr)}</span>
+            <Blocks blocks={translation} greek={false} keyPrefix="pdt" />
+          </div>
+        )}
+        <aside className={styles.scholia} aria-label="In the margin">
           <span className="label">In the margin</span>
-          {PASSAGE.notes.map((n) => (
-            <p key={n.greek} className={styles.scholion}>
-              <span className={styles.ref}>{n.line}</span>
-              <b lang="grc">{n.greek}</b> {n.text}
-              {"certainty" in n && n.certainty === "debated" && <><br /><span className="tag debated">Debated among scholars</span></>}
-            </p>
-          ))}
+          <p>{p.about}</p>
         </aside>
       </div>
 
       <div className={styles.cite}>
         <strong>{cite}</strong>
         <button className="chip" type="button" onClick={copy}>Copy citation</button>
-        <span className="muted">Greek: {PASSAGE.edition}. Click any word to look it up.</span>
+        <Link className="chip" href={`/read?w=${p.work}&ed=${versionOf(grc.urn)}&tr=${tr ? versionOf(tr.urn) : "none"}&at=${p.from}`} transitionTypes={["page-turn"]}>Read on →</Link>
+        <span className="muted">Greek: {describe(grc)}. Click any word to look it up.</span>
       </div>
 
-      {open && <Popover open={open} onClose={close} />}
+      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onClose={() => { setWord(null); document.querySelectorAll(`.${readerStyles.sel}`).forEach((x) => x.classList.remove(readerStyles.sel)); }} />
     </div>
   );
 }

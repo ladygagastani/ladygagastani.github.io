@@ -12,10 +12,11 @@ const blockText = (b: Block) =>
 const docText = (d: TeiDoc) => d.units.flatMap((u) => u.blocks.map(blockText)).join("");
 const plain = (b: Block[]) => b.map(blockText).join(" ");
 
-/** Every letter in the file's <body>, in order (tags and whitespace removed). */
+/** Every letter of printed text in the file's <body>, in order (tags, and <reg> metadata, removed). */
 function bodyLetters(xml: string, re: RegExp) {
-  const body = xml.slice(xml.indexOf("<body"), xml.lastIndexOf("</body>"));
-  return (body.replace(/<[^>]+>/g, "").match(re) ?? []).join("");
+  const body = xml.slice(xml.indexOf("<body"), xml.lastIndexOf("</body>")).replace(/<reg\b[^>]*>[\s\S]*?<\/reg>/g, "");
+  const text = body.replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, "&");
+  return (text.match(re) ?? []).join("");
 }
 const GREEK = /[Ͱ-Ͽἀ-῿]/gu;
 const LATIN = /[A-Za-z]/g;
@@ -25,6 +26,7 @@ describe("TEI parsing keeps the text exactly", () => {
     ["tlg0012.tlg001.perseus-grc2", GREEK], ["tlg0059.tlg002.perseus-grc2", GREEK], ["tlg0011.tlg002.perseus-grc2", GREEK],
     ["tlg0031.tlg004.perseus-grc2", GREEK], ["tlg0555.tlg001.1st1K-grc1", GREEK],
     ["tlg0012.tlg001.perseus-eng3", LATIN], ["tlg0059.tlg002.perseus-eng2", LATIN], ["tlg0011.tlg002.perseus-eng2", LATIN],
+    ["tlg0016.tlg001.perseus-eng2", LATIN],
   ] as const) {
     it(`loses and changes no letter: ${f}`, () => {
       const xml = load(f);
@@ -108,5 +110,27 @@ describe("going to a reference", () => {
     const ap = doc("tlg0059.tlg002.perseus-grc2");
     expect(ap.units[findRef(ap, "19a")].ref).toEqual(["19"]);
     expect(findRef(il, "99.1")).toBe(-1);
+  });
+});
+
+describe("unusual headers", () => {
+  it("reads citation patterns whose quotes are escaped with backslashes (Hesiod's Theogony)", () => {
+    const xml = `<TEI><teiHeader><encodingDesc><refsDecl n="CTS">
+      <cRefPattern n="line" matchPattern="(\\w+)" replacementPattern="#xpath(/tei:TEI/tei:text/tei:body/tei:div//tei:l[@n=\'$1\'])"/>
+      </refsDecl></encodingDesc></teiHeader><text><body><div type="edition">
+      <l n="1">Μουσάων Ἑλικωνιάδων ἀρχώμεθʼ ἀείδειν,</l><l n="2">αἵθʼ Ἑλικῶνος ἔχουσιν ὄρος μέγα τε ζάθεόν τε</l>
+      </div></body></text></TEI>`;
+    const d = parseTei(xml);
+    expect(d.levels).toEqual(["line"]);
+    expect(d.units.map((u) => u.ref)).toEqual([["1"], ["2"]]);
+  });
+});
+
+describe("metadata inside the text", () => {
+  it("does not show Perseus gazetteer data as if it were translation (Godley's Herodotus)", () => {
+    const d = doc("tlg0016.tlg001.perseus-eng2");
+    const text = d.units.slice(0, 2).flatMap((u) => u.blocks.map(blockText)).join(" ");
+    expect(text).toContain("the inquiry of Herodotus of Halicarnassus");
+    expect(text).not.toContain("Bodrum");
   });
 });
