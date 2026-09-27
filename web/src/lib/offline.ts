@@ -24,7 +24,7 @@ interface OfflineState {
   browser: BrowserCopy[];               // what is saved in browser storage, per collection
   zipImported: Record<string, number>;  // repo → files imported from a ZIP
   usage: { used: number; quota: number } | null;
-  lookups: { words: number; lsj: number };   // word-analysis files and LSJ shards saved for offline use
+  lookups: { words: number; lsj: number; lexicon: number };   // word-analysis files, LSJ and Word Study shards saved for offline use
   job: { label: string; progress: Progress | null; running: boolean; error: string | null; kind: "download" | "zip" } | null;
 
   refresh: () => Promise<void>;
@@ -51,7 +51,7 @@ export const useOffline = create<OfflineState>()((set, get) => ({
   browser: [],
   zipImported: {},
   usage: null,
-  lookups: { words: 0, lsj: 0 },
+  lookups: { words: 0, lsj: 0, lexicon: 0 },
   job: null,
 
   async refresh() {
@@ -77,7 +77,11 @@ export const useOffline = create<OfflineState>()((set, get) => ({
       browser: Object.values(by),
       zipImported: (await kvGet<Record<string, number>>("zip-imported")) ?? {},
       usage: est ? { used: est.usage ?? 0, quota: est.quota ?? 0 } : null,
-      lookups: { words: packKeys.filter((k) => k.startsWith("words/")).length, lsj: packKeys.filter((k) => k.startsWith("lsj/")).length },
+      lookups: {
+        words: packKeys.filter((k) => k.startsWith("words/")).length,
+        lsj: packKeys.filter((k) => k.startsWith("lsj/")).length,
+        lexicon: packKeys.filter((k) => k.startsWith("lexicon/")).length,
+      },
     });
   },
 
@@ -101,7 +105,7 @@ export const useOffline = create<OfflineState>()((set, get) => ({
         // then the word analyses for these works and the dictionary, so look-ups work offline too
         const works = new Set(plan.texts.map((t) => t.path.split("/").slice(1, 3).join(".")));
         const files = await planPacks(works);
-        set({ job: { label: "Downloading word analyses and the LSJ dictionary", progress: null, running: true, error: null, kind: "download" } });
+        set({ job: { label: "Downloading word analyses, the LSJ dictionary and the Word Study index", progress: null, running: true, error: null, kind: "download" } });
         const r = await runPackDownload(files, (n, total, bytes, totalBytes) => set((s) => ({
           job: s.job && { ...s.job, progress: { files: n, totalFiles: total, bytes, totalBytes, skipped: 0, failed: [] } },
         })), controller.signal);

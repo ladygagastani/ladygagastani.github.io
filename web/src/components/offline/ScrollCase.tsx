@@ -97,7 +97,7 @@ export default function ScrollCase() {
               })}
             </ul>
             {(s.lookups.words > 0 || s.lookups.lsj > 0) && (
-              <p className={styles.small}>Word look-ups offline: analyses for {s.lookups.words.toLocaleString("en-GB")} work{s.lookups.words === 1 ? "" : "s"}, {s.lookups.lsj} of the dictionary&apos;s 362 parts.</p>
+              <p className={styles.small}>Word look-ups offline: analyses for {s.lookups.words.toLocaleString("en-GB")} work{s.lookups.words === 1 ? "" : "s"}, {s.lookups.lsj} of the dictionary&apos;s 362 parts{s.lookups.lexicon ? `, and the Word Study index (${s.lookups.lexicon} parts)` : ""}.</p>
             )}
             {s.usage && s.usage.quota > 0 && <p className={styles.small}>This site uses {mb(s.usage.used)} of the {mb(s.usage.quota)} your browser allows it.</p>}
           </div>
@@ -177,7 +177,7 @@ export default function ScrollCase() {
         <fieldset className={styles.fs}>
           <legend className="label">Word look-ups</legend>
           <label className={styles.check}><input type="checkbox" checked={lookups} onChange={() => setLookups(!lookups)} />
-            Also save the word analyses for these works and the LSJ dictionary, so clicking a word works offline
+            Also save the word analyses for these works, the LSJ dictionary and the Word Study index, so looking up and studying words work offline
             <span className="muted">{lookupBytes !== null ? ` — about ${mb(transferEstimate(lookupBytes))} to download` : ""}</span></label>
           <p className={styles.small}>These are kept in this browser, whichever place you choose for the texts.</p>
         </fieldset>

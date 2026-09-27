@@ -5,6 +5,9 @@ export type ThemePref = "auto" | "light" | "dark";
 export type MotionPref = "auto" | "reduce" | "full";
 export type Columns = "both" | "greek" | "trans";
 export type Pronunciation = "attic" | "erasmian" | "modern";
+/** Kinds of marker beside the reader's scroll bar. */
+export type MarkerKind = "note" | "bookmark" | "highlight" | "favourite" | "xref" | "left" | "echo";
+export const MARKER_KINDS: MarkerKind[] = ["note", "bookmark", "highlight", "favourite", "xref", "left", "echo"];
 
 export interface Settings {
   theme: ThemePref;
@@ -16,9 +19,10 @@ export interface Settings {
   cases: boolean;      // reader aid: colour words by case
   metre: boolean;      // reader aid: show the scansion of verse
   pron: Pronunciation; // pronunciation system shown in the Academy
+  markers: MarkerKind[];   // reader: which kinds of marker to show beside the scroll bar
 }
 
-export const DEFAULTS: Settings = { theme: "auto", motion: "auto", greekSize: 1.25, leading: 1.75, columns: "both", translit: false, cases: false, metre: false, pron: "attic" };
+export const DEFAULTS: Settings = { theme: "auto", motion: "auto", greekSize: 1.25, leading: 1.75, columns: "both", translit: false, cases: false, metre: false, pron: "attic", markers: MARKER_KINDS };
 export const LIMITS = {
   greekSize: { min: 1, max: 2, step: 0.0625 },
   leading: { min: 1.4, max: 2.2, step: 0.1 },
@@ -53,7 +57,7 @@ export const useSettings = create<SettingsStore>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => safeStorage),
-      partialize: ({ theme, motion, greekSize, leading, columns, translit, cases, metre, pron }) => ({ theme, motion, greekSize, leading, columns, translit, cases, metre, pron }),
+      partialize: ({ theme, motion, greekSize, leading, columns, translit, cases, metre, pron, markers }) => ({ theme, motion, greekSize, leading, columns, translit, cases, metre, pron, markers }),
       skipHydration: true,
     },
   ),

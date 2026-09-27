@@ -1,0 +1,85 @@
+/* ================================================================ the floating reader */
+.win {
+  position: fixed; left: 0; top: 0; z-index: 48;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--bg); border: 1px solid var(--ink); border-radius: 10px;
+  box-shadow: 0 30px 60px -28px var(--shadow), 0 0 0 1px color-mix(in srgb, var(--bg) 40%, transparent);
+  transition: transform 0.38s var(--ease), width 0.38s var(--ease), height 0.38s var(--ease);
+  animation: unroll 0.5s var(--ease) both;
+}
+.dragging { transition: none; box-shadow: 0 40px 80px -30px var(--shadow); }
+.dragging .body { pointer-events: none; }
+/* opening unrolls the window from its title bar, like a scroll; closing rolls it up again */
+@keyframes unroll { from { clip-path: inset(0 0 calc(100% - 44px) 0 round 10px); opacity: 0.4; } to { clip-path: inset(0 0 0 0 round 10px); opacity: 1; } }
+.closing { animation: rollup 0.22s ease-in both; }
+@keyframes rollup { to { clip-path: inset(0 0 calc(100% - 44px) 0 round 10px); opacity: 0; } }
+
+.bar {
+  flex: none; display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 4px 6px 4px 10px;
+  background: var(--ink); color: var(--bg); cursor: grab; user-select: none; touch-action: none; position: relative;
+}
+.bar:active { cursor: grabbing; }
+.bar:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+/* a meander band along the bottom of the title bar */
+.bar::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: var(--accent); opacity: 0.8;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") repeat-x 0 0 / 6px 6px;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") repeat-x 0 0 / 6px 6px;
+}
+.grip { width: 10px; height: 18px; flex: none; opacity: 0.55; background: radial-gradient(circle, currentColor 1.2px, transparent 1.6px) 0 0 / 5px 6px; }
+.title { flex: 1; min-width: 0; display: grid; line-height: 1.15; }
+.title b { font-family: var(--f-display); font-weight: 400; font-size: 1.02rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.title small { font-family: var(--f-label); font-size: 0.75rem; letter-spacing: 0.05em; opacity: 0.75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.btn { flex: none; width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px; background: transparent; color: inherit; font-size: 1.3rem; line-height: 1; }
+.btn:hover { background: color-mix(in srgb, var(--bg) 18%, transparent); }
+.btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+.body { flex: 1; min-height: 0; position: relative; }
+.body > div { height: 100%; }
+
+/* resize handles: edges and corners */
+.edge { position: absolute; z-index: 2; touch-action: none; }
+.edge[data-edge="n"], .edge[data-edge="s"] { left: 12px; right: 12px; height: 7px; cursor: ns-resize; }
+.edge[data-edge="n"] { top: -3px; } .edge[data-edge="s"] { bottom: -3px; }
+.edge[data-edge="e"], .edge[data-edge="w"] { top: 12px; bottom: 12px; width: 7px; cursor: ew-resize; }
+.edge[data-edge="e"] { right: -3px; } .edge[data-edge="w"] { left: -3px; }
+.edge[data-edge="ne"], .edge[data-edge="nw"], .edge[data-edge="se"], .edge[data-edge="sw"] { width: 16px; height: 16px; }
+.edge[data-edge="ne"] { top: -3px; right: -3px; cursor: nesw-resize; }
+.edge[data-edge="sw"] { bottom: -3px; left: -3px; cursor: nesw-resize; }
+.edge[data-edge="nw"] { top: -3px; left: -3px; cursor: nwse-resize; }
+.edge[data-edge="se"] { bottom: -3px; right: -3px; cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 55%, var(--ink-2) 55% 62%, transparent 62% 72%, var(--ink-2) 72% 79%, transparent 79%); }
+
+/* where a drop will snap */
+.ghost {
+  position: fixed; z-index: 47; pointer-events: none; border-radius: 10px;
+  border: 2px dashed var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent);
+  transition: left 0.18s var(--ease), top 0.18s var(--ease), width 0.18s var(--ease), height 0.18s var(--ease);
+  animation: fadeIn 0.15s both;
+}
+@keyframes fadeIn { from { opacity: 0; } }
+
+/* minimised: a tab with the book and passage */
+.tab {
+  position: fixed; z-index: 48; right: 16px; bottom: 16px; display: flex; align-items: center; gap: 2px; max-width: min(420px, calc(100vw - 32px));
+  padding: 4px; background: var(--ink); color: var(--bg); border-radius: 999px; box-shadow: 0 18px 40px -18px var(--shadow);
+  animation: tabIn 0.35s var(--ease) both;
+}
+.tab[data-snap="left"], .tab[data-snap="tl"], .tab[data-snap="bl"] { right: auto; left: 16px; }
+@keyframes tabIn { from { transform: translateY(20px) scale(0.9); opacity: 0; } }
+.tabMain { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 6px 12px 6px 8px; border: 0; background: transparent; color: inherit; border-radius: 999px; text-align: left; }
+.tabMain:hover { background: color-mix(in srgb, var(--bg) 14%, transparent); }
+.tabIcon { width: 22px; height: 22px; flex: none; border-radius: 50%; background: var(--accent);
+  -webkit-mask: radial-gradient(circle at 50% 50%, #000 5px, transparent 5.5px, transparent 7px, #000 7.5px); mask: radial-gradient(circle at 50% 50%, #000 5px, transparent 5.5px, transparent 7px, #000 7.5px); }
+.tabText { display: grid; min-width: 0; line-height: 1.15; }
+.tabText b { font-family: var(--f-display); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tabText small { font-family: var(--f-label); font-size: 0.75rem; opacity: 0.75; }
+.tabBtn { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: inherit; font-size: 1.25rem; }
+.tabBtn:hover { background: color-mix(in srgb, var(--bg) 14%, transparent); }
+.tabBtn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+@media (max-width: 640px) {
+  /* on a phone the window becomes a sheet across the bottom of the screen */
+  .win { transform: none !important; left: 0; right: 0; top: auto; bottom: 0; width: 100% !important; height: min(62vh, 560px) !important; border-radius: 14px 14px 0 0; }
+  .edge { display: none; }
+}

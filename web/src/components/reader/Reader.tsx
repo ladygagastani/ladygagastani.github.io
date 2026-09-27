@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   loadCatalog, greekEditions, translations, describe, versionOf,
   type CatalogIndex, type CatText, type CatWork,
@@ -27,6 +27,9 @@ import WorkPicker from "./WorkPicker";
 import VocabPanel from "./VocabPanel";
 import EchoesPanel, { type EchoMarks, type EchoQuery, type EchoTarget } from "./EchoesPanel";
 import MetreBar from "./MetreBar";
+import ScrollMarkers, { MarkersLegend, type MarkerItem } from "./ScrollMarkers";
+import { useFloat } from "@/lib/float";
+import { lastOtherPage } from "@/lib/resume";
 import { metreIndex, publishedFor, loadLengths } from "@/lib/metre/load";
 import { renderPassages, type LineRender } from "@/lib/metre/render";
 import { lineHash, type MetreIndex } from "@/lib/metre/text";
@@ -54,6 +57,7 @@ function pickTranslation(w: CatWork, tr: string | null, remembered: string | nul
 }
 
 const NO_MARKS: Mark[] = [];
+const rangeLabel = (a: string, b: string) => (a === b ? a : `${a}–${b}`);
 const blockText = (bs: Block[]) => bs.map((b) => b.c.map((x) => (typeof x === "string" ? x : "")).join("")).join(" ").replace(/\s+/g, " ").trim();
 
 const MARK_ICON: Record<string, React.ReactNode> = {
@@ -72,6 +76,7 @@ const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, trans
     <section className={styles.row} data-key={row.key}>
       <div className={styles.ref}>
         <button type="button" data-row={row.key} title="Actions for this passage">{row.key}</button>
+        <span className={styles.grip} draggable data-drag={row.key} title="Drag into a note to quote this passage with its citation" aria-hidden="true" />
         {marks.some((m) => m.kind !== "highlight") && (
           <span className={styles.marks}>
             {marks.filter((m) => m.kind !== "highlight").map((m) => (
@@ -99,9 +104,28 @@ const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, trans
 
 export interface PaneProps { pane: 1 | 2; split: boolean; onOpenSecond: () => void }
 
+/**
+ * Where the reader keeps what it shows. On the reader's page that is the address bar (/read?w=…);
+ * in the floating window it is the window's own state (lib/float.ts). Both use the same keys.
+ */
+export interface ReaderNav {
+  params: URLSearchParams;
+  go: (q: URLSearchParams, how?: "replace" | "push") => void;
+  floating: boolean;
+  /** the passage now at the top of the first book (the floating window remembers it) */
+  onPosition?: (at: string) => void;
+}
+export const ReaderNavContext = createContext<ReaderNav | null>(null);
+/** The passage at the top of each pane of the reader's page (for floating both books at once). */
+const paneTops: Record<1 | 2, string | null> = { 1: null, 2: null };
+const useNav = () => useContext(ReaderNavContext)!;
+
 /** One reading pane. With two panes, pane 2 uses the same query keys with a "2" on the end. */
 function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
-  const params = useSearchParams();
+  const nav = useNav();
+  const params = nav.params;
+  const floating = nav.floating;
+  const contained = split || floating;   // the pane scrolls inside its own box, not the page
   const P = (k: string) => params.get(pane === 1 ? k : `${k}2`);
   const rootRef = useRef<HTMLDivElement>(null);
   const root = () => rootRef.current ?? document;
@@ -227,13 +251,13 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   // once the page is drawn, bring the requested passage into view (and briefly mark it if it was asked for)
   useEffect(() => {
     if (!rows.length) return;
-    if (!startKey) { if (split) rootRef.current?.scrollTo({ top: 0 }); else window.scrollTo({ top: 0 }); return; }
+    if (!startKey) { if (contained) rootRef.current?.scrollTo({ top: 0 }); else window.scrollTo({ top: 0 }); return; }
     const row = rows.find((r) => r.greek.some((u) => u.ref.join(".") === startKey));
     const el = row && root().querySelector<HTMLElement>(`[data-key="${CSS.escape(row.key)}"]`);
     if (!el) return;
     requestAnimationFrame(() => el.scrollIntoView({ block: "start" }));
     if (at || tu) { el.classList.remove(styles.flash); void el.offsetWidth; el.classList.add(styles.flash); }
-  }, [rows, startKey, at, tu, split]);
+  }, [rows, startKey, at, tu, contained]);
 
   // words found by a search: ?hl= their positions in the passage (Greek), ?find= the words (translation)
   const hl = P("hl"), find = P("find");
@@ -278,20 +302,52 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   }, [rows, hl, find, doc, startUnit, pane]);
 
   // ------------------------------------------------------------ remember where the reader is
+  /** The passage at the top of this pane now: the first showing more than a sliver below the sticky bar. */
+  const topKey = () => {
+    const bar = root().querySelector<HTMLElement>(`.${styles.bar}`);
+    const edge = bar ? bar.getBoundingClientRect().bottom : contained ? rootRef.current!.getBoundingClientRect().top : 68;
+    return [...root().querySelectorAll<HTMLElement>("article [data-key]")].find((r) => r.getBoundingClientRect().bottom > edge + 24)?.dataset.key ?? null;
+  };
+  const onPosition = useRef(nav.onPosition);
+  useEffect(() => { onPosition.current = nav.onPosition; }, [nav.onPosition]);
   const edV = grcText ? versionOf(grcText.urn) : null;
   const trV = trText ? versionOf(trText.urn) : null;
+  // the passage being read is the first one showing clearly below the sticky bar
   useEffect(() => {
     if (!rows.length || !edV) return;
-    const io = new IntersectionObserver((entries) => {
-      const top = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-      if (top) savePosition(workId, { ed: edV, tr: trV, at: (top.target as HTMLElement).dataset.key! });
-    }, { root: split ? rootRef.current : null, rootMargin: split ? "-60px 0px -70% 0px" : "-80px 0px -70% 0px" });
-    root().querySelectorAll("[data-key]").forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, [rows, workId, edV, trV, split]);
+    const scroller: HTMLElement | Window = contained ? rootRef.current! : window;
+    let frame = 0, last: string | null = null;
+    const check = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const key = topKey();
+        if (!key || key === last) return;
+        last = key;
+        savePosition(workId, { ed: edV, tr: trV, at: key });
+        if (pane === 1) onPosition.current?.(key);
+        if (!floating) paneTops[pane] = key;
+      });
+    };
+    // after the page has been scrolled to the passage asked for
+    const t = setTimeout(check, 400);
+    scroller.addEventListener("scroll", check, { passive: true });
+    return () => { clearTimeout(t); cancelAnimationFrame(frame); scroller.removeEventListener("scroll", check); };
+    // topKey reads the page as it is
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows, workId, edV, trV, contained, pane, floating]);
+
+  // the sticky bar's height, so a passage brought into view is not hidden under it
+  const hasRows = rows.length > 0;
+  useEffect(() => {
+    const el = rootRef.current, bar = el?.querySelector<HTMLElement>(`.${styles.bar}`);
+    if (!el || !bar) return;
+    const ro = new ResizeObserver(() => el.style.setProperty("--bar-h", `${bar.offsetHeight}px`));
+    ro.observe(bar);
+    return () => ro.disconnect();
+  }, [hasRows]);
 
   // ------------------------------------------------------------ navigation
-  const href = (o: { ed?: string; tr?: string | null; at?: string }) => {
+  const query = (o: { ed?: string; tr?: string | null; at?: string }) => {
     const q = new URLSearchParams(params.toString());
     const k = (x: string) => (pane === 1 ? x : `${x}2`);
     q.set(k("w"), workId);
@@ -300,11 +356,12 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     q.set(k("tr"), o.tr === undefined ? (trV ?? "none") : (o.tr ?? "none"));
     if (o.at) q.set(k("at"), o.at); else q.delete(k("at"));
     for (const x of ["hl", "find", "tu"]) q.delete(k(x));   // a search's marks belong to the passage it found
-    return `/read?${q}`;
+    return q;
   };
+  const href = (o: { ed?: string; tr?: string | null; at?: string }) => `/read?${query(o)}`;
   const goChunk = (i: number) => {
     if (!doc || i < 0 || i >= doc.chunks.length) return;
-    router.replace(href({ at: doc.units[doc.chunks[i].first].ref.join(".") }), { scroll: false });
+    nav.go(query({ at: doc.units[doc.chunks[i].first].ref.join(".") }));
   };
   const goChunkRef = useRef(goChunk);
   useEffect(() => { goChunkRef.current = goChunk; });
@@ -314,7 +371,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     if (!doc) return;
     const i = findRef(doc, goto);
     if (i < 0) { toast(`No passage "${goto}" in this text. Try a reference like ${doc.units[Math.min(40, doc.units.length - 1)].ref.join(".")}.`); return; }
-    router.replace(href({ at: goto.trim().replace(/\s+/g, ".") }), { scroll: false });
+    nav.go(query({ at: goto.trim().replace(/\s+/g, ".") }));
     setGoto("");
   };
 
@@ -323,6 +380,9 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       const t = e.target as HTMLElement;
       if (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable || e.ctrlKey || e.metaKey || e.altKey) return;
       if (split && useUI.getState().activePane !== pane) return;
+      // two readers can be open (the page and the floating window): keys go to the one in use
+      const inFloat = !!document.activeElement?.closest("[data-float-window]");
+      if (floating !== inFloat && (floating || useFloat.getState().open)) return;
       if (e.key === "ArrowRight") { e.preventDefault(); goChunkRef.current(chunk + 1); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); goChunkRef.current(chunk - 1); }
       else if (e.key === "g") { e.preventDefault(); gotoRef.current?.focus(); }
@@ -331,7 +391,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     };
     addEventListener("keydown", onKey);
     return () => removeEventListener("keydown", onKey);
-  }, [chunk, split, pane]);
+  }, [chunk, split, pane, floating]);
 
   // ------------------------------------------------------------ your marks
   const order = useMemo(() => new Map(doc?.units.map((u, i) => [u.ref.join("."), i]) ?? []), [doc]);
@@ -347,6 +407,38 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     return out;
   }, [rows, marks]);
   const noMarks = useMemo<Mark[]>(() => [], []);
+
+  // ------------------------------------------------------------ markers beside the scroll bar
+  const markerItems = useMemo<MarkerItem[]>(() => {
+    const out: MarkerItem[] = [];
+    const rowOf = new Map<string, string>();
+    for (const r of rows) for (const u of r.greek) rowOf.set(u.ref.join("."), r.key);
+    for (const [rk, ms] of marksByRow) for (const m of ms) {
+      out.push({ key: rk, kind: m.kind, label: rangeLabel(m.start.u, m.end.u), colour: m.colour,
+        preview: m.kind === "note" ? (m.text || "Empty note") : m.kind === "xref" ? `${m.link?.label ?? ""}: ${m.quote}` : m.quote });
+    }
+    const left = remembered?.at ? rowOf.get(remembered.at) ?? (rows.some((r) => r.key === remembered.at) ? remembered.at : null) : null;
+    if (left) out.push({ key: left, kind: "left", label: remembered!.at, preview: "Where you stopped last time" });
+    const here = grcText ? echoMarks?.get(grcText.urn) : undefined;
+    if (here) {
+      const seen = new Set<string>();
+      for (const u of here.keys()) { const rk = rowOf.get(u); if (rk && !seen.has(rk)) { seen.add(rk); out.push({ key: rk, kind: "echo", label: u, preview: "An echo of the passage you chose" }); } }
+    }
+    return out;
+    // remembered is read once per work
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows, marksByRow, echoMarks, grcText?.urn, snap]);
+  const markerCounts = useMemo(() => {
+    const c: Partial<Record<MarkerItem["kind"], number>> = {};
+    for (const it of markerItems) c[it.kind] = (c[it.kind] ?? 0) + 1;
+    return c;
+  }, [markerItems]);
+  const jumpToRow = (key: string) => {
+    const el = root().querySelector<HTMLElement>(`[data-key="${CSS.escape(key)}"]`);
+    if (!el) return;
+    el.scrollIntoView({ block: "start", behavior: "smooth" });
+    el.classList.remove(styles.flash); void el.offsetWidth; el.classList.add(styles.flash);
+  };
 
   // highlights are drawn onto the word spans after each render of the page
   useEffect(() => {
@@ -409,7 +501,6 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     selectSpans(spans, range.getBoundingClientRect());
   };
 
-  const rangeLabel = (a: string, b: string) => (a === b ? a : `${a}–${b}`);
   async function act(a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | "echoes" | { highlight: Colour }) {
     if (!sel || !edV) return;
     if (a === "echoes") {
@@ -451,6 +542,31 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     window.getSelection()?.removeAllRanges();
     setSel(null);
   }
+
+  // dragging a passage number, or selected Greek, carries the words with their citation
+  const onDragStart = (e: React.DragEvent) => {
+    const el = e.target instanceof HTMLElement ? e.target : (e.target as Node).parentElement;
+    const r = el?.closest<HTMLElement>("[data-drag]");
+    let text = "", where = "";
+    if (r) {
+      // the passage's own text, punctuation and all
+      text = rows.find((x) => x.key === r.dataset.drag)?.greek.map((u) => blockText(u.blocks)).join(" ") ?? "";
+      where = r.dataset.drag!;
+    } else {
+      const s = window.getSelection();
+      if (!s || s.isCollapsed) return;
+      const range = s.getRangeAt(0);
+      const spans = [...root().querySelectorAll<HTMLElement>("article [data-u] [data-w]")].filter((sp) => range.intersectsNode(sp));
+      if (!spans.length) return;
+      text = spans.map((w) => w.textContent).join(" ");
+      const a = pointOf(spans[0]).u, b = pointOf(spans[spans.length - 1]).u;
+      where = rangeLabel(a, b);
+    }
+    if (!text) return;
+    e.dataTransfer.setData("text/plain", `“${text}” (${cite} ${where})`);
+    e.dataTransfer.setData("text/uri-list", `${location.origin}${href({ at: where.split("–")[0] })}`);
+    e.dataTransfer.effectAllowed = "copy";
+  };
 
   // clicks inside the text: words open the look-up; margin references and marks act on the passage
   const onTextClick = (e: React.MouseEvent) => {
@@ -500,7 +616,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     if (t.work !== workId) q.delete(k("tr"));
     q.set(k("w"), t.work); q.set(k("ed"), t.ed); q.set(k("at"), t.at);
     for (const x of ["hl", "find", "tu"]) q.delete(k(x));
-    router.push(`/read?${q}`, { scroll: false });
+    nav.go(q, "push");
   };
   // the words Echoes found, marked wherever they are on the page
   useEffect(() => {
@@ -533,13 +649,28 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     const k = (x: string) => (target === 1 ? x : `${x}2`);
     q.set(k("w"), w); q.set(k("ed"), ed); q.set(k("at"), u);
     if (!q.get(k("tr"))) q.delete(k("tr"));
-    router.replace(`/read?${q}`, { scroll: false });
+    nav.go(q);
   };
   const closePane = () => {
     const q = new URLSearchParams(params.toString());
     for (const k of ["w2", "ed2", "tr2", "at2"]) q.delete(k);
-    router.replace(`/read?${q}`, { scroll: false });
+    nav.go(q);
   };
+  /** Shrink the reader into the floating window (this book only, or both), and step back to the page before. */
+  const floatAway = (which: "this" | "all") => {
+    const q = new URLSearchParams();
+    if (which === "all") for (const [k, v] of params) q.set(k, v);
+    else for (const k of ["w", "ed", "tr", "at"]) { const v = P(k); if (v) q.set(k, v); }
+    for (const k of ["hl", "find", "tu", "hl2", "find2", "tu2"]) q.delete(k);
+    const here = topKey();
+    if (here) q.set("at", here);
+    if (which === "all" && split && paneTops[pane === 1 ? 2 : 1]) q.set(pane === 1 ? "at2" : "at", paneTops[pane === 1 ? 2 : 1]!);
+    useFloat.getState().float(q.toString());
+    if (which === "this" && pane === 2) { closePane(); return; }
+    // back to the page you came from (never off the site); the Mouseion if the reader was the first page
+    router.push(lastOtherPage() ?? AREAS.library.href);
+  };
+
 
   // ------------------------------------------------------------ synced scrolling (same work in both panes)
   const sync = useUI((s) => s.syncScroll);
@@ -583,36 +714,52 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   }
 
   const chunkInfo = doc?.chunks[chunk];
+  const aids = (
+    <div className={styles.aids} role="group" aria-label="Reading aids">
+      <button type="button" className="chip" aria-pressed={translit} onClick={() => setSettings({ translit: !translit })} title="Show each line in Latin letters">Transliteration</button>
+      <button type="button" className="chip" aria-pressed={cases} onClick={() => setSettings({ cases: !cases })} title="Underline nouns, adjectives and participles in the colour of their case">Colour by case</button>
+      {mInfo && <button type="button" className="chip" aria-pressed={metreOn} onClick={() => setSettings({ metre: !metreOn })} title="Mark long and short syllables, feet and caesura">Metre</button>}
+      <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setWord(null); setEcho(null); }}>Vocabulary</button>
+    </div>
+  );
   const setCols = (c: Columns) => setSettings({ columns: c });
 
   return (
-    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${word || echo || vocabOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""}`}
+    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${word || echo || vocabOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""} ${floating ? styles.floating : ""}`}
       onPointerDown={() => useUI.getState().setActivePane(pane)} onFocusCapture={() => useUI.getState().setActivePane(pane)}>
+      {load.state === "ready" && <ScrollMarkers rootRef={rootRef} contained={contained} items={markerItems} onJump={jumpToRow} offset={68} depKey={`${chunk}|${rows.length}|${columns}|${translit}|${!!metre}|${word ? 1 : 0}`} />}
       {split && (
         <div className={styles.paneBar}>
           <span className="label">{pane === 1 ? "Left book" : "Right book"}</span>
           {canSync && <button type="button" className="chip" aria-pressed={sync} onClick={() => useUI.getState().setSyncScroll(!sync)}>Sync scrolling</button>}
+          {!floating && <button type="button" className="chip" onClick={() => floatAway("this")} title="Keep reading this book in a small window while you use the rest of the site">Float this book</button>}
           {pane === 2 && <button type="button" className="chip" onClick={closePane}>Close this book</button>}
         </div>
       )}
       <header className={`wrap ${styles.top}`}>
-        <nav className={styles.crumbs} aria-label="Breadcrumbs">
-          <Link href={AREAS.library.href} transitionTypes={["page-turn"]}>{AREAS.library.name}</Link>
-          {author && <><span aria-hidden="true">›</span><Link href={`${AREAS.library.href}?a=${author.id}`} transitionTypes={["page-turn"]}>{author.name}</Link></>}
-        </nav>
-        <h1 className={styles.title}>{work?.title ?? " "}
-          {grcText?.label && grcText.label !== work?.title && <span className={styles.titleGr} lang="grc">{grcText.label}</span>}
-        </h1>
+        {!floating && (
+          <>
+            <nav className={styles.crumbs} aria-label="Breadcrumbs">
+              <Link href={AREAS.library.href} transitionTypes={["page-turn"]}>{AREAS.library.name}</Link>
+              {author && <><span aria-hidden="true">›</span><Link href={`${AREAS.library.href}?a=${author.id}`} transitionTypes={["page-turn"]}>{author.name}</Link></>}
+            </nav>
+            <h1 className={styles.title}>{work?.title ?? " "}
+              {grcText?.label && grcText.label !== work?.title && <span className={styles.titleGr} lang="grc">{grcText.label}</span>}
+            </h1>
+          </>
+        )}
+        {floating && split && <p className={styles.floatTitle}>{work?.title}</p>}
 
         {work && grcText && (
+          <FloatFold floating={floating}>
           <div className={styles.controls}>
             <label className={styles.pick}><span className="label">Greek text</span>
-              <select value={versionOf(grcText.urn)} onChange={(e) => router.replace(href({ ed: e.target.value }), { scroll: false })}>
+              <select value={versionOf(grcText.urn)} onChange={(e) => nav.go(query({ ed: e.target.value }))}>
                 {(greekEditions(work).length ? greekEditions(work) : work.texts.filter((t) => t.kind === "edition")).map((t) => <option key={t.urn} value={versionOf(t.urn)}>{describe(t)}</option>)}
               </select>
             </label>
             <label className={styles.pick}><span className="label">Translation</span>
-              <select value={trText ? versionOf(trText.urn) : "none"} onChange={(e) => router.replace(href({ tr: e.target.value }), { scroll: false })}>
+              <select value={trText ? versionOf(trText.urn) : "none"} onChange={(e) => nav.go(query({ tr: e.target.value }))}>
                 <option value="none">None</option>
                 {translations(work).map((t) => <option key={t.urn} value={versionOf(t.urn)}>{describe(t)}</option>)}
               </select>
@@ -624,6 +771,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
               ))}
             </div>
           </div>
+          {floating && aids}
+          </FloatFold>
         )}
       </header>
 
@@ -652,12 +801,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
               <input ref={gotoRef} id="reader-goto" value={goto} onChange={(e) => setGoto(e.target.value)} placeholder={`Go to ${doc.levels.join(".")}`} aria-label="Go to reference" />
               <button type="submit">Go</button>
             </form>
-            <div className={styles.aids} role="group" aria-label="Reading aids">
-              <button type="button" className="chip" aria-pressed={translit} onClick={() => setSettings({ translit: !translit })} title="Show each line in Latin letters">Transliteration</button>
-              <button type="button" className="chip" aria-pressed={cases} onClick={() => setSettings({ cases: !cases })} title="Underline nouns, adjectives and participles in the colour of their case">Colour by case</button>
-              {mInfo && <button type="button" className="chip" aria-pressed={metreOn} onClick={() => setSettings({ metre: !metreOn })} title="Mark long and short syllables, feet and caesura">Metre</button>}
-              <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setWord(null); setEcho(null); }}>Vocabulary</button>
-            </div>
+            {!floating && aids}
             <div className={styles.marksMenu}>
               <button type="button" onClick={() => setMarksOpen(!marksOpen)} aria-expanded={marksOpen}>Your marks ({allMarks.length})</button>
               {marksOpen && (
@@ -665,7 +809,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
                   {!allMarks.length && <li className="muted">Select words in the Greek, or click a passage number, to bookmark, highlight or write a note.</li>}
                   {[...allMarks].sort((a, b) => cmp(a.start, b.start, order)).map((m) => (
                     <li key={m.id}>
-                      <button type="button" onClick={() => { setMarksOpen(false); router.replace(href({ at: m.start.u }), { scroll: false }); }}>
+                      <button type="button" onClick={() => { setMarksOpen(false); nav.go(query({ at: m.start.u })); }}>
                         <span className="label">{m.kind} · {rangeLabel(m.start.u, m.end.u)}</span>
                         <span>{m.kind === "note" && m.text ? m.text.slice(0, 80) : <span lang="grc">{m.quote.slice(0, 60)}</span>}</span>
                       </button>
@@ -674,6 +818,12 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
                 </ul>
               )}
             </div>
+            <MarkersLegend counts={markerCounts} />
+            {!floating && pane === 1 && (
+              <button type="button" className={styles.floatBtn} onClick={() => floatAway("all")} title="Shrink the reader into a small window that follows you around the site, at the passage you are reading">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM12 12h6v5h-6z" /></svg> Float {split ? "both books" : "the reader"}
+              </button>
+            )}
             <button type="button" className={styles.helpBtn} onClick={() => setHelp((h) => !h)} aria-expanded={help}>Keys <kbd>?</kbd></button>
           </div>
 
@@ -704,7 +854,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
             <span className="label">{trText ? `English · ${describe(trText)}` : ""}</span>
           </div>
 
-          <article className={`wrap ${styles.text} ${metre ? styles.metreOn : ""}`} onClick={onTextClick} onMouseUp={onTextMouseUp} aria-label={`${cite}, ${chunkInfo.label}`}>
+          <article className={`wrap ${styles.text} ${metre ? styles.metreOn : ""}`} onClick={onTextClick} onMouseUp={onTextMouseUp} onDragStart={onDragStart} aria-label={`${cite}, ${chunkInfo.label}`}>
             {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} translit={translit} metre={metre} />)}
           </article>
           {sel && <PassageToolbar sel={sel} onAction={act} onClose={() => setSel(null)}
@@ -735,24 +885,50 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   );
 }
 
-/** The reader: one pane, or two side by side (when the address has w2=…). */
-export default function Reader() {
-  const params = useSearchParams();
-  const router = useRouter();
-  const split = !!params.get("w2");
+/** In the floating window the book's settings fold away, so the text shows first. */
+function FloatFold({ floating, children }: { floating: boolean; children: React.ReactNode }) {
+  if (!floating) return <>{children}</>;
+  return (
+    <details className={styles.floatFold}>
+      <summary>Edition, translation and reading aids</summary>
+      <div className={styles.floatFoldIn}>{children}</div>
+    </details>
+  );
+}
+
+/** One book, or two side by side (w2=…), wherever the reader lives (its page, or the floating window). */
+export function ReaderBooks() {
+  const nav = useNav();
+  const split = !!nav.params.get("w2");
   const [picking, setPicking] = useState(false);
   const open = (w: string) => {
-    const q = new URLSearchParams(params.toString());
+    const q = new URLSearchParams(nav.params.toString());
     q.set("w2", w);
     for (const k of ["ed2", "tr2", "at2"]) q.delete(k);
-    router.replace(`/read?${q}`, { scroll: false });
+    nav.go(q);
     setPicking(false);
   };
   return (
-    <div className={split ? styles.split : undefined}>
+    <div className={`${split ? styles.split : ""} ${nav.floating ? styles.floatBooks : ""}`}>
       <ReaderPane pane={1} split={split} onOpenSecond={() => setPicking(true)} />
       {split && <ReaderPane pane={2} split onOpenSecond={() => undefined} />}
       {picking && <WorkPicker onPick={open} onClose={() => setPicking(false)} />}
     </div>
+  );
+}
+
+/** The reader's page: what it shows is in the address (/read?w=…). */
+export default function Reader() {
+  const params = useSearchParams();
+  const router = useRouter();
+  const nav = useMemo<ReaderNav>(() => ({
+    params: new URLSearchParams(params.toString()),
+    go: (q, how = "replace") => router[how](`/read?${q}`, { scroll: false }),
+    floating: false,
+  }), [params, router]);
+  return (
+    <ReaderNavContext.Provider value={nav}>
+      <ReaderBooks />
+    </ReaderNavContext.Provider>
   );
 }

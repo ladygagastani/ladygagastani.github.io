@@ -49,7 +49,7 @@ To rebuild everything, in this order (Python commands from the top folder, `npx`
 | 1 | `python pipeline/fetch_corpus.py` | Every text file, checked, in `pipeline/.cache/corpus/`. |
 | 2 | `python pipeline/build_words.py` | Word analyses from GLAUx, `web/public/data/words/` (about 345 MB; downloads about 3.3 GB). |
 | 3 | `python pipeline/build_lsj.py` | The LSJ dictionary, `web/public/data/lsj/` (about 75 MB). |
-| 4 | `python pipeline/build_pack_index.py` | Sizes and checksums of steps 2 and 3, for offline downloads. |
+| 4 | `python pipeline/build_pack_index.py` | Sizes and checksums of steps 2, 3 and 6, for offline downloads (run it again after step 6). |
 | 5 | `npx tsx scripts/build-search.ts grc`, then `eng`, then `lem` | The search index, `web/public/data/search/` (about 320 MB). |
 | 6 | `npx tsx scripts/build-lexicon.ts` | The Word Study index, `web/public/data/lexicon/` (about 40 MB): every form of every dictionary word, and its count in each work (needs step 2). |
 
@@ -75,6 +75,8 @@ Rebuilding the committed data, only when its sources change:
 - `lib/search/`, `lib/echoes/` and `lib/metre/` hold the Oracle search, Echoes and scansion.
 - `lib/annotations.ts` stores the reader's marks and notes (IndexedDB); `lib/treasury-io.ts` exports and restores them.
 - `lib/lexicon.ts` reads the Word Study index and lays out forms as tables; `components/treasury/` is the Treasury and Word Study.
+- `public/sw.js` is the offline helper (service worker); `config/pages.ts` lists the pages it keeps; `lib/connection.ts` and `components/ConnectionLight.tsx` are the connection light and Reconnect.
+- `lib/float.ts` and `components/reader/FloatingReader.tsx` are the floating reader; `lib/resume.ts` and `components/Resume.tsx` remember where you left off.
 - `data/` holds hand-checked content: the alphabet, stroke order, lessons, tables of forms and passages of the day.
 
 ## Content rules

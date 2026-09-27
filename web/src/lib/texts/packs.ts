@@ -1,24 +1,26 @@
 /**
- * Offline copies of the look-up data: word analyses (per work) and the LSJ dictionary (per shard).
+ * Offline copies of the look-up data: word analyses (per work), the LSJ dictionary (per shard) and
+ * the Word Study index (per shard).
  * Each file is checked against the SHA-1 in the pack index before it is saved to browser storage.
  */
 import { kvGet, kvSet } from "./kv";
 import { opfsWrite } from "./local";
 import { WORD_PACK_DIR } from "@/lib/lookup/words";
 import { LSJ_DIR } from "@/lib/lookup/lsj";
+import { LEXICON_DIR } from "@/lib/lexicon";
 
 export interface PackFile { url: string; dir: string; name: string; size: number; sha: string; key: string }
 type Index = Record<string, [number, string]>;
 
 const indexes = new Map<string, Promise<Index>>();
-const loadIndex = (kind: "words" | "lsj") => {
+const loadIndex = (kind: "words" | "lsj" | "lexicon") => {
   if (!indexes.has(kind)) indexes.set(kind, fetch(`/data/${kind}/_index.json`).then((r) => (r.ok ? r.json() : {})).catch(() => ({})));
   return indexes.get(kind)!;
 };
 
-/** Word analyses for these works (or all), plus the whole LSJ. */
+/** Word analyses for these works (or all), plus the whole LSJ and the whole Word Study index. */
 export async function planPacks(workIds: Iterable<string> | null): Promise<PackFile[]> {
-  const [words, lsj] = await Promise.all([loadIndex("words"), loadIndex("lsj")]);
+  const [words, lsj, lexicon] = await Promise.all([loadIndex("words"), loadIndex("lsj"), loadIndex("lexicon")]);
   const want = workIds ? new Set(workIds) : null;
   const files: PackFile[] = [];
   for (const [work, [size, sha]] of Object.entries(words)) {
@@ -27,6 +29,9 @@ export async function planPacks(workIds: Iterable<string> | null): Promise<PackF
   }
   for (const [shard, [size, sha]] of Object.entries(lsj)) {
     files.push({ url: `/data/lsj/${encodeURIComponent(shard)}.json`, dir: LSJ_DIR, name: `${shard}.json`, size, sha, key: `lsj/${shard}` });
+  }
+  for (const [shard, [size, sha]] of Object.entries(lexicon)) {
+    files.push({ url: `/data/lexicon/${encodeURIComponent(shard)}.json`, dir: LEXICON_DIR, name: `${shard}.json`, size, sha, key: `lexicon/${shard}` });
   }
   return files;
 }

@@ -5,6 +5,7 @@
  */
 import { greekKey, shardOf } from "@/lib/search/codec";
 import { readTag } from "@/lib/lookup/postag";
+import { opfsRead } from "@/lib/texts/local";
 
 /** A dictionary form as one word: lower case, marks that are not letters or accents removed. */
 export const canonLemma = (l: string) => l.normalize("NFC").toLocaleLowerCase("el").replace(/[^\p{L}\p{M}]/gu, "");
@@ -25,10 +26,15 @@ export interface LexEntry { n: number; f: [string, number, number][]; w: [number
 export interface LexMeta { works: [string, number][]; tags: string[]; lemmas: number; forms: number }
 
 const BASE = "/data/lexicon";
+/** Where the Scroll Case saves the index for offline use (browser storage). */
+export const LEXICON_DIR = "mathesis-lexicon";
 let metaP: Promise<LexMeta | null> | null = null;
 const shards = new Map<string, Promise<Record<string, LexEntry> | null>>();
 
+/** From browser storage if downloaded, else from the site. */
 async function json<T>(url: string): Promise<T | null> {
+  const local = await opfsRead(LEXICON_DIR, decodeURIComponent(url.slice(BASE.length + 1))).catch(() => null);
+  if (local) return JSON.parse(local) as T;
   const r = await fetch(url);
   if (r.status === 404) return null;
   if (!r.ok) throw new Error(`the word index could not be reached (${r.status})`);

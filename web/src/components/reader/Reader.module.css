@@ -55,7 +55,7 @@
 }
 .row {
   padding-block: 14px; border-bottom: 1px solid color-mix(in srgb, var(--rule) 45%, transparent);
-  content-visibility: auto; contain-intrinsic-size: auto 160px; scroll-margin-top: 140px;
+  content-visibility: auto; contain-intrinsic-size: auto 160px; scroll-margin-top: calc(68px + var(--bar-h, 64px) + 12px);
 }
 .row:last-child { border-bottom: 0; }
 .flash { animation: flash 2.4s ease-out; }
@@ -331,3 +331,30 @@ p.translit { margin: -0.3em 0 0.8em; }
 .metreLinks a { text-decoration: none; }
 .metreHelp { display: grid; gap: 8px; padding: 12px 16px; background: var(--surface); border-left: 3px solid var(--accent); border-radius: var(--radius); line-height: 1.6; }
 .metreHelp a { text-underline-offset: 3px; }
+
+/* ------------------------------------------------------------ in the floating window */
+.floatBooks { height: 100%; }
+.floating { height: 100%; overflow-y: auto; overscroll-behavior: contain; padding-bottom: 32px; scroll-padding-top: 60px; }
+.floating.pane { height: 100%; }
+.floating .bar { top: 0; padding-block: 8px; gap: 8px 12px; }
+.floating .top { padding-block: 12px 8px; gap: 10px; }
+.floating .title { font-size: 1.5rem; }
+.floating .crumbs { font-size: 0.78rem; }
+.floating .wrap { padding-inline: 14px; }
+.floating .panel { top: 0; width: min(100%, 360px); }
+.floating.withPanel .text, .floating.withPanel .cols, .floating.withPanel .bar, .floating.withPanel .bottom { margin-right: 0; }
+.floating .row, .pane .row { scroll-margin-top: calc(var(--bar-h, 64px) + 12px); }
+.floating .helpBtn { display: none; }
+.floatBtn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; background: transparent; border: 1px solid var(--rule); border-radius: var(--radius); font-size: 0.9rem; }
+.floatBtn:hover { border-color: var(--ink-2); }
+.floatBtn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; }
+/* a grip beside each passage number: drag it into a note to quote the passage */
+.grip { display: block; width: 10px; height: 16px; margin: 4px 0 0 auto; cursor: grab; opacity: 0; transition: opacity 0.2s;
+  background: radial-gradient(circle, var(--ink-2) 1.3px, transparent 1.7px) 0 0 / 5px 5px; }
+.row:hover .grip, .grip:focus-visible { opacity: 0.7; }
+@media (hover: none) { .grip { display: none; } }
+.floatFold { font-size: 0.92rem; }
+.floatFold summary { cursor: pointer; font-family: var(--f-label); letter-spacing: 0.05em; color: var(--ink-2); padding: 2px 0; }
+.floatFold[open] summary { margin-bottom: 10px; }
+.floatFoldIn { display: grid; gap: 12px; animation: slide-in 0.25s var(--ease); }
+.floatTitle { font-family: var(--f-display); font-size: 1.15rem; }

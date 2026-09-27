@@ -26,8 +26,11 @@ export default function PassageToolbar({ sel, onAction, onClose, xref = null }: 
     const el = ref.current;
     if (!el) return;
     const w = el.offsetWidth, h = el.offsetHeight;
-    const left = Math.min(Math.max(12, sel.rect.left), innerWidth - w - 12);
-    const top = sel.rect.top - h - 10 > 70 ? sel.rect.top - h - 10 : sel.rect.bottom + 10;
+    // inside the floating window, "fixed" is measured from the window, not the screen
+    const box = el.parentElement?.closest("[data-float-window]")?.getBoundingClientRect();
+    const ox = box?.left ?? 0, oy = box?.top ?? 0, width = box?.width ?? innerWidth, minTop = box ? 50 : 70;
+    const left = Math.min(Math.max(12, sel.rect.left - ox), width - w - 12);
+    const top = sel.rect.top - oy - h - 10 > minTop ? sel.rect.top - oy - h - 10 : sel.rect.bottom - oy + 10;
     el.style.left = `${left}px`;
     el.style.top = `${top}px`;
     el.style.opacity = "1";

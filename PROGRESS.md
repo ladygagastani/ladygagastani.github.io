@@ -96,7 +96,24 @@
     - **yours**: review status (or "Save word to my review") and your note on the word.
     - Data: `web/scripts/build-lexicon.ts` → `web/public/data/lexicon/` (**about 40 MB, not committed**): 119,708 dictionary words, 687,857 forms, 1,186 works, from the GLAUx word packs.
   - Numbers are now written the English way everywhere (43,789, not 43.789, whatever the computer's language).
-- **Not started:** Phases 6–9.
+- **Phase 6 (offline, floating reader, where you left off, scrollbar markers): done** (2026-09-27). Tests: 108 unit (plus 3 that need the network or the corpus cache) and 37 browser.
+  - **The site works offline once visited.** An offline helper (service worker, `public/sw.js`) keeps every page (the list is `config/pages.ts`, served at `/offline.json`; a test checks it against `src/app`), the code and fonts they use, and the small data files. Pages come from the network when it answers within 4 s, else from the kept copy; code files are kept once built; `/data` is network-first with the kept copy as fallback; the search index is never kept by it. Each build registers `/sw.js?build=<id>` (the id comes from `next.config.ts`), so a new build replaces the old copy. In-app navigation data (RSC) is never kept: offline, the app falls back to loading the page itself, which the kept copy answers.
+  - **Installable**: `app/manifest.ts` and icons drawn in code (`app/icons/[size]/route.tsx`: a black-figure amphora with a band of rays).
+  - **Connection light** in the header (`components/ConnectionLight.tsx`, `lib/connection.ts`): Online (green), Offline (red, one ripple), Syncing (ochre, rippling). Clicking it shows what works offline (the site copy, texts downloaded, folders, look-ups) and has **Reconnect**: it reconnects folders first (the browser only allows that straight after a click), checks the connection with a real request (5 s limit), updates the offline copy of the site, and reports each step. Notes, marks and saved words live in this browser, so nothing made offline can be lost; syncing between devices waits for accounts (Phase 8), and the report says so.
+  - **Word Study offline**: its index is now part of the Scroll Case's look-up downloads (`build_pack_index.py` indexes `lexicon/`; `lib/lexicon.ts` reads browser storage first).
+  - **Scrollbar markers** (`components/reader/ScrollMarkers.tsx`): beside the scroll bar (of the page, or of a pane or the floating window), a mark for each note, bookmark, highlight (in its colour), favourite and cross-reference on the page, where you left off last time, and the current Echoes. Hover or focus shows a preview (a note's text); a click goes there. A **Markers** legend in the reader's bar explains them and switches each kind on or off (remembered in Settings as `markers`).
+  - **The floating reader** (`components/reader/FloatingReader.tsx`, `lib/float.ts`): **Float the reader** in the reader's bar (or **Float this book** on one pane of two) shrinks it into a window that stays open across the whole site (it lives in the root layout) and returns you to the page you came from. The window:
+    - is dragged by its title bar and resized from any edge or corner; dropped near a screen edge it docks there full height, near a corner it tucks into it, with a dashed preview of where it will land; the keyboard moves it (arrows) and resizes it (Shift+arrows);
+    - minimises to a tab showing the book and passage, and expands back into the full reader at the passage in view (the expand button, or a double-click on the title bar);
+    - keeps working: scrolling, pages, word look-up, notes, bookmarks, highlights, Echoes (with a Back button), metre, side-by-side;
+    - unrolls when it opens and rolls up when it closes (no animation with reduced motion); on a phone it is a sheet across the bottom of the screen;
+    - folds the book's settings (edition, translation, reading aids) away so the Greek shows first;
+    - is remembered, with its book, passage, position and size, after a reload (localStorage `mathesis:float`).
+  - The reader's navigation now goes through a small context (`ReaderNav` in `Reader.tsx`): the address bar on the reader's page, the window's own state when floating. Two readers can be open at once; keys go to the one in use.
+  - **Drag a passage into a note**: a grip beside each passage number (on hover), or selected Greek, drags as the Greek in quotation marks followed by (Author, Work ref), which any note (or other text box) takes as a quotation. The forum and debates will take it too (Phase 8).
+  - **Continue where you left off** (`lib/resume.ts`, `components/Resume.tsx`): the site remembers the pages visited (newest first; the reader once per set of books open) and how far down each was scrolled. The home page shows the last place (the reader resumes at its own remembered passage), the books in progress and the other recent pages (a lesson, a search with its filters, a Word Study...); following a link there restores the page's scroll. "Forget these pages" clears the list. Unsent drafts: notes already save as they are typed.
+  - **Reading position is now measured from what is on screen** (the first passage showing below the sticky bar, on scroll), instead of an IntersectionObserver that only reported rows whose visibility changed; a passage brought into view is no longer hidden under the bar (its offset follows the bar's real height, `--bar-h`).
+- **Not started:** Phases 7–9.
 
 ## Decisions log
 | Date | Decision | Reason |
@@ -148,6 +165,10 @@
 | 2026-09-27 | **A word's family comes live from English Wiktionary** (rendered page, sections Etymology, Derived/Related terms, Descendants → English), credited, and only when online. Nothing about etymology or derivatives is written by the site itself. | Real facts only; Wiktionary is the open, cited source. |
 | 2026-09-27 | **The Treasury export is one HTML file with the data inside it.** Restoring merges by id and date and never deletes. | "Export everything to a readable file so the user owns their data" (brief), and a way back in. |
 | 2026-09-27 | **Places in the Treasury wait for the map** (Phase 7): saving a place needs Pleiades places and the map, which that phase builds. | Avoid a half-feature now. |
+| 2026-09-27 | **Offline: a hand-written service worker** (no plug-in): pages network-first with a 4 s limit, built code cached once, data network-first. The page list is explicit (`config/pages.ts`) and tested against the app's pages. | Small, readable, and exact about what is kept. |
+| 2026-09-27 | **The connection light checks with a real request**, not only the browser's online flag, which can say "online" on a network that reaches nothing. | Honest status. |
+| 2026-09-27 | **The floating reader is the same reader**, given a different place to keep what it shows (`ReaderNav`), not a second copy. It lives in the root layout, so page changes never reset it. After floating, the site returns to the last page that was not the reader (never off the site). | Everything the reader does keeps working while floating. |
+| 2026-09-27 | **Passages are dragged by a grip**, not by their number: browsers do not start a drag from a button. The Float button sits in the sticky bar, so floating keeps the passage being read. | Found while testing. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
 
 ## Known problems
@@ -185,14 +206,21 @@
 
 - **Treasury follow-ups**:
   - Places (saved places on a personal map) come with the Periplus map in Phase 7.
-  - Word Study's index (`public/data/lexicon/`, about 40 MB) is not yet in the Scroll Case downloads, so Word Study's forms and counts need a connection (or a local build); its examples need the search index; its family needs Wiktionary. Add the index to offline downloads in Phase 6.
+  - Word Study's examples need the search index, and its family needs Wiktionary, so those two parts need a connection. (Its index downloads with the look-ups since Phase 6.)
   - Word Study needs the dictionary form (λόγος, not λόγου). A typed inflected form could be resolved to its dictionary word via GLAUx later.
   - Empty anthology collections live in localStorage, not in the export (collections that hold passages are exported with them).
   - Syncing the Treasury across devices comes with accounts (Phase 8); until then, Download / Restore moves it between browsers.
 - **Hosting**: the Word Study index adds about 40 MB to the generated data.
 
+- **Phase 6 follow-ups**:
+  - The search index (about 320 MB) is still not downloadable for offline use (see Search follow-ups).
+  - Scrollbar markers exist in the reader; long wiki entries get them when the wiki arrives (Phase 7).
+  - A Study lesson is remembered by its scroll position; the practice drills do not yet save a half-finished round.
+  - With the floating reader open, the page-turning keys go to whichever reader has the focus.
+  - Python edits run through a Bash heredoc can break in two ways: a backslash before b or 1 becomes a control character, and some long heredocs fail to parse. Write such edit scripts to a file first.
+
 ## Next steps
-1. Phase 6: offline mode and Reconnect, the floating reader, "continue where you left off", scrollbar markers (see `PLAN.md`).
+1. Phase 7: the Painted Stoa (wiki), maps and archaeology, with 25+ fully sourced flagship entries (see `PLAN.md`).
 
 ## Review history
 - None yet.

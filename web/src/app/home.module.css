@@ -53,3 +53,24 @@
   .heroGrid, .learnGrid, .offline { grid-template-columns: 1fr; }
   .cards { grid-template-columns: 1fr; }
 }
+
+/* ---------------------------------------------------------------- continue where you left off */
+.resume { padding-block: clamp(28px, 4vw, 44px) 0; }
+.resumeIn { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px 40px; align-items: stretch; animation: lift 0.6s var(--ease) both; }
+.resumeMain { display: grid; gap: 10px; align-content: start; }
+.resumeLast {
+  display: grid; gap: 4px; padding: 20px 24px; text-decoration: none; background: var(--ink); color: var(--bg);
+  border-radius: var(--radius); border-left: 6px solid var(--accent); transition: transform 0.3s var(--ease);
+}
+.resumeLast:hover { transform: translateY(-3px); }
+.resumeLast b { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.15; }
+.resumeLast span { color: color-mix(in srgb, var(--bg) 78%, var(--ink)); }
+.resumeLast small { font-family: var(--f-label); letter-spacing: 0.05em; color: var(--accent); }
+.resumeLast .arr { display: inline-block; transition: transform 0.25s var(--ease); }
+.resumeLast:hover .arr { transform: translateX(5px); }
+.resumeMore { display: grid; gap: 6px; align-content: start; }
+.resumeMore ul { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 4px; }
+.resumeMore a { text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.resumeMore small { color: var(--ink-2); font-size: 0.85rem; }
+.resumeClear { justify-self: start; border: 0; background: transparent; padding: 0; color: var(--ink-2); font-size: 0.85rem; text-decoration: underline; }
+@media (max-width: 760px) { .resumeIn { grid-template-columns: 1fr; } }

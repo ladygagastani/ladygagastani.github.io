@@ -4,6 +4,7 @@ import Amphora from "@/components/Amphora";
 import LetterTiles from "@/components/LetterTiles";
 import PassageOfTheDay from "@/components/PassageOfTheDay";
 import OfflineActions from "@/components/OfflineActions";
+import { ContinueCard } from "@/components/Resume";
 import { AREAS, SITE } from "@/config/areas";
 import styles from "./home.module.css";
 
@@ -45,6 +46,9 @@ export default function Home() {
         </div>
         <div className="wrap"><div className="meander draw" aria-hidden="true" /></div>
       </section>
+
+      {/* ---------------------------------------------------------------- continue (only when there is something) */}
+      <ContinueCard styles={styles} />
 
       {/* ---------------------------------------------------------------- learn */}
       <section className={`${styles.block} ${styles.learn}`} aria-labelledby="learn-title">

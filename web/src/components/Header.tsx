@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AREAS, NAV, SITE } from "@/config/areas";
 import { useSettings } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
+import ConnectionLight from "./ConnectionLight";
 import styles from "./Header.module.css";
 
 function isActive(pathname: string, href: string) {
@@ -44,6 +45,7 @@ export default function Header() {
         </nav>
 
         <div className={styles.tools}>
+          <ConnectionLight />
           <Link className={styles.tbtn} href={AREAS.search.href} transitionTypes={["page-turn"]} aria-label={`${AREAS.search.name}: ${AREAS.search.english}`} title="Search (or press / on any page)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
             <span className={styles.txt}>{AREAS.search.name}</span>
