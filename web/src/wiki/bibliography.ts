@@ -237,4 +237,12 @@ export const BIB: Record<string, Secondary> = {
     author: "Emily Wilson", title: "The Death of Socrates", year: 2007,
     publisher: "Cambridge, MA: Harvard University Press", checked: "https://bmcr.brynmawr.edu/2009/2009.09.31/",
   },
+  "burkert-lore-science": {
+    author: "Walter Burkert, translated by Edwin L. Minar", title: "Lore and Science in Ancient Pythagoreanism", year: 1972,
+    publisher: "Cambridge, MA: Harvard University Press", checked: "https://www.hup.harvard.edu/books/9780674539181",
+  },
+  "kahn-pythagoras": {
+    author: "Charles H. Kahn", title: "Pythagoras and the Pythagoreans: A Brief History", year: 2001,
+    publisher: "Indianapolis: Hackett", checked: "https://philpapers.org/rec/KAHPAT-8",
+  },
 };
