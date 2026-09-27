@@ -49,7 +49,8 @@ describe.skipIf(!process.env.CORPUS).each(ENTRIES.map((e) => [e.slug, e] as cons
     for (const [id, q] of Object.entries(e.quotes ?? {})) {
       const d = greekOf(q.work)!;
       const i = findRef(d, q.ref);
-      const near = norm(d.units.slice(Math.max(0, i - 1), i + 3).map((u) => textOf(u.blocks)).join(" "));
+      // the cited unit, the one before, and up to six after (verse quotations run over several lines)
+      const near = norm(d.units.slice(Math.max(0, i - 1), i + 7).map((u) => textOf(u.blocks)).join(" "));
       expect(near.includes(norm(q.grc)), `${slug}/${id}: Greek not found at ${q.ref}`).toBe(true);
       if (q.trFrom === "corpus") {
         const t = trOf(q.work);

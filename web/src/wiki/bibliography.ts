@@ -253,4 +253,12 @@ export const BIB: Record<string, Secondary> = {
     author: "Lynn R. LiDonnici", title: "The Epidaurian Miracle Inscriptions: Text, Translation and Commentary", year: 1995,
     publisher: "Atlanta: Scholars Press", checked: "https://openlibrary.org/books/OL1277271M/The_Epidaurian_miracle_inscriptions",
   },
+  "moulton-similes": {
+    author: "Carroll Moulton", title: "Similes in the Homeric Poems (Hypomnemata 49)", year: 1977,
+    publisher: "Göttingen: Vandenhoeck & Ruprecht", checked: "https://philpapers.org/rec/TAPHS",
+  },
+  "scott-simile": {
+    author: "William C. Scott", title: "The Oral Nature of the Homeric Simile (Mnemosyne Supplement 28)", year: 1974,
+    publisher: "Leiden: Brill", checked: "https://digitalcommons.dartmouth.edu/facoa/4333/",
+  },
 };
