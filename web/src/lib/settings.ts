@@ -11,9 +11,11 @@ export interface Settings {
   greekSize: number;   // rem
   leading: number;     // unitless line height for reading text
   columns: Columns;    // reader: Greek and translation, or one of them
+  translit: boolean;   // reader aid: transliteration under the Greek
+  cases: boolean;      // reader aid: colour words by case
 }
 
-export const DEFAULTS: Settings = { theme: "auto", motion: "auto", greekSize: 1.25, leading: 1.75, columns: "both" };
+export const DEFAULTS: Settings = { theme: "auto", motion: "auto", greekSize: 1.25, leading: 1.75, columns: "both", translit: false, cases: false };
 export const LIMITS = {
   greekSize: { min: 1, max: 2, step: 0.0625 },
   leading: { min: 1.4, max: 2.2, step: 0.1 },
@@ -48,7 +50,7 @@ export const useSettings = create<SettingsStore>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => safeStorage),
-      partialize: ({ theme, motion, greekSize, leading, columns }) => ({ theme, motion, greekSize, leading, columns }),
+      partialize: ({ theme, motion, greekSize, leading, columns, translit, cases }) => ({ theme, motion, greekSize, leading, columns, translit, cases }),
       skipHydration: true,
     },
   ),

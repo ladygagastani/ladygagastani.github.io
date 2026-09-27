@@ -14,19 +14,24 @@
     - the offline block, where Download links to the GitHub ZIPs work and Load / Reconnect show "arrives in Phase 2".
   - **Every other area** has a page whose header explains its name, plus an honest "being built in Phase N" list. There are also About (the names) and Credits, licences & privacy pages.
   - **Tests** (all passing on 2026-09-26): `npm test` runs 8 Vitest checks; `npm run e2e` runs 5 Playwright tests in the installed Microsoft Edge.
-- **Phase 2 (Library and reader): in progress.** Done so far:
+- **Phase 2 (Library and reader): done** (2026-09-27). Tests: 47 unit (`npm test`) and 12 browser (`npm run e2e`, which needs internet for GitHub).
   - **Catalogue** (`pipeline/build_catalog.py` → `web/public/data/catalog.json`, committed): 373 authors, 1,837 works, 2,816 texts, pinned to exact commits.
-  - **TEI reader** (`web/src/lib/tei/`): parses each file by its own cRefPattern citation scheme, pages by book or scene or size, and aligns translations (Murray's line markers anchor the English). Tests prove no letter is lost.
-  - **Text sources** (`web/src/lib/texts/`): browser storage (OPFS), then connected folders (File System Access), then GitHub raw pinned to a SHA.
-  - **Downloader**: per-file, each file checked against its git blob SHA-1, resumable. ZIP import, reconnect folders.
-  - **Pages**: the Reader (`/read?w=…&ed=…&tr=…&at=…`); the Mouseion library with where-to-begin guidance and search; the Scroll Case downloads page. The front-page and Settings offline buttons work.
-  - **Word look-up**, in three layers:
-    1. GLAUx in-context analysis (`pipeline/build_words.py` → `web/public/data/words/`, **345 MB, not committed**);
-    2. LSJ (`pipeline/build_lsj.py` → `web/public/data/lsj/`, **75 MB, not committed**; citations link into the reader);
-    3. live Wiktionary.
-  - **Passage tools** (select words, or click a passage number): bookmark, favourite, note (inline, editable, deletable), highlight in 4 colours, Share (copy link, copy text, image with a highlight-or-skip step, preview, light/dark, clipboard with download fallback). Tested in the browser on 2026-09-27. Marks are stored in IndexedDB (`lib/annotations.ts`); the "Your marks" list is in the reader bar.
-  - **Still to do in Phase 2**: side-by-side reading and cross-references; offline download of the word and LSJ packs; e2e tests for the reader.
-- **Not started:** Phases 3–9.
+  - **TEI reader** (`web/src/lib/tei/`): cRefPattern citation schemes; pages by book, scene or size (very long divisions are split); alignment of translations (line markers, and finer or coarser schemes). The corpus health check covers all 2,774 Greek and English texts.
+  - **Text sources**: browser storage (OPFS), then connected folders, then GitHub pinned to a SHA. The downloader checks git blob SHA-1s and can resume. ZIP import and reconnect folders work.
+  - **Pages**:
+    - Reader `/read?w=&ed=&tr=&at=` (plus `w2=…` for a second pane).
+    - Mouseion library: where to begin, search, and filters by genre, period and dialect from GLAUx metadata.
+    - Scroll Case: download texts plus word look-ups.
+    - Live passage of the day: 10 verified passages in `src/data/passages.ts`.
+  - **Word look-up**:
+    - GLAUx analysis in context, from `pipeline/build_words.py`, **345 MB, not committed**;
+    - DCC core-vocabulary definitions for the ~500 commonest words (`pipeline/build_core.py` → `core.json`, committed);
+    - LSJ (`pipeline/build_lsj.py`, **75 MB, not committed**), with citations linked into the reader; Shift-click opens a citation beside;
+    - live Wiktionary.
+  - **Passage tools**: bookmark, favourite, notes (inline, editable, deletable), highlights in 4 colours, Share (link, text, image with a highlight-or-skip step), a "Your marks" list, and cross-references between panes.
+  - **Side-by-side**: two panes, each with its own navigation; synced scrolling for the same work; Shift-click on a citation opens it beside.
+  - **Reading aids** (learning first): transliteration in the site's documented simple scheme; colour by case from GLAUx; a vocabulary list for the page.
+- **Not started:** Phases 3–9. **Next: Phase 3, the Academy (Study).**
 
 ## Decisions log
 | Date | Decision | Reason |

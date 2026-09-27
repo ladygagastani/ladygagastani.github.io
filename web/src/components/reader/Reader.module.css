@@ -239,3 +239,23 @@
   .notes { grid-column: 1 / -1; }
 }
 @media (max-width: 900px) { .split { grid-template-columns: 1fr; } .pane { height: auto; overflow: visible; border-right: 0; border-bottom: 3px double var(--rule); } }
+
+/* ------------------------------------------------------------ reading aids */
+.aids { display: flex; flex-wrap: wrap; gap: 6px; }
+.translit { display: block; grid-column: 2; font-family: var(--f-body); font-style: italic; font-size: 0.72em; line-height: 1.4; color: var(--ink-2); margin: -0.1em 0 0.35em 1.2em; }
+p.translit { margin: -0.3em 0 0.8em; }
+.reader [data-case] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
+.reader [data-case="nominative"] { text-decoration-color: #4F7CA8; }
+.reader [data-case="genitive"] { text-decoration-color: #D9A441; }
+.reader [data-case="dative"] { text-decoration-color: #6E9A5B; }
+.reader [data-case="accusative"] { text-decoration-color: #C0492B; }
+.reader [data-case="vocative"] { text-decoration-color: #8B5FA8; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; font-size: 0.88rem; padding-block: 8px 0; }
+
+.vocabTitle { font-size: 1.3rem; }
+.vocab { list-style: none; margin: 0; padding: 0; display: grid; }
+.vocab button { width: 100%; display: grid; grid-template-columns: auto auto 1fr; gap: 4px 10px; align-items: baseline; text-align: left; padding: 7px 4px; background: transparent; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--rule) 45%, transparent); }
+.vocab button:hover { background: var(--bg-2); }
+.vocabLemma { font-family: var(--f-greek); font-size: 1.15rem; }
+.vocabN { font-family: var(--f-label); font-size: 0.8rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+.vocabGloss { grid-column: 1 / -1; font-size: 0.9rem; color: var(--ink-2); }

@@ -51,6 +51,7 @@ export default function CreditsPage() {
             Ancient Greek&rdquo;, <i>Proceedings of the 2nd International Workshop on Computational Approaches to Historical Language Change</i>, 39–50.
           </li>
           <li><b>Liddell–Scott–Jones Greek-English Lexicon (LSJ)</b>: {LSJ_CREDIT}</li>
+          <li><b>Short definitions of the commonest words</b> and their frequency ranks: <a href="https://dcc.dickinson.edu/greek-core-list" rel="noopener">Dickinson College Commentaries Greek Core Vocabulary</a>, by Christopher Francese and collaborators, CC BY-SA 3.0.</li>
           <li><b>Wiktionary</b> entries, fetched live when you look up a word: English Wiktionary contributors, CC BY-SA 4.0.</li>
         </ul>
 

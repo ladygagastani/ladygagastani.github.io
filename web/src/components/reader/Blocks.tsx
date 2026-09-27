@@ -1,6 +1,7 @@
 import { Fragment, memo } from "react";
 import type { Block, Inline } from "@/lib/tei/types";
 import { GREEK_WORD, isGreekWord } from "@/lib/greek";
+import { transliterate } from "@/lib/translit";
 import styles from "./Reader.module.css";
 
 // Markers readers cite by (Stephanus pages, sections, page numbers) are shown; layout-only ones are not.
@@ -27,8 +28,11 @@ function inlines(c: Inline[], greek: boolean, key: string) {
 
 const lineNo = (n?: string) => n && /^\d+$/.test(n) && (+n % 5 === 0 || n === "1") ? n : "";
 
+const plain = (c: Inline[]) => c.map((x) => (typeof x === "string" ? x : "")).join("");
+
 /** Renders TEI blocks exactly as the file gives them. Greek words become clickable. */
-export const Blocks = memo(function Blocks({ blocks, greek, keyPrefix }: { blocks: Block[]; greek: boolean; keyPrefix: string }) {
+
+export const Blocks = memo(function Blocks({ blocks, greek, keyPrefix, translit = false }: { blocks: Block[]; greek: boolean; keyPrefix: string; translit?: boolean }) {
   return (
     <>
       {blocks.map((b, i) => {
@@ -40,9 +44,15 @@ export const Blocks = memo(function Blocks({ blocks, greek, keyPrefix }: { block
             {speaker}
             <span className={styles.ln} aria-hidden="true">{lineNo(b.n)}</span>
             <span className={styles.lt}>{inlines(b.c, greek, k)}</span>
+            {translit && <span className={styles.translit} aria-hidden="true">{transliterate(plain(b.c))}</span>}
           </div>
         );
-        return <p key={k} className={styles.p}>{speaker}{inlines(b.c, greek, k)}</p>;
+        return (
+          <Fragment key={k}>
+            <p className={styles.p}>{speaker}{inlines(b.c, greek, k)}</p>
+            {translit && <p className={styles.translit} aria-hidden="true">{transliterate(plain(b.c))}</p>}
+          </Fragment>
+        );
       })}
     </>
   );

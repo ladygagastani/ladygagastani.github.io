@@ -106,11 +106,17 @@ def segments(el: ET.Element, greek: bool = False) -> list:
 
 
 def short_gloss(entry: ET.Element) -> str:
+    """The first few translations LSJ marks with <tr>, taken from its numbered senses only
+    (the part before them holds forms and etymology, where <tr> can mark cognates)."""
     seen: list[str] = []
-    for tr in entry.iter("tr"):
+    trs = [tr for s in entry.iter("sense") for tr in s.iter("tr")] or list(entry.iter("tr"))
+    for tr in trs:
         t = " ".join("".join(tr.itertext()).split()).strip(" ,;:")
         # a few <tr> elements in the source hold abbreviations ("Il.Parv..", "Smp.."), not translations
         if ".." in t or re.fullmatch(r"[A-Z][\w.]*\.", t):
+            continue
+        # cognates from other languages (Sanskrit "ahám", "sā") are not English glosses
+        if re.search(r"[^\x00-\x7F’‘–—]", t):
             continue
         if t and t not in seen:
             seen.append(t)

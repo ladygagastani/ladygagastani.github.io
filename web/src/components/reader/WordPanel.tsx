@@ -8,6 +8,7 @@ import { lookUpWiktionary, type WiktResult, type WiktSense } from "@/lib/lookup/
 import { loadWordPack, analyse, type Analysis } from "@/lib/lookup/words";
 import { lsjEntries, citationHref, LSJ_CREDIT, type LsjEntry, type Seg } from "@/lib/lookup/lsj";
 import { readTag } from "@/lib/lookup/postag";
+import { coreEntry, CORE_CREDIT, type CoreEntry } from "@/lib/lookup/core";
 import { useUI } from "@/lib/ui";
 import styles from "./Reader.module.css";
 
@@ -87,6 +88,7 @@ export default function WordPanel({ word, ctx, onClose }: { word: string | null;
   const [lsj, setLsj] = useState<Loaded<{ head: string; entries: LsjEntry[] }>>({ key: "", value: null });
   const [wikt, setWikt] = useState<Loaded<WiktResult>>({ key: "", value: null });
   const [full, setFull] = useState(false);
+  const [core, setCore] = useState<Loaded<CoreEntry>>({ key: "", value: null });
   const offline = typeof navigator !== "undefined" && navigator.onLine === false;
   const key = word && ctx ? `${ctx.work}|${ctx.unitKey}|${ctx.occurrence}|${word}` : word ?? "";
 
@@ -104,7 +106,7 @@ export default function WordPanel({ word, ctx, onClose }: { word: string | null;
   const analysisDone = analysis.key === key;
 
   // 2. LSJ for the dictionary form (or the word itself when there is no analysis)
-  const lsjKey = analysisDone ? `${key}|${lemma ?? ""}` : "";
+  const lsjKey = !ctx ? `${key}|` : analysisDone ? `${key}|${lemma ?? ""}` : "";
   useEffect(() => {
     if (!word || !lsjKey) return;
     let live = true;
@@ -117,6 +119,14 @@ export default function WordPanel({ word, ctx, onClose }: { word: string | null;
     })()
       .then((value) => { if (live) setLsj({ key: lsjKey, value }); })
       .catch((e: Error) => { if (live) setLsj({ key: lsjKey, value: null, error: e.message }); });
+    return () => { live = false; };
+  }, [lsjKey, word, lemma]);
+
+  // 2b. the core vocabulary, for the commonest words
+  useEffect(() => {
+    if (!word || !lsjKey) return;
+    let live = true;
+    coreEntry(lemma ?? lookupForm(word)).then((value) => { if (live) setCore({ key: lsjKey, value }); });
     return () => { live = false; };
   }, [lsjKey, word, lemma]);
 
@@ -149,7 +159,7 @@ export default function WordPanel({ word, ctx, onClose }: { word: string | null;
       </div>
 
       {/* ------------------------------------------------ here */}
-      <section className={styles.sec}>
+      {ctx && <section className={styles.sec}>
         <h3 className="label">In this passage</h3>
         {!analysisDone && ctx && <p className="muted">Finding this word…</p>}
         {analysisDone && !a && <p className="muted">{analysis.error ? `Word analyses could not be loaded (${analysis.error}).` : "No analysis is available for this text yet."}</p>}
@@ -170,7 +180,15 @@ export default function WordPanel({ word, ctx, onClose }: { word: string | null;
             <p className={styles.fine}>Analysis: GLAUx (Keersmaekers 2021), CC BY-SA 4.0.</p>
           </div>
         )}
-      </section>
+      </section>}
+
+      {core.key === lsjKey && core.value && (
+        <section className={styles.sec}>
+          <h3 className="label">Core vocabulary · one of the commonest words (#{core.value.rank})</h3>
+          <p className={styles.gloss}>{core.value.def}</p>
+          <p className={styles.fine}><span lang="grc">{core.value.head}</span> · {core.value.pos}. {CORE_CREDIT}.</p>
+        </section>
+      )}
 
       {/* ------------------------------------------------ LSJ */}
       <section className={styles.sec}>

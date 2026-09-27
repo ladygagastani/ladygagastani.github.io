@@ -24,6 +24,9 @@ import PassageToolbar, { type Selection } from "./PassageToolbar";
 import NoteEditor from "./NoteEditor";
 import ShareDialog, { type ShareData } from "./ShareDialog";
 import WorkPicker from "./WorkPicker";
+import VocabPanel from "./VocabPanel";
+import { loadWordPack, analyse as analyseWord } from "@/lib/lookup/words";
+import { caseOf } from "@/lib/lookup/postag";
 import styles from "./Reader.module.css";
 
 type Load = { state: "loading"; step: string } | { state: "error"; message: string } | { state: "ready" };
@@ -55,7 +58,7 @@ const MARK_ICON: Record<string, React.ReactNode> = {
 };
 
 /** One passage row: reference and your marks in the margin, Greek, translation, and any notes. */
-const RowView = memo(function RowView({ row, marks, openNote, onCloseNote }: { row: Row; marks: Mark[]; openNote: string | null; onCloseNote: () => void }) {
+const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, translit }: { row: Row; marks: Mark[]; openNote: string | null; onCloseNote: () => void; translit: boolean }) {
   const notes = marks.filter((m) => m.kind === "note");
   return (
     <section className={styles.row} data-key={row.key}>
@@ -72,7 +75,7 @@ const RowView = memo(function RowView({ row, marks, openNote, onCloseNote }: { r
         )}
       </div>
       <div className={styles.grc} lang="grc">
-        {row.greek.map((u) => <div key={u.ref.join(".")} data-u={u.ref.join(".")}><Blocks blocks={u.blocks} greek keyPrefix={u.ref.join(".")} /></div>)}
+        {row.greek.map((u) => <div key={u.ref.join(".")} data-u={u.ref.join(".")}><Blocks blocks={u.blocks} greek keyPrefix={u.ref.join(".")} translit={translit} /></div>)}
       </div>
       <div className={styles.tr}>
         {row.trans.length ? <Blocks blocks={row.trans} greek={false} keyPrefix={`t${row.key}`} /> : <span className={styles.none} aria-label="No translation for this passage">—</span>}
@@ -100,6 +103,9 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const toast = useUI((s) => s.showToast);
   const columns = useSettings((s) => s.columns);
   const setSettings = useSettings((s) => s.set);
+  const translit = useSettings((s) => s.translit);
+  const cases = useSettings((s) => s.cases);
+  const [vocabOpen, setVocabOpen] = useState(false);
 
   const workId = P("w") ?? "";
   const at = P("at");
@@ -169,6 +175,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const chunk = doc ? chunkOf(doc, startUnit) : 0;
   const placed = parsed?.placed ?? null;
   const unitKeys = useMemo(() => new Set(doc?.units.map((u) => u.ref.join(".")) ?? []), [doc]);
+  const pageKeys = useMemo(() => new Set(doc && doc.chunks[chunk] ? doc.units.slice(doc.chunks[chunk].first, doc.chunks[chunk].last + 1).map((u) => u.ref.join(".")) : []), [doc, chunk]);
   const rows = useMemo(() => (doc && doc.chunks[chunk] ? alignChunk(doc, doc.chunks[chunk], placed) : []), [doc, chunk, placed]);
   const cov = trText && placed ? coverage(rows) : 1;
   const startKey = doc && startUnit > 0 ? doc.units[startUnit].ref.join(".") : null;
@@ -271,6 +278,31 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       }
     }
   }, [marks, rows, order, doc]);
+
+  // colour by case: mark each Greek word with the case GLAUx gives it here
+  useEffect(() => {
+    const clear = () => root().querySelectorAll("[data-case]").forEach((el) => el.removeAttribute("data-case"));
+    if (!cases || !rows.length || !doc) { clear(); return; }
+    let live = true;
+    loadWordPack(workId).then((pack) => {
+      if (!live) return;
+      clear();
+      if (!pack) { toast("No word analyses exist for this text yet, so words can't be coloured by case."); return; }
+      root().querySelectorAll<HTMLElement>("[data-u]").forEach((unit) => {
+        const seen = new Map<string, number>();
+        unit.querySelectorAll<HTMLElement>("[data-w]").forEach((sp) => {
+          const f = norm(sp.dataset.w!);
+          const occ = seen.get(f) ?? 0;
+          seen.set(f, occ + 1);
+          const a = analyseWord(pack, sp.dataset.w!, unit.dataset.u!, occ, unitKeys, doc.levels.length);
+          const c = a && a.where !== "work" ? caseOf(a.tag) : null;
+          if (c) sp.dataset.case = c;
+        });
+      });
+    }).catch(() => undefined);
+    return () => { live = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cases, rows, doc, workId, unitKeys]);
 
   const pointOf = (span: HTMLElement) => {
     const unit = span.closest<HTMLElement>("[data-u]")!;
@@ -488,6 +520,11 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
               <input ref={gotoRef} id="reader-goto" value={goto} onChange={(e) => setGoto(e.target.value)} placeholder={`Go to ${doc.levels.join(".")}`} aria-label="Go to reference" />
               <button type="submit">Go</button>
             </form>
+            <div className={styles.aids} role="group" aria-label="Reading aids">
+              <button type="button" className="chip" aria-pressed={translit} onClick={() => setSettings({ translit: !translit })} title="Show each line in Latin letters">Transliteration</button>
+              <button type="button" className="chip" aria-pressed={cases} onClick={() => setSettings({ cases: !cases })} title="Underline nouns, adjectives and participles in the colour of their case">Colour by case</button>
+              <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setWord(null); }}>Vocabulary</button>
+            </div>
             <div className={styles.marksMenu}>
               <button type="button" onClick={() => setMarksOpen(!marksOpen)} aria-expanded={marksOpen}>Your marks ({allMarks.length})</button>
               {marksOpen && (
@@ -507,6 +544,14 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
             <button type="button" className={styles.helpBtn} onClick={() => setHelp((h) => !h)} aria-expanded={help}>Keys <kbd>?</kbd></button>
           </div>
 
+          {cases && (
+            <p className={`wrap ${styles.legend}`} aria-label="Case colours">
+              <span data-case="nominative">nominative</span> <span data-case="genitive">genitive</span> <span data-case="dative">dative</span>
+              <span data-case="accusative">accusative</span> <span data-case="vocative">vocative</span>
+              <span className="muted">From GLAUx&apos;s analyses of this text.</span>
+            </p>
+          )}
+          {translit && <p className={`wrap ${styles.legend}`}><span className="muted">Transliteration uses a simple scheme: η ē, ω ō, rough breathing h, υ y (u in diphthongs), χ ch, φ ph, θ th, iota subscript i; accents are left out.</span></p>}
           {help && (
             <div className={`wrap ${styles.help}`} role="note">
               <p><kbd>←</kbd> <kbd>→</kbd> previous / next page · <kbd>g</kbd> go to a reference · click a word to look it up · select words or click a passage number for bookmarks, notes, highlights and sharing · <kbd>Esc</kbd> close</p>
@@ -526,7 +571,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           </div>
 
           <article className={`wrap ${styles.text}`} onClick={onTextClick} onMouseUp={onTextMouseUp} aria-label={`${cite}, ${chunkInfo.label}`}>
-            {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} />)}
+            {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} translit={translit} />)}
           </article>
           {sel && <PassageToolbar sel={sel} onAction={act} onClose={() => setSel(null)}
             xref={split ? (pendingXref && pendingXref.pane !== pane ? "here" : "start") : null} />}
@@ -546,6 +591,10 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
         </>
       )}
 
+      {vocabOpen && doc && !word && (
+        <VocabPanel work={workId} pageKeys={pageKeys} keys={unitKeys} depth={doc.levels.length}
+          onClose={() => setVocabOpen(false)} onPick={(lemma) => setWord({ w: lemma, ctx: null })} />
+      )}
       <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onClose={() => { setWord(null); root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel)); }} />
     </div>
   );

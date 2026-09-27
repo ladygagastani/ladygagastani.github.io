@@ -115,3 +115,18 @@ export function analyse(pack: WordPack, word: string, unitKey: string, occurrenc
   if (!others.length) return null;
   return { lemma: others[0].lemma, tag: others[0].tag, manual: false, where: "work", others: others.map(({ lemma, tag, n }) => ({ lemma, tag, n })) };
 }
+
+/** How often each dictionary word occurs in the given passages (punctuation left out). */
+export function lemmaCounts(pack: WordPack, pageKeys: Iterable<string>, keys: Set<string>, depth: number): Map<string, number> {
+  const { byKey } = indexFor(pack, keys, depth);
+  const counts = new Map<string, number>();
+  for (const k of pageKeys) for (const i of byKey.get(k) ?? []) {
+    const [, , , lem, tags] = pack.units[i];
+    lem.forEach((l, j) => {
+      if (pack.tags[tags[j]].startsWith("u")) return;
+      const lemma = pack.lemmas[l];
+      counts.set(lemma, (counts.get(lemma) ?? 0) + 1);
+    });
+  }
+  return counts;
+}

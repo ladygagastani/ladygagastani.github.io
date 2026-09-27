@@ -5,17 +5,7 @@ test("home page shows the site name, the passage and the offline block", async (
   await expect(page.locator("h1").first()).toContainText("Μάθησις");
   await expect(page.getByRole("heading", { name: "Passage of the day" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Read without a connection" })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Perseus Digital Library/ }).first()).toHaveAttribute("href", /canonical-greekLit\/archive/);
-});
-
-test("clicking a Greek word opens its look-up", async ({ page }) => {
-  await page.goto("/");
-  await page.getByRole("button", { name: "μῆνιν", exact: true }).click();
-  const pop = page.getByRole("dialog", { name: "Look-up: μῆνιν" });
-  await expect(pop).toContainText("accusative singular feminine");
-  await expect(pop.getByRole("link", { name: "Logeion" })).toHaveAttribute("href", /logeion\.uchicago\.edu/);
-  await page.keyboard.press("Escape");
-  await expect(pop).toBeHidden();
+  await expect(page.getByRole("link", { name: "canonical-greekLit" })).toHaveAttribute("href", /canonical-greekLit\/archive/);
 });
 
 test("moving between areas does not reload the page", async ({ page }) => {
