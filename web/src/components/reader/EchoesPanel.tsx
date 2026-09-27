@@ -281,10 +281,10 @@ function Summary({ n, counts, isWord, where }: { n: number; counts: Record<Kind,
   const parts = ([["exact", "exact"], ["forms", "in other forms"], ["near", "near"]] as [Kind, string][]).filter(([k]) => counts[k] > 0);
   return (
     <div className={es.summary} aria-live="polite">
-      <span className={es.big}>{n.toLocaleString()}</span>
+      <span className={es.big}>{n.toLocaleString("en-GB")}</span>
       <span>
         {n === 1 ? "time" : "times"} in {where}{n > 0 ? ", this one included" : ""}
-        {(!isWord || counts.forms > 0) && parts.length > 1 && <span className="muted"> · {parts.map(([k, l]) => `${counts[k].toLocaleString()} ${l}`).join(" · ")}</span>}
+        {(!isWord || counts.forms > 0) && parts.length > 1 && <span className="muted"> · {parts.map(([k, l]) => `${counts[k].toLocaleString("en-GB")} ${l}`).join(" · ")}</span>}
       </span>
     </div>
   );
@@ -360,8 +360,8 @@ function IndexResults({ ix, idx, words, lemma, scope, plan, isWord }: {
   return (
     <>
       <div className={es.summary} aria-live="polite">
-        <span className={es.big}>{o.hits.toLocaleString()}</span>
-        <span>{o.hits === 1 ? "time" : "times"} in {where}, in {o.works.length.toLocaleString()} work{o.works.length === 1 ? "" : "s"}
+        <span className={es.big}>{o.hits.toLocaleString("en-GB")}</span>
+        <span>{o.hits === 1 ? "time" : "times"} in {where}, in {o.works.length.toLocaleString("en-GB")} work{o.works.length === 1 ? "" : "s"}
           <span className="muted"> · {lemma ? `every form of ${lemma}` : isWord ? "accents ignored" : "word for word, within one passage, accents ignored"}</span>
         </span>
       </div>
@@ -372,13 +372,13 @@ function IndexResults({ ix, idx, words, lemma, scope, plan, isWord }: {
               <Link href={oracle(w.work)} transitionTypes={["page-turn"]}>
                 <span className={es.wName}>{idx?.authorOf.get(w.work)?.name}, <i>{idx?.work.get(w.work)?.title}</i></span>
                 <span className={es.wBar}><span style={{ width: `${(w.count / most) * 100}%` }} /></span>
-                <span className={es.wN}>{w.count.toLocaleString()}</span>
+                <span className={es.wN}>{w.count.toLocaleString("en-GB")}</span>
               </Link>
             </li>
           ))}
         </ol>
       )}
-      {o.works.length > top.length && <p className={styles.fine}>The {top.length} works where it occurs most, of {o.works.length.toLocaleString()}.</p>}
+      {o.works.length > top.length && <p className={styles.fine}>The {top.length} works where it occurs most, of {o.works.length.toLocaleString("en-GB")}.</p>}
       <Link className="btn ghost" href={oracle()} transitionTypes={["page-turn"]}>See every place in the Oracle</Link>
     </>
   );

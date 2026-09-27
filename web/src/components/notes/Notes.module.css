@@ -1,0 +1,42 @@
+/* The note editor and note text, shared by the reader and the Treasury. */
+.field { display: grid; gap: 6px; }
+.field textarea {
+  width: 100%; font: inherit; font-size: 1rem; line-height: 1.55; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--rule); border-radius: var(--radius); padding: 10px 12px; resize: vertical;
+}
+.field textarea:focus-visible, .greek input:focus-visible, .tags input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.tools { display: flex; flex-wrap: wrap; gap: 4px; }
+.tools button {
+  min-width: 34px; height: 30px; padding: 0 9px; border: 1px solid var(--rule); border-radius: var(--radius);
+  background: transparent; color: var(--ink); font-size: 0.92rem;
+}
+.tools button:hover { background: var(--bg-2); }
+.tools button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+.greek {
+  display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; align-items: end;
+  padding: 10px 12px; border: 1px dashed var(--rule); border-radius: var(--radius); background: var(--bg);
+  animation: open 0.28s var(--ease) both;
+}
+.greek label { display: grid; gap: 4px; grid-column: 1 / -1; }
+.greek input { font: inherit; font-family: ui-monospace, Consolas, monospace; padding: 6px 8px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); color: var(--ink); }
+.preview { font-family: var(--f-greek); font-size: 1.35rem; min-height: 1.6em; }
+.help { grid-column: 1 / -1; font-size: 0.82rem; color: var(--ink-2); margin: 0; }
+@keyframes open { from { opacity: 0; transform: translateY(-6px); } }
+
+.tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.tag {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 10px; border-radius: 999px;
+  background: var(--bg-2); font-size: 0.86rem; animation: pop 0.25s var(--ease) both;
+}
+.tag button { border: 0; background: transparent; color: var(--ink-2); width: 20px; height: 20px; border-radius: 50%; line-height: 1; }
+.tag button:hover { background: var(--rule); color: var(--ink); }
+.tags input { flex: 1 1 120px; min-width: 100px; font: inherit; font-size: 0.9rem; padding: 3px 8px; border: 1px solid var(--rule); border-radius: 999px; background: transparent; color: var(--ink); }
+@keyframes pop { from { transform: scale(0.8); opacity: 0; } }
+
+.rich p { margin: 0 0 0.5em; }
+.rich p:last-child { margin-bottom: 0; }
+.rich ul { margin: 0.2em 0 0.6em; padding-left: 1.3em; }
+.rich li { margin: 0.1em 0; }
+.rich li::marker { color: var(--accent); }

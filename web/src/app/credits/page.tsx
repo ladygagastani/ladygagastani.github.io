@@ -53,7 +53,7 @@ export default function CreditsPage() {
           <li><b>Liddell–Scott–Jones Greek-English Lexicon (LSJ)</b>: {LSJ_CREDIT}</li>
           <li><b>Short definitions of the commonest words</b> and their frequency ranks: <a href="https://dcc.dickinson.edu/greek-core-list" rel="noopener">Dickinson College Commentaries Greek Core Vocabulary</a>, by Christopher Francese and collaborators, CC BY-SA 3.0.</li>
           <li><b>Scansion of verse</b> (long and short syllables, and the metre of each line) for Homer, Hesiod, Apollonius, Nonnus, Pindar, Theognis, the Greek Anthology, three plays of Aeschylus and other poets: <a href="https://hypotactic.com" rel="noopener">hypotactic.com</a>, by David Chamberlain, CC BY 4.0. The vowel lengths the site&apos;s own scanner uses for other texts were also learned from these scansions.</li>
-          <li><b>Wiktionary</b> entries, fetched live when you look up a word: English Wiktionary contributors, CC BY-SA 4.0.</li>
+          <li><b>Wiktionary</b> entries, fetched live when you look up a word, and each word&apos;s origin, related Greek words and English descendants on its Word Study page: English Wiktionary contributors, CC BY-SA 4.0.</li>
         </ul>
 
         <h2>Fonts and software</h2>
@@ -70,9 +70,9 @@ export default function CreditsPage() {
         <ul>
           <li>No adverts, no analytics, no trackers and no cookies.</li>
           <li>Fonts and code are served from this site, so your browser does not contact Google or any other company just to show a page.</li>
-          <li>Your settings, reading positions, bookmarks, notes and highlights are stored only in this browser, on this computer.</li>
+          <li>Your settings, reading positions, bookmarks, notes, highlights, saved words and everything else in the Treasury are stored only in this browser, on this computer. “Download my Treasury” saves a copy as a file on your computer; nothing is uploaded.</li>
           <li>When you are online and a text is not in your downloaded library, your browser fetches that text&apos;s file from GitHub (raw.githubusercontent.com).</li>
-          <li>When you look up a word while online, the word you clicked (and nothing else) is sent to Wiktionary (en.wiktionary.org).</li>
+          <li>When you look up a word or open its Word Study page while online, that word (and nothing else) is sent to Wiktionary (en.wiktionary.org).</li>
           <li>Downloading the library fetches the text files from GitHub. Links to Logeion and Perseus take you to those sites only when you click them.</li>
         </ul>
       </article>

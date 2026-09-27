@@ -15,3 +15,9 @@ export function savePosition(work: string, p: Omit<Position, "t">) {
 }
 /** Most recently read works, newest first (for "Continue reading"). */
 export const recentPositions = (n = 6) => Object.entries(all()).sort((a, b) => b[1].t - a[1].t).slice(0, n);
+/** Every remembered position (for export). */
+export const allPositions = (): Record<string, Position> => all();
+/** Replace every remembered position (restoring an export, after merging). */
+export function setAllPositions(p: Record<string, Position>) {
+  try { localStorage.setItem(KEY, JSON.stringify(p)); } catch { /* storage unavailable */ }
+}

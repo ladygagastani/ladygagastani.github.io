@@ -53,7 +53,7 @@ function useCiteClick() {
   };
 }
 
-function Segs({ segs }: { segs: Seg[] }) {
+export function Segs({ segs }: { segs: Seg[] }) {
   const onCite = useCiteClick();
   return (
     <>
@@ -67,10 +67,10 @@ function Segs({ segs }: { segs: Seg[] }) {
   );
 }
 
-function LsjEntryView({ e, full }: { e: LsjEntry; full: boolean }) {
+export function LsjEntryView({ e, full, tall = false }: { e: LsjEntry; full: boolean; tall?: boolean }) {
   if (!full) return <p className={styles.gloss}>{e.s || "See the full entry."}</p>;
   return (
-    <div className={styles.lsj}>
+    <div className={styles.lsj} style={tall ? { maxHeight: "none", overflow: "visible" } : undefined}>
       {e.b.map(([level, label, segs], i) => (
         <p key={i} style={{ paddingLeft: `${Math.max(0, level - 1) * 0.9}em` }}>
           {label && <b className={styles.senseN}>{label}.</b>} <Segs segs={segs} />
@@ -183,11 +183,19 @@ export default function WordPanel({ word, ctx, onClose, onEchoes }: { word: stri
         )}
       </section>}
 
-      {onEchoes && (
-        <button type="button" className="chip" onClick={onEchoes} title="Every place this word occurs in the book, marked along a strip">
-          Echoes · where else it occurs
-        </button>
-      )}
+      <p className={styles.panelLinks}>
+        {onEchoes && (
+          <button type="button" className="chip" onClick={onEchoes} title="Every place this word occurs in the book, marked along a strip">
+            Echoes · where else it occurs
+          </button>
+        )}
+        {(lemma || l?.value) && (
+          <Link className="chip" href={`/treasury/word?l=${encodeURIComponent(headword)}`} transitionTypes={["page-turn"]}
+            title="Every form of the word, where and when it is used, real examples and its family">
+            Word Study · <span lang="grc">{headword}</span>
+          </Link>
+        )}
+      </p>
 
       {core.key === lsjKey && core.value && (
         <section className={styles.sec}>

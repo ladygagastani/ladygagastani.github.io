@@ -37,9 +37,9 @@ Then open http://localhost:3000.
 
 ## The large data files
 
-The catalogue, core vocabulary, work abbreviations and metre data are committed. Three large generated
-sets are **not** committed (they are too big for git, about 740 MB together), so a fresh copy of the site
-has no word analyses, no LSJ dictionary and no search until they are rebuilt. Where to host them for
+The catalogue, core vocabulary, work abbreviations and metre data are committed. Four large generated
+sets are **not** committed (they are too big for git, about 780 MB together), so a fresh copy of the site
+has no word analyses, no LSJ dictionary, no Word Study forms and counts, and no search until they are rebuilt. Where to host them for
 the public site is still undecided (see "Known problems" in `PROGRESS.md`).
 
 To rebuild everything, in this order (Python commands from the top folder, `npx` commands in `web/`):
@@ -51,6 +51,7 @@ To rebuild everything, in this order (Python commands from the top folder, `npx`
 | 3 | `python pipeline/build_lsj.py` | The LSJ dictionary, `web/public/data/lsj/` (about 75 MB). |
 | 4 | `python pipeline/build_pack_index.py` | Sizes and checksums of steps 2 and 3, for offline downloads. |
 | 5 | `npx tsx scripts/build-search.ts grc`, then `eng`, then `lem` | The search index, `web/public/data/search/` (about 320 MB). |
+| 6 | `npx tsx scripts/build-lexicon.ts` | The Word Study index, `web/public/data/lexicon/` (about 40 MB): every form of every dictionary word, and its count in each work (needs step 2). |
 
 Rebuilding the committed data, only when its sources change:
 
@@ -72,6 +73,8 @@ Rebuilding the committed data, only when its sources change:
 - `lib/ui.ts` holds site-wide UI state that survives page changes.
 - `lib/tei/` reads the original text files and splits them into pages and aligned passages.
 - `lib/search/`, `lib/echoes/` and `lib/metre/` hold the Oracle search, Echoes and scansion.
+- `lib/annotations.ts` stores the reader's marks and notes (IndexedDB); `lib/treasury-io.ts` exports and restores them.
+- `lib/lexicon.ts` reads the Word Study index and lays out forms as tables; `components/treasury/` is the Treasury and Word Study.
 - `data/` holds hand-checked content: the alphabet, stroke order, lessons, tables of forms and passages of the day.
 
 ## Content rules

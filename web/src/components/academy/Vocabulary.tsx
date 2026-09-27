@@ -87,7 +87,7 @@ export default function Vocabulary() {
             </div>
           ))}
         </div>
-        <p className={styles.small}>Share of the running words of this text ({total ? total.toLocaleString() : "…"} words) whose dictionary form is in each set, counted from GLAUx&apos;s analyses. Knowing a word&apos;s dictionary form is only the first step: its forms still have to be recognised.</p>
+        <p className={styles.small}>Share of the running words of this text ({total ? total.toLocaleString("en-GB") : "…"} words) whose dictionary form is in each set, counted from GLAUx&apos;s analyses. Knowing a word&apos;s dictionary form is only the first step: its forms still have to be recognised.</p>
       </section>
 
       <section className={styles.coreList} aria-labelledby="core-title">

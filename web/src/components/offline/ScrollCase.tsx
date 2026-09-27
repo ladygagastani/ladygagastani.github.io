@@ -88,7 +88,7 @@ export default function ScrollCase() {
                 if (!b && !z) return null;
                 return (
                   <li key={c.id}>
-                    <span><b>{c.name}</b> {b ? `${b.files.toLocaleString()} texts, ${mb(b.bytes)}` : ""}{z ? `${b ? " · " : ""}${z.toLocaleString()} texts from a ZIP` : ""}</span>
+                    <span><b>{c.name}</b> {b ? `${b.files.toLocaleString("en-GB")} texts, ${mb(b.bytes)}` : ""}{z ? `${b ? " · " : ""}${z.toLocaleString("en-GB")} texts from a ZIP` : ""}</span>
                     {confirm === c.id
                       ? <span className={styles.confirm}>Remove them? <button type="button" className="chip" onClick={() => { s.removeBrowserCopy(c.id).then(() => toast(`Removed ${c.name} from this browser.`)); setConfirm(null); }}>Remove</button> <button type="button" className="chip" onClick={() => setConfirm(null)}>Keep</button></span>
                       : <button type="button" className="chip" onClick={() => setConfirm(c.id)}>Remove</button>}
@@ -97,7 +97,7 @@ export default function ScrollCase() {
               })}
             </ul>
             {(s.lookups.words > 0 || s.lookups.lsj > 0) && (
-              <p className={styles.small}>Word look-ups offline: analyses for {s.lookups.words.toLocaleString()} work{s.lookups.words === 1 ? "" : "s"}, {s.lookups.lsj} of the dictionary&apos;s 362 parts.</p>
+              <p className={styles.small}>Word look-ups offline: analyses for {s.lookups.words.toLocaleString("en-GB")} work{s.lookups.words === 1 ? "" : "s"}, {s.lookups.lsj} of the dictionary&apos;s 362 parts.</p>
             )}
             {s.usage && s.usage.quota > 0 && <p className={styles.small}>This site uses {mb(s.usage.used)} of the {mb(s.usage.quota)} your browser allows it.</p>}
           </div>
@@ -184,7 +184,7 @@ export default function ScrollCase() {
 
         <div className={styles.go}>
           <p>
-            {plan ? <><b>{plan.texts.length.toLocaleString()} files</b>, {mb(plan.bytes)} on disk, about {mb(transferEstimate(plan.bytes))} to download.</> : "Working out the size…"}
+            {plan ? <><b>{plan.texts.length.toLocaleString("en-GB")} files</b>, {mb(plan.bytes)} on disk, about {mb(transferEstimate(plan.bytes))} to download.</> : "Working out the size…"}
           </p>
           <button type="button" className="btn" disabled={!plan?.texts.length || s.job?.running || !s.online} onClick={start}>
             {s.job?.running ? "Downloading…" : "Download"}

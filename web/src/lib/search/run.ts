@@ -1,6 +1,7 @@
 /** Running one search: from what was typed to hits grouped by work. */
 import { fold, type CatalogIndex } from "@/lib/catalog";
 import { greekKey, englishKey } from "./codec";
+import { canonLemma } from "@/lib/lexicon";
 import { detectScript, queryWords, toPattern, type KeyPattern, type Script } from "./input";
 import {
   countOf, defaultTexts, englishPattern, hasTagFilter, loadTags, loadTexts, matchKeys, phrase, postings, tagMatches,
@@ -105,7 +106,7 @@ export async function runSearch(idx: CatalogIndex, query: Query): Promise<Outcom
   }
 
   const truncated = hits.length > MAX_HITS;
-  if (truncated) { notes.push(`Showing the first ${MAX_HITS.toLocaleString()} results. Narrow the search to see the rest.`); hits = hits.slice(0, MAX_HITS); }
+  if (truncated) { notes.push(`Showing the first ${MAX_HITS.toLocaleString("en-GB")} results. Narrow the search to see the rest.`); hits = hits.slice(0, MAX_HITS); }
 
   const byWork = new Map<string, WorkHits>();
   for (const h of hits) {
@@ -119,8 +120,7 @@ export async function runSearch(idx: CatalogIndex, query: Query): Promise<Outcom
   return { hits: hits.length, works: [...byWork.values()], read, lemmas, notes, texts };
 }
 
-/** A dictionary form as one word: lower case, marks that are not letters or accents removed. */
-export const canonLemma = (l: string) => l.normalize("NFC").toLocaleLowerCase("el").replace(/[^\p{L}\p{M}]/gu, "");
+export { canonLemma };
 
 /** How GLAUx files some words, which a reader would otherwise miss. Keyed by greekKey. */
 const LEMMA_NOTES: Record<string, string> = {

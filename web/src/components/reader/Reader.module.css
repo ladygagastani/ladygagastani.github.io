@@ -183,6 +183,9 @@
 .noteActs { display: inline-flex; gap: 6px; }
 .noteBox textarea { width: 100%; font: inherit; font-size: 1rem; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 10px; resize: vertical; }
 .noteText { white-space: pre-wrap; }
+.panelLinks { display: flex; flex-wrap: wrap; gap: 6px; }
+.panelLinks a { text-decoration: none; }
+.noteTags { display: flex; flex-wrap: wrap; gap: 4px 10px; margin: 6px 0 0; font-family: var(--f-label); font-size: 0.85rem; letter-spacing: 0.04em; color: var(--ochre); }
 
 .marksMenu { position: relative; }
 .marksMenu > button { height: 36px; padding: 0 12px; background: transparent; border: 1px solid var(--rule); border-radius: var(--radius); font-size: 0.9rem; }

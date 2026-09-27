@@ -1,0 +1,110 @@
+/* ================================================================ Word Study */
+.ws { display: grid; gap: 28px; padding-block: clamp(24px, 4vw, 44px) 24px; }
+.crumbs { font-family: var(--f-label); font-size: 0.9rem; letter-spacing: 0.04em; color: var(--ink-2); }
+.crumbs a { text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.warn { color: var(--accent); }
+.fine { font-size: 0.85rem; color: var(--ink-2); line-height: 1.5; }
+.lead { color: var(--ink-2); max-width: 70ch; }
+
+/* ------------------------------------------------ head: the word, large, as on a dictionary page */
+.head { display: grid; gap: 10px; }
+.lemma { font-family: var(--f-greek); font-size: clamp(3.2rem, 9vw, 6.4rem); line-height: 1; letter-spacing: 0.01em; animation: ink 0.9s var(--ease) both; }
+.lemma::first-letter { color: var(--accent); }
+@keyframes ink { from { opacity: 0; filter: blur(6px); transform: translateY(8px); } }
+.headMeta { display: flex; flex-wrap: wrap; gap: 4px 0; font-size: 1.05rem; color: var(--ink-2); }
+.headMeta > span + span::before { content: "·"; margin: 0 12px; color: var(--accent); }
+.translit { font-style: italic; color: var(--ink); }
+.alike { font-size: 0.95rem; }
+.alike a { font-size: 1.1rem; }
+.head :global(.meander) { margin-top: 8px; }
+
+/* ------------------------------------------------ layout */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.main, .side { display: grid; gap: clamp(32px, 4vw, 48px); min-width: 0; }
+.side { position: sticky; top: 84px; gap: 28px; }
+@media (max-width: 960px) { .layout { grid-template-columns: 1fr; } .side { position: static; } }
+
+.sec { display: grid; gap: 12px; align-content: start; animation: rise 0.5s var(--ease) both; }
+.sec h2 { font-size: var(--step-2); }
+.sec h2::first-letter { color: var(--accent); }
+.sec > h3 { margin-top: 6px; }
+@keyframes rise { from { transform: translateY(12px); opacity: 0; } }
+.secHead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; overflow: hidden; }
+.seg button { border: 0; background: transparent; padding: 6px 12px; font-size: var(--step--1); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+.core { padding: 14px 18px; background: var(--surface); border-left: 3px solid var(--accent); display: grid; gap: 6px; }
+.coreDef { font-size: 1.25rem; line-height: 1.4; }
+
+/* ------------------------------------------------ paradigm tables */
+.grids { display: flex; flex-wrap: wrap; gap: 18px 26px; align-items: flex-start; }
+.sec :global(.chip) { justify-self: start; }
+.grid { margin: 0; display: grid; gap: 6px; flex: 0 1 auto; max-width: 100%; }
+.grid figcaption { font-family: var(--f-display); font-size: 1.2rem; }
+.grid figcaption small, .grid td small { font-family: var(--f-label); font-size: 0.72rem; color: var(--ink-2); margin-left: 5px; font-variant-numeric: tabular-nums; }
+.scrollX { overflow-x: auto; }
+.grid table { border-collapse: collapse; min-width: 260px; background: var(--surface); border-top: 3px double var(--rule); border-bottom: 3px double var(--rule); }
+.grid th { font-family: var(--f-label); font-weight: 500; font-size: 0.82rem; color: var(--ink-2); text-align: left; padding: 6px 10px; white-space: nowrap; }
+.grid thead th { border-bottom: 1px solid var(--rule); }
+.grid td { font-family: var(--f-greek); font-size: 1.2rem; padding: 6px 10px; vertical-align: top; border-bottom: 1px solid color-mix(in srgb, var(--rule) 40%, transparent); white-space: nowrap; }
+.grid tbody tr { animation: slot 0.5s var(--ease) both; animation-delay: calc(var(--i) * 45ms); }
+@keyframes slot { from { opacity: 0; transform: translateX(-6px); } }
+.grid td.none { color: var(--rule); font-family: var(--f-body); }
+.variant { display: block; font-size: 0.85em; color: var(--ink-2); }
+.nonFinite { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 1.05rem; }
+.nonFinite [lang="grc"] { font-size: 1.15rem; }
+.nonFinite small { font-family: var(--f-label); font-size: 0.72rem; color: var(--ink-2); }
+.minor summary { cursor: pointer; font-family: var(--f-label); letter-spacing: 0.04em; color: var(--ink-2); padding: 8px 0; }
+.minor[open] { display: grid; gap: 12px; }
+
+.formList { list-style: none; margin: 0; padding: 0; columns: 2 340px; column-gap: 28px; }
+.formList li { break-inside: avoid; display: grid; grid-template-columns: minmax(90px, auto) 1fr auto; gap: 12px; align-items: baseline; padding: 5px 0; border-bottom: 1px solid color-mix(in srgb, var(--rule) 40%, transparent); font-size: 0.95rem; }
+.formGr { font-family: var(--f-greek); font-size: 1.2rem; }
+.num { font-family: var(--f-label); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------ bar charts */
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; }
+.chart { margin: 0; display: grid; gap: 10px; align-content: start; }
+.bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.barRow { position: relative; display: grid; grid-template-columns: minmax(120px, 38%) 1fr; gap: 12px; align-items: center; padding: 5px 4px; border-radius: 4px; outline: none; }
+.barRow[data-hover] { background: color-mix(in srgb, var(--rule) 30%, transparent); }
+.barRow:focus-visible { outline: 2px solid var(--accent); }
+.barLabel { font-size: 0.92rem; line-height: 1.2; }
+.barLabel small { display: block; font-size: 0.78rem; color: var(--ink-2); }
+.barTrack { position: relative; height: 16px; display: flex; align-items: center; }
+/* one baseline on the left (square), a 4px rounded data-end on the right */
+.bar { display: block; height: 16px; width: var(--w); min-width: 2px; background: var(--accent); border-radius: 0 4px 4px 0;
+  transform-origin: left; animation: grow 0.8s var(--ease) both; animation-delay: calc(0.1s + var(--i) * 60ms); }
+@keyframes grow { from { transform: scaleX(0); } }
+.barValue { position: absolute; left: calc(var(--w) + 8px); font-family: var(--f-label); font-size: 0.85rem; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tip { position: absolute; z-index: 5; left: 38%; bottom: calc(100% + 4px); max-width: min(360px, 80vw); padding: 7px 10px; font-size: 0.85rem; line-height: 1.35;
+  background: var(--ink); color: var(--bg); border-radius: 4px; box-shadow: 0 10px 24px -12px var(--shadow); pointer-events: none; }
+.asTable summary { cursor: pointer; font-size: 0.85rem; color: var(--ink-2); }
+.asTable table { margin-top: 8px; border-collapse: collapse; font-size: 0.88rem; }
+.asTable th, .asTable td { text-align: left; padding: 4px 10px 4px 0; border-bottom: 1px solid color-mix(in srgb, var(--rule) 40%, transparent); vertical-align: top; }
+.asTable th { font-weight: 600; }
+
+/* ------------------------------------------------ examples */
+.examples { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; border-left: 2px solid var(--rule); }
+.examples li { position: relative; display: grid; gap: 6px; padding: 4px 0 4px 22px; animation: rise 0.5s var(--ease) both; animation-delay: calc(var(--i) * 80ms); }
+.examples li::before { content: ""; position: absolute; left: -6px; top: 10px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--bg); }
+.exWhere { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.exWhere a { text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.exGr { font-family: var(--f-greek); font-size: 1.18rem; line-height: 1.6; }
+.exGr mark { background: color-mix(in srgb, var(--accent) 24%, transparent); color: inherit; border-radius: 2px; padding: 0 2px; }
+
+/* ------------------------------------------------ side: yours, family */
+.mine { padding: 18px 20px; background: var(--surface); border-top: 3px solid var(--ink); }
+.review { display: grid; gap: 8px; justify-items: start; }
+.status { font-family: var(--f-label); font-size: 0.9rem; letter-spacing: 0.04em; }
+.status[data-tone="new"] { color: var(--ink-2); }
+.status[data-tone="learning"] { color: var(--ochre); }
+.status[data-tone="known"] { color: var(--ok); }
+.famBlock { display: grid; gap: 6px; }
+.ety { font-size: 0.95rem; line-height: 1.55; }
+.english { display: flex; flex-wrap: wrap; gap: 6px; }
+.english span { padding: 2px 10px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: 0.95rem; }
+.kin { display: flex; flex-wrap: wrap; gap: 2px 12px; }
+.kin a { font-family: var(--f-greek); font-size: 1.05rem; text-decoration: none; }
+.kin a:hover { color: var(--accent); text-decoration: underline; }

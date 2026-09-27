@@ -16,7 +16,7 @@ import { TAG_FIELDS, loadTags, type TagFilter } from "@/lib/search/engine";
 import { loadDoc, snippet, type Part } from "@/lib/search/context";
 import { englishWords } from "@/lib/search/codec";
 import { readTag } from "@/lib/lookup/postag";
-import { allMarks, type Mark } from "@/lib/annotations";
+import { allMarks, allPageNotes, type Mark, type PageNote } from "@/lib/annotations";
 import { useAcademy } from "@/lib/academy";
 import type { TeiDoc } from "@/lib/tei/types";
 import GreekKeyboard from "./GreekKeyboard";
@@ -339,7 +339,7 @@ function Results({ idx, meta, tab, q, script, lemma, tags, works, allEditions, s
     <div className={styles.found}>
       <div className={styles.summary} aria-live="polite">
         <p className={styles.count}>
-          {o.hits ? <><b>{o.hits.toLocaleString()}</b> {o.hits === 1 ? "result" : "results"} in <b>{o.works.length.toLocaleString()}</b> {o.works.length === 1 ? "work" : "works"} by {authors} {authors === 1 ? "author" : "authors"}</> : "Nothing found."}
+          {o.hits ? <><b>{o.hits.toLocaleString("en-GB")}</b> {o.hits === 1 ? "result" : "results"} in <b>{o.works.length.toLocaleString("en-GB")}</b> {o.works.length === 1 ? "work" : "works"} by {authors} {authors === 1 ? "author" : "authors"}</> : "Nothing found."}
         </p>
         {o.works.length > 1 && (
           <div className={styles.seg} role="radiogroup" aria-label="Order">
@@ -356,7 +356,7 @@ function Results({ idx, meta, tab, q, script, lemma, tags, works, allEditions, s
             <button type="button" className="chip" aria-pressed={!lemma} onClick={() => go({ lem: null })}>all of them</button>
             {o.lemmas.slice(0, 24).map((l) => (
               <button key={l.lemma} type="button" className="chip" lang="grc" aria-pressed={o.read[0]?.matched.length === 1 && o.read[0].matched[0].key === l.lemma}
-                onClick={() => go({ lem: l.lemma })}>{l.lemma} <small className="muted">{l.count.toLocaleString()}</small></button>
+                onClick={() => go({ lem: l.lemma })}>{l.lemma} <small className="muted">{l.count.toLocaleString("en-GB")}</small></button>
             ))}
           </div>
         </div>
@@ -378,7 +378,7 @@ function Results({ idx, meta, tab, q, script, lemma, tags, works, allEditions, s
         ))}
       </ol>
       {sorted.length > shownWorks && (
-        <button type="button" className="btn ghost" onClick={() => setShownWorks((n) => n + 60)}>Show more works ({(sorted.length - shownWorks).toLocaleString()} left)</button>
+        <button type="button" className="btn ghost" onClick={() => setShownWorks((n) => n + 60)}>Show more works ({(sorted.length - shownWorks).toLocaleString("en-GB")} left)</button>
       )}
       <p className={styles.small}>
         {tab === "english" ? "Translations as published in the Perseus and First1K collections." : "Greek texts from the Perseus and First1K collections."}
@@ -418,7 +418,7 @@ function WorkGroup({ g, idx, meta, texts, startOpen, tab, allEditions }: {
       <button type="button" className={styles.groupHead} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
         <span className={styles.groupTitle}><b>{work?.title ?? g.work}</b> <span className="muted">{author?.name}</span></span>
         {meta?.from != null && <span className={styles.groupDate} title={DATE_NOTE}>{centuries(meta.from, meta.to)}</span>}
-        <span className={styles.groupCount}>{g.count.toLocaleString()}</span>
+        <span className={styles.groupCount}>{g.count.toLocaleString("en-GB")}</span>
       </button>
       {open && (
         <div className={styles.hits}>
@@ -451,7 +451,7 @@ function WorkGroup({ g, idx, meta, texts, startOpen, tab, allEditions }: {
               );
             })}
           </ol>
-          {list.length > shown && <button type="button" className="chip" onClick={() => setShown((n) => n + 40)}>Show more here ({(list.length - shown).toLocaleString()} left)</button>}
+          {list.length > shown && <button type="button" className="chip" onClick={() => setShown((n) => n + 40)}>Show more here ({(list.length - shown).toLocaleString("en-GB")} left)</button>}
         </div>
       )}
     </li>
@@ -470,16 +470,18 @@ function TagLabel({ id }: { id: number }) {
 // ------------------------------------------------------------ my library
 function LibraryResults({ q, idx }: { q: string; idx: CatalogIndex | null }) {
   const [marks, setMarks] = useState<Mark[] | null>(null);
+  const [pageNotes, setPageNotes] = useState<PageNote[]>([]);
   const deck = useAcademy((s) => s.deck);
-  useEffect(() => { allMarks().then(setMarks, () => setMarks([])); }, []);
-  const n = fold(q).trim();
-  if (!n) return <p className={styles.status}>Type a word to look for in your notes, bookmarks, highlights and saved words.</p>;
-  const found = (marks ?? []).filter((m) => [m.quote, m.text, m.link?.label, idx?.work.get(m.work)?.title].some((s) => s && fold(s).includes(n)));
+  useEffect(() => { allMarks().then(setMarks, () => setMarks([])); allPageNotes().then(setPageNotes, () => {}); }, []);
+  const n = fold(q).trim().replace(/^#/, "");
+  if (!n) return <p className={styles.status}>Type a word to look for in your notes (and their tags), bookmarks, highlights and saved words.</p>;
+  const found = (marks ?? []).filter((m) => [m.quote, m.text, m.link?.label, idx?.work.get(m.work)?.title, ...(m.tags ?? []), ...(m.collections ?? [])].some((s) => s && fold(s).includes(n)));
+  const others = pageNotes.filter((p) => [p.text, p.target, p.kind === "author" ? idx?.author.get(p.target)?.name : null, ...(p.tags ?? [])].some((s) => s && fold(s).includes(n)));
   const words = Object.values(deck).filter((c) => fold(c.lemma).includes(n) || fold(c.gloss).includes(n));
   const KIND: Record<Mark["kind"], string> = { bookmark: "Bookmark", favourite: "Favourite", note: "Note", highlight: "Highlight", xref: "Cross-reference" };
   return (
     <div className={styles.found}>
-      <p className={styles.count}><b>{found.length}</b> in your notes and marks · <b>{words.length}</b> saved words</p>
+      <p className={styles.count}><b>{found.length}</b> in your notes and marks · <b>{others.length}</b> notes on authors and words · <b>{words.length}</b> saved words</p>
       {found.length > 0 && (
         <ol className={styles.libList}>
           {found.map((m) => (
@@ -489,6 +491,20 @@ function LibraryResults({ q, idx }: { q: string; idx: CatalogIndex | null }) {
               </Link>
               {m.quote && <p lang="grc" className={styles.gr}>{m.quote}</p>}
               {m.text && <p>{m.text}</p>}
+              {!!m.tags?.length && <p className={styles.small}>{m.tags.map((t) => `#${t}`).join(" ")}</p>}
+            </li>
+          ))}
+        </ol>
+      )}
+      {others.length > 0 && (
+        <ol className={styles.libList}>
+          {others.map((p) => (
+            <li key={p.id}>
+              <Link href={p.kind === "author" ? `/treasury?s=authors&a=${p.target}` : `/treasury/word?l=${encodeURIComponent(p.target)}`} transitionTypes={["page-turn"]}>
+                <span className="label">{p.kind === "author" ? "Note on an author" : "Note on a word"}</span>{" "}
+                <b lang={p.kind === "word" ? "grc" : undefined}>{p.kind === "author" ? idx?.author.get(p.target)?.name ?? p.target : p.target}</b>
+              </Link>
+              <p>{p.text.length > 240 ? p.text.slice(0, 240) + "…" : p.text}</p>
             </li>
           ))}
         </ol>
@@ -496,7 +512,7 @@ function LibraryResults({ q, idx }: { q: string; idx: CatalogIndex | null }) {
       {words.length > 0 && (
         <ol className={styles.libList}>
           {words.map((c) => (
-            <li key={c.id}><span className="label">Saved word</span> <b lang="grc" className={styles.gr}>{c.lemma}</b> <span className="muted">{c.gloss}</span></li>
+            <li key={c.id}><span className="label">Saved word</span> <Link href={`/treasury/word?l=${encodeURIComponent(c.lemma)}`} transitionTypes={["page-turn"]}><b lang="grc" className={styles.gr}>{c.lemma}</b></Link> <span className="muted">{c.gloss}</span></li>
           ))}
         </ol>
       )}

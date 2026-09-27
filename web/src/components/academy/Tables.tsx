@@ -21,7 +21,7 @@ function stemLength(p: Paradigm): number {
 function Cell({ form, stem, hit, count }: { form: string; stem: number; hit: boolean; count: number }) {
   // split each alternative at the shared stem; letters and folded letters line up one to one
   return (
-    <td className={hit ? styles.hit : undefined} title={count ? `Found ${count.toLocaleString()} times in the analysed texts` : "Rare in the analysed texts"}>
+    <td className={hit ? styles.hit : undefined} title={count ? `Found ${count.toLocaleString("en-GB")} times in the analysed texts` : "Rare in the analysed texts"}>
       {form.split(/(,\s*)/).map((part, i) => /^,/.test(part) ? part : (
         <span key={i} lang="grc">
           {[...part.normalize("NFC")].slice(0, stem).join("")}

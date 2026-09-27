@@ -31,7 +31,7 @@ export function JobProgress() {
       </div>
       <div className={styles.bar}><span style={{ width: `${pct}%` }} /></div>
       <p className="muted">
-        {!p ? "Starting…" : `${p.files.toLocaleString()} of ${p.totalFiles.toLocaleString()} files${p.totalBytes ? ` · ${mb(p.bytes)} of ${mb(p.totalBytes)}` : ""}`}
+        {!p ? "Starting…" : `${p.files.toLocaleString("en-GB")} of ${p.totalFiles.toLocaleString("en-GB")} files${p.totalBytes ? ` · ${mb(p.bytes)} of ${mb(p.totalBytes)}` : ""}`}
         {!job.running && !job.error && p && (p.files === p.totalFiles ? " · Done." : " · Paused. Start it again to resume.")}
       </p>
       {job.error && <p className={styles.err}>{job.error}</p>}
@@ -86,7 +86,7 @@ export default function OfflineActions({ compact = false }: { compact?: boolean 
                   {c.name}
                   <small className={styles.size}>
                     {sizes[c.id] ? ` · about ${mb(transferEstimate(sizes[c.id]!))} to download` : ""}
-                    {have ? ` · ${have.files.toLocaleString()} saved` : ""}
+                    {have ? ` · ${have.files.toLocaleString("en-GB")} saved` : ""}
                   </small>
                 </button>
               );

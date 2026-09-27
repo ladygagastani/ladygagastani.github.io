@@ -153,7 +153,7 @@ export default function Library() {
             </select>
           </label>
           {filtering && <button type="button" className="chip" onClick={() => { setFamily(""); setPeriod(""); setDialect(""); }}>Clear filters</button>}
-          <p className={styles.small}>Genre, period and dialect come from the GLAUx corpus and cover {Object.keys(meta).length.toLocaleString()} works; dates are by century.</p>
+          <p className={styles.small}>Genre, period and dialect come from the GLAUx corpus and cover {Object.keys(meta).length.toLocaleString("en-GB")} works; dates are by century.</p>
         </div>
 
         {matches ? (

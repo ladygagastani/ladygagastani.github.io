@@ -76,7 +76,27 @@
     - **The scanner**: syllables and their possible lengths (nature, position, the accent where it proves a length, vowel lengths learned from the published scansions for 12,000 word forms), licences with costs by kind of verse (Homer vs. Attic drama), then a fit to every pattern the metre allows; lines split between two speakers (35 + 35b) are joined before scanning.
     - **Lesson 9, "Hearing Homer's rhythm: the hexameter"** (`/academy/lesson/metre`): long and short, the six feet, caesura, correption and synizesis, with Iliad 1.1, Odyssey 1.1 and the Delphic oracle in Herodotus 1.47.3 shown scanned, and ▸ to hear them.
     - Data: `python pipeline/fetch_hypotactic.py` (downloads the published scansions, 102 MB, into `pipeline/.cache/hypotactic`), then `npx tsx scripts/build-metre.ts` in `web/` → `public/data/metre/` (4 MB, committed): `_index.json` (which texts are verse, in which metre, with the accuracy figures), one file of published scansions per edition, `_lengths.json`. `npx tsx scripts/check-metre.ts errors 30` lists disagreements.
-- **Not started:** Phases 5–9.
+- **Phase 5 (the Treasury, My Library): done** (2026-09-27). Tests: 100 unit (plus 3 that need the network or the corpus cache) and 32 browser.
+  - **The Treasury** `/treasury` (`components/treasury/`). The overview is a Doric frieze, as on the treasuries at Delphi: eight metopes (Notes, Anthology, Bookmarks, Highlights, Cross-references, Words, Authors, Places), each with its count, between triglyphs, under a pediment that draws itself. Below it: **Continue reading** (book spines, from the reader's remembered positions) and **Latest** (the newest things saved, of every kind). Sections are chosen by `?s=`.
+    - **Notes on passages**: grouped by work or newest first, searchable (Greek or English, accents ignored), filtered by tag (`?tag=`); each note is edited in place and opens its passage.
+    - **Anthology** (favourite passages): shown as manuscript leaves; **collections** the reader names, creates, renames and removes (a collection is a name on each favourite; empty ones are remembered in localStorage `mathesis:collections`).
+    - **Bookmarks** with Continue reading; **Highlights** by colour; **Cross-references** shown as pairs (each is stored on both passages; removing removes both).
+    - **Words**: saved words (optionally lesson and core words too), with review status, each opening Word Study; a box to study any word (Greek or Beta Code).
+    - **Authors**: the reader's own notes on authors, with an author finder.
+    - **Places**: not yet; it arrives with the map (Phase 7), and the page says so.
+    - **Keep your Treasury safe**: **Download my Treasury** saves one HTML file that reads as a tidy document in any browser and carries the same data as JSON inside it; **Restore from a file** merges it back (adds what is missing, replaces only with newer copies, never deletes) and reports what changed. `lib/treasury-io.ts`.
+  - **Notes** now have light formatting (**bold**, *italic*, "- " lists; toolbar and Ctrl+B / Ctrl+I), a **Greek typing box** (Beta Code, e.g. `mh=nin` → μῆνιν, with a live preview) and **tags**, in the reader and the Treasury alike (`components/notes/`).
+  - **Notes on authors and on words** are stored in a second IndexedDB store (`mathesis-user` version 2, store `notes`, ids `author:tlg0012` / `word:λόγος`).
+  - **Word Study** `/treasury/word?l=λόγος`, also reached from the reader's look-up ("Word Study · λόγος") and from saved words:
+    - meaning: the DCC core definition and LSJ (short, or the full entry);
+    - **every form** laid out as a grammar would print it: case by number (per gender) for nouns, adjectives, pronouns and articles; person by mood per tense and voice for verbs, with infinitive and participles; or as a list with plain-English parsing. Forms under 3% of uses are folded into "Rarer forms and analyses";
+    - **where it is used**: bar charts of uses per 10,000 words by period, and the ten authors who use it most (hover or focus for details; "Show as a table");
+    - **in real texts**: one passage from each period, opened from the original files, with the word marked, its grammar there, and a link into the reader; plus "Every occurrence in the Oracle";
+    - **family** (live from Wiktionary): where the word comes from, English words descended from it, and the Greek words built on it, each opening its own Word Study;
+    - **yours**: review status (or "Save word to my review") and your note on the word.
+    - Data: `web/scripts/build-lexicon.ts` → `web/public/data/lexicon/` (**about 40 MB, not committed**): 119,708 dictionary words, 687,857 forms, 1,186 works, from the GLAUx word packs.
+  - Numbers are now written the English way everywhere (43,789, not 43.789, whatever the computer's language).
+- **Not started:** Phases 6–9.
 
 ## Decisions log
 | Date | Decision | Reason |
@@ -123,6 +143,11 @@
 | 2026-09-27 | **Unsure lines are never guessed.** A line is scanned only when every best reading gives each syllable the same length; a free place (anceps) holding α, ι or υ of unknown length is shown as ×, not as long or short. | Plan §7. |
 | 2026-09-27 | **Which metre a text is in** is decided by the build: the published scansion's own tags where it covers the text, otherwise the share of lines the scanner can fit to each metre; Aristophanes and Menander are comedy. In plays, Perseus's division subtypes (strophe, choral, anapests…) mark the sung parts, which the parser now records on each verse line (`Block.part`). | Honest labels; the brief asks for the correct metre per text. |
 | 2026-09-27 | **Rhythm playback** sounds beats (long two, short one), not words: there is no recording of the lines, and the brief forbids faked audio. | Brief. |
+| 2026-09-27 | **Word Study counts come from GLAUx's own texts** (the word packs), not from the reader's editions: forms with their grammar and uses per work, pre-built into a small index. Rates are per 10,000 analysed words of each period or author, so larger bodies of text do not win by size. | Honest, comparable counts; one source for forms and counts. |
+| 2026-09-27 | **In paradigm tables a grave accent is written as an acute** and a sentence-initial capital is lowered (not for names), as dictionaries and grammars print forms. Unaccented stray lemmas in GLAUx are not offered as "spelled alike". | Readable tables; accuracy. |
+| 2026-09-27 | **A word's family comes live from English Wiktionary** (rendered page, sections Etymology, Derived/Related terms, Descendants → English), credited, and only when online. Nothing about etymology or derivatives is written by the site itself. | Real facts only; Wiktionary is the open, cited source. |
+| 2026-09-27 | **The Treasury export is one HTML file with the data inside it.** Restoring merges by id and date and never deletes. | "Export everything to a readable file so the user owns their data" (brief), and a way back in. |
+| 2026-09-27 | **Places in the Treasury wait for the map** (Phase 7): saving a place needs Pleiades places and the map, which that phase builds. | Avoid a half-feature now. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
 
 ## Known problems
@@ -158,8 +183,16 @@
   - Near repetitions are looked for in selections of up to 40 words; Echoes takes at most 200 words.
   - A browser development server from another session may hold port 3000; `.claude/launch.json` has `web-prod` (built site on port 3100) for checking in the built-in browser.
 
+- **Treasury follow-ups**:
+  - Places (saved places on a personal map) come with the Periplus map in Phase 7.
+  - Word Study's index (`public/data/lexicon/`, about 40 MB) is not yet in the Scroll Case downloads, so Word Study's forms and counts need a connection (or a local build); its examples need the search index; its family needs Wiktionary. Add the index to offline downloads in Phase 6.
+  - Word Study needs the dictionary form (λόγος, not λόγου). A typed inflected form could be resolved to its dictionary word via GLAUx later.
+  - Empty anthology collections live in localStorage, not in the export (collections that hold passages are exported with them).
+  - Syncing the Treasury across devices comes with accounts (Phase 8); until then, Download / Restore moves it between browsers.
+- **Hosting**: the Word Study index adds about 40 MB to the generated data.
+
 ## Next steps
-1. Phase 5: My Library (see `PLAN.md`).
+1. Phase 6: offline mode and Reconnect, the floating reader, "continue where you left off", scrollbar markers (see `PLAN.md`).
 
 ## Review history
 - None yet.
