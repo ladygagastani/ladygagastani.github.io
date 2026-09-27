@@ -245,4 +245,12 @@ export const BIB: Record<string, Secondary> = {
     author: "Charles H. Kahn", title: "Pythagoras and the Pythagoreans: A Brief History", year: 2001,
     publisher: "Indianapolis: Hackett", checked: "https://philpapers.org/rec/KAHPAT-8",
   },
+  "edelstein-asclepius": {
+    author: "Emma J. Edelstein and Ludwig Edelstein", title: "Asclepius: A Collection and Interpretation of the Testimonies (2 volumes)", year: 1945,
+    publisher: "Baltimore: Johns Hopkins Press", checked: "https://wellcomecollection.org/works/cy6w3n6z",
+  },
+  "lidonnici-epidaurus": {
+    author: "Lynn R. LiDonnici", title: "The Epidaurian Miracle Inscriptions: Text, Translation and Commentary", year: 1995,
+    publisher: "Atlanta: Scholars Press", checked: "https://openlibrary.org/books/OL1277271M/The_Epidaurian_miracle_inscriptions",
+  },
 };
