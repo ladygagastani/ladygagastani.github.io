@@ -74,3 +74,14 @@ describe("the bibliography", () => {
     for (const id of Object.keys(BIB)) expect(used.has(id), id).toBe(true);
   });
 });
+
+describe("the Kerameikos", () => {
+  it("lists only entries that exist, each once, and dig sites that are on the map", async () => {
+    const { LAYERS, DIG_SITES } = await import("./kerameikos");
+    const slugs = LAYERS.flatMap((l) => l.slugs);
+    for (const s of slugs) expect(entryBySlug.has(s), `Kerameikos: no entry "${s}"`).toBe(true);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    for (const e of ENTRIES) if (e.category === "archaeology") expect(slugs, `archaeology entry ${e.slug} is not in a Kerameikos layer`).toContain(e.slug);
+    for (const s of DIG_SITES) expect(MAP_PLACES.has(s.id), `Kerameikos: ${s.en} (${s.id}) is not on the map`).toBe(true);
+  });
+});

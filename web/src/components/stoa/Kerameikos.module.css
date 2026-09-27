@@ -1,0 +1,153 @@
+/* ================================================================ the Kerameikos (archaeology) */
+/* Every animation here starts from a hidden "from" and rests on the finished state, so with
+   reduced motion (animation: none) the page is simply complete. */
+
+.page { padding-top: 24px; }
+
+/* ------------------------------------------------ the section drawing */
+.drawing {
+  margin: 0; display: grid; grid-template-columns: minmax(0, 2.3fr) minmax(220px, 1fr); gap: 18px 36px; align-items: center;
+}
+.drawing svg {
+  width: 100%; height: auto; display: block; background: var(--surface); border: 1px solid var(--rule);
+  box-shadow: 0 22px 40px -32px var(--shadow); border-radius: var(--radius);
+}
+.drawing figcaption { grid-column: 1; font-size: 0.93rem; color: var(--ink-2); max-width: 72ch; }
+.drawing figcaption b { color: var(--ink); font-weight: 600; }
+.legend { grid-column: 2; grid-row: 1 / span 2; list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.legend a { display: grid; grid-template-columns: 34px 1fr; column-gap: 12px; align-items: center; padding: 8px 10px; text-decoration: none; border-radius: var(--radius); transition: background-color 0.2s; }
+.legend a:hover { background: var(--bg-2); }
+.legend b { font-family: var(--f-display); font-weight: 400; font-size: 1.2rem; line-height: 1.15; }
+.legend small { grid-column: 2; color: var(--ink-2); font-family: var(--f-label); letter-spacing: 0.04em; font-size: 0.8rem; }
+.legend li[aria-hidden] { display: grid; grid-template-columns: 34px 1fr; column-gap: 12px; align-items: center; padding: 4px 10px; }
+.num {
+  grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  border: 1.5px solid var(--ink); font-family: var(--f-display); font-size: 1rem; background: var(--surface);
+}
+.num.natural { border-style: dashed; color: var(--ink-2); }
+
+/* hatchings */
+.drawing pattern circle, .drawing pattern ellipse { fill: var(--ink-2); }
+.drawing pattern path { stroke: var(--ink-2); stroke-width: 1; fill: none; }
+.fill { opacity: 0.8; animation: kd-fade 0.9s ease both; animation-delay: calc(500ms + var(--i, 0) * 170ms); }
+.f4 { opacity: 0.55; }
+@keyframes kd-fade { from { opacity: 0; } }
+
+/* outlines, drawn on */
+.line, .frame, .pit { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.frame { stroke-width: 2.2; }
+.line, .frame { animation: kd-draw 1.3s cubic-bezier(0.6, 0, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 170ms); }
+.pit { stroke: var(--accent); stroke-width: 2; animation: kd-draw 1.1s cubic-bezier(0.6, 0, 0.2, 1) 1.7s both; }
+@keyframes kd-draw { from { stroke-dashoffset: 1; } }
+.pitBg { fill: var(--surface); animation: kd-fade 0.6s ease 2.2s both; }
+.pitFill { opacity: 0.9; animation: kd-fade 0.6s ease 2.3s both; }
+.drawing pattern#kd-loose path { stroke: var(--accent); }
+
+/* the wall, the grave, the sherds */
+.objects { animation: kd-set 0.7s var(--ease) both; animation-delay: calc(700ms + var(--i, 0) * 170ms); }
+@keyframes kd-set { from { opacity: 0; transform: translateY(-6px); } }
+.stone { fill: var(--surface); stroke: var(--ink); stroke-width: 1.4; }
+.cut { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-dasharray: 6 4; }
+.pot { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.sherd { fill: var(--accent); }
+
+.datum { stroke: var(--ink-2); stroke-width: 1; stroke-dasharray: 10 6; }
+.datumMark { fill: var(--ink); }
+.scale path { stroke: var(--ink); stroke-width: 1.6; fill: none; }
+.note { font-family: var(--f-label); font-size: 15px; letter-spacing: 0.06em; fill: var(--ink-2); paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
+
+.ctx circle { fill: var(--surface); stroke: var(--ink); stroke-width: 1.6; transition: fill 0.2s; }
+.ctx text { font-family: var(--f-display); font-size: 17px; fill: var(--ink); pointer-events: none; }
+.ctx:hover circle, .ctx:focus-visible circle { fill: var(--accent); }
+.ctx:hover text, .ctx:focus-visible text { fill: var(--accent-ink); }
+.ctx { cursor: pointer; outline: none; }
+
+/* ------------------------------------------------ the trench: one band per layer, darker as you go down */
+.trench { position: relative; margin-top: 56px; }
+.layer {
+  --soil: color-mix(in srgb, var(--bg-2) calc(100% - var(--d, 0) * 8%), var(--ink-2));
+  position: relative; padding-block: 56px 60px; scroll-margin-top: 70px;
+  background:
+    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--ink) 10%, transparent) 0.8px, transparent 1.4px) 0 0 / 23px 19px,
+    radial-gradient(circle at 70% 60%, color-mix(in srgb, var(--surface) 25%, transparent) 0.8px, transparent 1.5px) 0 0 / 31px 27px,
+    var(--soil);
+}
+/* the boundary between two deposits is never straight */
+.layer::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -13px; height: 14px; background: var(--soil);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 14' preserveAspectRatio='none'%3E%3Cpath d='M0 14V8C30 2 55 12 90 7S150 1 185 8 225 10 240 6V14Z'/%3E%3C/svg%3E") 0 0 / 240px 14px repeat-x;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 14' preserveAspectRatio='none'%3E%3Cpath d='M0 14V8C30 2 55 12 90 7S150 1 185 8 225 10 240 6V14Z'/%3E%3C/svg%3E") 0 0 / 240px 14px repeat-x;
+}
+.layer.natural { --d: 4; padding-bottom: 80px; }
+.layerIn { display: grid; gap: 26px; }
+.layerHead { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start; }
+.layerHead h2 { font-size: var(--step-3); line-height: 1.05; }
+.blurb { max-width: 68ch; color: var(--ink-2); margin-top: 8px; }
+.ctxLabel {
+  width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; margin-top: 6px;
+  border: 2px solid var(--ink); background: var(--surface); font-family: var(--f-display); font-size: 1.6rem;
+  box-shadow: 0 8px 18px -12px var(--shadow);
+}
+.ctxNatural { border-style: dashed; color: var(--ink-2); }
+.soon { font-style: italic; color: var(--ink-2); padding-left: 72px; }
+
+/* entries: finds laid out on a tray */
+.finds { list-style: none; margin: 0; padding: 0 0 0 72px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.finds li { animation-delay: calc(var(--j, 0) * 70ms); }
+.card {
+  display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: center; height: 100%;
+  padding: 12px; text-decoration: none; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius);
+  box-shadow: 0 16px 28px -24px var(--shadow); transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.2s;
+}
+.card:hover { transform: translateY(-3px) rotate(-0.4deg); box-shadow: 0 22px 36px -24px var(--shadow); border-color: var(--ink-2); }
+.card:hover b { color: var(--accent); }
+.thumb { width: 104px; height: 104px; overflow: hidden; border-radius: var(--radius); background: var(--bg-2); display: grid; place-items: center; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb img.tallImg { object-fit: contain; padding: 4px; }
+.noImg { width: 60%; height: 60%; background: var(--ink-2); opacity: 0.35;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M6 30q8-12 20-9l-3 6q-9-2-13 7z'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M6 30q8-12 20-9l-3 6q-9-2-13 7z'/%3E%3C/svg%3E") center / contain no-repeat; }
+.cardText { display: grid; gap: 4px; }
+.cardText b { font-family: var(--f-display); font-weight: 400; font-size: 1.3rem; line-height: 1.1; transition: color 0.2s; }
+.cardText span { font-size: 0.93rem; color: var(--ink-2); }
+.cardText small { font-family: var(--f-label); letter-spacing: 0.05em; font-size: 0.78rem; color: var(--accent); }
+
+/* excavated sites: find labels, tied on with string */
+.sites { list-style: none; margin: 0; padding: 0 0 0 72px; display: flex; flex-wrap: wrap; gap: 14px 12px; }
+.sites a {
+  position: relative; display: grid; gap: 2px; padding: 10px 16px 10px 30px; text-decoration: none;
+  background: var(--white-slip); border: 1px solid var(--rule); border-radius: 3px 14px 14px 3px;
+  box-shadow: 0 10px 20px -16px var(--shadow); transition: transform 0.25s var(--ease);
+}
+.sites a::before { content: ""; position: absolute; left: 11px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; border: 1.5px solid var(--ink-2); background: var(--soil, var(--bg-2)); }
+.sites a:hover { transform: rotate(-2deg) translateY(-2px); }
+.sites b { font-family: var(--f-greek); font-weight: 400; font-size: 1.15rem; }
+.sites span { font-size: 0.9rem; }
+.sites small { font-family: var(--f-label); letter-spacing: 0.04em; font-size: 0.76rem; color: var(--ink-2); }
+
+/* ------------------------------------------------ the ranging pole */
+.poleRail { position: absolute; top: 0; bottom: 0; left: max(10px, calc((100vw - var(--maxw)) / 2 - 18px)); width: 14px; z-index: 2; pointer-events: none; }
+.pole {
+  --p: 0; position: sticky; top: 110px; height: min(58vh, 520px); width: 12px; border: 1px solid var(--ink); border-radius: 2px;
+  background: repeating-linear-gradient(180deg, var(--accent) 0 12.5%, var(--white-slip) 12.5% 25%);
+  box-shadow: 0 10px 20px -12px var(--shadow);
+}
+/* the marker: how far down the trench you have read */
+.poleMark {
+  position: absolute; left: -9px; top: calc(var(--p) * 100%); width: 30px; height: 2px; background: var(--ink);
+  transform: translateY(-1px); transition: top 0.12s linear;
+}
+.poleMark::after { content: ""; position: absolute; right: -8px; top: -5px; border: 6px solid transparent; border-left-color: var(--ink); }
+
+@media (max-width: 1120px) {
+  .poleRail { display: none; }
+}
+@media (max-width: 860px) {
+  .drawing { grid-template-columns: 1fr; }
+  .legend { grid-column: 1; grid-row: auto; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .finds, .sites, .soon { padding-left: 0; }
+  .ctxLabel { width: 42px; height: 42px; font-size: 1.3rem; }
+  .finds { grid-template-columns: 1fr; }
+  .card { grid-template-columns: 80px 1fr; }
+  .thumb { width: 80px; height: 80px; }
+}
