@@ -262,9 +262,10 @@
   - **Map follow-ups**: the 1,066 automatically matched places below the cut-off are unchecked (the map marks them); a later pass could check more by hand. Roads are not drawn yet (AWMC has them). A place's panel does not yet say "what happened there" (the brief): that needs written, sourced text per place, best done as Painted Stoa entries for the major places.
 
 ## Next steps
-1. The Census (`/stoa/census`). Its name counts per work are ready in `pipeline/.cache/map/names.json` (from `build_map.py`); people, gods and peoples still need sorting from places.
-2. Update README and this file; report to the owner in plain English.
-3. Phase 8 (Town Hall, the Pnyx, accounts) needs the owner's decisions first: which sign-in methods, and who moderates.
+1. The Census (`/stoa/census`, still a "coming" page). Its name counts per work are ready in `pipeline/.cache/map/names.json` (from `build_map.py`); people, gods and peoples still need sorting from places, and word counts can come from the Word Study index (`public/data/lexicon/`). Asked the owner on 2026-09-28 whether to count only names or also words and phrases (the brief asks for all); unless told otherwise, plan all of them, starting with people, gods and places. The brief's list: words, people, gods and heroes, places, peoples, objects, phrases; filters by author, work, genre, period; compare two authors; charts; each item linking to Word Study, the wiki, the map or Echoes; the counting method stated on the page.
+2. When the Census is done, Phase 7 is complete: update README and this file, and report to the owner in plain English.
+3. Possible later wiki work: more archaeology (looting and the antiquities trade, Akrotiri, Olympia, Vergina), pictures for melos, plague-of-athens, mytilene-debate and helots.
+4. Phase 8 (Town Hall, the Pnyx, accounts) needs the owner's decisions first: which sign-in methods, and who moderates.
 
 ## Review history
 - None yet.

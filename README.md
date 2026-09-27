@@ -63,6 +63,8 @@ Rebuilding the committed data, only when its sources change:
 | `python pipeline/build_core.py` | `core.json`: the DCC core vocabulary. |
 | `npx tsx scripts/build-abbrev.ts` | `abbrev.json`: abbreviations such as "Il." (needs the LSJ files). |
 | `python pipeline/fetch_hypotactic.py`, then `npx tsx scripts/build-metre.ts` | The metre data in `public/data/metre/` (also needs step 1). |
+| `python pipeline/build_map.py` | The Periplus map data in `public/data/map/`: the sea and lakes (AWMC geodata) and the places the texts name (Pleiades), plus every capitalised name with its count per work in `pipeline/.cache/map/names.json` for the Census (needs step 2). Hand-checked matches are in its `OVERRIDES` and `NOT_PLACES` tables. |
+| `npx tsx scripts/fetch-images.ts` | The wiki's pictures and their credits (`public/images/`, `src/data/images.json`) from the list in `scripts/images.list.json`. |
 | `npx tsx scripts/check-metre.ts` | Checks the site's scansion against the published scansions. |
 
 ## Where things live in `web/src`
@@ -80,6 +82,8 @@ Rebuilding the committed data, only when its sources change:
 - `public/sw.js` is the offline helper (service worker); `config/pages.ts` lists the pages it keeps; `lib/connection.ts` and `components/ConnectionLight.tsx` are the connection light and Reconnect.
 - `lib/float.ts` and `components/reader/FloatingReader.tsx` are the floating reader; `lib/resume.ts` and `components/Resume.tsx` remember where you left off.
 - `wiki/` is the Painted Stoa: `entries/` (one file per entry; list new ones in `index.ts`), `bibliography.ts` (every modern work cited, each with the link it was checked against), `markup.ts` (the entry text format) and the tests that check entries against the texts; `components/stoa/` draws them.
+- `wiki/kerameikos.ts` lists the archaeology section's layers and dig sites; `components/stoa/Kerameikos.tsx` draws it.
+- `lib/map.ts` and `components/map/Periplus.tsx` are the Periplus map; saved places show in the Treasury (`components/treasury/PlacesSection.tsx`).
 - `data/` holds hand-checked content: the alphabet, stroke order, lessons, tables of forms and passages of the day.
 
 ## Content rules
