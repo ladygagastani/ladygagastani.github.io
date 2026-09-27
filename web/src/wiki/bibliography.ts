@@ -286,4 +286,24 @@ export const BIB: Record<string, Secondary> = {
     author: "Spencer P. M. Harrington", title: "Behind the Mask of Agamemnon", year: 1999,
     publisher: "Archaeology 52.4 (July/August 1999)", checked: "https://archive.archaeology.org/9907/etc/mask.html",
   },
+  "renfrew-bahn": {
+    author: "Colin Renfrew and Paul Bahn", title: "Archaeology: Theories, Methods and Practice (8th edition)", year: 2020,
+    publisher: "London: Thames & Hudson", checked: "https://www.worldcat.org/title/archaeology-theories-methods-and-practice/oclc/1152052419",
+  },
+  "harris-stratigraphy": {
+    author: "Edward C. Harris", title: "Principles of Archaeological Stratigraphy", year: 1979,
+    publisher: "London and New York: Academic Press (2nd edition 1989)", checked: "https://harrismatrix.com/about-the-book/",
+  },
+  "stewart-2008": {
+    author: "Andrew Stewart", title: "The Persian and Carthaginian Invasions of 480 B.C.E. and the Beginning of the Classical Style: Part 1, The Stratigraphy, Chronology, and Significance of the Acropolis Deposits", year: 2008,
+    publisher: "American Journal of Archaeology 112, 377–412", checked: "https://ajaonline.org/article/240/",
+  },
+  "friedrich-2006": {
+    author: "Walter L. Friedrich, Bernd Kromer, Michael Friedrich, Jan Heinemeier and others", title: "Santorini Eruption Radiocarbon Dated to 1627–1600 B.C.", year: 2006,
+    publisher: "Science 312, 548", checked: "https://www.science.org/doi/10.1126/science.1125087",
+  },
+  "pearson-2018": {
+    author: "Charlotte L. Pearson and others", title: "Annual radiocarbon record indicates 16th century BCE date for the Thera eruption", year: 2018,
+    publisher: "Science Advances 4, eaar8241", checked: "https://www.science.org/doi/10.1126/sciadv.aar8241",
+  },
 };

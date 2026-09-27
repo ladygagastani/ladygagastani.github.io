@@ -21,7 +21,7 @@ export const LAYERS: Layer[] = [
   {
     id: "how", title: "How we know", deposit: "sherds in a clay layer",
     blurb: "Layers, broken pots, traces of paint, and the methods that turn them into dates and stories.",
-    slugs: ["black-and-red-figure", "painted-statues"],
+    slugs: ["reading-the-layers", "black-and-red-figure", "painted-statues"],
   },
   {
     id: "sites", title: "Great sites", deposit: "wall foundations",

@@ -306,5 +306,19 @@
   "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
   "source": "https://commons.wikimedia.org/wiki/File:Agamemnon_mask_NAMA_Athens_Greece.jpg",
   "sourceName": "Wikimedia Commons"
+ },
+ "geometric-krater": {
+  "file": "geometric-krater.jpg",
+  "width": 1600,
+  "height": 1978,
+  "alt": "A tall clay bowl on a high foot, painted in dark bands of zigzags and meanders. In the upper frieze a dead man lies on a bier under a checkered shroud, flanked by rows of stick-like mourners with their hands raised to their heads; below, a procession of horse-drawn chariots and warriors with hourglass-shaped shields.",
+  "title": "Attic Geometric krater attributed to the Hirschfeld Workshop, painted with a funeral",
+  "date": "c. 750–735 BC",
+  "place": "The Metropolitan Museum of Art, New York (14.130.14)",
+  "creator": "Hirschfeld Workshop",
+  "licence": "CC0",
+  "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "source": "https://www.metmuseum.org/art/collection/search/248904",
+  "sourceName": "The Metropolitan Museum of Art"
  }
 }
