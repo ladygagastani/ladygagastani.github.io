@@ -6,24 +6,14 @@ import PassageOfTheDay from "@/components/PassageOfTheDay";
 import OfflineActions from "@/components/OfflineActions";
 import { ContinueCard } from "@/components/Resume";
 import { AREAS, SITE } from "@/config/areas";
+import StoaCards, { type StoaCard } from "@/components/StoaCards";
+import { ENTRIES, categoryOf } from "@/wiki/index";
+import { inline, plain } from "@/wiki/markup";
 import styles from "./home.module.css";
 
-// From the Painted Stoa. Always includes a dark-side and an archaeology topic, as the brief asks.
-// Each card opens its full, sourced entry in the Painted Stoa.
-const STOA = [
-  {
-    cat: "The dark side", title: "The silver of Laurion", slug: "laurion",
-    text: "The silver that paid for Athens' fleet before the Persian invasion of 480 BC came from the mines at Laurion, worked largely by enslaved people in cramped underground galleries.",
-  },
-  {
-    cat: "Language", title: "Linear B", slug: "linear-b",
-    text: "In 1952 Michael Ventris showed that the clay tablets from Knossos and Pylos record an early form of Greek, written centuries before Homer.",
-  },
-  {
-    cat: "Democracy", title: "Ostracism", slug: "ostracism",
-    text: "Once a year the Athenian Assembly could vote to hold an ostracism. The man named on the most potsherds had to leave Athens for ten years.",
-  },
-];
+// From the Painted Stoa: each entry reduced to what a home-page card shows (its first sentences).
+const firstSentences = (t: string) => { let out = ""; for (const x of t.split(/(?<=[.!?])\s+/)) { if (out && (out + " " + x).length > 230) break; out = out ? `${out} ${x}` : x; } return out; };
+const STOA_CARDS: StoaCard[] = ENTRIES.map((e) => ({ slug: e.slug, title: e.title, cat: categoryOf(e.category).title, catId: e.category, text: firstSentences(plain(inline(e.hook))) }));
 
 export default function Home() {
   return (
@@ -90,17 +80,7 @@ export default function Home() {
             <div><span className="label">{AREAS.wiki.name} · {AREAS.wiki.english}</span><h2 id="stoa-title" className={styles.h2}>From the Painted Stoa</h2></div>
             <p className="muted">History, daily life, the strange and the brutal, told from the sources. Every entry says how sure we can be.</p>
           </div>
-          <div className={styles.cards}>
-            {STOA.map((c) => (
-              <Link key={c.title} href={`/stoa/${c.slug}`} className={`${styles.card} ${styles.cardLink} rv`} transitionTypes={["page-turn"]}>
-                <span className="label">{c.cat}</span>
-                <h3>{c.title}</h3>
-                <p>{c.text}</p>
-                <span className="tag well">Well established</span>
-                <span className={styles.cardGo}>Read the entry →</span>
-              </Link>
-            ))}
-          </div>
+          <StoaCards cards={STOA_CARDS} styles={styles} />
         </div>
       </section>
 
