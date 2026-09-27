@@ -47,7 +47,7 @@ const indexes = new WeakMap<WordPack, Map<string, Index>>();
  * which combination of them spells the references of the text on screen, by trying the likely
  * ones against the text's own references and keeping the best fit.
  */
-function indexFor(pack: WordPack, keys: Set<string>, depth: number): Index {
+export function indexFor(pack: WordPack, keys: Set<string>, depth: number): Index {
   const cacheKey = `${depth}:${keys.size}`;
   let m = indexes.get(pack);
   if (!m) indexes.set(pack, (m = new Map()));
@@ -63,11 +63,19 @@ function indexFor(pack: WordPack, keys: Set<string>, depth: number): Index {
   };
   grow([]);
   const sample = pack.units.filter((_, i) => i % Math.max(1, Math.floor(pack.units.length / 400)) === 0);
-  let best = recipes[0] ?? [], score = -1;
+  // Score each recipe by how many places it matches. Several can match equally well when GLAUx
+  // repeats the full reference at each level (book "1", chapter "1.1", section "1.1.1": book+chapter
+  // spells "1.1.1" too). Among equals, prefer the one that tells the most places apart.
+  let best = recipes[0] ?? [], score = -1, distinct = -1;
   for (const r of recipes) {
     let s = 0;
-    for (const u of sample) if (keys.has(r.map((i) => u[0][i]).join("."))) s++;
-    if (s > score) { score = s; best = r; }
+    const seen = new Set<string>();
+    for (const u of sample) {
+      const k = r.map((i) => u[0][i]).join(".");
+      seen.add(k);
+      if (keys.has(k)) s++;
+    }
+    if (s > score || (s === score && seen.size > distinct)) { score = s; best = r; distinct = seen.size; }
   }
   const byKey = new Map<string, number[]>();
   pack.units.forEach((u, i) => {

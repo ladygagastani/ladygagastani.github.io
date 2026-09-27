@@ -72,5 +72,5 @@ export function describe(t: CatText): string {
 
 /** Plain-text normalisation for searching: no accents, breathings or case; final sigma folded. */
 export function fold(s: string) {
-  return s.normalize("NFD").replace(/[̀-ͯ̓̔͂ͅ]/g, "").toLowerCase().replace(/ς/g, "σ");
+  return s.normalize("NFD").replace(/[̀-ͯ̓̔͂ͅ]/g, "").toLowerCase().replace(/[ςϲ]/g, "σ");
 }

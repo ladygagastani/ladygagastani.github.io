@@ -6,3 +6,4 @@ node_modules/
 pipeline/.cache/
 web/public/data/words/
 web/public/data/lsj/
+web/public/data/search/
