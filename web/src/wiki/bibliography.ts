@@ -205,4 +205,12 @@ export const BIB: Record<string, Secondary> = {
     author: "François Lissarrague, translated by Andrew Szegedy-Maszak", title: "The Aesthetics of the Greek Banquet: Images of Wine and Ritual", year: 1990,
     publisher: "Princeton: Princeton University Press", checked: "https://press.princeton.edu/books/hardcover/9780691633268/the-aesthetics-of-the-greek-banquet",
   },
+  "miller-athletics": {
+    author: "Stephen G. Miller", title: "Ancient Greek Athletics", year: 2004,
+    publisher: "New Haven: Yale University Press", checked: "https://bmcr.brynmawr.edu/2004/2004.12.10/",
+  },
+  "swaddling-olympic": {
+    author: "Judith Swaddling", title: "The Ancient Olympic Games (2nd edition)", year: 1999,
+    publisher: "London: British Museum Press", checked: "https://www.academia.edu/5153432/Review_of_Judith_Swaddling_The_Ancient_Olympic_Games_London_British_Museum_Press_1999",
+  },
 };
