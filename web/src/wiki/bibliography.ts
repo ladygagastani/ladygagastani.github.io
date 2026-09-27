@@ -89,4 +89,28 @@ export const BIB: Record<string, Secondary> = {
     author: "Paul Cartledge", title: "Sparta and Lakonia: A Regional History 1300–362 BC (2nd edition)", year: 2002,
     publisher: "London: Routledge", checked: "https://www.routledge.com/Sparta-and-Lakonia-A-Regional-History-1300-362-BC/Cartledge/p/book/9780415262767",
   },
+  "branham-cynics": {
+    author: "R. Bracht Branham and Marie-Odile Goulet-Cazé (eds.)", title: "The Cynics: The Cynic Movement in Antiquity and Its Legacy", year: 1996,
+    publisher: "Berkeley: University of California Press", checked: "https://philpapers.org/rec/BRATCT-8",
+  },
+  "desmond-cynics": {
+    author: "William Desmond", title: "Cynics", year: 2008,
+    publisher: "Stocksfield: Acumen", checked: "https://bmcr.brynmawr.edu/2009/2009.08.36/",
+  },
+  "scott-delphi": {
+    author: "Michael Scott", title: "Delphi: A History of the Center of the Ancient World", year: 2014,
+    publisher: "Princeton: Princeton University Press", checked: "https://press.princeton.edu/books/hardcover/9780691150819/delphi",
+  },
+  "fontenrose-delphic": {
+    author: "Joseph Fontenrose", title: "The Delphic Oracle: Its Responses and Operations, with a Catalogue of Responses", year: 1978,
+    publisher: "Berkeley: University of California Press", checked: "https://archive.org/details/delphicoracleits0000font_j9x3",
+  },
+  "deboer-hale-2001": {
+    author: "J. Z. de Boer, J. R. Hale and J. Chanton", title: "New evidence for the geological origins of the ancient Delphic oracle (Greece)", year: 2001,
+    publisher: "Geology 29, 707–710", checked: "https://pubs.geoscienceworld.org/gsa/geology/article-abstract/29/8/707/192089/New-evidence-for-the-geological-origins-of-the",
+  },
+  "foster-lehoux-2007": {
+    author: "J. Foster and D. Lehoux", title: "The Delphic oracle and the ethylene-intoxication hypothesis", year: 2007,
+    publisher: "Clinical Toxicology 45, 85–89", checked: "https://pubmed.ncbi.nlm.nih.gov/17357391/",
+  },
 };
