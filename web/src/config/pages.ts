@@ -3,6 +3,7 @@
  * this list from /offline.json). A test checks it against the pages in src/app.
  */
 import { LESSONS } from "@/data/lessons";
+import { ENTRIES } from "@/wiki/index";
 
 export const STATIC_PAGES = [
   "/", "/library", "/read", "/search", "/downloads", "/treasury", "/treasury/word",
@@ -14,7 +15,7 @@ export const STATIC_PAGES = [
 /** Pages that exist only while developing (the recording studio): never kept offline. */
 export const DEV_PAGES = ["/academy/studio"];
 
-export const offlinePages = () => [...STATIC_PAGES, ...LESSONS.map((l) => `/academy/lesson/${l.id}`)];
+export const offlinePages = () => [...STATIC_PAGES, ...LESSONS.map((l) => `/academy/lesson/${l.id}`), ...ENTRIES.map((e) => `/stoa/${e.slug}`)];
 
 /** Small data files every page may need, kept offline with the pages. */
 export const OFFLINE_DATA = [
