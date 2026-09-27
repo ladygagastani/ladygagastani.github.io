@@ -5,8 +5,12 @@
 import type { CategoryId, Entry } from "./types";
 import { CATEGORIES } from "./types";
 import melos from "./entries/melos";
+import ostracism from "./entries/ostracism";
+import laurion from "./entries/laurion";
+import linearB from "./entries/linear-b";
+import plague from "./entries/plague";
 
-export const ENTRIES: Entry[] = [melos];
+export const ENTRIES: Entry[] = [melos, ostracism, laurion, linearB, plague];
 
 export const entryBySlug = new Map(ENTRIES.map((e) => [e.slug, e]));
 export const entriesIn = (c: CategoryId) => ENTRIES.filter((e) => e.category === c).sort((a, b) => a.title.localeCompare(b.title));

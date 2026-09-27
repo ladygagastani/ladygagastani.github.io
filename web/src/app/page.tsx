@@ -9,18 +9,18 @@ import { AREAS, SITE } from "@/config/areas";
 import styles from "./home.module.css";
 
 // From the Painted Stoa. Always includes a dark-side and an archaeology topic, as the brief asks.
-// Each line was checked against standard reference works; full sourced entries arrive in Phase 7.
+// Each card opens its full, sourced entry in the Painted Stoa.
 const STOA = [
   {
-    cat: "The dark side", title: "The silver of Laurion",
+    cat: "The dark side", title: "The silver of Laurion", slug: "laurion",
     text: "The silver that paid for Athens' fleet before the Persian invasion of 480 BC came from the mines at Laurion, worked largely by enslaved people in cramped underground galleries.",
   },
   {
-    cat: "Archaeology", title: "Linear B",
+    cat: "Language", title: "Linear B", slug: "linear-b",
     text: "In 1952 Michael Ventris showed that the clay tablets from Knossos and Pylos record an early form of Greek, written centuries before Homer.",
   },
   {
-    cat: "Democracy", title: "Ostracism",
+    cat: "Democracy", title: "Ostracism", slug: "ostracism",
     text: "Once a year the Athenian Assembly could vote to hold an ostracism. The man named on the most potsherds had to leave Athens for ten years.",
   },
 ];
@@ -92,12 +92,13 @@ export default function Home() {
           </div>
           <div className={styles.cards}>
             {STOA.map((c) => (
-              <article key={c.title} className={`${styles.card} rv`}>
+              <Link key={c.title} href={`/stoa/${c.slug}`} className={`${styles.card} ${styles.cardLink} rv`} transitionTypes={["page-turn"]}>
                 <span className="label">{c.cat}</span>
                 <h3>{c.title}</h3>
                 <p>{c.text}</p>
                 <span className="tag well">Well established</span>
-              </article>
+                <span className={styles.cardGo}>Read the entry →</span>
+              </Link>
             ))}
           </div>
         </div>

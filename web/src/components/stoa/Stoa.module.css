@@ -100,7 +100,7 @@
 
 .quote { margin: 12px 0; padding: 26px clamp(18px, 4vw, 36px); background: var(--surface); border-top: 3px double var(--rule); border-bottom: 3px double var(--rule); display: grid; gap: 12px; position: relative; }
 .quote::before { content: "“"; position: absolute; top: -18px; left: 18px; font-family: var(--f-display); font-size: 4.5rem; line-height: 1; color: var(--accent); }
-.quoteGr { margin: 0; font-family: var(--f-greek); font-size: 1.45rem; line-height: 1.55; }
+.quoteGr { margin: 0; font-family: var(--f-greek); font-size: 1.45rem; line-height: 1.55; white-space: pre-line; }
 .quoteTr { margin: 0; font-style: italic; color: var(--ink-2); }
 .quote figcaption { font-family: var(--f-label); font-size: 0.88rem; letter-spacing: 0.04em; color: var(--ink-2); }
 .quote figcaption a { color: var(--accent); text-decoration: none; }

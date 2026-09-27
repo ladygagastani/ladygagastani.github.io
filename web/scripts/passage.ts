@@ -5,6 +5,7 @@
  *   npx tsx scripts/passage.ts tlg0003.tlg001 5.89            the default edition and translation
  *   npx tsx scripts/passage.ts tlg0003.tlg001 5.89 5.90       a range
  *   npx tsx scripts/passage.ts find <author or title words>   work ids matching a name
+ *   npx tsx scripts/passage.ts refs <work> [prefix]           the references under a prefix
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -20,7 +21,12 @@ const text = (bs: Block[]) => bs.map((b) => b.c.map((x) => (typeof x === "string
 const load = (t: CatText) => { const f = join(CORPUS, t.col, t.path); return existsSync(f) ? parseTei(readFileSync(f, "utf8")) : null; };
 
 const [a, b, c] = process.argv.slice(2);
-if (a === "find") {
+if (a === "refs") {
+  // the references a work's default edition has under a prefix: npx tsx scripts/passage.ts refs tlg0007.tlg024 7
+  const w = idx.work.get(b)!;
+  const g = load(greekEditions(w).find((t) => t.col === "perseus") ?? greekEditions(w)[0])!;
+  console.log(g.units.map((u) => u.ref.join(".")).filter((r) => !c || r === c || r.startsWith(c + ".")).join(" "));
+} else if (a === "find") {
   const q = process.argv.slice(3).join(" ").toLowerCase();
   for (const au of idx.catalog.authors) for (const w of au.works) {
     if (`${au.name} ${w.title}`.toLowerCase().includes(q)) console.log(w.id, "|", au.name, "|", w.title, "|", w.texts.map((t) => versionOf(t.urn)).join(", "));
@@ -33,6 +39,7 @@ if (a === "find") {
   const g = load(ed);
   if (!g) throw new Error(`${ed.path} is not in the local corpus`);
   const i = findRef(g, b), j = findRef(g, c ?? b);
+  if (j < 0) throw new Error(`no passage ${c} (end)`);
   if (i < 0) throw new Error(`no passage ${b} in ${versionOf(ed.urn)} (levels ${g.levels.join(".")}, first refs ${g.units.slice(0, 3).map((u) => u.ref.join(".")).join(" ")})`);
   let end = j;
   const toKey = g.units[j].ref.join(".");
