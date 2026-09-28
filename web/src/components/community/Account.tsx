@@ -91,17 +91,17 @@ function SignIn({ next }: { next: string | null }) {
         {mode === "join" && (
           <label>
             <span>Display name <small>shown beside what you write; 2–40 characters</small></span>
-            <input value={name} onChange={(e) => setName(e.target.value)} required minLength={2} maxLength={40} autoComplete="nickname" />
+            <input aria-label="Display name" value={name} onChange={(e) => setName(e.target.value)} required minLength={2} maxLength={40} autoComplete="nickname" />
           </label>
         )}
         <label>
           <span>Email address {mode === "join" && <small>never shown to anyone</small>}</span>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
+          <input type="email" aria-label="Email address" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
         </label>
         {mode !== "forgot" && (
           <label>
             <span>Password {mode === "join" && <small>at least 10 characters</small>}</span>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={mode === "join" ? 10 : 1}
+            <input type="password" aria-label="Password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={mode === "join" ? 10 : 1}
               autoComplete={mode === "join" ? "new-password" : "current-password"} />
           </label>
         )}
@@ -141,7 +141,7 @@ function NewPassword({ onDone }: { onDone: () => void }) {
         if (error) setError(problem(error)); else onDone();
       }}>
         <label><span>New password <small>at least 10 characters</small></span>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={10} autoComplete="new-password" /></label>
+          <input type="password" aria-label="New password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={10} autoComplete="new-password" /></label>
         {error && <p className={styles.error} role="alert">{error}</p>}
         <button type="submit" className="btn" disabled={busy}>{busy ? "One moment…" : "Save the new password"}</button>
       </form>
@@ -168,9 +168,9 @@ function ProfileCard({ email, onSaved }: { email: string; onSaved: () => Promise
         try { await updateProfile(profile.id, { display_name: name.trim(), bio }); await onSaved(); setMsg("Saved."); }
         catch (err) { const m = problem(err); setError(/duplicate|unique/i.test(m) ? "Someone already uses that display name." : m); }
       }}>
-        <label><span>Display name</span><input value={name} onChange={(e) => setName(e.target.value)} required minLength={2} maxLength={40} /></label>
+        <label><span>Display name</span><input aria-label="Display name" value={name} onChange={(e) => setName(e.target.value)} required minLength={2} maxLength={40} /></label>
         <label><span>About you <small>optional, up to 500 characters; shown on your page</small></span>
-          <textarea value={bio} onChange={(e) => setBio(e.target.value)} maxLength={500} rows={3} /></label>
+          <textarea aria-label="About you" value={bio} onChange={(e) => setBio(e.target.value)} maxLength={500} rows={3} /></label>
         {error && <p className={styles.error} role="alert">{error}</p>}
         {msg && <p className={styles.ok} role="status">{msg}</p>}
         <div className={styles.row}>
@@ -199,7 +199,7 @@ function DeleteAccount() {
       if (error) { setError(problem(error)); return; }
       await supabase().auth.signOut();
     }}>
-      <label><span>Type DELETE to confirm</span><input value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete="off" /></label>
+      <label><span>Type DELETE to confirm</span><input aria-label="Type DELETE to confirm" value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete="off" /></label>
       {error && <p className={styles.error} role="alert">{error}</p>}
       <button type="submit" className="btn ghost" disabled={typed !== "DELETE"}>Delete my account for ever</button>
     </form>

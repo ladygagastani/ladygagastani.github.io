@@ -113,7 +113,7 @@ export function ReportButton({ kind, id }: { kind: "thread" | "post" | "argument
           try { await report(kind, id, reason.trim()); setState("done"); } catch (err) { setError(problem(err)); setState("idle"); }
         }}>
           <label><span>What is wrong? Only the moderator sees this.</span>
-            <input value={reason} onChange={(e) => setReason(e.target.value)} required minLength={3} maxLength={1000} /></label>
+            <input aria-label="What is wrong?" value={reason} onChange={(e) => setReason(e.target.value)} required minLength={3} maxLength={1000} /></label>
           {error && <p className={styles.error}>{error}</p>}
           <button type="submit" className="chip" disabled={state === "busy"}>Send to the moderator</button>
         </form>
@@ -168,7 +168,7 @@ export function HideButton({ hidden, onChange }: { hidden: boolean; onChange: (h
       {open && (
         <form className={styles.reportForm} onSubmit={(e) => { e.preventDefault(); run(true, reason.trim() || null); }}>
           <label><span>Why is it hidden? Optional; shown to the author.</span>
-            <input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} autoFocus /></label>
+            <input aria-label="Why is it hidden?" value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} autoFocus /></label>
           <span className={styles.askRow}>
             <button type="submit" className="chip" disabled={busy}>Hide it</button>
             <button type="button" className={styles.linkBtn} onClick={() => setOpen(false)}>Cancel</button>

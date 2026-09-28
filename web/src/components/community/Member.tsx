@@ -73,8 +73,8 @@ function BanControls({ p, onDone }: { p: PublicProfile; onDone: () => Promise<vo
           e.preventDefault();
           try { await ban(p.id, new Date(Date.now() + days * 86400000).toISOString(), reason.trim() || null); await onDone(); } catch (err) { setError(problem(err)); }
         }}>
-          <label>Pause writing for <input type="number" min={1} max={3650} value={days} onChange={(e) => setDays(+e.target.value)} /> days</label>
-          <label>Reason (shown to them) <input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={300} /></label>
+          <label>Pause writing for <input type="number" aria-label="Days to pause writing" min={1} max={3650} value={days} onChange={(e) => setDays(+e.target.value)} /> days</label>
+          <label>Reason (shown to them) <input aria-label="Reason (shown to them)" value={reason} onChange={(e) => setReason(e.target.value)} maxLength={300} /></label>
           <button type="submit" className={styles.modBtn}>Pause</button>
         </form>
       )}
