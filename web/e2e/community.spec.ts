@@ -24,7 +24,7 @@ test("the account page offers to join with a display name", async ({ page }) => 
   await page.getByRole("tab", { name: "Join" }).click();
   await expect(page.getByLabel(/Display name/)).toBeVisible();
   await expect(page.getByLabel(/Password/)).toHaveAttribute("minlength", "10");
-  await expect(page.getByRole("link", { name: "Privacy" })).toHaveAttribute("href", "/credits#privacy");
+  await expect(page.getByRole("link", { name: "Privacy", exact: true })).toHaveAttribute("href", "/credits#privacy");
 });
 
 test("a wiki entry offers to debate it in the Pnyx", async ({ page }) => {
