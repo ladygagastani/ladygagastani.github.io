@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { loadCatalog, fold, greekEditions, hasTranslation, type CatalogIndex, type CatAuthor, type CatWork } from "@/lib/catalog";
 import { loadWorksMeta, FAMILIES, PERIODS, familyOf, periodOf, centuries, type WorkMeta } from "@/lib/works-meta";
 import { commonShare, loadDifficulty, VOCAB_BANDS } from "@/lib/difficulty";
@@ -95,7 +95,15 @@ export default function Library() {
     english: authors.reduce((n, a) => n + a.works.filter(hasTranslation).length, 0),
   }), [authors]);
 
-  const pick = (id: string) => router.replace(`/library?a=${id}`, { scroll: false });
+  // on narrow screens the works appear below the list of authors, so a tap brings them into view
+  const tapped = useRef(false);
+  const detailRef = useRef<HTMLDivElement>(null);
+  const pick = (id: string) => { tapped.current = true; router.replace(`/library?a=${id}`, { scroll: false }); };
+  useEffect(() => {
+    if (!tapped.current || !author) return;
+    tapped.current = false;
+    if (matchMedia("(max-width: 980px)").matches) detailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [author]);
 
   // keep the chosen author visible in the list (for example when arriving from the reader)
   useEffect(() => {
@@ -167,7 +175,7 @@ export default function Library() {
             </select>
           </label>
           {filtering && <button type="button" className="chip" onClick={() => { setFamily(""); setPeriod(""); setDialect(""); setVocab(""); }}>Clear filters</button>}
-          <p className={styles.small}>Vocabulary is the share of a text's running words that are among the 516 core words, the commonest in Greek (the Dickinson College Commentaries core list, counted over the GLAUx analysis; texts under 2,000 words are not rated). It measures words only, not grammar, dialect or how hard the ideas are: Aristotle's words are common, his arguments are not. Genre, period and dialect come from the GLAUx corpus and cover {Object.keys(meta).length.toLocaleString("en-GB")} works; dates are by century.</p>
+          <p className={styles.small}>Vocabulary is the share of a text&apos;s running words that are among the 516 core words, the commonest in Greek (the Dickinson College Commentaries core list, counted over the GLAUx analysis; texts under 2,000 words are not rated). It measures words only, not grammar, dialect or how hard the ideas are: Aristotle&apos;s words are common, his arguments are not. Genre, period and dialect come from the GLAUx corpus and cover {Object.keys(meta).length.toLocaleString("en-GB")} works; dates are by century.</p>
         </div>
 
         {matches ? (
@@ -189,7 +197,7 @@ export default function Library() {
                 ))}
               </ul>
             </nav>
-            <div className={styles.detail} aria-live="polite">
+            <div ref={detailRef} className={styles.detail} aria-live="polite">
               {author ? (
                 <>
                   <h3>{author.name}</h3>

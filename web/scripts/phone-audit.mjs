@@ -14,6 +14,16 @@ for (const path of paths) {
     const visible = (e) => { const r = e.getBoundingClientRect(); const cs = getComputedStyle(e); return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.display !== "none"; };
     const inScroller = (e) => { for (let a = e.parentElement; a; a = a.parentElement) { const o = getComputedStyle(a).overflowX; if ((o === "auto" || o === "scroll" || o === "hidden") && a.scrollWidth > a.clientWidth) return true; } return false; };
     const wide = [...document.querySelectorAll("body *")].filter((e) => visible(e) && e.getBoundingClientRect().right > W + 1 && !inScroller(e)).slice(0, 6).map(desc);
+    // body hides sideways overflow, so also look for anything spilling past its page column (.wrap) into the margin
+    const clipped = (e, stop) => { for (let a = e.parentElement; a && a !== stop; a = a.parentElement) if (getComputedStyle(a).overflowX !== "visible") return true; return false; };
+    const spill = [];
+    for (const e of document.querySelectorAll(".wrap *")) {
+      if ((e instanceof SVGElement && e.ownerSVGElement) || !visible(e) || /absolute|fixed/.test(getComputedStyle(e).position) || spill.some((s) => s.contains(e))) continue;
+      const w = e.closest(".wrap"), wr = w.getBoundingClientRect(), cs = getComputedStyle(w), r = e.getBoundingClientRect();
+      const out = r.right > wr.right - parseFloat(cs.paddingRight) + 1.5 || r.left < wr.left + parseFloat(cs.paddingLeft) - 1.5;
+      if (out && !clipped(e, w) && !e.closest("header")) spill.push(e);  // the header's menu reaches into the margin on purpose
+    }
+    wide.push(...spill.slice(0, 6).map((e) => `${desc(e)} (into the margin)`));
     const small = [...document.querySelectorAll("a[href], button, input:not([type=hidden]), select, textarea, [role=button], [role=tab]")]
       .filter((e) => visible(e) && !e.closest("[data-decorative]")).filter((e) => { const r = e.getBoundingClientRect(); return r.height < 24 || r.width < 24; })
       // an inline link inside a sentence is exempt, as WCAG allows

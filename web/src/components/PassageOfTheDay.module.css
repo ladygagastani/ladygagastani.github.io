@@ -24,7 +24,7 @@
   .scholia { grid-column: auto; border-top: 0; padding-top: 0; border-left: 1px solid var(--accent); padding-left: 16px; }
 }
 @media (max-width: 900px) {
-  .reading { grid-template-columns: 1fr; }
+  .reading { grid-template-columns: minmax(0, 1fr); }
   .eng { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 16px; }
 }
 

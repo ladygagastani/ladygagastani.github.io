@@ -46,7 +46,7 @@
 .attached { display: grid; gap: 6px; justify-items: start; }
 
 /* ------------------------------------------------ the Town Hall */
-.hall { display: grid; gap: 22px; padding-bottom: 72px; }
+.hall { display: grid; gap: 22px; padding-top: clamp(24px, 4vw, 36px); padding-bottom: 72px; }
 .featured {
   display: grid; gap: 4px; padding: 16px 20px; text-decoration: none; color: var(--bg); background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink);
   border-radius: var(--radius); box-shadow: 0 18px 30px -24px var(--shadow); position: relative; overflow: hidden;
@@ -171,7 +171,7 @@
 .modPanel form { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
 
 /* ------------------------------------------------ the Pnyx */
-.pnyx { display: grid; gap: 24px; padding-bottom: 72px; }
+.pnyx { display: grid; gap: 24px; padding-top: clamp(24px, 4vw, 36px); padding-bottom: 72px; }
 .motionHero {
   display: grid; gap: 8px; padding: clamp(22px, 4vw, 40px); text-decoration: none; color: var(--ink);
   background: var(--surface); border: 1.5px solid var(--ink); border-radius: var(--radius); text-align: center;
@@ -226,7 +226,7 @@
 @media (max-width: 760px) {
   .threads li { grid-template-columns: 44px 1fr; }
   .threadReplies { grid-column: 2; justify-items: start; grid-auto-flow: column; gap: 6px; }
-  .sides { grid-template-columns: 1fr; }
+  .sides { grid-template-columns: minmax(0, 1fr); }
   .headRow { grid-template-columns: 40px 1fr; gap: 10px; }
 }
 

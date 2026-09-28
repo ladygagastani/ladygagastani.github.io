@@ -143,11 +143,11 @@
   .poleRail { display: none; }
 }
 @media (max-width: 860px) {
-  .drawing { grid-template-columns: 1fr; }
+  .drawing { grid-template-columns: minmax(0, 1fr); }
   .legend { grid-column: 1; grid-row: auto; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
   .finds, .sites, .soon { padding-left: 0; }
   .ctxLabel { width: 42px; height: 42px; font-size: 1.3rem; }
-  .finds { grid-template-columns: 1fr; }
+  .finds { grid-template-columns: minmax(0, 1fr); }
   .card { grid-template-columns: 80px 1fr; }
   .thumb { width: 80px; height: 80px; }
 }

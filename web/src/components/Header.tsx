@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AREAS, NAV, SITE } from "@/config/areas";
 import { useSettings } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
@@ -63,6 +63,30 @@ export default function Header() {
   // a new page starts with the header showing
   useEffect(() => { showRef.current?.(); }, [pathname]);
 
+  // On narrow screens the menu scrolls sideways: show which side has more, and keep the current area in view.
+  const navRef = useRef<HTMLElement>(null);
+  const [more, setMore] = useState({ left: false, right: false });
+  useEffect(() => {
+    const n = navRef.current;
+    if (!n) return;
+    const update = () => {
+      const left = n.scrollLeft > 2, right = n.scrollLeft + n.clientWidth < n.scrollWidth - 2;
+      setMore((m) => (m.left === left && m.right === right ? m : { left, right }));
+    };
+    update();
+    n.addEventListener("scroll", update, { passive: true });
+    const ro = new ResizeObserver(update);
+    ro.observe(n);
+    return () => { n.removeEventListener("scroll", update); ro.disconnect(); };
+  }, []);
+  useEffect(() => {
+    const n = navRef.current, a = n?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!n || !a || n.scrollWidth <= n.clientWidth) return;
+    const x = a.getBoundingClientRect().left - n.getBoundingClientRect().left + n.scrollLeft;
+    n.scrollTo({ left: x - (n.clientWidth - a.offsetWidth) / 2 });
+  }, [pathname]);
+  const scrollMenu = () => navRef.current?.scrollBy({ left: navRef.current.clientWidth * 0.6, behavior: "smooth" });
+
   const toggleTheme = () => {
     const dark = theme === "dark" || (theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
     setSettings({ theme: dark ? "light" : "dark" });
@@ -76,7 +100,8 @@ export default function Header() {
           <span className={styles.brandEn}>{SITE.latin}</span>
         </Link>
 
-        <nav className={styles.areas} aria-label="Areas of the site">
+        <div className={styles.areasWrap} data-more-left={more.left || undefined} data-more-right={more.right || undefined}>
+        <nav ref={navRef} className={styles.areas} aria-label="Areas of the site">
           {NAV.map((id) => {
             const a = AREAS[id];
             const active = isActive(pathname, a.href);
@@ -88,6 +113,11 @@ export default function Header() {
             );
           })}
         </nav>
+        {/* a pointer and touch hint only: keyboard users reach every area by Tab, which scrolls it into view */}
+        <button type="button" className={styles.areasMore} onClick={scrollMenu} tabIndex={-1} aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m9 6 6 6-6 6" /></svg>
+        </button>
+        </div>
 
         <div className={styles.tools}>
           <ConnectionLight />

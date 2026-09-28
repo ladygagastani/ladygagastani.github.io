@@ -133,7 +133,7 @@ export default function ScrollCase() {
         <fieldset className={styles.fs}>
           <legend className="label">Collections</legend>
           {COLLECTIONS.map((c) => (
-            <label key={c.id} className={styles.check}><input type="checkbox" checked={cols.includes(c.id)} onChange={() => setCols(toggle(cols, c.id))} /> {c.name} <span className="muted">— {c.description}</span></label>
+            <label key={c.id} className={styles.check}><input type="checkbox" checked={cols.includes(c.id)} onChange={() => setCols(toggle(cols, c.id))} /> <span>{c.name} <span className="muted">— {c.description}</span></span></label>
           ))}
         </fieldset>
 
@@ -158,7 +158,7 @@ export default function ScrollCase() {
               <ul>
                 {authors.map((a) => (
                   <li key={a.id}><label className={styles.check}><input type="checkbox" checked={picked.has(a.id)}
-                    onChange={() => setPicked((p) => { const n = new Set(p); if (n.has(a.id)) n.delete(a.id); else n.add(a.id); return n; })} /> {a.name} <span className="muted">({a.works.length})</span></label></li>
+                    onChange={() => setPicked((p) => { const n = new Set(p); if (n.has(a.id)) n.delete(a.id); else n.add(a.id); return n; })} /> <span>{a.name} <span className="muted">({a.works.length})</span></span></label></li>
                 ))}
               </ul>
               <p className={styles.small}>{picked.size} chosen</p>
@@ -169,16 +169,16 @@ export default function ScrollCase() {
         <fieldset className={styles.fs}>
           <legend className="label">Where to keep them</legend>
           <div className={styles.row}>
-            <label className={styles.check}><input type="radio" name="where" checked={where === "browser"} onChange={() => setWhere("browser")} /> In this browser <span className="muted">— simplest; nothing to manage</span></label>
-            <label className={styles.check}><input type="radio" name="where" checked={where === "folder"} disabled={!s.supportsFolders} onChange={() => setWhere("folder")} /> In a folder on this computer <span className="muted">— survives clearing browser data (Chrome and Edge)</span></label>
+            <label className={styles.check}><input type="radio" name="where" checked={where === "browser"} onChange={() => setWhere("browser")} /> <span>In this browser <span className="muted">— simplest; nothing to manage</span></span></label>
+            <label className={styles.check}><input type="radio" name="where" checked={where === "folder"} disabled={!s.supportsFolders} onChange={() => setWhere("folder")} /> <span>In a folder on this computer <span className="muted">— survives clearing browser data (Chrome and Edge)</span></span></label>
           </div>
         </fieldset>
 
         <fieldset className={styles.fs}>
           <legend className="label">Word look-ups</legend>
           <label className={styles.check}><input type="checkbox" checked={lookups} onChange={() => setLookups(!lookups)} />
-            Also save the word analyses for these works, the LSJ dictionary and the Word Study index, so looking up and studying words work offline
-            <span className="muted">{lookupBytes !== null ? ` — about ${mb(transferEstimate(lookupBytes))} to download` : ""}</span></label>
+            <span>Also save the word analyses for these works, the LSJ dictionary and the Word Study index, so looking up and studying words work offline
+            <span className="muted">{lookupBytes !== null ? ` — about ${mb(transferEstimate(lookupBytes))} to download` : ""}</span></span></label>
           <p className={styles.small}>These are kept in this browser, whichever place you choose for the texts.</p>
         </fieldset>
 

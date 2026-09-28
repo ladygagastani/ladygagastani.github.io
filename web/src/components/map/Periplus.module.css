@@ -20,7 +20,7 @@
     --map-name: #EDCBA0; --map-halo: #2A1F18; --map-sea-name: #C8703A;
   }
 }
-@media (max-width: 980px) { .layout { grid-template-columns: 1fr; } }
+@media (max-width: 980px) { .layout { grid-template-columns: minmax(0, 1fr); } }
 
 .mapCol { display: grid; gap: 12px; min-width: 0; }
 .stage {
@@ -29,6 +29,8 @@
   background: var(--map-land); animation: unroll 0.9s var(--ease) both;
 }
 .stage:active { cursor: grabbing; }
+/* phones: the map takes every drag on it, so it leaves room above and below where a finger scrolls the page */
+@media (pointer: coarse) and (max-width: 760px) { .stage { height: 58vh; height: 58svh; min-height: 340px; } }
 .stage:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 @keyframes unroll { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
 .svg { display: block; user-select: none; }

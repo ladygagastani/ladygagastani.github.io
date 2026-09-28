@@ -17,11 +17,11 @@
 .fs { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; }
 .fs legend { margin-bottom: 6px; }
 .check { display: inline-flex; gap: 8px; align-items: baseline; cursor: pointer; }
-.check input { accent-color: var(--accent); }
+.check input { accent-color: var(--accent); flex: none; align-self: flex-start; margin-top: 0.3em; }
 .picker { display: grid; gap: 8px; }
 .picker input[type="search"] { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: var(--radius); padding: 8px 12px; max-width: 360px; }
 .picker ul { list-style: none; margin: 0; padding: 8px 12px; max-height: 260px; overflow-y: auto; columns: 3 220px; background: var(--bg); border: 1px solid var(--rule); }
 .picker li { break-inside: avoid; }
 .go { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding-top: 16px; border-top: 3px double var(--rule); }
 
-@media (max-width: 800px) { .haveGrid { grid-template-columns: 1fr; } }
+@media (max-width: 800px) { .haveGrid { grid-template-columns: minmax(0, 1fr); } }

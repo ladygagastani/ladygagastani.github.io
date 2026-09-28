@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LETTERS, DIPHTHONGS, SYSTEMS, ALLEN, type System } from "@/data/alphabet";
 import { coreWords, type CoreEntry } from "@/lib/lookup/core";
 import { fold } from "@/lib/catalog";
@@ -45,6 +45,14 @@ export default function Alphabet() {
     });
   }, []);
 
+  // on a phone the letter's details are below the whole grid: bring them into view
+  const detailRef = useRef<HTMLElement>(null);
+  const pick = (i: number) => {
+    setSel(i);
+    const d = detailRef.current;
+    if (d && d.getBoundingClientRect().top > innerHeight * 0.6) d.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const L = LETTERS[sel];
   const sound = L.sounds[pron];
   const ex = examples[L.name];
@@ -55,7 +63,7 @@ export default function Alphabet() {
 
       <div className={styles.alphaGrid} role="listbox" aria-label="The 24 letters">
         {LETTERS.map((x, i) => (
-          <button key={x.name} type="button" role="option" aria-selected={i === sel} onClick={() => setSel(i)}
+          <button key={x.name} type="button" role="option" aria-selected={i === sel} onClick={() => pick(i)}
             className={`${styles.tile} ${x.vowel ? styles.vowelTile : ""}`}>
             <span className={styles.tileGlyph} lang="grc">{x.upper}{x.lower}{x.final ?? ""}</span>
             <span className={styles.tileName}>{x.name}</span>
@@ -64,7 +72,7 @@ export default function Alphabet() {
       </div>
       <p className={styles.small}><span className={styles.vowelKey} /> vowels (7): α ε η ι ο υ ω</p>
 
-      <section className={styles.detail} aria-live="polite">
+      <section ref={detailRef} className={styles.detail} aria-live="polite">
         <div className={styles.detailDraw}>
           <StrokeLetter key={`${L.name}-${caps}`} letter={caps ? L.upper : L.lower} />
           <div className={styles.seg} role="radiogroup" aria-label="Letter form">

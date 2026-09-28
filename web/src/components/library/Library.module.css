@@ -34,6 +34,7 @@
 .authors small { color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .authors button[aria-current="true"] small { color: inherit; opacity: 0.7; }
 
+.detail { scroll-margin-top: calc(var(--hdr-vis) + 16px); }
 .detail h3 { font-size: clamp(1.8rem, 3vw, 2.4rem); }
 .detail h3::first-letter { color: var(--accent); }
 .empty { padding: 48px 0; display: grid; gap: 8px; }
@@ -58,8 +59,8 @@
 .results { display: grid; gap: 4px; }
 
 @media (max-width: 980px) {
-  .start { grid-template-columns: 1fr; }
-  .browse { grid-template-columns: 1fr; }
+  .start { grid-template-columns: minmax(0, 1fr); }
+  .browse { grid-template-columns: minmax(0, 1fr); }
   .authors { position: static; max-height: 280px; }
 }
 
@@ -69,3 +70,10 @@
 .small { flex-basis: 100%; font-size: 0.8rem; color: var(--ink-2); }
 .genre { font-size: 0.82rem; color: var(--ink-2); }
 @media (max-width: 700px) { .genre { display: none; } }
+/* on a phone the filters line up in an even two-column grid instead of ragged widths */
+@media (max-width: 560px) {
+  .filters { display: grid; grid-template-columns: 1fr 1fr; }
+  .filters select { width: 100%; min-width: 0; }
+  .filters .small { grid-column: 1 / -1; }
+  .filters > :global(.chip) { justify-self: start; }
+}

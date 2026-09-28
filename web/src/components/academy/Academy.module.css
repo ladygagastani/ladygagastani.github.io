@@ -1,9 +1,11 @@
 /* The Academy: learning pages in the Black-Figure style */
 .small { font-size: 0.85rem; color: var(--ink-2); }
 .inlineGr { font-family: var(--f-greek); font-size: 1.15em; }
-.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: var(--radius); }
-.seg button { background: transparent; border: 0; padding: 8px 12px; font-size: 0.9rem; }
-.seg button + button { border-left: 1px solid var(--rule); }
+/* when the choices wrap onto a second row (phones), every button keeps a dividing line above and to its left:
+   each draws its own, laid over the frame's edge by the -1px margins */
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
+.seg button { flex: 1 1 auto; margin: -1px 0 0 -1px; background: transparent; border: 0; box-shadow: inset 1px 1px 0 var(--rule); padding: 9px 12px; font-size: 0.9rem; }
+.seg button:focus-visible { outline-offset: -4px; }  /* the frame clips anything outside it */
 .seg button[aria-checked="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
 
 /* stroke drawing */
@@ -39,8 +41,15 @@
 .vowelKey { display: inline-block; width: 22px; height: 3px; background: var(--accent); vertical-align: middle; }
 .tileGlyph { font-family: var(--f-greek); font-size: 1.8rem; line-height: 1.1; }
 .tileName { font-family: var(--f-label); font-size: 0.8rem; letter-spacing: 0.05em; }
+@media (max-width: 480px) {
+  .alphaGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .tile { padding: 10px 2px; }
+  .tileGlyph { font-size: 1.55rem; }
+  .tileName { font-size: 0.72rem; letter-spacing: 0.02em; }
+}
 
 .detail {
+  scroll-margin-top: calc(var(--hdr-vis) + 12px);
   display: grid; grid-template-columns: auto 1fr; gap: clamp(20px, 4vw, 48px); align-items: start;
   padding: clamp(20px, 3vw, 36px); background: var(--surface); border-top: 3px double var(--rule); border-bottom: 3px double var(--rule);
 }
@@ -62,7 +71,7 @@
 .diph th { font-family: var(--f-label); font-weight: 500; font-size: 0.85rem; text-align: left; color: var(--ink-2); padding: 6px 8px; border-bottom: 3px double var(--rule); }
 .diph td { padding: 10px 8px; border-bottom: 1px solid color-mix(in srgb, var(--rule) 45%, transparent); vertical-align: top; }
 
-@media (max-width: 760px) { .detail { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .detail { grid-template-columns: minmax(0, 1fr); } }
 
 /* academy hub */
 .hub { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; }  /* five cards: one row wide, none left alone below */
@@ -98,6 +107,13 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 .pathGr { font-family: var(--f-greek); color: var(--ink-2); margin-left: 6px; }
 .pathAbout { display: block; color: var(--ink-2); font-size: 0.95rem; }
 .pathMin { font-family: var(--f-label); font-size: 0.85rem; color: var(--ink-2); }
+/* phones: the lesson title gets the width; the time goes under the summary */
+@media (max-width: 560px) {
+  .pathItem { grid-template-columns: 32px minmax(0, 1fr); gap: 4px 12px; align-items: start; padding: 14px 4px; }
+  .pathNo { font-size: 1.6rem; line-height: 1.2; }
+  .pathMin { grid-column: 2; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
+}
 .cardGr { font-family: var(--f-greek); color: var(--accent); font-size: 1.1rem; }
 .progress { display: grid; grid-template-columns: auto 1fr; gap: 20px 40px; align-items: center; padding: clamp(18px, 3vw, 28px); background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: var(--radius); }
 .stats { display: flex; flex-wrap: wrap; gap: 12px 32px; }
@@ -108,7 +124,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 .nextStep { display: grid; gap: 6px; }
 .nextStep a { color: inherit; font-weight: 600; text-decoration-color: var(--accent); text-underline-offset: 3px; }
 .nextStep :global(.muted) { color: color-mix(in srgb, var(--bg) 70%, var(--ink)); }
-@media (max-width: 760px) { .progress { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .progress { grid-template-columns: minmax(0, 1fr); } }
 
 /* lessons */
 .lesson { display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px; }
@@ -144,7 +160,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 .realGr [data-quote] { background: color-mix(in srgb, var(--accent) 18%, transparent); border-bottom: 2px solid var(--accent); }
 .realTr { font-size: 1rem; line-height: 1.65; color: var(--ink-2); border-left: 1px solid var(--rule); padding-left: 18px; }
 .realNote { font-size: 1.05rem; }
-@media (max-width: 760px) { .realBody { grid-template-columns: 1fr; } .realTr { border-left: 0; padding-left: 0; } }
+@media (max-width: 760px) { .realBody { grid-template-columns: minmax(0, 1fr); } .realTr { border-left: 0; padding-left: 0; } }
 .words { display: grid; gap: 10px; }
 .words ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .inDeck { font-family: var(--f-label); font-size: 0.75rem; color: var(--ok); margin-left: 8px; }
@@ -178,9 +194,10 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 @media (max-width: 520px) { .grades { grid-template-columns: repeat(2, 1fr); } }
 
 /* vocabulary */
-.vocabPage { display: grid; gap: 36px; }
-.coverage { display: grid; gap: 14px; padding: clamp(18px, 3vw, 28px); background: var(--surface); border-top: 3px double var(--rule); border-bottom: 3px double var(--rule); }
+.vocabPage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
+.coverage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding: clamp(18px, 3vw, 28px); background: var(--surface); border-top: 3px double var(--rule); border-bottom: 3px double var(--rule); }
 .covPick { display: grid; gap: 4px; justify-items: start; }
+.covPick select { max-width: 100%; }
 .covPick select, .coreList select { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: var(--radius); padding: 8px 10px; }
 .covBars { display: grid; gap: 10px; }
 .covRow { display: grid; grid-template-columns: minmax(180px, 1.2fr) 2fr 56px; gap: 14px; align-items: center; }
@@ -188,11 +205,21 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 .covBar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 70%, var(--ink))); border-radius: inherit; transition: width 1s var(--ease); }
 .covRow b { font-family: var(--f-display); font-size: 1.4rem; text-align: right; font-variant-numeric: tabular-nums; }
 @media (max-width: 640px) { .covRow { grid-template-columns: 1fr 56px; } .covBar { grid-column: 1 / -1; order: 3; } }
-.coreList { display: grid; gap: 14px; }
+.coreList { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 .coreTable { width: 100%; border-collapse: collapse; background: var(--surface); }
 .coreTable th { font-family: var(--f-label); font-weight: 500; font-size: 0.85rem; text-align: left; color: var(--ink-2); padding: 8px 10px; border-bottom: 3px double var(--rule); }
 .coreTable td { padding: 8px 10px; border-bottom: 1px solid color-mix(in srgb, var(--rule) 40%, transparent); vertical-align: top; }
 .rank { font-family: var(--f-label); color: var(--accent); font-variant-numeric: tabular-nums; }
+/* phones: each word becomes a small card (number, word and Learn button on top; meaning and kind below),
+   so nothing hides off to the right */
+@media (max-width: 560px) {
+  .coreTable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .coreTable, .coreTable tbody { display: block; }
+  .coreTable tr { display: grid; grid-template-columns: 2.4em minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; padding: 10px 8px; border-bottom: 1px solid color-mix(in srgb, var(--rule) 40%, transparent); }
+  .coreTable td { display: block; padding: 0; border: 0; }
+  .coreTable td:nth-child(3), .coreTable td:nth-child(4) { grid-column: 2 / -1; }
+  .coreTable td:nth-child(5) { grid-column: 3; grid-row: 1; align-self: center; }
+}
 
 /* recording studio */
 .studio { display: grid; gap: 28px; }
@@ -205,7 +232,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 .studioGuide { font-size: 0.9rem; color: var(--ink-2); }
 .studioActs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .studioActs audio { height: 32px; max-width: 220px; }
-@media (max-width: 760px) { .studioGroup li { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .studioGroup li { grid-template-columns: minmax(0, 1fr); } }
 
 /* practice */
 .practice { display: grid; gap: 20px; }

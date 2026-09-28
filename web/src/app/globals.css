@@ -92,6 +92,10 @@ p { margin: 0; }
 a { color: inherit; }
 button { font: inherit; color: inherit; cursor: pointer; }
 img { max-width: 100%; }
+/* a long placeholder or value that does not fit ends in "…" instead of being cut mid-letter */
+input { text-overflow: ellipsis; }
+/* on touch screens, tick boxes and radio buttons are big enough for a finger */
+@media (pointer: coarse) { input[type="checkbox"], input[type="radio"] { width: 20px; height: 20px; flex: none; } }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
 [lang="grc"] { font-family: var(--f-greek); }
@@ -213,7 +217,7 @@ main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(
 .site-footer-links { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
 .site-footer-src { grid-column: 1 / -1; max-width: 70ch; }
 @media (max-width: 680px) {
-  .site-footer-in { grid-template-columns: 1fr; }
+  .site-footer-in { grid-template-columns: minmax(0, 1fr); }
   .site-footer-links { align-items: flex-start; gap: 0; }
   .site-footer-links a { padding-block: 7px; }  /* a finger-sized target */
 }

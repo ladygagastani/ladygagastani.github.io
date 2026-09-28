@@ -215,6 +215,13 @@
 - **Traps:** the Bash tool can mangle a long heredoc or a backslash followed by b or 1 (write files with the Write/Edit tools); a stray `cat > file` without input waits forever; after `npm run build`, restart any preview server; Git Bash needs `MSYS_NO_PATHCONV=1` for paths such as `/stoa`.
 - **Owner:** not a coder; write every message in plain English and explain any technical term.
 
+## Phone polish pass (2026-09-29)
+Every page checked at 320 and 375 px wide, light and dark, including opened panels. Fixed:
+- **Bugs (all screen sizes):** the home page's three Painted Stoa cards had invisible titles (ink on ink); the offline block's ZIP links broke onto separate lines with a stray comma; the Town Hall and Pnyx started flush against the band under their headers; the Treasury's "Sign in" line touched the paragraph above.
+- **Phones:** the header menu shows an arrow and fades on the side with more areas, and scrolls to the current area; the connection light's panel opened half off the left edge; the reader puts the passage number above its passage so the Greek gets the full width (container query, so the floating window gets it too), and a tapped word moves above the look-up sheet; rhythm buttons stay inside their panel in lessons; the alphabet shows 4 letters a row and scrolls to a tapped letter; Vocabulary rows became cards (the Learn button was off-screen); Library and Census filters line up full-width; Scroll Case options wrap as one paragraph; the map is shorter on touch screens so the page can still be scrolled past it; wrapped segmented buttons keep their dividers; tick boxes are 20 px on touch screens.
+- **Every single-column phone grid is now `minmax(0, 1fr)`**, not `1fr`: with `1fr` one wide item (a long select) pushed the column into the margin (Vocabulary, the map at 320 px).
+- `scripts/phone-audit.mjs` now also reports content that spills past its `.wrap` column into the side margin ("into the margin"); before, `body` hiding sideways overflow made that invisible to it.
+
 ## Decisions log
 | Date | Decision | Reason |
 |---|---|---|

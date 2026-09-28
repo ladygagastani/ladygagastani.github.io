@@ -130,7 +130,7 @@ function RealPassage({ item, onWord }: { item: Extract<Section, { kind: "real" }
       {!data && !error && <p className="muted">Unrolling the passage…</p>}
       {data && (
         <div className={styles.realBody}>
-          <div className={`${readerStyles.grc} ${styles.realGr} ${metre ? readerStyles.metreOn : ""}`} lang="grc" onClick={click}>
+          <div className={`${readerStyles.grc} ${styles.realGr} ${metre ? `${readerStyles.metreOn} ${readerStyles.metreInset}` : ""}`} lang="grc" onClick={click}>
             {data.rows.flatMap((r) => r.greek).map((u) => (
               <div key={u.ref.join(".")} data-u={u.ref.join(".")}>
                 <Blocks blocks={u.blocks.filter((b) => b.t !== "head")} greek keyPrefix={`lesson-${u.ref.join(".")}`}

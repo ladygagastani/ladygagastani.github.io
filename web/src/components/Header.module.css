@@ -14,15 +14,24 @@
 .brandGr { font-family: var(--f-greek); font-size: 1.3rem; }
 .brandEn { font-family: var(--f-label); font-size: 0.75rem; letter-spacing: 0.14em; color: var(--ink-2); }
 
-.areas { display: flex; gap: 4px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
-/* when the menu may not fit (a narrow phone or tablet), fade its right edge so it reads as scrollable */
-@media (max-width: 760px) {
-  .areas {
-    padding-right: 36px;
-    -webkit-mask: linear-gradient(90deg, #000 calc(100% - 36px), transparent);
-            mask: linear-gradient(90deg, #000 calc(100% - 36px), transparent);
-  }
+.areasWrap { position: relative; display: flex; flex: 1; min-width: 0; }
+.areas { display: flex; gap: 4px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.areas::-webkit-scrollbar { display: none; }
+/* when the menu does not fit (a phone or narrow tablet), the side with more areas fades out, and an arrow scrolls on */
+.areasWrap[data-more-right] .areas { -webkit-mask: linear-gradient(90deg, #000 calc(100% - 56px), transparent); mask: linear-gradient(90deg, #000 calc(100% - 56px), transparent); }
+.areasWrap[data-more-left] .areas { -webkit-mask: linear-gradient(90deg, transparent, #000 40px); mask: linear-gradient(90deg, transparent, #000 40px); }
+.areasWrap[data-more-left][data-more-right] .areas {
+  -webkit-mask: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 56px), transparent);
+          mask: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 56px), transparent);
 }
+.areasMore {
+  display: none; position: absolute; right: 0; top: 50%; translate: 0 -50%; width: 30px; height: 30px; padding: 0;
+  place-items: center; border: 1px solid var(--rule); border-radius: 50%; background: var(--surface); color: var(--accent);
+  animation: nudge 1.6s var(--ease) 0.6s 2;
+}
+.areasMore svg { width: 16px; height: 16px; }
+.areasWrap[data-more-right] .areasMore { display: grid; }
+@keyframes nudge { 0%, 100% { transform: none; } 40% { transform: translateX(4px); } }
 .areas a {
   position: relative; display: flex; flex-direction: column;
   padding: 6px 12px; text-decoration: none; white-space: nowrap; line-height: 1.15;
@@ -50,7 +59,7 @@
 @media (min-width: 1601px) { .top .row { max-width: max(var(--maxw), 1560px); } }
 @media (max-width: 1220px) {
   .row { flex-wrap: wrap; gap: 4px 12px; padding-block: 8px 0; min-height: 0; }
-  .areas { order: 3; flex-basis: 100%; margin-left: -12px; }
+  .areasWrap { order: 3; flex-basis: 100%; margin-left: -12px; }
   .areas a { padding-block: 6px 9px; }
   .tools { margin-left: auto; }
 }
@@ -63,7 +72,7 @@
 /* small phones: a smaller name, and the quick theme switch (also in Settings) steps aside, so the row fits */
 @media (max-width: 440px) {
   .brandGr { font-size: 1.12rem; }
-  .brandEn { font-size: 0.66rem; letter-spacing: 0.1em; }
+  .brandEn { font-size: 0.72rem; letter-spacing: 0.08em; }
   .theme { display: none; }
 }
 @media (max-width: 360px) {
@@ -89,6 +98,11 @@
   box-shadow: 0 24px 48px -24px var(--shadow); animation: drop 0.22s var(--ease) both; font-size: 0.95rem;
 }
 @keyframes drop { from { opacity: 0; transform: translateY(-6px); } }
+/* phones: the light sits mid-row, so its panel hangs from the whole header instead, inside the screen */
+@media (max-width: 680px) {
+  .conn { position: static; }
+  .connPanel { left: 12px; right: 12px; width: auto; top: calc(100% + 6px); }
+}
 .connHead { display: flex; align-items: center; gap: 10px; font-size: 1.05rem; }
 .connList { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; color: var(--ink-2); }
 .connActs { display: flex; flex-wrap: wrap; gap: 8px; }

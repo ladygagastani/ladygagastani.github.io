@@ -62,6 +62,12 @@
 .scopeBtns { display: flex; gap: 8px; }
 .scopeBtns .chip { cursor: pointer; }
 .compareBtn { padding: 9px 16px; cursor: pointer; }
+/* phones: the choices stack at full width, like the Oracle's, instead of ragged lengths */
+@media (max-width: 560px) {
+  .scopes, .scope { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; }
+  .scope select { width: 100%; max-width: none; }
+  .scopes > :global(.btn) { justify-self: start; }
+}
 
 /* ------------------------------------------------ rankings and the panel */
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: clamp(20px, 3vw, 40px); align-items: start; }
@@ -188,7 +194,7 @@
 
 /* ------------------------------------------------ smaller screens */
 @media (max-width: 1080px) {
-  .layout { grid-template-columns: 1fr; }
+  .layout { grid-template-columns: minmax(0, 1fr); }
   .side { position: static; max-height: none; overflow: visible; }
 }
 @media (max-width: 760px) {
@@ -197,6 +203,6 @@
   .shelves { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .comparing .columns { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .threads { display: none; }
-  .methodCols { grid-template-columns: 1fr; }
+  .methodCols { grid-template-columns: minmax(0, 1fr); }
   .row { grid-template-columns: 1.8em minmax(7em, 44%) 1fr; gap: 8px; }
 }

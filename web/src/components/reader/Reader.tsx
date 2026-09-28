@@ -603,6 +603,11 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       ctx = { work: workId, unitKey: unit.dataset.u!, occurrence: same.indexOf(w), keys: unitKeys, depth: doc.levels.length };
     }
     setWord({ w: w.dataset.w!, ctx, at: unit ? { u: unit.dataset.u!, i: [...unit.querySelectorAll("[data-w]")].indexOf(w) } : null });
+    // phones and tablets: the look-up rises from the bottom over up to 62% of the screen, so the word moves up above it
+    if (!floating && matchMedia("(max-width: 900px)").matches) {
+      const r = w.getBoundingClientRect();
+      if (r.bottom > innerHeight * 0.38 - 12) scrollBy({ top: r.top - innerHeight * 0.2, behavior: "smooth" });
+    }
   };
 
   // The keyboard in the text. Tab reaches it as one stop (the first word, or the word last used);
