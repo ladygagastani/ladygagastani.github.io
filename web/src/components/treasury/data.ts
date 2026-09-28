@@ -8,8 +8,8 @@ import { allPositions, type Position } from "@/lib/position";
 
 export function useTreasury() {
   const [idx, setIdx] = useState<CatalogIndex | null>(null);
-  // the Treasury renders only in the browser (it reads the address), so storage can be read at once
-  const [positions, setPositions] = useState<Record<string, Position>>(() => (typeof window === "undefined" ? {} : allPositions()));
+  // read after the first render, so the page the server built and the browser's first render agree
+  const [positions, setPositions] = useState<Record<string, Position>>({});
   const byWork = useMarks((s) => s.byWork);
   const allLoaded = useMarks((s) => s.allLoaded);
   const error = useMarks((s) => s.error);
@@ -19,6 +19,7 @@ export function useTreasury() {
 
   useEffect(() => {
     loadCatalog().then(setIdx, () => setIdx(null));
+    void Promise.resolve().then(() => setPositions(allPositions()));
     useMarks.getState().loadAll();
     usePageNotes.getState().load();
     useAcademy.persist.rehydrate();
