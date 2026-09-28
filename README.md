@@ -70,6 +70,8 @@ Rebuilding the committed data, only when its sources change:
 |---|---|
 | `python pipeline/build_catalog.py` | `catalog.json`: authors, works and texts, pinned to exact versions. |
 | `python pipeline/build_core.py` | `core.json`: the DCC core vocabulary. |
+| `npx tsx scripts/build-difficulty.ts` | `difficulty.json`: each text's share of common words, for the library's vocabulary badge and filter (needs the word packs, step 2). |
+| `node scripts/shots.mjs <folder> <site> <paths…>` and `node scripts/phone-audit.mjs <site> <paths…>` | Polish checks: screenshots wide and on a phone, light and dark; and a phone-width audit (sideways overflow, tiny tap targets and text). Need the built site served with `node scripts/serve-out.mjs 3100`. |
 | `npx tsx scripts/build-abbrev.ts` | `abbrev.json`: abbreviations such as "Il." (needs the LSJ files). |
 | `python pipeline/fetch_hypotactic.py`, then `npx tsx scripts/build-metre.ts` | The metre data in `public/data/metre/` (also needs step 1). |
 | `python pipeline/build_census.py` | The Census (Most Mentioned) data in `public/data/census/` (committed, about 10 MB): ranked names, things, words and phrases for the whole library, each kind of writing and period, each author and each work. Needs steps 1–3 and 6 of the table above (GLAUx files, word packs, LSJ, Word Study index) and `pip install nltk` (WordNet). Hand-checked lists are in `pipeline/census_lists.py`. The first run scans GLAUx into `pipeline/.cache/census/` (2 minutes); `--rescan` repeats it. |

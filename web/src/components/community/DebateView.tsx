@@ -79,7 +79,7 @@ export default function DebateView() {
             <h2 id={`${side}-h`}>{side === "for" ? "For" : "Against"} <small>{args.filter((a) => a.side === side).length}</small></h2>
             <ArgTree nodes={bySide(side)} uid={uid} mod={mod} writer={writer && open} reload={load} />
             {open && writer && (
-              <Composer label={`An argument ${side} the motion`} submitLabel={side === "for" ? "Argue for" : "Argue against"} rows={4}
+              <Composer label={`An argument ${side} the motion`} submitLabel={side === "for" ? "Argue for" : "Argue against"} rows={4} draftKey={`debate:${d.id}:${side}`}
                 onSubmit={async (body) => { await argue({ debate_id: d.id, side, parent_id: null, body, quote: null }); await load(); }} />
             )}
           </section>
@@ -169,7 +169,7 @@ function ArgCard({ a, depth, uid, mod, writer, reload }: { a: Argument; depth: n
         {mod && <HideButton hidden={a.hidden} onChange={async (hide, reason) => { await moderate("argument", a.id, hide, reason); await reload(); }} />}
       </div>
       {mode === "reply" && (
-        <Composer label={`Reply to ${a.author?.display_name ?? "this"}`} submitLabel="Reply" rows={3} autoFocus onCancel={() => setMode("read")}
+        <Composer label={`Reply to ${a.author?.display_name ?? "this"}`} submitLabel="Reply" rows={3} autoFocus draftKey={`argument:${a.id}`} onCancel={() => setMode("read")}
           onSubmit={async (body) => { await argue({ debate_id: a.debate_id, side: a.side, parent_id: a.id, body, quote: null }); setMode("read"); await reload(); }} />
       )}
     </div>

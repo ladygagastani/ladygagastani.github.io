@@ -4,6 +4,7 @@ import Amphora from "@/components/Amphora";
 import LetterTiles from "@/components/LetterTiles";
 import PassageOfTheDay from "@/components/PassageOfTheDay";
 import OfflineActions from "@/components/OfflineActions";
+import ForumActivity from "@/components/ForumActivity";
 import { ContinueCard } from "@/components/Resume";
 import { AREAS, SITE } from "@/config/areas";
 import StoaCards, { type StoaCard } from "@/components/StoaCards";
@@ -81,6 +82,17 @@ export default function Home() {
             <p className="muted">History, daily life, the strange and the brutal, told from the sources. Every entry says how sure we can be.</p>
           </div>
           <StoaCards cards={STOA_CARDS} styles={styles} />
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- forum */}
+      <section className={styles.block} aria-labelledby="forum-title">
+        <div className="wrap">
+          <div className={`${styles.secHead} rv`}>
+            <div><span className="label">{AREAS.forum.name} · {AREAS.forum.english}</span><h2 id="forum-title" className={styles.h2}>What people are asking</h2></div>
+            <p className="muted">Questions from beginners, help with a passage, and a debate each week. Reading is open to everyone; a free account lets you join in.</p>
+          </div>
+          <div className="rv"><ForumActivity styles={styles} /></div>
         </div>
       </section>
 

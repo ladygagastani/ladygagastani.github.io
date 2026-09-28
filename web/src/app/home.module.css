@@ -77,3 +77,29 @@
 .cardLink { text-decoration: none; color: inherit; transition: transform 0.3s var(--ease), box-shadow 0.3s; }
 .cardLink:hover { transform: translateY(-4px); }
 .cardGo { font-family: var(--f-label); font-size: 0.85rem; letter-spacing: 0.05em; color: var(--accent); margin-top: auto; }
+
+/* ---------------------------------------------------------------- recent forum activity */
+.forum { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; align-items: stretch; }
+.forumList { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding: clamp(20px, 3vw, 32px); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); }
+.forumH { font-size: 1.35rem; }
+.forumRows { list-style: none; margin: 0; padding: 0; width: 100%; }
+.forumRows li { border-top: 1px solid var(--rule); }
+.forumRows a { display: grid; gap: 2px; padding: 12px 0; text-decoration: none; }
+.forumRows a b { font-size: 1.08rem; line-height: 1.3; }
+.forumRows a:hover b { color: var(--accent); }
+.forumRows small { color: var(--ink-2); font-size: 0.88rem; }
+.forumSkel { height: 68px; border-top: 1px solid var(--rule); position: relative; overflow: hidden; }
+.forumSkel::after { content: ""; position: absolute; inset: 16px 0 auto 0; height: 14px; width: 62%; border-radius: 4px; background: color-mix(in srgb, var(--ink) 9%, transparent); }
+.forumEmpty { color: var(--ink-2); max-width: 46ch; }
+.forumMotion {
+  display: flex; flex-direction: column; gap: 12px; padding: clamp(20px, 3vw, 32px); text-decoration: none; justify-content: center;
+  background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg);
+  border-radius: var(--radius); border-left: 6px solid var(--accent); transition: transform 0.3s var(--ease), box-shadow 0.3s;
+}
+.forumMotion:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -24px var(--shadow); }
+.forumMotion :global(.label) { color: var(--accent); }
+.forumMotion b { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.4rem, 2.4vw, 1.9rem); line-height: 1.2; }
+.forumMotionK { color: color-mix(in srgb, var(--bg) 78%, var(--ink)); font-size: 0.95rem; }
+.forumMotion small { font-family: var(--f-label); letter-spacing: 0.05em; color: var(--accent); }
+@media (max-width: 980px) { .forum { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .forumMotion { transition: none; } .forumMotion:hover { transform: none; } }

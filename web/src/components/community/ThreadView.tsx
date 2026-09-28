@@ -64,7 +64,7 @@ export default function ThreadView() {
       {t.locked ? <p className={styles.note}>🔒︎ This thread is closed to new replies.</p> : writer ? (
         <section className={styles.replyBox} aria-label="Reply">
           <h2>Your reply</h2>
-          <Composer label="Your reply" submitLabel="Reply" onSubmit={async (body) => { await reply({ thread_id: t.id, parent_id: null, body, quote: null }); await load(); }} />
+          <Composer label="Your reply" submitLabel="Reply" draftKey={`thread:${t.id}`} onSubmit={async (body) => { await reply({ thread_id: t.id, parent_id: null, body, quote: null }); await load(); }} />
         </section>
       ) : <SignInPrompt what="reply" />}
     </article>
@@ -157,7 +157,7 @@ function Reply({ p, depth, t, uid, mod, writer, votes, toggle, reload }: {
             {mod && <HideButton hidden={p.hidden} onChange={async (hide, reason) => { await moderate("post", p.id, hide, reason); await reload(); }} />}
           </div>
           {mode === "reply" && (
-            <Composer label={`Reply to ${p.author?.display_name ?? "this"}`} submitLabel="Reply" rows={3} autoFocus onCancel={() => setMode("read")}
+            <Composer label={`Reply to ${p.author?.display_name ?? "this"}`} submitLabel="Reply" rows={3} autoFocus draftKey={`post:${p.id}`} onCancel={() => setMode("read")}
               onSubmit={async (body) => { await reply({ thread_id: t.id, parent_id: p.id, body, quote: null }); setMode("read"); await reload(); }} />
           )}
         </div>

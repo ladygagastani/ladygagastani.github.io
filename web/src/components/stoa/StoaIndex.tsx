@@ -4,7 +4,7 @@
  * entries, with a search across every entry and a featured entry that changes each day.
  */
 import Link from "next/link";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { fold } from "@/lib/catalog";
 import { ENTRIES, entriesIn } from "@/wiki/index";
 import { inline, plain } from "@/wiki/markup";
@@ -13,11 +13,15 @@ import styles from "./Stoa.module.css";
 
 const text = (s: string) => plain(inline(s));
 const noSubscribe = () => () => {};
+/** What a search looks in, folded once: the title, the hook and the whole text of each entry (not only its opening). */
+const HAYSTACK = ENTRIES.map((e) => ({ e, hay: fold(`${e.title} ${e.greek ?? ""} ${e.kicker} ${text(e.hook)} ${e.body}`) }));
 
 export default function StoaIndex() {
   const [q, setQ] = useState("");
   const n = fold(q).trim();
-  const found = useMemo(() => (n ? ENTRIES.filter((e) => fold(`${e.title} ${e.greek ?? ""} ${e.kicker} ${text(e.hook)}`).includes(n)) : []), [n]);
+  const found = useMemo(() => (n ? HAYSTACK.filter((h) => h.hay.includes(n)).map((h) => h.e) : []), [n]);
+  // a search handed over from Quick search (/stoa?q=…)
+  useEffect(() => { const v = new URLSearchParams(location.search).get("q"); if (v) setQ(v); }, []);
   // one entry featured each day, the same for everyone (by date, not at random); the built page shows the first
   const day = useSyncExternalStore(noSubscribe, () => Math.floor(Date.now() / 864e5), () => 0);
   const featured = ENTRIES.length ? [...ENTRIES].sort((a, b) => a.slug.localeCompare(b.slug))[day % ENTRIES.length] : null;
@@ -25,7 +29,7 @@ export default function StoaIndex() {
   return (
     <div className={`wrap ${styles.index}`}>
       <div className={styles.searchRow}>
-        <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${ENTRIES.length === 1 ? "the entry" : `${ENTRIES.length} entries`}: Melos, plague, ostracism…`} aria-label="Search the Painted Stoa" />
+        <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${ENTRIES.length === 1 ? "the entry" : `${ENTRIES.length} entries`} in full: Melos, plague, ostracism…`} aria-label="Search the Painted Stoa" />
       </div>
       {n && (
         <section className={styles.found} aria-live="polite">

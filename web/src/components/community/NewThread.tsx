@@ -63,7 +63,7 @@ export default function NewThread() {
           </div>
         </div>
         {error && <p className={styles.error} role="alert">{error}</p>}
-        <Composer label="Your question" submitLabel="Post the thread" rows={7} onSubmit={async (body) => {
+        <Composer label="Your question" submitLabel="Post the thread" rows={7} draftKey="thread:new" onSubmit={async (body) => {
           setError(null);
           if (!category) { setError("Choose a category first."); throw new Error("Choose a category first."); }
           if (title.trim().length < 3) { setError("Give the thread a title."); throw new Error("Give the thread a title."); }

@@ -6,7 +6,7 @@
  */
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Fragment, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import NoteField from "@/components/notes/NoteField";
 import { isBanned, problem, useAccount } from "@/lib/community/client";
 import { ago, report, type Author, type Quote } from "@/lib/community/data";
@@ -194,25 +194,42 @@ export function SignInPrompt({ what }: { what: string }) {
 export const canWrite = (s: ReturnType<typeof useAccount.getState>) => !!s.session && !!s.profile && !isBanned(s.profile);
 
 // ------------------------------------------------------------ writing
-export function Composer({ label, submitLabel, onSubmit, onCancel, initial = "", rows = 5, autoFocus }: {
-  label: string; submitLabel: string; onSubmit: (body: string) => Promise<void>; onCancel?: () => void; initial?: string; rows?: number; autoFocus?: boolean;
+const DRAFT = (key: string) => `mathesis:draft:${key}`;
+const readDraft = (key: string): string => { try { return localStorage.getItem(DRAFT(key)) ?? ""; } catch { return ""; } };
+const writeDraft = (key: string, text: string) => { try { if (text.trim()) localStorage.setItem(DRAFT(key), text); else localStorage.removeItem(DRAFT(key)); } catch { /* storage blocked: no draft, nothing lost that was saved */ } };
+
+/**
+ * The box for writing a post. With a `draftKey` an unsent text is kept in this browser as it is typed,
+ * comes back when the box is opened again (even after a reload), and is dropped once sent or cancelled.
+ */
+export function Composer({ label, submitLabel, onSubmit, onCancel, initial = "", rows = 5, autoFocus, draftKey }: {
+  label: string; submitLabel: string; onSubmit: (body: string) => Promise<void>; onCancel?: () => void; initial?: string; rows?: number; autoFocus?: boolean; draftKey?: string;
 }) {
   const [body, setBody] = useState(initial);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [restored, setRestored] = useState(false);
+  useEffect(() => {
+    if (!draftKey || initial) return;
+    const d = readDraft(draftKey);
+    if (d) { setBody(d); setRestored(true); }
+  }, [draftKey, initial]);
+  const change = (v: string) => { setBody(v); if (draftKey) writeDraft(draftKey, v); };
+  const drop = () => { if (draftKey) writeDraft(draftKey, ""); };
   return (
     <form className={styles.composer} onSubmit={async (e) => {
       e.preventDefault();
       if (!body.trim()) return;
       setBusy(true); setError(null);
-      try { await onSubmit(body.trim()); setBody(""); } catch (err) { setError(problem(err)); } finally { setBusy(false); }
+      try { await onSubmit(body.trim()); drop(); setBody(""); setRestored(false); } catch (err) { setError(problem(err)); } finally { setBusy(false); }
     }}>
-      <NoteField value={body} onChange={setBody} label={label} rows={rows} placeholder="Write here. **bold**, *italic*, “- ” for a list; [Il. 1.1](cts:tlg0012.tlg001:1.1) links a passage." onEscape={onCancel}
+      <NoteField value={body} onChange={change} label={label} rows={rows} placeholder="Write here. **bold**, *italic*, “- ” for a list; [Il. 1.1](cts:tlg0012.tlg001:1.1) links a passage." onEscape={onCancel}
         ref={autoFocus ? (h) => { if (h) requestAnimationFrame(() => h.focus()); } : undefined} />
       {error && <p className={styles.error} role="alert">{error}</p>}
+      {restored && <p className={styles.small} role="status">Your unsent draft has come back.</p>}
       <div className={styles.row}>
         <button type="submit" className="btn" disabled={busy || !body.trim()}>{busy ? "Sending…" : submitLabel}</button>
-        {onCancel && <button type="button" className="btn ghost" onClick={onCancel}>Cancel</button>}
+        {onCancel && <button type="button" className="btn ghost" onClick={() => { drop(); onCancel(); }}>Cancel</button>}
         <span className={styles.small}>Drag a passage from the reader into the box to quote it with its citation.</span>
       </div>
     </form>

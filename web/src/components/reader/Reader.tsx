@@ -806,7 +806,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           <>
             <nav className={styles.crumbs} aria-label="Breadcrumbs">
               <Link href={AREAS.library.href} transitionTypes={["page-turn"]}>{AREAS.library.name}</Link>
-              {author && <><span aria-hidden="true">›</span><Link href={`${AREAS.library.href}?a=${author.id}`} transitionTypes={["page-turn"]}>{author.name}</Link></>}
+              {author && <><span aria-hidden="true">›</span><Link href={`${AREAS.library.href}/author?a=${author.id}`} transitionTypes={["page-turn"]}>{author.name}</Link></>}
             </nav>
             <h1 className={styles.title}>{work?.title ?? " "}
               {grcText?.label && grcText.label !== work?.title && <span className={styles.titleGr} lang="grc">{grcText.label}</span>}

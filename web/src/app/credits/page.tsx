@@ -99,14 +99,15 @@ export default function CreditsPage() {
         <ul>
           <li>No adverts, no analytics, no trackers and no cookies.</li>
           <li>Fonts and code are served from this site, so your browser does not contact Google or any other company just to show a page.</li>
-          <li>Your settings, reading positions, bookmarks, notes, highlights, saved words and everything else in the Treasury are stored only in this browser, on this computer. “Download my Treasury” saves a copy as a file on your computer; nothing is uploaded.</li>
+          <li>Your settings, reading positions, bookmarks, notes, highlights, saved words, unsent forum drafts and everything else in the Treasury are stored only in this browser, on this computer. “Download my Treasury” saves a copy as a file on your computer; nothing is uploaded.</li>
           <li>When you are online and a text is not in your downloaded library, your browser fetches that text&apos;s file from GitHub (raw.githubusercontent.com).</li>
           <li>When you look up a word or open its Word Study page while online, that word (and nothing else) is sent to Wiktionary (en.wiktionary.org).</li>
           <li>Downloading the library fetches the text files from GitHub. Links to Logeion and Perseus take you to those sites only when you click them.</li>
           <li>
             <b>The Town Hall, the Pnyx and accounts</b> are kept by <a href="https://supabase.com" rel="noopener">Supabase</a>, on servers in the European
-            Union (Ireland). Your browser contacts Supabase only on those pages and on your account page, or when you are signed in; reading,
-            study and the wiki never do. An account holds your email address (used only to sign you in and to send the confirmation and
+            Union (Ireland). Your browser contacts Supabase on those pages and on your account page, when you are signed in, and on the home page, which
+            reads the latest forum threads and the motion of the week (a read-only request that carries nothing but your internet address, as
+            every request does); reading, study and the wiki never do. An account holds your email address (used only to sign you in and to send the confirmation and
             password-reset letters; never shown to anyone), your password (stored by Supabase in scrambled form, never readable), your
             display name and what you write about yourself.
           </li>

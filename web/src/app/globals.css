@@ -214,7 +214,8 @@ main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(
 .site-footer-src { grid-column: 1 / -1; max-width: 70ch; }
 @media (max-width: 680px) {
   .site-footer-in { grid-template-columns: 1fr; }
-  .site-footer-links { align-items: flex-start; }
+  .site-footer-links { align-items: flex-start; gap: 0; }
+  .site-footer-links a { padding-block: 7px; }  /* a finger-sized target */
 }
 
 /* area header, shared by every area page */
