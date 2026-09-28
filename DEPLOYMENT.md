@@ -1,7 +1,8 @@
 # Hosting on GitHub Pages
 
-The site is live at **https://ladygagastani.github.io/**, from the repository
-https://github.com/ladygagastani/ladygagastani.github.io (public).
+The site is live at **https://mathesisstoicheion.github.io/**, from the repository
+https://github.com/mathesisstoicheion/mathesisstoicheion.github.io (public), owned by the free GitHub organization `mathesisstoicheion`.
+(Until 2026-09-28 it was ladygagastani.github.io; a GitHub Pages address is always `<owner>.github.io`, so the address moved with the repositories.)
 
 ## How it works
 - `web/next.config.ts` has `output: "export"`, so `npm run build` writes a plain static site to `web/out/`.
@@ -12,7 +13,7 @@ https://github.com/ladygagastani/ladygagastani.github.io (public).
 ## To publish a change
 Commit, then `git push`. That's all.
 
-## Why the repository is named `ladygagastani.github.io`
+## Why the repository is named `mathesisstoicheion.github.io`
 A repository with that exact name is served at the top of the address (`/`). The code asks for its files
 there (`/data/…`, `/sw.js`, `/images/…`). A repository with any other name would be served at
 `/<name>/`, and those requests would fail unless the code were changed to use a base path.
@@ -25,8 +26,8 @@ A push does not change the database: changes to it are SQL files in `supabase/mi
 ## The large data packs: a second site at `/packs/`
 The generated data packs are too large for this repository (they are gitignored): `words` (word analyses),
 `lsj` (LSJ), `lexicon` (Word Study) and `search` (the Oracle's index), about 780 MB in 5,100 files. They are
-published as a second GitHub Pages site from the repository **`ladygagastani/packs`**, which GitHub serves at
-https://ladygagastani.github.io/packs/ — the same address as the site, so visitors' browsers contact nobody
+published as a second GitHub Pages site from the repository **`mathesisstoicheion/packs`**, which GitHub serves at
+https://mathesisstoicheion.github.io/packs/ — the same address as the site, so visitors' browsers contact nobody
 else and the offline helper can keep the files. The live site is built with `NEXT_PUBLIC_PACKS=/packs`
 (`deploy.yml`), so it fetches them from there; on your own computer they stay in `web/public/data`
 (`web/src/config/packs.ts`).
@@ -35,7 +36,7 @@ else and the offline helper can keep the files. The live site is built with `NEX
 1. On github.com, create a new repository named exactly **`packs`**, **public**, with nothing in it (no README, no licence).
 2. Run `python pipeline/publish_packs.py --push` (it uploads about 780 MB; this takes a while).
 3. In the `packs` repository: Settings → Pages → Source **Deploy from a branch**, branch **main**, folder **/ (root)** → Save.
-4. After a few minutes, https://ladygagastani.github.io/packs/lsj/_meta.json should open.
+4. After a few minutes, https://mathesisstoicheion.github.io/packs/lsj/_meta.json should open.
 
 **After rebuilding any pack** (see README.md, "The large data files"), run `python pipeline/publish_packs.py --push`
 again. It replaces the whole `packs` repository with one fresh commit, so it never grows with history.

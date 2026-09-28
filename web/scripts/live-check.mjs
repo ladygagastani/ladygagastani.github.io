@@ -1,8 +1,8 @@
 // After publishing: opens the live site in Edge and checks the pages that talk to the forum's database.
-//   node scripts/live-check.mjs [https://ladygagastani.github.io]
+//   node scripts/live-check.mjs [https://mathesisstoicheion.github.io]
 import { chromium } from "@playwright/test";
 
-const base = process.argv[2] ?? "https://ladygagastani.github.io";
+const base = process.argv[2] ?? "https://mathesisstoicheion.github.io";
 const b = await chromium.launch({ channel: "msedge" });
 const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
 const errors = [];

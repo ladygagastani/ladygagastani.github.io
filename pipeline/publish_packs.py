@@ -1,6 +1,6 @@
 """
 Publish the large generated data packs to their own GitHub Pages site, so the live site can use them:
-  https://ladygagastani.github.io/packs/words/…   word analyses   (pipeline/build_words.py)
+  https://mathesisstoicheion.github.io/packs/words/…   word analyses   (pipeline/build_words.py)
                                      /lsj/…     LSJ              (pipeline/build_lsj.py)
                                      /lexicon/… Word Study index (web/scripts/build-lexicon.ts)
                                      /search/…  Oracle index     (web/scripts/build-search.ts)
@@ -10,7 +10,7 @@ Same address as the site: visitors' browsers contact no one else, and the offlin
 Each run replaces the whole repository with one fresh commit (the files are rebuilt, not edited, so no
 history is kept and the repository stays the size of the data, about 760 MB; GitHub Pages allows 1 GB).
 
-Needs, once: an empty public repository github.com/ladygagastani/packs, with Settings → Pages →
+Needs, once: an empty public repository github.com/mathesisstoicheion/packs, with Settings → Pages →
 "Deploy from a branch", branch main, folder / (root). See DEPLOYMENT.md.
 
 Usage:  python pipeline/publish_packs.py            check and stage only (prints what would be sent)
@@ -25,14 +25,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "web" / "public" / "data"
 STAGE = ROOT / "pipeline" / ".cache" / "packs-publish"
-REMOTE = "https://github.com/ladygagastani/packs.git"
+REMOTE = "https://github.com/mathesisstoicheion/packs.git"
 KINDS = ["words", "lsj", "lexicon", "search"]
 PAGES_LIMIT = 1_000_000_000
 FILE_LIMIT = 100_000_000
 
 README = """# Data packs for Mathesis Stoicheion
 
-Generated files used by https://ladygagastani.github.io/ (the Greek reader): word analyses (`words/`),
+Generated files used by https://mathesisstoicheion.github.io/ (the Greek reader): word analyses (`words/`),
 the Liddell–Scott–Jones dictionary (`lsj/`), the Word Study index (`lexicon/`) and the search index
 (`search/`). They are rebuilt by the site's pipeline and replaced here as a whole; do not edit them by hand.
 
@@ -44,7 +44,7 @@ Sources and licences:
 - Search index: built from the Perseus Digital Library (canonical-greekLit) and First1KGreek texts,
   CC BY-SA 4.0, and from GLAUx.
 
-These derived files are shared under CC BY-SA 4.0. Full credits: https://ladygagastani.github.io/credits
+These derived files are shared under CC BY-SA 4.0. Full credits: https://mathesisstoicheion.github.io/credits
 """
 
 
@@ -86,7 +86,7 @@ def main() -> None:
         return
     print(f"pushing to {REMOTE} (replaces what is there)...", flush=True)
     subprocess.run(["git", "push", "--force", REMOTE, "main"], cwd=STAGE, check=True)
-    print("done. GitHub Pages publishes it in a few minutes: https://ladygagastani.github.io/packs/lsj/_meta.json")
+    print("done. GitHub Pages publishes it in a few minutes: https://mathesisstoicheion.github.io/packs/lsj/_meta.json")
 
 
 if __name__ == "__main__":
