@@ -165,7 +165,13 @@
   - The Treasury page can take a few seconds to show its content in the development server (`npm run dev`); that is the dev server, not a fault.
   - **Not live yet (owner's choice, 2026-09-28)**: nothing of Phase 8 is pushed; main holds it locally. Publish the forum only after the tests above pass and sign-up emails work.
   - **Another session** ("Mobile website optimization") made the header collapse on scroll and fixed phone layouts (commit 7a18419): sticky elements now use `top: calc(var(--hdr-vis) + …)` (`web/src/lib/header.ts`); ScrollMarkers no longer takes an `offset` prop; the reader's toolbar has a `.more` wrapper with a Tools button on phones. AccountButton is kept in the header. That session did not push either.
-- **Not started:** Phase 9.
+- **Phase 9 (polish, performance, accessibility, full review): in progress** (started 2026-09-28). Plan, in order: 1. accessibility, 2. speed, 3. polish (every page, wide and phone, light and dark; the home page's recent forum activity), 4. a review of the whole site against the brief.
+  - **1. Accessibility: done** (commit "Phase 9 (1)").
+    - `e2e/a11y.spec.ts` runs axe (WCAG 2.1 A and AA rules) on every page and on 17 opened panels (settings, connection, quick search, look-up, passage toolbar and note, reading aids, Echoes, Census item, map place, wiki note, Treasury sections, alphabet, join) in both themes, and fails on any serious or critical problem. `A11Y_REPORT=1` writes the findings to `test-results/` instead. 983 problems found and fixed; none left.
+    - Colours: the light theme's added red is now #93300F, ochre #704A10, green #275B34 (each 4.5:1 on the clay). Panels painted in the ink colour (black in light, clay in dark) set `--accent: var(--accent-on-ink)` and the like, so red and grey text on them stays readable.
+    - Keyboard: every page was tabbed through; no traps, every stop visibly marked. **Words in the reader can now be looked up by keyboard**: Tab reaches the text (one stop), ← → move word by word, ↑ ↓ line by line, Home / End, Enter or Space looks up, Escape returns to the word. The Markers legend closes with Escape.
+    - A main heading (h1) on Account, New thread, Moderation and the empty Word Study.
+    - Found on the way: the reader remembered a passage a few lines too early (so "where you left off" slipped back each visit, and the floating reader's test failed). Two causes: the header slides away when the reader jumps down (fixed by `scrollBelowHeader` in `lib/header.ts`), and a row's empty bottom padding counted as "showing" (fixed in `topKey`).
 
 ## Decisions log
 | Date | Decision | Reason |
@@ -244,6 +250,8 @@
 | 2026-09-28 | **Census builds are repeatable**: ties are ranked alphabetically and every file is written in sorted order, so rebuilding changes files only when the data changes. | Clean history. |
 | 2026-09-28 | **No browser pop-up boxes** (`alert`, `confirm`, `prompt`) anywhere on the site: questions such as "Delete this?" or "Why is it hidden?" open as in-page boxes in the site's style (`DeleteButton`, `HideButton` in `components/community/parts.tsx`). | They look out of place, and automated browser tests cannot answer them. |
 | 2026-09-28 | **Sign-up emails go through the site's Gmail, mathesis.stoicheion@gmail.com**, with the site's own templates (`supabase/email-templates/`). | Owner set up the account; free, no domain needed. |
+| 2026-09-28 | **Light-theme accent colours deepened** for 4.5:1 contrast with small text (red #A33A16 → #93300F, ochre #8C5E17 → #704A10, green #3F7A4F → #275B34); panels in the ink colour swap to `--*-on-ink` tokens. Decorative giant Greek words are marked `data-decorative` and left out of the contrast check (WCAG exempts decoration). | Accessibility (brief: good contrast); the look is unchanged to the eye. |
+| 2026-09-28 | **Accessibility is tested on every build of the browser tests** (axe, WCAG 2.1 AA, both themes, pages and opened panels). | Keeps it from slipping back. |
 | 2026-09-26 | npm 11 blocks install scripts by default. `unrs-resolver` (an ESLint dependency) is not approved and linting still works. Don't pass `--allow-scripts` on the command line; approve in package.json if ever needed. | Seen during setup. |
 
 ## Known problems
