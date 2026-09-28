@@ -127,7 +127,7 @@ function CensusView({ meta, links }: { meta: CensusMeta; links: Links }) {
         </div>
         <aside className={styles.side} aria-live="polite">
           {picked
-            ? <ItemPanel key={`${cat.id}|${picked.text}`} meta={meta} cat={cat} item={picked} scope={scope} links={links} onClose={() => go([["i", null]])} />
+            ? <ItemPanel key={`${cat.id}|${picked.text}`} meta={meta} cat={cat} item={picked} listed={rowsA?.find((r) => r.text === picked.text)?.n ?? null} scope={scope} links={links} onClose={() => go([["i", null]])} />
             : <PanelHint cat={cat} />}
         </aside>
       </div>

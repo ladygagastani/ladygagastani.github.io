@@ -7,6 +7,7 @@
 .spinner { display: inline-block; vertical-align: -3px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--rule); border-top-color: var(--accent); animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .warn { color: var(--accent); font-size: 0.93rem; }
+.note { font-size: 0.9rem; color: var(--ink-2); border-left: 2px solid var(--rule); padding-left: 10px; }
 .fine { font-size: 0.86rem; color: var(--ink-2); }
 .small { font-size: 0.9rem; }
 .blurb { color: var(--ink-2); max-width: 70ch; margin: 0; }

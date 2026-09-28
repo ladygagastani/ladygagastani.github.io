@@ -6,6 +6,7 @@
 import { greekKey, shardOf } from "@/lib/search/codec";
 import { readTag } from "@/lib/lookup/postag";
 import { opfsRead } from "@/lib/texts/local";
+import { PACKS } from "@/config/packs";
 
 /** A dictionary form as one word: lower case, marks that are not letters or accents removed. */
 export const canonLemma = (l: string) => l.normalize("NFC").toLocaleLowerCase("el").replace(/[^\p{L}\p{M}]/gu, "");
@@ -25,7 +26,7 @@ export function displayForm(form: string, lemma: string): string {
 export interface LexEntry { n: number; f: [string, number, number][]; w: [number, number][] }
 export interface LexMeta { works: [string, number][]; tags: string[]; lemmas: number; forms: number }
 
-const BASE = "/data/lexicon";
+const BASE = `${PACKS}/lexicon`;
 /** Where the Scroll Case saves the index for offline use (browser storage). */
 export const LEXICON_DIR = "mathesis-lexicon";
 let metaP: Promise<LexMeta | null> | null = null;

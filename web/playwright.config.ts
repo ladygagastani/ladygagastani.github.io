@@ -8,7 +8,7 @@ export default defineConfig({
   expect: { timeout: 15_000 },
   use: { baseURL: "http://localhost:3100", channel: "msedge" },
   webServer: {
-    command: "npm run build && npx next start -p 3100",
+    command: "npm run build && node scripts/serve-out.mjs 3100",
     url: "http://localhost:3100",
     reuseExistingServer: false,
     timeout: 180_000,

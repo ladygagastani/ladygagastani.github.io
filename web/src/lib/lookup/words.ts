@@ -5,6 +5,7 @@
  */
 import { fold } from "@/lib/catalog";
 import { opfsRead } from "@/lib/texts/local";
+import { PACKS } from "@/config/packs";
 
 export interface WordPack {
   work: string; glaux: string; sha: string; licence: string; treebank: string;
@@ -26,7 +27,7 @@ export function loadWordPack(work: string): Promise<WordPack | null> {
     packs.set(work, (async () => {
       const local = await opfsRead(PACK_DIR, `${work}.json`).catch(() => null);
       if (local) return JSON.parse(local) as WordPack;
-      const res = await fetch(`/data/words/${work}.json`);
+      const res = await fetch(`${PACKS}/words/${work}.json`);
       if (res.status === 404) return null;
       if (!res.ok) throw new Error(`word analyses unavailable (${res.status})`);
       return (await res.json()) as WordPack;

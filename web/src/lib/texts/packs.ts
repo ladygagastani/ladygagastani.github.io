@@ -8,13 +8,14 @@ import { opfsWrite } from "./local";
 import { WORD_PACK_DIR } from "@/lib/lookup/words";
 import { LSJ_DIR } from "@/lib/lookup/lsj";
 import { LEXICON_DIR } from "@/lib/lexicon";
+import { PACKS } from "@/config/packs";
 
 export interface PackFile { url: string; dir: string; name: string; size: number; sha: string; key: string }
 type Index = Record<string, [number, string]>;
 
 const indexes = new Map<string, Promise<Index>>();
 const loadIndex = (kind: "words" | "lsj" | "lexicon") => {
-  if (!indexes.has(kind)) indexes.set(kind, fetch(`/data/${kind}/_index.json`).then((r) => (r.ok ? r.json() : {})).catch(() => ({})));
+  if (!indexes.has(kind)) indexes.set(kind, fetch(`${PACKS}/${kind}/_index.json`).then((r) => (r.ok ? r.json() : {})).catch(() => ({})));
   return indexes.get(kind)!;
 };
 
@@ -25,13 +26,13 @@ export async function planPacks(workIds: Iterable<string> | null): Promise<PackF
   const files: PackFile[] = [];
   for (const [work, [size, sha]] of Object.entries(words)) {
     if (want && !want.has(work)) continue;
-    files.push({ url: `/data/words/${work}.json`, dir: WORD_PACK_DIR, name: `${work}.json`, size, sha, key: `words/${work}` });
+    files.push({ url: `${PACKS}/words/${work}.json`, dir: WORD_PACK_DIR, name: `${work}.json`, size, sha, key: `words/${work}` });
   }
   for (const [shard, [size, sha]] of Object.entries(lsj)) {
-    files.push({ url: `/data/lsj/${encodeURIComponent(shard)}.json`, dir: LSJ_DIR, name: `${shard}.json`, size, sha, key: `lsj/${shard}` });
+    files.push({ url: `${PACKS}/lsj/${encodeURIComponent(shard)}.json`, dir: LSJ_DIR, name: `${shard}.json`, size, sha, key: `lsj/${shard}` });
   }
   for (const [shard, [size, sha]] of Object.entries(lexicon)) {
-    files.push({ url: `/data/lexicon/${encodeURIComponent(shard)}.json`, dir: LEXICON_DIR, name: `${shard}.json`, size, sha, key: `lexicon/${shard}` });
+    files.push({ url: `${PACKS}/lexicon/${encodeURIComponent(shard)}.json`, dir: LEXICON_DIR, name: `${shard}.json`, size, sha, key: `lexicon/${shard}` });
   }
   return files;
 }

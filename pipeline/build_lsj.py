@@ -105,13 +105,66 @@ def segments(el: ET.Element, greek: bool = False) -> list:
     return [s for s in tidy if not (isinstance(s, str) and not s.strip())]
 
 
+# Abbreviations LSJ writes before a word of another language; a <tr> right after one glosses that word.
+COGNATE_LANGS = {"Skt", "Sanskr", "Lat", "Goth", "Arm", "Lith", "Lett", "OHG", "MHG", "OE", "OIr", "Ir", "Engl", "Germ",
+                 "Av", "Zd", "Slav", "OSlav", "Hitt", "Toch", "Pers", "Heb", "Hebr", "Aram", "Syr", "Arab", "Egypt", "Umbr", "Osc"}
+
+
+def glossing_trs(entry: ET.Element, anywhere: bool = False) -> list[str]:
+    """
+    The <tr> elements that translate the headword, in reading order: inside a sense, and not inside
+    a note on cognates. LSJ's source sometimes marks the meaning of a related word in another language
+    with <tr> too ("(Cf. ὄρνεον, Goth. ara, gen. arins 'eagle')" in ὄρνις), so a <tr> is skipped when
+    it stands in a parenthesis that opens with "Cf." or right after a language's name ("Goth."); when
+    such a <tr> holds the foreign word and then the English ("Lat. diaetarius, house-steward"), the
+    English after the comma is kept. With anywhere=True, <tr>s outside the senses count too.
+    """
+    out: list[str] = []
+    parens: list[bool] = []          # one flag per open parenthesis: is it a note on cognates?
+    last_text = ""
+
+    def text(t: str | None) -> None:
+        nonlocal last_text
+        if not t:
+            return
+        for i, ch in enumerate(t):
+            if ch == "(":
+                parens.append(t[i + 1:i + 5].lstrip().lower().startswith("cf"))
+            elif ch == ")" and parens:
+                parens.pop()
+        last_text = t
+
+    def walk(el: ET.Element, in_sense: bool) -> None:
+        text(el.text)
+        for c in el:
+            if c.tag == "tr":
+                before = last_text.rstrip()
+                lang = re.search(r"([A-Z][A-Za-z]*)\.$", before)
+                t = " ".join("".join(c.itertext()).split())
+                if in_sense and not any(parens):
+                    if not (lang and lang.group(1) in COGNATE_LANGS):
+                        out.append(t)
+                    elif "," in t:
+                        out.append(t.split(",", 1)[1])
+                elif in_sense and parens and not any(parens[:-1]) and ")" in t:
+                    out.append(t.rsplit(")", 1)[1])      # "(cf. Lat. mappa), towel": the English is after the note
+                text(t)
+            elif c.get("lang") == "greek":
+                pass                     # Beta Code writes breathings as ( and ), which are not brackets
+            else:
+                walk(c, in_sense or c.tag == "sense")
+            text(c.tail)
+
+    walk(entry, anywhere or entry.tag == "sense")
+    return out
+
+
 def short_gloss(entry: ET.Element) -> str:
     """The first few translations LSJ marks with <tr>, taken from its numbered senses only
     (the part before them holds forms and etymology, where <tr> can mark cognates)."""
     seen: list[str] = []
-    trs = [tr for s in entry.iter("sense") for tr in s.iter("tr")] or list(entry.iter("tr"))
-    for tr in trs:
-        t = " ".join("".join(tr.itertext()).split()).strip(" ,;:")
+    for t in glossing_trs(entry) or glossing_trs(entry, anywhere=True):
+        t = t.strip(" ,;:")
         # a few <tr> elements in the source hold abbreviations ("Il.Parv..", "Smp.."), not translations
         if ".." in t or re.fullmatch(r"[A-Z][\w.]*\.", t):
             continue

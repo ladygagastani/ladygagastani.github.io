@@ -17,9 +17,28 @@ A repository with that exact name is served at the top of the address (`/`). The
 there (`/data/…`, `/sw.js`, `/images/…`). A repository with any other name would be served at
 `/<name>/`, and those requests would fail unless the code were changed to use a base path.
 
-## What does not work online yet
-These generated data packs are not in the repository (they are too large and gitignored), so they are not on the site:
-`public/data/words` (word analyses), `public/data/lsj` (LSJ), `public/data/search` (the Oracle's index) and
-`public/data/lexicon` (Word Study). Online, the Oracle search, Word Study and the detailed word look-ups
-need them; see "Hosting the generated data packs" in `PROGRESS.md`. Note that GitHub refuses single files
-over 100 MB and a Pages site should stay under 1 GB.
+## The large data packs: a second site at `/packs/`
+The generated data packs are too large for this repository (they are gitignored): `words` (word analyses),
+`lsj` (LSJ), `lexicon` (Word Study) and `search` (the Oracle's index), about 780 MB in 5,100 files. They are
+published as a second GitHub Pages site from the repository **`ladygagastani/packs`**, which GitHub serves at
+https://ladygagastani.github.io/packs/ — the same address as the site, so visitors' browsers contact nobody
+else and the offline helper can keep the files. The live site is built with `NEXT_PUBLIC_PACKS=/packs`
+(`deploy.yml`), so it fetches them from there; on your own computer they stay in `web/public/data`
+(`web/src/config/packs.ts`).
+
+**Setting it up (once):**
+1. On github.com, create a new repository named exactly **`packs`**, **public**, with nothing in it (no README, no licence).
+2. Run `python pipeline/publish_packs.py --push` (it uploads about 780 MB; this takes a while).
+3. In the `packs` repository: Settings → Pages → Source **Deploy from a branch**, branch **main**, folder **/ (root)** → Save.
+4. After a few minutes, https://ladygagastani.github.io/packs/lsj/_meta.json should open.
+
+**After rebuilding any pack** (see README.md, "The large data files"), run `python pipeline/publish_packs.py --push`
+again. It replaces the whole `packs` repository with one fresh commit, so it never grows with history.
+Without `--push` it only checks and prepares the upload.
+
+Limits: GitHub refuses single files over 100 MB (the largest pack file is 11 MB), and a Pages site should stay
+under 1 GB; the script stops if the packs come within 5% of that. Past 1 GB, split them over two repositories
+(for example `packs` and `packs2`) and point `search` at the second.
+
+Until the `packs` site exists, the Oracle, Word Study and the detailed word look-ups do not work online, and
+the Census shows its rankings but not an item's charts.

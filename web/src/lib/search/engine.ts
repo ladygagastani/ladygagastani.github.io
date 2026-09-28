@@ -1,6 +1,6 @@
 /**
  * The search engine, in the browser. It reads the index built by scripts/build-search.ts from
- * /data/search: only the few small files ("shards") a query needs, kept in memory once read.
+ * <packs>/search: only the few small files ("shards") a query needs, kept in memory once read.
  *
  * Kinds of search:
  * - forms:  Greek words exactly as printed (accents ignored), one or several in a row;
@@ -11,9 +11,10 @@
 import { greekEditions, translations, type CatalogIndex } from "@/lib/catalog";
 import { decodePostings, englishKey, unpackShard, type Posting } from "./codec";
 import type { KeyPattern } from "./input";
+import { PACKS } from "@/config/packs";
 
 export type Dir = "grc" | "eng" | "lem" | "tag";
-const BASE = "/data/search";
+const BASE = `${PACKS}/search`;
 const EXTRAS: Record<Dir, number> = { grc: 0, eng: 0, lem: 1, tag: 0 };
 
 export interface TextInfo { id: number; urn: string; work: string; lang: string; kind: string }

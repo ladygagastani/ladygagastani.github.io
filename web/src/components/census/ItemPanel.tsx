@@ -33,15 +33,24 @@ export function worksInScope(meta: CensusMeta, wm: Record<string, WorkMeta>, s: 
   return out;
 }
 
-export default function ItemPanel({ meta, cat, item, scope, links, onClose }: {
-  meta: CensusMeta; cat: Category; item: Shown; scope: Scope; links: Links; onClose: () => void;
+/** The works the Census counted and their sizes, in the shape of the Word Study index's list. */
+function censusWorks(meta: CensusMeta): LexMeta {
+  return { works: meta.authors.flatMap((a) => a[3].map(([w, , n]) => [w, n] as [string, number])), tags: [], lemmas: 0, forms: 0 };
+}
+
+export default function ItemPanel({ meta, cat, item, listed, scope, links, onClose }: {
+  meta: CensusMeta; cat: Category; item: Shown; listed: number | null; scope: Scope; links: Links; onClose: () => void;
 }) {
   const phrase = cat.id === "phrase";
-  const lex = useLoad(`lex|${item.text}`, () => Promise.all([phrase ? Promise.resolve(null) : lexEntry(item.text), loadLexMeta()]));
+  // a word's counts per work come from the Word Study index; a phrase's from the Census's own files
+  const lex = useLoad(`lex|${item.text}`, () => Promise.all([lexEntry(item.text), loadLexMeta()]), !phrase);
   const occ = useLoad(`ph|${item.text}`, () => phraseOccurrences(item.text), phrase);
   const wm = useLoad("worksmeta", loadWorksMeta);
   const place = useLoad(`place|${item.text}`, () => placeNamed(item.text), cat.id === "place");
-  const lexMeta = lex.state === "done" ? lex.value[1] : null;
+  const phraseWorks = useMemo(() => censusWorks(meta), [meta]);
+  const lexMeta = phrase ? phraseWorks : lex.state === "done" ? lex.value[1] : null;
+  // the Word Study index is not on every copy of the site (it is part of the downloadable word data)
+  const noIndex = !phrase && lex.state === "done" && !lex.value[1];
 
   // the item's uses per work, as a Word Study entry (a phrase's come from the Census's own file)
   const entry: LexEntry | null = useMemo(() => {
@@ -54,11 +63,12 @@ export default function ItemPanel({ meta, cat, item, scope, links, onClose }: {
   }, [lex, occ, lexMeta, phrase]);
 
   const inScope = useMemo(() => {
+    if (noIndex) return listed;
     if (!entry || !lexMeta || wm.state !== "done") return null;
     const set = worksInScope(meta, wm.value, scope);
     if (!set) return entry.n;
     return entry.w.reduce((s, [wi, n]) => s + (set.has(lexMeta.works[wi]?.[0]) ? n : 0), 0);
-  }, [entry, lexMeta, wm, meta, scope]);
+  }, [entry, lexMeta, wm, meta, scope, noIndex, listed]);
 
   const group = groupOf(scope);
   const info = groupInfo(meta, group);
@@ -84,15 +94,16 @@ export default function ItemPanel({ meta, cat, item, scope, links, onClose }: {
           <dt>{group === "all" ? "In the whole library" : `In ${info.label}`}</dt>
           <dd>{inScope === null ? "…" : fmt(inScope)}<small>{inScope !== null && info.words > 0 && `${fmtRate(rate(inScope, info.words))} per 10,000 words`}</small></dd>
         </div>
-        {group !== "all" && (
+        {group !== "all" && !noIndex && (
           <div>
             <dt>In the whole library</dt>
             <dd>{entry ? fmt(entry.n) : "…"}<small>{entry && `in ${fmt(entry.w.length)} works`}</small></dd>
           </div>
         )}
       </dl>
-      {failed && <p className={styles.warn}>The counts per work could not be loaded (they come with the word look-ups; see the Scroll Case).</p>}
-      {!failed && lex.state === "done" && !phrase && !lex.value[0] && <p className={styles.warn}>Word Study has no entry for this word, so its spread cannot be shown.</p>}
+      {failed && <p className={styles.warn}>The counts per work could not be loaded. Check the connection, then try again.</p>}
+      {noIndex && <p className={styles.note}>How this word spreads over the periods and the works comes from the Word Study index, which this copy of the site does not have yet, so the charts cannot be shown here.</p>}
+      {!failed && !noIndex && lex.state === "done" && !lex.value[0] && <p className={styles.warn}>Word Study has no entry for this word, so its spread cannot be shown.</p>}
 
       <nav className={styles.go} aria-label="More about it">
         <Link className="btn" href={oracle} transitionTypes={["page-turn"]}>Every mention <span className="arr">→</span></Link>

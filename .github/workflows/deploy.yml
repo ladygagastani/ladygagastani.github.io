@@ -35,6 +35,9 @@ jobs:
       - name: Build
         working-directory: web
         run: npm run build
+        env:
+          # the large data packs come from the second Pages site (pipeline/publish_packs.py)
+          NEXT_PUBLIC_PACKS: /packs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

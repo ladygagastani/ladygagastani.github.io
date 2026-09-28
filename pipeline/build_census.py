@@ -400,6 +400,11 @@ def phrase_pass2(wid: str) -> tuple[str, dict]:
     return wid, out
 
 
+def top(counts: dict, n: int) -> list[tuple[str, int]]:
+    """The n largest counts; ties in alphabetical order, so every build gives the same lists."""
+    return sorted(counts.items(), key=lambda x: (-x[1], x[0]))[:n]
+
+
 def build_phrases(works: list[str]) -> dict[str, dict[str, list[int]]]:
     """phrase -> {work: [unit of each occurrence]} for the phrases worth listing."""
     approx: collections.Counter = collections.Counter()
@@ -407,8 +412,8 @@ def build_phrases(works: list[str]) -> dict[str, dict[str, list[int]]]:
     with multiprocessing.Pool() as pool:
         for wid, c in pool.imap_unordered(phrase_pass1, works, chunksize=2):
             approx.update(c)
-            per_work_top.update(k for k, v in collections.Counter(c).most_common(25) if v >= 3)
-    cands = {k for k, _ in approx.most_common(6000)} | per_work_top
+            per_work_top.update(k for k, v in top(c, 25) if v >= 3)
+    cands = {k for k, _ in top(approx, 6000)} | per_work_top
     print(f"phrases: {len(approx):,} repeated within a work; {len(cands):,} candidates", flush=True)
     occ: dict[str, dict[str, list[int]]] = {}
     with multiprocessing.Pool(initializer=_init_candidates, initargs=(cands,)) as pool:
@@ -564,7 +569,7 @@ def build(data: dict) -> None:
                 for g in groups_of.get(wid, ()):
                     sums[g][item] += n
         for g, c in sums.items():
-            ranked[g][cat] = [[k, n] for k, n in c.most_common(top_n(g))]
+            ranked[g][cat] = [[k, n] for k, n in top(c, top_n(g))]
         print(f"  {cat}: {len(items):,} items", flush=True)
 
     # A row is [the word as GLAUx spells it, count], plus a 0 when a name or object was sorted
@@ -583,7 +588,7 @@ def build(data: dict) -> None:
                         row.append(0)
                     if cat not in ("person", "god", "place", "people"):
                         shown.add(k)
-    gl = glosses({k: display[k] for k in shown}, {k: lemmas[k][3].most_common(1)[0][0] for k in shown if lemmas[k][3]})
+    gl = glosses({k: display[k] for k in sorted(shown)}, {k: lemmas[k][3].most_common(1)[0][0] for k in shown if lemmas[k][3]})
 
     # write
     import shutil
@@ -613,8 +618,8 @@ def build(data: dict) -> None:
     # where each listed phrase occurs: [work, [unit of each occurrence]], sharded like the search index
     shards: dict[str, dict] = collections.defaultdict(dict)
     listed = {row[0] for g in ranked.values() for row in g.get("phrase", [])}
-    for g in listed:
-        shards[greek_key(g)[:2] or "_"][g] = [[wid, us] for wid, us in sorted(phrases[g].items(), key=lambda x: -len(x[1]))]
+    for g in sorted(listed):
+        shards[greek_key(g)[:2] or "_"][g] = [[wid, us] for wid, us in sorted(phrases[g].items(), key=lambda x: (-len(x[1]), x[0]))]
     for s, body in shards.items():
         size += dump(OUT / "ph" / f"{s}.json", body)
 

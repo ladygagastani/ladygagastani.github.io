@@ -126,8 +126,9 @@ self.addEventListener("fetch", (e) => {
   if (request.headers.get("RSC") || url.searchParams.has("_rsc")) return;
   if (request.mode === "navigate") { e.respondWith(page(request)); return; }
   if (url.pathname.startsWith("/_next/static/")) { e.respondWith(staticFile(request)); return; }
-  if (url.pathname.startsWith("/data/search/")) return;
-  if (url.pathname.startsWith("/data/") || url.pathname.startsWith("/audio/") || url.pathname.startsWith("/images/")) { e.respondWith(dataFile(request)); return; }
+  // the Oracle's index is too large to keep; the other data packs live in /data locally and /packs online
+  if (url.pathname.startsWith("/data/search/") || url.pathname.startsWith("/packs/search/")) return;
+  if (["/data/", "/packs/", "/audio/", "/images/"].some((p) => url.pathname.startsWith(p))) { e.respondWith(dataFile(request)); return; }
 });
 
 self.addEventListener("message", (e) => {

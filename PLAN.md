@@ -3,8 +3,8 @@
 Status: **agreed**; Phases 0–7 are built (see `PROGRESS.md`). The owner's decisions since this was written are in
 `PROGRESS.md`'s decisions log, and win where they differ from this file. The main ones: hosting is **GitHub Pages**
 (static export), not Vercel; the map is **drawn by the site from its own files**, not MapLibre with tiles; texts are read
-from the original GitHub files, unchanged (§3a). Still open: sign-in methods and moderation (Phase 8), where to host the
-large generated data packs, and a domain.
+from the original GitHub files, unchanged (§3a); the large data packs are a second GitHub Pages site at `/packs/`
+(DEPLOYMENT.md); Phase 8 uses email sign-up, and the owner moderates. Still open: a domain.
 Written 2026-09-26. The brief (`greek-reader-website-prompt.md`) is the source of truth; this file
 explains *how* we'll deliver it. Anything marked **(verify)** must be checked before we rely on it.
 

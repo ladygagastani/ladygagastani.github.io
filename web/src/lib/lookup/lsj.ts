@@ -4,6 +4,7 @@
  */
 import { fold } from "@/lib/catalog";
 import { opfsRead } from "@/lib/texts/local";
+import { PACKS } from "@/config/packs";
 
 export type Seg = string | { g: string } | { c: string; u: string };
 export interface LsjEntry { k: string; s: string; b: [number, string, Seg[]][] }
@@ -20,7 +21,7 @@ function loadShard(shard: string) {
     shards.set(shard, (async () => {
       const local = await opfsRead(LSJ_DIR, `${shard}.json`).catch(() => null);
       if (local) return JSON.parse(local);
-      const res = await fetch(`/data/lsj/${encodeURIComponent(shard)}.json`);
+      const res = await fetch(`${PACKS}/lsj/${encodeURIComponent(shard)}.json`);
       if (res.status === 404) return null;
       if (!res.ok) throw new Error(`LSJ unavailable (${res.status})`);
       return res.json();
