@@ -1,0 +1,26 @@
+<!-- Supabase → Authentication → Emails → Templates → "Confirm signup".
+     Subject: Confirm your place in the Town Hall · Mathesis Stoicheion
+     Inline styles only: email programs ignore style sheets. {{ .ConfirmationURL }} is filled in by Supabase. -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#E6C39B;padding:32px 12px;">
+  <tr><td align="center">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#F6ECDD;border:1px solid #1B1410;">
+      <tr><td style="background:#1B1410;height:10px;font-size:0;line-height:0;">&nbsp;</td></tr>
+      <tr><td style="padding:28px 32px 8px;font-family:Georgia,'Times New Roman',serif;color:#1B1410;">
+        <p style="margin:0;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#A33A16;">Mathesis Stoicheion · Μάθησις Στοιχείων</p>
+        <h1 style="margin:14px 0 0;font-size:26px;font-weight:normal;line-height:1.25;">Welcome to the Town Hall</h1>
+      </td></tr>
+      <tr><td style="padding:12px 32px 4px;font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.6;color:#1B1410;">
+        <p style="margin:0 0 14px;">Someone, we hope you, asked to join the Town Hall and the Pnyx with this email address. Confirm it, and you can ask questions, reply, argue motions and cast your pebble.</p>
+        <p style="margin:22px 0;text-align:center;">
+          <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#1B1410;color:#F6ECDD;text-decoration:none;padding:12px 26px;font-size:16px;">Confirm my address</a>
+        </p>
+        <p style="margin:0 0 14px;font-size:14px;color:#5A3E2B;">If the button does not work, copy this link into your browser:<br><a href="{{ .ConfirmationURL }}" style="color:#A33A16;word-break:break-all;">{{ .ConfirmationURL }}</a></p>
+        <p style="margin:0 0 14px;font-size:14px;color:#5A3E2B;">If you did not ask to join, ignore this letter: nothing happens without the link.</p>
+      </td></tr>
+      <tr><td style="padding:8px 32px 24px;font-family:Georgia,'Times New Roman',serif;font-size:13px;color:#5A3E2B;border-top:1px solid #DDB186;">
+        <p style="margin:12px 0 0;">Mathesis Stoicheion is free, with no adverts and no trackers. Reading, study and the wiki never need an account.</p>
+      </td></tr>
+      <tr><td style="background:#A33A16;height:6px;font-size:0;line-height:0;">&nbsp;</td></tr>
+    </table>
+  </td></tr>
+</table>
