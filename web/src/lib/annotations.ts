@@ -1,12 +1,13 @@
 /**
  * The reader's own marks on the texts: bookmarks, favourite passages, notes and highlights, and
  * their notes on authors and on dictionary words (the Treasury).
- * Kept in IndexedDB on this device (sync across devices comes with accounts, Phase 8).
+ * Kept in IndexedDB on this device; members can keep it in step between devices (lib/community/sync.ts).
  *
  * A mark points at a stretch of Greek by passage reference and word position, so it survives
  * page changes and different translations: { u: "1.33", i: 4 } is the 5th Greek word of 1.33.
  */
 import { create } from "zustand";
+import { recordDeletion } from "./tombstones";
 
 export type Kind = "bookmark" | "favourite" | "note" | "highlight" | "xref";
 export type Colour = "red" | "ochre" | "blue" | "green";
@@ -57,6 +58,16 @@ function run<T>(mode: IDBTransactionMode, fn: (s: IDBObjectStore) => IDBRequest<
 
 export const allMarks = () => run<Mark[]>("readonly", (s) => s.getAll());
 export const allPageNotes = () => run<PageNote[]>("readonly", (s) => s.getAll(), NOTES);
+
+/** Delete many records at once (deletions made on another device). */
+export function deleteAll(ids: string[]): Promise<void> {
+  return db().then((d) => new Promise<void>((resolve, reject) => {
+    const tx = d.transaction([STORE, NOTES], "readwrite");
+    for (const id of ids) { tx.objectStore(STORE).delete(id); tx.objectStore(NOTES).delete(id); }
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  }));
+}
 
 /** Write many records at once (restoring from an export). */
 export function putAll(marks: Mark[], notes: PageNote[]): Promise<void> {
@@ -131,6 +142,7 @@ export const useMarks = create<MarksState>()((set, get) => ({
   async remove(id) {
     const m = find(get().byWork, id);
     await run("readwrite", (s) => s.delete(id));
+    recordDeletion(id);
     if (m) set((s) => put(s.byWork, m.work, s.byWork[m.work].filter((x) => x.id !== id)));
   },
 }));
@@ -167,6 +179,7 @@ export const usePageNotes = create<PageNotesState>()((set, get) => ({
   },
   async remove(id) {
     await run("readwrite", (s) => s.delete(id), NOTES);
+    recordDeletion(id);
     set((s) => { const notes = { ...s.notes }; delete notes[id]; return { notes }; });
   },
 }));

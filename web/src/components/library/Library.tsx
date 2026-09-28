@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { loadCatalog, fold, greekEditions, hasTranslation, type CatalogIndex, type CatAuthor, type CatWork } from "@/lib/catalog";
 import { loadWorksMeta, FAMILIES, PERIODS, familyOf, periodOf, centuries, type WorkMeta } from "@/lib/works-meta";
+import { commonShare, loadDifficulty, VOCAB_BANDS } from "@/lib/difficulty";
 import styles from "./Library.module.css";
 
 /**
@@ -20,7 +21,7 @@ const START = [
 const readHref = (w: CatWork) => `/read?w=${w.id}`;
 const kb = (n: number) => (n > 1e6 ? `${(n / 1e6).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1e3))} KB`);
 
-function WorkItem({ w, author, meta }: { w: CatWork; author?: CatAuthor; meta?: WorkMeta }) {
+export function WorkItem({ w, author, meta, common }: { w: CatWork; author?: CatAuthor; meta?: WorkMeta; common: number | null }) {
   const grc = greekEditions(w)[0];
   const tr = hasTranslation(w);
   return (
@@ -32,6 +33,7 @@ function WorkItem({ w, author, meta }: { w: CatWork; author?: CatAuthor; meta?: 
       <span className={styles.meta}>
         {meta?.genre && <span className={styles.genre}>{meta.genre}{meta.from !== null ? ` · ${centuries(meta.from, meta.to)}` : ""}</span>}
         {tr ? <span className={styles.badge}>English</span> : <span className={`${styles.badge} ${styles.off}`}>Greek only</span>}
+        {common !== null && <span title={`${common}% of this text's running words are among the 516 core words, the commonest in Greek`}>{common}% common words</span>}
         {grc && <span>{kb(grc.size)}</span>}
       </span>
     </li>
@@ -48,11 +50,13 @@ export default function Library() {
   const [family, setFamily] = useState("");
   const [period, setPeriod] = useState("");
   const [dialect, setDialect] = useState("");
+  const [vocab, setVocab] = useState("");
+  const [diff, setDiff] = useState<Record<string, [number, number]>>({});
   const [meta, setMeta] = useState<Record<string, WorkMeta>>({});
   const query = useDeferredValue(q);
-  useEffect(() => { loadCatalog().then(setIdx, (e: Error) => setError(e.message)); loadWorksMeta().then(setMeta); }, []);
+  useEffect(() => { loadCatalog().then(setIdx, (e: Error) => setError(e.message)); loadWorksMeta().then(setMeta); loadDifficulty().then(setDiff); }, []);
   const dialects = useMemo(() => [...new Set(Object.values(meta).map((m) => m.dialect).filter((d): d is string => !!d))].sort(), [meta]);
-  const filtering = !!(family || period || dialect);
+  const filtering = !!(family || period || dialect || vocab);
 
   const selected = params.get("a");
   const authors = useMemo(() => idx?.catalog.authors ?? [], [idx]);
@@ -64,8 +68,12 @@ export default function Library() {
     if (family && familyOf(m?.genre ?? null) !== family) return false;
     if (period && periodOf(m?.from ?? null) !== period) return false;
     if (dialect && m?.dialect !== dialect) return false;
+    if (vocab) {
+      const p = commonShare(diff[w.id]);
+      if (p === null || !VOCAB_BANDS.find(([id]) => id === vocab)?.[2](p)) return false;
+    }
     return true;
-  }, [onlyEnglish, family, period, dialect, meta]);
+  }, [onlyEnglish, family, period, dialect, vocab, meta, diff]);
   const visibleAuthors = useMemo(() => authors.filter((a) => a.works.some(keep)), [authors, keep]);
   const author = idx && selected ? idx.author.get(selected) : undefined;
 
@@ -123,7 +131,7 @@ export default function Library() {
         <div className={styles.browseHead}>
           <h2 id="browse-title">All texts</h2>
           <p className="muted">
-            {idx ? `${stats.authors} authors · ${stats.works} works · ${stats.english} with an English translation` : "Opening the catalogue…"}
+            {idx ? `${stats.authors.toLocaleString("en-GB")} authors · ${stats.works.toLocaleString("en-GB")} works · ${stats.english.toLocaleString("en-GB")} with an English translation` : "Opening the catalogue…"}
           </p>
         </div>
         <div className={styles.tools}>
@@ -152,14 +160,20 @@ export default function Library() {
               {dialects.map((d) => <option key={d} value={d}>{d}</option>)}
             </select>
           </label>
-          {filtering && <button type="button" className="chip" onClick={() => { setFamily(""); setPeriod(""); setDialect(""); }}>Clear filters</button>}
-          <p className={styles.small}>Genre, period and dialect come from the GLAUx corpus and cover {Object.keys(meta).length.toLocaleString("en-GB")} works; dates are by century.</p>
+          <label><span className="label">Vocabulary</span>
+            <select id="library-vocab" value={vocab} onChange={(e) => setVocab(e.target.value)}>
+              <option value="">Any vocabulary</option>
+              {VOCAB_BANDS.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+            </select>
+          </label>
+          {filtering && <button type="button" className="chip" onClick={() => { setFamily(""); setPeriod(""); setDialect(""); setVocab(""); }}>Clear filters</button>}
+          <p className={styles.small}>Vocabulary is the share of a text's running words that are among the 516 core words, the commonest in Greek (the Dickinson College Commentaries core list, counted over the GLAUx analysis; texts under 2,000 words are not rated). It measures words only, not grammar, dialect or how hard the ideas are: Aristotle's words are common, his arguments are not. Genre, period and dialect come from the GLAUx corpus and cover {Object.keys(meta).length.toLocaleString("en-GB")} works; dates are by century.</p>
         </div>
 
         {matches ? (
           <div className={styles.results}>
             <p className="muted">{matches.length ? `${matches.length} work${matches.length === 1 ? "" : "s"} found` : "Nothing found. Try fewer letters, or search in English."}</p>
-            <ul className={styles.works}>{matches.slice(0, 200).map(({ w, a }) => <WorkItem key={w.id} w={w} author={a} meta={meta[w.id]} />)}</ul>
+            <ul className={styles.works}>{matches.slice(0, 200).map(({ w, a }) => <WorkItem key={w.id} w={w} author={a} meta={meta[w.id]} common={commonShare(diff[w.id])} />)}</ul>
             {matches.length > 200 && <p className="muted">Showing the first 200. Add more letters to narrow the search.</p>}
           </div>
         ) : (
@@ -179,14 +193,14 @@ export default function Library() {
               {author ? (
                 <>
                   <h3>{author.name}</h3>
-                  <p className="muted">{author.works.length} work{author.works.length === 1 ? "" : "s"} in the collections</p>
+                  <p className="muted">{author.works.length} work{author.works.length === 1 ? "" : "s"} in the collections · <Link href={`/library/author?a=${author.id}`} transitionTypes={["page-turn"]}>Author page →</Link></p>
                   <ul className={styles.works}>
-                    {author.works.filter(keep).map((w) => <WorkItem key={w.id} w={w} meta={meta[w.id]} />)}
+                    {author.works.filter(keep).map((w) => <WorkItem key={w.id} w={w} meta={meta[w.id]} common={commonShare(diff[w.id])} />)}
                   </ul>
                 </>
               ) : (
                 <div className={styles.empty}>
-                  <p className={styles.emptyGr} lang="grc">βιβλία</p>
+                  <p className={styles.emptyGr} lang="grc" aria-hidden="true" data-decorative="">βιβλία</p>
                   <p className="muted">Choose an author to see their works, or search above.</p>
                 </div>
               )}

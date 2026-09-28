@@ -14,7 +14,7 @@
 
 .featured {
   position: relative; display: grid; gap: 10px; padding: clamp(24px, 4vw, 40px); text-decoration: none; overflow: hidden;
-  background: var(--ink); color: var(--bg); border-radius: var(--radius);
+  background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: var(--radius);
   box-shadow: inset 0 0 0 6px var(--ink), inset 0 0 0 7px color-mix(in srgb, var(--accent) 60%, transparent);
   animation: lift 0.7s var(--ease) both;
 }
@@ -80,7 +80,7 @@
 .entryGrid { display: grid; grid-template-columns: minmax(0, 46rem) minmax(220px, 280px); gap: clamp(28px, 5vw, 72px); justify-content: space-between; align-items: start; }
 .entryMain { display: grid; gap: 20px; font-size: 1.12rem; line-height: 1.75; min-width: 0; }
 .entryMain > p { margin: 0; }
-.entryAside { position: sticky; top: 90px; display: grid; gap: 22px; }
+.entryAside { position: sticky; top: calc(var(--hdr-vis) + 22px); transition: top 0.35s var(--ease); display: grid; gap: 22px; }
 @media (max-width: 980px) { .entryGrid { grid-template-columns: 1fr; } .entryAside { position: static; order: -1; } }
 
 .hook { font-size: 1.32rem; line-height: 1.6; }
@@ -105,10 +105,10 @@
 .quoteGr { margin: 0; font-family: var(--f-greek); font-size: 1.45rem; line-height: 1.55; white-space: pre-line; }
 .quoteTr { margin: 0; font-style: italic; color: var(--ink-2); }
 .quote figcaption { font-family: var(--f-label); font-size: 0.88rem; letter-spacing: 0.04em; color: var(--ink-2); }
-.quote figcaption a { color: var(--accent); text-decoration: none; }
-.quote figcaption a:hover { text-decoration: underline; }
+.quote figcaption a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent); text-underline-offset: 3px; }
+.quote figcaption a:hover { text-decoration-color: var(--accent); }
 
-.dyk { margin: 8px 0; padding: 18px 22px 18px 58px; position: relative; background: var(--ink); color: var(--bg); border-radius: var(--radius); display: grid; gap: 6px; font-size: 1.04rem; }
+.dyk { margin: 8px 0; padding: 18px 22px 18px 58px; position: relative; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: var(--radius); display: grid; gap: 6px; font-size: 1.04rem; }
 .dyk :global(.label) { color: var(--accent); }
 .dyk p { margin: 0; }
 .dyk a { color: inherit; }
@@ -148,8 +148,8 @@
 .certKey p { margin: 0; display: grid; gap: 4px; justify-items: start; }
 
 /* ---------------------------------------------------------------- the reader's own notes on an entry */
-.noteBtn { justify-self: end; margin-top: -12px; font-size: 0.82rem; opacity: 0.55; transition: opacity 0.2s; }
-.noteBtn:hover, .noteBtn:focus-visible { opacity: 1; }
+.noteBtn { justify-self: end; margin-top: -12px; font-size: 0.82rem; color: var(--ink-2); border-color: var(--rule); transition: color 0.2s, border-color 0.2s; }
+.noteBtn:hover, .noteBtn:focus-visible { color: var(--ink); border-color: var(--ink); }
 .entryMain > .noteBtn { justify-self: end; }
 .sectionNote { margin-top: -6px; padding: 12px 16px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--radius) var(--radius) 0; font-size: 1rem; animation: noteIn 0.35s var(--ease) both; }
 @keyframes noteIn { from { opacity: 0; transform: translateY(-4px); } }

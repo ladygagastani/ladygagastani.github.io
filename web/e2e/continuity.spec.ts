@@ -70,6 +70,11 @@ test("the floating reader follows the reader around the site, snaps, minimises a
   await page.goto("/treasury");
   await page.waitForTimeout(1200);   // the visit is remembered once the page settles
   await openIliad(page, "1.40");
+  // wait until the reader has brought 1.40 to the top and the header has finished sliding away: a click on
+  // the sticky bar while it still moves makes the test browser scroll the page first
+  await expect.poll(() => page.locator('[data-key="1.40"]').first().evaluate((el) => el.getBoundingClientRect().top)).toBeLessThan(260);
+  await expect(page.locator("html")).toHaveAttribute("data-hdr", "hidden");
+  await expect.poll(() => page.getByRole("button", { name: /Float the reader/ }).evaluate((el) => el.getBoundingClientRect().top)).toBeLessThan(60);
   await page.getByRole("button", { name: /Float the reader/ }).click();
   // back to the page before the reader, with the book in a window
   await expect(page).toHaveURL(/\/treasury$/);

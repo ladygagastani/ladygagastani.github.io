@@ -64,7 +64,8 @@ self.addEventListener("install", (e) => {
 
 self.addEventListener("activate", (e) => {
   e.waitUntil((async () => {
-    for (const k of await caches.keys()) if (k !== PAGES && k !== STATIC && k !== DATA) await caches.delete(k);
+    // texts-recent: the texts read lately from GitHub (src/lib/texts/source.ts), kept across builds
+    for (const k of await caches.keys()) if (k !== PAGES && k !== STATIC && k !== DATA && k !== "texts-recent") await caches.delete(k);
     // static files no page of this build uses any more
     const used = new Set();
     const pages = await caches.open(PAGES);

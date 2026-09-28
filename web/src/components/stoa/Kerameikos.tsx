@@ -5,7 +5,7 @@
  */
 import Link from "next/link";
 import { entryBySlug, categoryOf } from "@/wiki/index";
-import { IMAGES } from "@/wiki/images";
+import { IMAGES, srcSet } from "@/wiki/images";
 import { LAYERS, DIG_SITES } from "@/wiki/kerameikos";
 import SectionDrawing from "./SectionDrawing";
 import DepthPole from "./DepthPole";
@@ -47,7 +47,7 @@ export default function Kerameikos() {
                           <Link href={`/stoa/${e.slug}`} transitionTypes={["page-turn"]} className={styles.card}>
                             <span className={styles.thumb} aria-hidden="true">
                               {/* eslint-disable-next-line @next/next/no-img-element -- self-hosted, sized files; no image service */}
-                              {im ? <img src={`/images/${im.file}`} alt="" width={im.width} height={im.height} loading="lazy" decoding="async" className={im.height > im.width * 0.9 ? styles.tallImg : undefined} />
+                              {im ? <img src={`/images/${im.file}`} srcSet={srcSet(im)} sizes="104px" alt="" width={im.width} height={im.height} loading="lazy" decoding="async" className={im.height > im.width * 0.9 ? styles.tallImg : undefined} />
                                 : <span className={styles.noImg} />}
                             </span>
                             <span className={styles.cardText}>

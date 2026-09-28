@@ -12,7 +12,7 @@ const LOCAL = process.env.NODE_ENV === "development";
 export default function StudioPage() {
   return (
     <Page>
-      <div className="wrap" style={{ paddingBlock: "clamp(32px, 5vw, 56px)", display: "grid", gap: 20 }}>
+      <div className="wrap" style={{ paddingBlock: "clamp(32px, 5vw, 56px)", display: "grid", gridTemplateColumns: "minmax(0, 1fr)", gap: 20 }}>
         <nav className="label"><Link href={AREAS.study.href} transitionTypes={["page-turn"]}>{AREAS.study.name}</Link> › Recording studio</nav>
         <h1 style={{ fontSize: "clamp(2.2rem, 5vw, 3.6rem)" }}>Recording studio</h1>
         {LOCAL ? <Studio /> : <p className="muted">The recording studio is used on the project computer, where the site&apos;s audio is recorded and saved.</p>}

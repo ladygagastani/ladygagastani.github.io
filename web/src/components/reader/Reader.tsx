@@ -29,6 +29,7 @@ import EchoesPanel, { type EchoMarks, type EchoQuery, type EchoTarget } from "./
 import MetreBar from "./MetreBar";
 import ScrollMarkers, { MarkersLegend, type MarkerItem } from "./ScrollMarkers";
 import { useFloat } from "@/lib/float";
+import { ASK_KEY } from "@/lib/community/ask";
 import { lastOtherPage } from "@/lib/resume";
 import { metreIndex, publishedFor, loadLengths } from "@/lib/metre/load";
 import { renderPassages, type LineRender } from "@/lib/metre/render";
@@ -36,6 +37,7 @@ import { lineHash, type MetreIndex } from "@/lib/metre/text";
 import { playLine as playLineRhythm } from "@/lib/metre/beat";
 import { loadWordPack, analyse as analyseWord } from "@/lib/lookup/words";
 import { caseOf } from "@/lib/lookup/postag";
+import { headerVisible, scrollBelowHeader } from "@/lib/header";
 import styles from "./Reader.module.css";
 
 type Load = { state: "loading"; step: string } | { state: "error"; message: string } | { state: "ready" };
@@ -153,6 +155,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const [share, setShare] = useState<ShareData | null>(null);
   const [openNote, setOpenNote] = useState<string | null>(null);
   const [marksOpen, setMarksOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);   // phones: the bar folds its tools away behind one button
   const allMarks = useMarks((s) => s.byWork[workId]) ?? NO_MARKS;
   useEffect(() => { if (workId) useMarks.getState().load(workId); }, [workId]);
   const [goto, setGoto] = useState("");
@@ -246,6 +249,12 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   useEffect(() => () => stopBeat.current?.(), []);
   /** Play a line's rhythm, lighting each syllable as it sounds. */
   const playLine = (line: HTMLElement) => { stopBeat.current = playLineRhythm(line, { playing: styles.playing, now: styles.beatNow }); };
+  /** Bring a passage to the top, just below the sticky bar (and the site header, if it will be showing). */
+  const bringToTop = (el: HTMLElement, smooth = false) => {
+    if (contained) { el.scrollIntoView({ block: "start", behavior: smooth ? "smooth" : "auto" }); return; }
+    const bar = root().querySelector<HTMLElement>(`.${styles.bar}`);
+    scrollBelowHeader(el, (bar?.offsetHeight ?? 64) + 12, smooth);
+  };
   const startKey = doc && startUnit > 0 ? doc.units[startUnit].ref.join(".") : null;
 
   // once the page is drawn, bring the requested passage into view (and briefly mark it if it was asked for)
@@ -255,8 +264,10 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     const row = rows.find((r) => r.greek.some((u) => u.ref.join(".") === startKey));
     const el = row && root().querySelector<HTMLElement>(`[data-key="${CSS.escape(row.key)}"]`);
     if (!el) return;
-    requestAnimationFrame(() => el.scrollIntoView({ block: "start" }));
+    requestAnimationFrame(() => bringToTop(el));
     if (at || tu) { el.classList.remove(styles.flash); void el.offsetWidth; el.classList.add(styles.flash); }
+    // bringToTop only reads `contained` and the page as it is
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rows, startKey, at, tu, contained]);
 
   // words found by a search: ?hl= their positions in the passage (Greek), ?find= the words (translation)
@@ -305,8 +316,10 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   /** The passage at the top of this pane now: the first showing more than a sliver below the sticky bar. */
   const topKey = () => {
     const bar = root().querySelector<HTMLElement>(`.${styles.bar}`);
-    const edge = bar ? bar.getBoundingClientRect().bottom : contained ? rootRef.current!.getBoundingClientRect().top : 68;
-    return [...root().querySelectorAll<HTMLElement>("article [data-key]")].find((r) => r.getBoundingClientRect().bottom > edge + 24)?.dataset.key ?? null;
+    const edge = bar ? bar.getBoundingClientRect().bottom : contained ? rootRef.current!.getBoundingClientRect().top : headerVisible();
+    // a row's empty padding below its last line does not count as showing
+    return [...root().querySelectorAll<HTMLElement>("article [data-key]")]
+      .find((r) => r.getBoundingClientRect().bottom - parseFloat(getComputedStyle(r).paddingBottom) > edge + 24)?.dataset.key ?? null;
   };
   const onPosition = useRef(nav.onPosition);
   useEffect(() => { onPosition.current = nav.onPosition; }, [nav.onPosition]);
@@ -436,7 +449,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const jumpToRow = (key: string) => {
     const el = root().querySelector<HTMLElement>(`[data-key="${CSS.escape(key)}"]`);
     if (!el) return;
-    el.scrollIntoView({ block: "start", behavior: "smooth" });
+    bringToTop(el, true);
     el.classList.remove(styles.flash); void el.offsetWidth; el.classList.add(styles.flash);
   };
 
@@ -501,7 +514,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     selectSpans(spans, range.getBoundingClientRect());
   };
 
-  async function act(a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | "echoes" | { highlight: Colour }) {
+  async function act(a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | "echoes" | "ask" | { highlight: Colour }) {
     if (!sel || !edV) return;
     if (a === "echoes") {
       openEchoes(sel.start, sel.end);
@@ -525,6 +538,15 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     if (a === "xref-here") return;   // no first passage chosen yet
     const base = { work: workId, ed: edV, start: sel.start, end: sel.end, quote: sel.quote };
     const where = rangeLabel(sel.start.u, sel.end.u);
+    if (a === "ask") {
+      // the Town Hall's new-thread page picks this up (components/community/NewThread.tsx)
+      const tr = rows.filter((r) => sel.rowKeys.includes(r.key)).map((r) => blockText(r.trans)).filter(Boolean).join(" ");
+      const quote = { work: workId, ref: where, grc: sel.quote, eng: tr ? tr.slice(0, 1500) : undefined, cite: `${cite} ${where}`, href: href({ at: sel.start.u }) };
+      try { sessionStorage.setItem(ASK_KEY, JSON.stringify(quote)); } catch { /* private mode: the page opens without it */ }
+      window.getSelection()?.removeAllRanges(); setSel(null);
+      router.push("/town-hall/new?ask=1");
+      return;
+    }
     if (a === "share") {
       const rowsHit = rows.filter((r) => sel.rowKeys.includes(r.key));
       const tr = rowsHit.map((r) => blockText(r.trans)).filter(Boolean).join(" ");
@@ -568,25 +590,68 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     e.dataTransfer.effectAllowed = "copy";
   };
 
+  // a word opens the look-up (by a click, or Enter on the focused word)
+  const openWord = (w: HTMLElement) => {
+    root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel));
+    w.classList.add(styles.sel);
+    rove(w);
+    // which passage the word is in, and which occurrence of this form within it
+    const unit = w.closest<HTMLElement>("[data-u]");
+    let ctx: WordContext | null = null;
+    if (unit && doc) {
+      const same = [...unit.querySelectorAll<HTMLElement>("[data-w]")].filter((x) => norm(x.dataset.w!) === norm(w.dataset.w!));
+      ctx = { work: workId, unitKey: unit.dataset.u!, occurrence: same.indexOf(w), keys: unitKeys, depth: doc.levels.length };
+    }
+    setWord({ w: w.dataset.w!, ctx, at: unit ? { u: unit.dataset.u!, i: [...unit.querySelectorAll("[data-w]")].indexOf(w) } : null });
+  };
+
+  // The keyboard in the text. Tab reaches it as one stop (the first word, or the word last used);
+  // there ← → move word by word, ↑ ↓ line by line, Home / End to the first / last word, Enter or Space looks up.
+  const textRef = useRef<HTMLElement>(null);
+  const rove = (w: HTMLElement) => {
+    textRef.current?.querySelectorAll<HTMLElement>('[data-w][tabindex="0"]').forEach((x) => { if (x !== w) x.tabIndex = -1; });
+    w.tabIndex = 0;
+  };
+  useEffect(() => {
+    const a = textRef.current;
+    if (a && !a.querySelector('[data-w][tabindex="0"]')) { const f = a.querySelector<HTMLElement>("[data-w]"); if (f) f.tabIndex = 0; }
+  });
+  const onTextKey = (e: React.KeyboardEvent<HTMLElement>) => {
+    const w = (e.target as HTMLElement).closest<HTMLElement>("[data-w]");
+    if (!w || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openWord(w); return; }
+    const all = [...e.currentTarget.querySelectorAll<HTMLElement>("[data-w]")];
+    const i = all.indexOf(w);
+    let to: HTMLElement | undefined;
+    if (e.key === "ArrowRight") to = all[i + 1];
+    else if (e.key === "ArrowLeft") to = all[i - 1];
+    else if (e.key === "Home") to = all[0];
+    else if (e.key === "End") to = all[all.length - 1];
+    else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      const r = w.getBoundingClientRect();
+      const next = e.key === "ArrowDown"
+        ? all.slice(i + 1).find((x) => x.getBoundingClientRect().top > r.bottom - 2)
+        : all.slice(0, i).reverse().find((x) => x.getBoundingClientRect().bottom < r.top + 2);
+      if (next) {
+        // on that line, the word nearest the same place across
+        const top = next.getBoundingClientRect().top;
+        const line = all.filter((x) => Math.abs(x.getBoundingClientRect().top - top) < 2);
+        const dx = (x: HTMLElement) => Math.abs(x.getBoundingClientRect().left - r.left);
+        to = line.reduce((a, b) => (dx(b) < dx(a) ? b : a));
+      }
+    } else return;
+    // these keys stay in the text (← → would otherwise turn the page)
+    e.preventDefault(); e.stopPropagation();
+    if (to) { rove(to); to.focus(); }
+  };
+
   // clicks inside the text: words open the look-up; margin references and marks act on the passage
   const onTextClick = (e: React.MouseEvent) => {
     const el = e.target as HTMLElement;
     const beat = el.closest<HTMLElement>("[data-beat]");
     if (beat) { playLine(beat.closest<HTMLElement>(`.${styles.line}`)!); return; }
     const w = el.closest<HTMLElement>("[data-w]");
-    if (w) {
-      root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel));
-      w.classList.add(styles.sel);
-      // which passage the word is in, and which occurrence of this form within it
-      const unit = w.closest<HTMLElement>("[data-u]");
-      let ctx: WordContext | null = null;
-      if (unit && doc) {
-        const same = [...unit.querySelectorAll<HTMLElement>("[data-w]")].filter((x) => norm(x.dataset.w!) === norm(w.dataset.w!));
-        ctx = { work: workId, unitKey: unit.dataset.u!, occurrence: same.indexOf(w), keys: unitKeys, depth: doc.levels.length };
-      }
-      setWord({ w: w.dataset.w!, ctx, at: unit ? { u: unit.dataset.u!, i: [...unit.querySelectorAll("[data-w]")].indexOf(w) } : null });
-      return;
-    }
+    if (w) { openWord(w); return; }
     const r = el.closest<HTMLElement>("[data-row]");
     if (r) {
       const row = root().querySelector(`[data-key="${CSS.escape(r.dataset.row!)}"]`);
@@ -727,7 +792,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   return (
     <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${word || echo || vocabOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""} ${floating ? styles.floating : ""}`}
       onPointerDown={() => useUI.getState().setActivePane(pane)} onFocusCapture={() => useUI.getState().setActivePane(pane)}>
-      {load.state === "ready" && <ScrollMarkers rootRef={rootRef} contained={contained} items={markerItems} onJump={jumpToRow} offset={68} depKey={`${chunk}|${rows.length}|${columns}|${translit}|${!!metre}|${word ? 1 : 0}`} />}
+      {load.state === "ready" && <ScrollMarkers rootRef={rootRef} contained={contained} items={markerItems} onJump={jumpToRow} depKey={`${chunk}|${rows.length}|${columns}|${translit}|${!!metre}|${word ? 1 : 0}`} />}
       {split && (
         <div className={styles.paneBar}>
           <span className="label">{pane === 1 ? "Left book" : "Right book"}</span>
@@ -741,7 +806,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           <>
             <nav className={styles.crumbs} aria-label="Breadcrumbs">
               <Link href={AREAS.library.href} transitionTypes={["page-turn"]}>{AREAS.library.name}</Link>
-              {author && <><span aria-hidden="true">›</span><Link href={`${AREAS.library.href}?a=${author.id}`} transitionTypes={["page-turn"]}>{author.name}</Link></>}
+              {author && <><span aria-hidden="true">›</span><Link href={`${AREAS.library.href}/author?a=${author.id}`} transitionTypes={["page-turn"]}>{author.name}</Link></>}
             </nav>
             <h1 className={styles.title}>{work?.title ?? " "}
               {grcText?.label && grcText.label !== work?.title && <span className={styles.titleGr} lang="grc">{grcText.label}</span>}
@@ -789,7 +854,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
 
       {load.state === "ready" && doc && chunkInfo && (
         <>
-          <div className={`wrap ${styles.bar}`}>
+          <div className={`wrap ${styles.bar}`} data-tools={toolsOpen ? "open" : undefined}>
             <div className={styles.pager}>
               <button type="button" onClick={() => goChunk(chunk - 1)} disabled={chunk === 0} aria-label="Previous page">←</button>
               <select aria-label="Page" value={chunk} onChange={(e) => goChunk(+e.target.value)}>
@@ -797,10 +862,14 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
               </select>
               <button type="button" onClick={() => goChunk(chunk + 1)} disabled={chunk === doc.chunks.length - 1} aria-label="Next page">→</button>
             </div>
+            <button type="button" className={styles.toolsBtn} onClick={() => setToolsOpen(!toolsOpen)} aria-expanded={toolsOpen}>
+              Tools <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
             <form className={styles.goto} onSubmit={submitGoto} role="search">
               <input ref={gotoRef} id="reader-goto" value={goto} onChange={(e) => setGoto(e.target.value)} placeholder={`Go to ${doc.levels.join(".")}`} aria-label="Go to reference" />
               <button type="submit">Go</button>
             </form>
+            <div className={styles.more}>
             {!floating && aids}
             <div className={styles.marksMenu}>
               <button type="button" onClick={() => setMarksOpen(!marksOpen)} aria-expanded={marksOpen}>Your marks ({allMarks.length})</button>
@@ -825,6 +894,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
               </button>
             )}
             <button type="button" className={styles.helpBtn} onClick={() => setHelp((h) => !h)} aria-expanded={help}>Keys <kbd>?</kbd></button>
+            </div>
           </div>
 
           {cases && (
@@ -838,7 +908,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           {translit && <p className={`wrap ${styles.legend}`}><span className="muted">Transliteration uses a simple scheme: η ē, ω ō, rough breathing h, υ y (u in diphthongs), χ ch, φ ph, θ th, iota subscript i; accents are left out.</span></p>}
           {help && (
             <div className={`wrap ${styles.help}`} role="note">
-              <p><kbd>←</kbd> <kbd>→</kbd> previous / next page · <kbd>g</kbd> go to a reference · click a word to look it up · select words or click a passage number for bookmarks, notes, highlights, sharing and Echoes · <kbd>Esc</kbd> close</p>
+              <p><kbd>←</kbd> <kbd>→</kbd> previous / next page · <kbd>g</kbd> go to a reference · click a word to look it up (or <kbd>Tab</kbd> into the text, move with the arrow keys, <kbd>Enter</kbd> to look up) · select words or click a passage number for bookmarks, notes, highlights, sharing and Echoes · <kbd>Esc</kbd> close</p>
             </div>
           )}
 
@@ -854,7 +924,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
             <span className="label">{trText ? `English · ${describe(trText)}` : ""}</span>
           </div>
 
-          <article className={`wrap ${styles.text} ${metre ? styles.metreOn : ""}`} onClick={onTextClick} onMouseUp={onTextMouseUp} onDragStart={onDragStart} aria-label={`${cite}, ${chunkInfo.label}`}>
+          <article ref={textRef} className={`wrap ${styles.text} ${metre ? styles.metreOn : ""}`} onClick={onTextClick} onKeyDown={onTextKey} onMouseUp={onTextMouseUp} onDragStart={onDragStart} aria-label={`${cite}, ${chunkInfo.label}`}>
             {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} translit={translit} metre={metre} />)}
           </article>
           {sel && <PassageToolbar sel={sel} onAction={act} onClose={() => setSel(null)}
@@ -880,7 +950,12 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           onClose={() => setVocabOpen(false)} onPick={(lemma) => setWord({ w: lemma, ctx: null, at: null })} />
       )}
       {echo && !word && <EchoesPanel q={echo} onJump={echoJump} onMarks={setEchoMarks} onClose={() => setEcho(null)} />}
-      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onEchoes={word?.at ? () => openEchoes(word.at!, word.at!) : undefined} onClose={() => { setWord(null); root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel)); }} />
+      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onEchoes={word?.at ? () => openEchoes(word.at!, word.at!) : undefined} onClose={() => {
+        // back to the word that was looked up, so the keyboard carries on from there
+        const back = root().querySelector<HTMLElement>(`.${styles.sel}`);
+        setWord(null); root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel));
+        back?.focus({ preventScroll: true });
+      }} />
     </div>
   );
 }

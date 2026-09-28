@@ -9,6 +9,7 @@
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MARKER_KINDS, useSettings, type MarkerKind } from "@/lib/settings";
+import { headerHeight } from "@/lib/header";
 import styles from "./Markers.module.css";
 
 export interface MarkerItem { key: string; kind: MarkerKind; label: string; preview?: string; colour?: string }
@@ -19,12 +20,11 @@ export const MARKER_LABEL: Record<MarkerKind, string> = {
 
 interface Placed extends MarkerItem { top: number; id: string }
 
-export default function ScrollMarkers({ rootRef, contained, items, onJump, offset = 0, depKey }: {
+export default function ScrollMarkers({ rootRef, contained, items, onJump, depKey }: {
   rootRef: React.RefObject<HTMLElement | null>;   // the reader's own root (its rows are found inside it)
   contained: boolean;              // true when the reader scrolls inside its own box (side by side, floating)
   items: MarkerItem[];
   onJump: (key: string) => void;
-  offset?: number;                 // page mode: height of the sticky site header above the text
   depKey: string;                  // changes whenever the page's rows change
 }) {
   const shown = useSettings((s) => s.markers);
@@ -39,6 +39,8 @@ export default function ScrollMarkers({ rootRef, contained, items, onJump, offse
       const root = rootRef.current;
       if (!root) return;
       const scroller = contained ? root : document.documentElement;
+      // page mode: the track starts below the site header (which slides away on scroll; see lib/header.ts)
+      const offset = contained ? 0 : headerHeight();
       const viewH = contained ? root.clientHeight : innerHeight - offset;
       const total = scroller.scrollHeight - (contained ? 0 : offset);
       const base = contained ? root.getBoundingClientRect().top - root.scrollTop : -scrollY + offset;
@@ -52,7 +54,7 @@ export default function ScrollMarkers({ rootRef, contained, items, onJump, offse
       setHeight(viewH);
       setPlaced(out);
     });
-  }, [rootRef, contained, items, offset]);
+  }, [rootRef, contained, items]);
 
   useLayoutEffect(() => { measure(); }, [measure, depKey]);
   useEffect(() => {
@@ -69,7 +71,7 @@ export default function ScrollMarkers({ rootRef, contained, items, onJump, offse
   const visible = placed.filter((p) => shown.includes(p.kind));
   if (!visible.length) return null;
   return (
-    <div className={styles.strip} style={{ top: contained ? 0 : offset }} aria-hidden={false}>
+    <div className={styles.strip} style={{ top: contained ? 0 : "var(--hdr-vis)" }} aria-hidden={false}>
       <div className={styles.track} style={{ height }} role="list" aria-label="Markers on this page">
         {visible.map((p, i) => (
           <button key={p.id} type="button" role="listitem" className={styles.marker} data-kind={p.kind} data-colour={p.colour}
@@ -103,7 +105,8 @@ export function MarkersLegend({ counts }: { counts: Partial<Record<MarkerKind, n
   }, [open]);
   const toggle = (k: MarkerKind) => set({ markers: shown.includes(k) ? shown.filter((x) => x !== k) : MARKER_KINDS.filter((x) => x === k || shown.includes(x)) });
   return (
-    <div className={styles.legendWrap} ref={box}>
+    <div className={styles.legendWrap} ref={box}
+      onKeyDown={(e) => { if (e.key === "Escape" && open) { e.stopPropagation(); setOpen(false); box.current?.querySelector("button")?.focus(); } }}>
       <button type="button" className={styles.legendBtn} aria-expanded={open} onClick={() => setOpen(!open)} title="What the marks beside the scroll bar mean">
         <span className={styles.legendIcon} aria-hidden="true" /> Markers
       </button>

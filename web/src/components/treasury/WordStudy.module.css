@@ -21,18 +21,18 @@
 /* ------------------------------------------------ layout */
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); gap: clamp(24px, 4vw, 56px); align-items: start; }
 .main, .side { display: grid; gap: clamp(32px, 4vw, 48px); min-width: 0; }
-.side { position: sticky; top: 84px; gap: 28px; }
+.side { position: sticky; top: calc(var(--hdr-vis) + 16px); transition: top 0.35s var(--ease); gap: 28px; }
 @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } .side { position: static; } }
 
 .sec { display: grid; gap: 12px; align-content: start; animation: rise 0.5s var(--ease) both; }
-.sec h2 { font-size: var(--step-2); }
-.sec h2::first-letter { color: var(--accent); }
+.sec h2, .sec h1 { font-size: var(--step-2); }
+.sec h2::first-letter, .sec h1::first-letter { color: var(--accent); }
 .sec > h3 { margin-top: 6px; }
 @keyframes rise { from { transform: translateY(12px); opacity: 0; } }
 .secHead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; }
 .seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; overflow: hidden; }
 .seg button { border: 0; background: transparent; padding: 6px 12px; font-size: var(--step--1); }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seg button[aria-pressed="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
 
 .core { padding: 14px 18px; background: var(--surface); border-left: 3px solid var(--accent); display: grid; gap: 6px; }
 .coreDef { font-size: 1.25rem; line-height: 1.4; }
@@ -79,7 +79,7 @@
 @keyframes grow { from { transform: scaleX(0); } }
 .barValue { position: absolute; left: calc(var(--w) + 8px); font-family: var(--f-label); font-size: 0.85rem; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tip { position: absolute; z-index: 5; left: 38%; bottom: calc(100% + 4px); max-width: min(360px, 80vw); padding: 7px 10px; font-size: 0.85rem; line-height: 1.35;
-  background: var(--ink); color: var(--bg); border-radius: 4px; box-shadow: 0 10px 24px -12px var(--shadow); pointer-events: none; }
+  background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: 4px; box-shadow: 0 10px 24px -12px var(--shadow); pointer-events: none; }
 .asTable summary { cursor: pointer; font-size: 0.85rem; color: var(--ink-2); }
 .asTable table { margin-top: 8px; border-collapse: collapse; font-size: 0.88rem; }
 .asTable th, .asTable td { text-align: left; padding: 4px 10px 4px 0; border-bottom: 1px solid color-mix(in srgb, var(--rule) 40%, transparent); vertical-align: top; }
@@ -104,7 +104,7 @@
 .famBlock { display: grid; gap: 6px; }
 .ety { font-size: 0.95rem; line-height: 1.55; }
 .english { display: flex; flex-wrap: wrap; gap: 6px; }
-.english span { padding: 2px 10px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: 0.95rem; }
+.english span { padding: 2px 10px; border-radius: 999px; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); font-size: 0.95rem; }
 .kin { display: flex; flex-wrap: wrap; gap: 2px 12px; }
 .kin a { font-family: var(--f-greek); font-size: 1.05rem; text-decoration: none; }
 .kin a:hover { color: var(--accent); text-decoration: underline; }

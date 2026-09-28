@@ -1,10 +1,11 @@
 .lib { display: grid; gap: clamp(40px, 6vw, 72px); padding-block: 32px 24px; }
+.lib > section { width: 100%; }  /* a grid item with auto side margins would shrink to its content */
 .error { color: var(--accent); padding-block: 40px; }
 
 /* where to begin: three bands of difficulty */
 .start { display: grid; grid-template-columns: 0.8fr repeat(3, 1fr); gap: 20px; align-items: start; }
 .startHead { display: grid; gap: 6px; }
-.level { display: grid; gap: 8px; padding: 20px 22px; background: var(--ink); color: var(--bg); border-radius: var(--radius); }
+.level { display: grid; gap: 8px; padding: 20px 22px; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: var(--radius); }
 .level h2 { font-size: 1.6rem; color: var(--accent); }
 .level :global(.muted) { color: color-mix(in srgb, var(--bg) 75%, var(--ink)); font-size: 0.95rem; }
 .level ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; }
@@ -20,7 +21,7 @@
 
 .browse { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 28px; align-items: start; }
 .authors {
-  position: sticky; top: calc(84px + env(safe-area-inset-top, 0px)); max-height: calc(100vh - 110px); overflow-y: auto;
+  position: sticky; top: calc(var(--hdr-vis) + 16px + env(safe-area-inset-top, 0px)); max-height: calc(100vh - var(--hdr-vis) - 42px); transition: top 0.35s var(--ease); overflow-y: auto;
   border-top: 3px double var(--rule); border-bottom: 3px double var(--rule);
 }
 .authors ul { list-style: none; margin: 0; padding: 6px 0; }
@@ -29,7 +30,7 @@
   padding: 6px 10px; background: transparent; border: 0; border-radius: var(--radius); font-size: 0.97rem;
 }
 .authors button:hover { background: var(--bg-2); }
-.authors button[aria-current="true"] { background: var(--ink); color: var(--bg); }
+.authors button[aria-current="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
 .authors small { color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .authors button[aria-current="true"] small { color: inherit; opacity: 0.7; }
 
@@ -49,6 +50,11 @@
 .meta { display: flex; gap: 10px; align-items: center; flex: none; font-size: 0.85rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .badge { font-family: var(--f-label); letter-spacing: 0.05em; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--blue); color: var(--blue); }
 .off { border-color: var(--rule); color: var(--ink-2); }
+/* on a phone the details go under the title instead of squeezing it */
+@media (max-width: 700px) {
+  .work { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .meta { flex-wrap: wrap; row-gap: 4px; }
+}
 .results { display: grid; gap: 4px; }
 
 @media (max-width: 980px) {

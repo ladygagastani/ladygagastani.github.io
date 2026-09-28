@@ -6,21 +6,26 @@
    ===================================================================== */
 
 :root {
+  /* the site header: its height, and how much of it shows now (it slides away on scroll; lib/header.ts) */
+  --hdr-h: 68px;
+  --hdr-vis: var(--hdr-h);
   /* colour */
   --bg: #E6C39B;          /* pale fired clay */
   --bg-2: #DDB186;        /* deeper clay, hover and bands */
   --surface: #F3E3CC;     /* slip-coated panel */
   --ink: #1B1410;         /* black gloss */
   --ink-2: #5A3E2B;       /* diluted gloss */
-  --accent: #A33A16;      /* added red */
+  --accent: #93300F;      /* added red (deep enough for small text on clay: 4.7:1) */
   --accent-ink: #F6ECDD;
   --band: #1B1410;
   --white-slip: #F6EEDF;  /* added white */
   --blue: #2F4F6B;        /* certainty: well established */
-  --ochre: #8C5E17;       /* certainty: debated */
+  --ochre: #704A10;       /* certainty: debated */
   --rule: rgba(27, 20, 16, 0.28);
   --shadow: rgba(40, 20, 5, 0.35);
-  --ok: #3F7A4F;
+  --ok: #275B34;
+  /* inside panels painted in the ink colour (black in this theme): see "on-ink" below */
+  --accent-on-ink: #E0673A; --accent-ink-on-ink: #16110E; --ink-2-on-ink: #BE9876;
 
   /* type */
   --f-greek: var(--font-didot), "Gentium Book Plus", "Noto Serif", Georgia, serif;
@@ -54,6 +59,7 @@
     --ink: #EDCBA0; --ink-2: #BE9876; --accent: #E0673A; --accent-ink: #16110E;
     --band: #C8703A; --white-slip: #2B2019; --blue: #8FB0CC; --ochre: #D9A15A;
     --rule: rgba(237, 203, 160, 0.22); --shadow: rgba(0, 0, 0, 0.6); --ok: #7CC08E;
+    --accent-on-ink: #93300F; --accent-ink-on-ink: #F6ECDD; --ink-2-on-ink: #5A3E2B;
     color-scheme: dark;
   }
 }
@@ -62,12 +68,15 @@
   --ink: #EDCBA0; --ink-2: #BE9876; --accent: #E0673A; --accent-ink: #16110E;
   --band: #C8703A; --white-slip: #2B2019; --blue: #8FB0CC; --ochre: #D9A15A;
   --rule: rgba(237, 203, 160, 0.22); --shadow: rgba(0, 0, 0, 0.6); --ok: #7CC08E;
+  --accent-on-ink: #93300F; --accent-ink-on-ink: #F6ECDD; --ink-2-on-ink: #5A3E2B;
   color-scheme: dark;
 }
 
 /* ---------------------------------------------------------------- base */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+/* phones: nothing may nudge the page sideways (clip, unlike hidden, keeps sticky elements working) */
+body { overflow-x: clip; }
 body {
   margin: 0;
   background: var(--bg);
@@ -90,7 +99,7 @@ img { max-width: 100%; }
 .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gutter); }
 .label { font-family: var(--f-label); font-size: var(--step--1); letter-spacing: 0.08em; color: var(--ink-2); }
 .muted { color: var(--ink-2); }
-.skip { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--ink); color: var(--bg); padding: 8px 14px; }
+.skip { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); padding: 8px 14px; }
 .skip:focus { left: 8px; }
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
@@ -138,7 +147,7 @@ img { max-width: 100%; }
   display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px;
   border: 1px solid var(--rule); border-radius: 999px; font-size: var(--step--1); background: transparent;
 }
-.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-color: var(--ink); }
 .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.5; }
 .chip[aria-pressed="true"] .dot { opacity: 1; }
 
@@ -185,12 +194,14 @@ html[data-motion="reduce"] ::view-transition-new(*) { animation: none !important
 ::view-transition-new(site-header) { animation: none; }
 
 /* ------------------------------------------------------------- shell */
-main { display: block; min-height: 60vh; outline: none; }
+/* at least a screen tall: content drawn in the browser arrives a moment after the page, and the
+   footer must not show and then jump away (a layout shift) */
+main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(100svh - var(--hdr-h)); outline: none; }
 
 .toast {
   position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 70;
   transform: translate(-50%, 20px); opacity: 0; pointer-events: none; max-width: calc(100vw - 32px);
-  background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 6px; font-size: 0.95rem;
+  background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); padding: 10px 18px; border-radius: 6px; font-size: 0.95rem;
   transition: opacity 0.25s, transform 0.25s var(--ease);
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
@@ -203,7 +214,8 @@ main { display: block; min-height: 60vh; outline: none; }
 .site-footer-src { grid-column: 1 / -1; max-width: 70ch; }
 @media (max-width: 680px) {
   .site-footer-in { grid-template-columns: 1fr; }
-  .site-footer-links { align-items: flex-start; }
+  .site-footer-links { align-items: flex-start; gap: 0; }
+  .site-footer-links a { padding-block: 7px; }  /* a finger-sized target */
 }
 
 /* area header, shared by every area page */

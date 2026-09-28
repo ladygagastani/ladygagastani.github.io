@@ -94,7 +94,7 @@ export default function AuthorsSection({ t }: { t: TreasuryState }) {
           <li key={id} className={styles.authorNote} data-open={chosen === id ? "" : undefined}>
             <h3>
               <span>{name(id)}</span>
-              <Link className={styles.small} href={`/library?a=${id}`} transitionTypes={["page-turn"]}>Works in the Mouseion →</Link>
+              <Link className={styles.small} href={`/library/author?a=${id}`} transitionTypes={["page-turn"]}>Author page in the Mouseion →</Link>
             </h3>
             <PageNoteEditor kind="author" target={id} label={`Your note on ${name(id)}`} startOpen={chosen === id && !t.pageNotes[`author:${id}`]} />
           </li>

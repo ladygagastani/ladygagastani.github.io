@@ -10,7 +10,7 @@ export interface ImageInput {
 }
 
 const THEMES = {
-  light: { bg: "#E6C39B", panel: "#F3E3CC", ink: "#1B1410", ink2: "#5A3E2B", accent: "#A33A16", band: "#1B1410" },
+  light: { bg: "#E6C39B", panel: "#F3E3CC", ink: "#1B1410", ink2: "#5A3E2B", accent: "#93300F", band: "#1B1410" },
   dark: { bg: "#16110E", panel: "#241A14", ink: "#EDCBA0", ink2: "#BE9876", accent: "#E0673A", band: "#C8703A" },
 };
 

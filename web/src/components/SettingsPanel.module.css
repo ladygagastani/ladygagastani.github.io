@@ -27,7 +27,7 @@
 .seg { display: flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: var(--radius); }
 .seg button { flex: 1 1 auto; padding: 9px 10px; background: transparent; border: 0; font-size: 0.9rem; }
 .seg button + button { border-left: 1px solid var(--rule); }
-.seg button[aria-checked="true"] { background: var(--ink); color: var(--bg); }
+.seg button[aria-checked="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
 
 .sample { padding: 14px 16px; background: var(--bg); border-radius: var(--radius); transition: font-size 0.2s, line-height 0.2s; }
 .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }

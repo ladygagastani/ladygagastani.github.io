@@ -81,7 +81,7 @@ function Box({ onClose }: { onClose: () => void }) {
         let k = 0;
         for (const a of idx.catalog.authors) {
           if (k >= 6) break;
-          if (fold(a.name).includes(n)) { out.push({ id: `au:${a.id}`, kind: "Author", href: `/read?w=${a.works[0]?.id}`, label: <><b>{a.name}</b> <span className={styles.muted}>{a.works.length} works</span></> }); k++; }
+          if (fold(a.name).includes(n)) { out.push({ id: `au:${a.id}`, kind: "Author", href: `/library/author?a=${a.id}`, label: <><b>{a.name}</b> <span className={styles.muted}>{a.works.length} works</span></> }); k++; }
           for (const w of a.works) {
             if (k >= 6) break;
             if (fold(w.title).includes(n)) { out.push({ id: `w:${w.id}`, kind: "Work", href: `/read?w=${w.id}`, label: <><b>{w.title}</b> <span className={styles.muted}>{a.name}</span></> }); k++; }
@@ -90,6 +90,8 @@ function Box({ onClose }: { onClose: () => void }) {
       }
     }
     if (/[a-z]/i.test(t) && !/\d/.test(t)) out.push({ id: "english", kind: "Search the translations", href: `/search?m=english&q=${e}`, label: <>for <b>{t}</b></> });
+    if (/[a-z]/i.test(t) && !/\d/.test(t)) out.push({ id: "wiki", kind: "Search the Painted Stoa", href: `/stoa?q=${e}`, label: <>for <b>{t}</b></> });
+    if (/[a-z]/i.test(t) && !/\d/.test(t)) out.push({ id: "forum", kind: "Search the Town Hall", href: `/town-hall?q=${e}`, label: <>for <b>{t}</b></> });
     out.push({ id: "library", kind: "Search my library", href: `/search?m=library&q=${e}`, label: <>for <b>{t}</b></> });
     return out;
   }, [q, idx, abbrevs, stoa]);

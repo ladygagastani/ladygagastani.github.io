@@ -17,6 +17,11 @@ A repository with that exact name is served at the top of the address (`/`). The
 there (`/data/…`, `/sw.js`, `/images/…`). A repository with any other name would be served at
 `/<name>/`, and those requests would fail unless the code were changed to use a base path.
 
+## The database (accounts, the Town Hall, the Pnyx)
+These live in Supabase (project `mathesis-stoicheion`, https://supabase.com/dashboard/project/kxwppdhbvlamcmgckqpg), not on GitHub.
+A push does not change the database: changes to it are SQL files in `supabase/migrations/`, run by hand in the Supabase SQL editor
+(see PROGRESS.md, Next steps). The site only holds the public address and publishable key (`web/src/config/supabase.ts`).
+
 ## The large data packs: a second site at `/packs/`
 The generated data packs are too large for this repository (they are gitignored): `words` (word analyses),
 `lsj` (LSJ), `lexicon` (Word Study) and `search` (the Oracle's index), about 780 MB in 5,100 files. They are

@@ -72,7 +72,7 @@ export function EntryMarkers({ slug, heads }: { slug: string; heads: { id: strin
   return (
     <>
       <span ref={setAnchor} hidden />
-      {el && <ScrollMarkers rootRef={root} contained={false} items={items} onJump={jump} offset={68} depKey={`${items.length}|${left}`} />}
+      {el && <ScrollMarkers rootRef={root} contained={false} items={items} onJump={jump} depKey={`${items.length}|${left}`} />}
       {items.length > 0 && (
         <div className={styles.markersKey}>
           <MarkersLegend counts={{ note: items.filter((i) => i.kind === "note").length, left: left ? 1 : 0 }} />

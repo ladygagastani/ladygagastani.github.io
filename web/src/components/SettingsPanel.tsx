@@ -105,7 +105,8 @@ export default function SettingsPanel() {
         <section className={styles.group}>
           <h3 className="label">Offline reading</h3>
           <p className={styles.hint}>Keep a copy of the text collections on this computer and read without a connection.</p>
-          <OfflineActions compact />
+          {/* only while open: it works out download sizes from the whole catalogue (1.3 MB), which no page should pay for unasked */}
+          {open && <OfflineActions compact />}
         </section>
 
         <button type="button" className={styles.reset} onClick={s.reset}>
