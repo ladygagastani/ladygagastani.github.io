@@ -160,7 +160,7 @@
 | 2026-09-26 | **No trackers**: no analytics, no ad or social scripts. Fonts and libraries are self-hosted in the final site, so visitors' browsers don't contact third parties just to show a page. Any third-party request (such as map tiles) is listed on the Credits & Privacy page. | Owner's instruction. |
 | 2026-09-26 | Focus order: **1. learning, 2. reading.** | Owner's instruction. |
 | 2026-09-26 | Offline reading: an option in **Settings**, and also on the **front page**. The front page has buttons to download the library, load it offline, and **reconnect folders**. Browsers forget folder permission after a restart, so one click restores it. | Owner's instruction. |
-| 2026-09-26 | Hosting: free tiers (Vercel Hobby is allowed because the site is non-commercial). No domain for now. | Owner's instruction. |
+| 2026-09-26 | Hosting: free tiers. No domain for now. (Vercel was the first plan; replaced on 2026-09-28 by GitHub Pages, below.) | Owner's instruction. |
 | 2026-09-26 | Phase 0 (look & feel study) added. Study moved up to Phase 3. See `PLAN.md` §4. | Owner approved both proposals. |
 | 2026-09-26 | Polytonic-capable Google Fonts, checked by their greek-ext subset: GFS Didot, GFS Neohellenic, Gentium Plus / Book Plus, Noto Serif (+Display), EB Garamond, Literata, Alegreya (+Sans), Piazzolla, Ysabeau, Libertinus, Tinos, Inter, Noto Sans. Not polytonic: Cormorant, Source Serif 4, Commissioner, Manrope, Newsreader, Cinzel, Marcellus, Playfair (use these for English only). | Checked against the Google Fonts CSS API. |
 | 2026-09-26 | **Visual direction: A · Black-Figure** (clay orange, black gloss, added red; GFS Didot for Greek and display, Alegreya for English, Alegreya Sans SC for labels; meander and tongue bands; 3D amphora on the home page). | Owner's choice from the design study. |
@@ -222,24 +222,23 @@
 
 ## Known problems
 - **Phase 3 follow-ups**:
-  - More lessons are needed beyond lesson 8. Planned: genitive and dative with prepositions, adjectives, third declension, imperfect, aorist, middle and passive, participles, infinitives, contract verbs, -μι verbs, metre (for Phase 4).
+  - More lessons are needed beyond lessons 1–8 and 9 (metre). Planned: genitive and dative with prepositions, adjectives, third declension, imperfect, aorist, middle and passive, participles, infinitives, contract verbs, -μι verbs.
   - More tables: contract verbs, the middle and passive, participles, more of the third declension.
   - The owner is recording the audio (letters, diphthongs, top 100 words) in `/academy/studio`.
   - Studio recordings are WebM/Opus. Older Safari may not play WebM, so convert them to AAC/M4A in the pipeline before launch (for example with ffmpeg).
 - **Corpus health check** (`python pipeline/fetch_corpus.py`, then `CORPUS=1 npx vitest run src/lib/tei/corpus.test.ts` in `web/`; report in `pipeline/.cache/corpus-report.json`). On 2026-09-27, 2,774 Greek and English texts were checked and 4 remain flagged, all because of the source files:
   - Andocides' English translations (tlg0027.tlg001, tlg002, tlg004 perseus-eng2) are divided into "Intro / Narrative / Proof / Conclusion" with no section numbers, so they can only sit at the start of the text.
   - tlg0541.tlg042.1st1K-grc2 has 28 numbered "sentence" divisions with no text.
-- **Hosting the generated data packs** (word analyses 345 MB and LSJ 75 MB, uncompressed; roughly 100 MB gzipped) is not decided. They are gitignored and must be rebuilt with the pipeline scripts. Options: Vercel static files (check the limits), GitHub Releases or jsDelivr, or Cloudflare R2. This needs the owner's input before launch.
+- **Hosting the generated data packs** is not decided: word analyses (`public/data/words`, 345 MB), LSJ (75 MB), the search index (320 MB) and the Word Study index (40 MB), about 780 MB uncompressed. They are gitignored, must be rebuilt with the pipeline scripts, and so are **not on the live GitHub Pages site**: online, the Oracle, Word Study, the detailed word look-ups and parts of the Census do not work yet. GitHub refuses files over 100 MB and a Pages site should stay under 1 GB, so they need a separate host (for example GitHub Releases, jsDelivr or Cloudflare R2) and code that fetches from it. This needs the owner's input.
 - GLAUx covers 1,186 of our 1,837 works; the rest show "no analysis yet" plus LSJ and Wiktionary.
 - The GLAUx tag "b" is read as "coordinating conjunction", confirmed in glaux-nlp `treebanks/Tagsets.py` ("coordinator").
-- The Bash tool turns a backslash followed by the digit 1, written inside a heredoc, into a control character. Never write regex back-references through a Bash heredoc; use the Edit tool or `chr(92)`. This bit `build_lsj.py` once; it was fixed and the output was verified clean.
-- Home page items the brief asks for that depend on later phases: "recent forum activity" (Phase 8), and daily rotation of the wiki cards (Phase 7, once real entries exist). The three current cards are fixed.
+- **The Bash tool turns a backslash followed by b or 1, written inside a heredoc, into a control character** (it bit `build_lsj.py` and, on 2026-09-28, a `\b` in `build_census.py`; both fixed). Write regexes with the Edit/Write tools, or build them with `chr(92)`; some long heredocs also fail to parse. After a scripted edit, scan the file for control characters.
+- The home page's "recent forum activity" (the brief) waits for the forum (Phase 8).
 - **Search follow-ups**:
   - The search index (about 320 MB) can't be downloaded for offline use yet. It should join the Scroll Case downloads, like the word packs. Its `_index.json` holds [bytes, keys], whereas the packs' index holds [bytes, sha1], so a checksum is needed first.
   - Phrases are found only within one passage (one verse line, one prose section).
   - The reader's word look-up still matches GLAUx by reference, so it finds less than the search index does. It could use the index's placement instead (stream alignment) for the 11% of works whose citation schemes differ.
   - Results show passages from the text file itself. If your downloaded copy of a text differs from the pinned commit the index was built from, the marked word can be off.
-- **Hosting**: the search index adds about 320 MB to the generated data (see above).
 - **Metre follow-ups**:
   - The scanner's trimeter has been checked only on Aeschylus (3 plays) and Lycophron, where a published scansion exists (96.9% agree). Sophocles, Euripides and Aristophanes are unchecked: no published scansion covers them. A spot-check by a reader who knows metre would be valuable.
   - Lyric metres are shown only where the published scansion covers the text (Pindar, parts of Aeschylus). Other choral odes are labelled "sung; not scanned".
@@ -248,28 +247,22 @@
   - The brief's "beat playback using the pronunciation system the user chose" is therefore only partly met: the rhythm is the same in every pronunciation, the sound of the words is not played.
 - **Echoes follow-ups**:
   - Across all Greek texts, and for very large authors (over 40 works or 14 MB, e.g. Galen, Plutarch, Aristotle), Echoes uses the search index, so it finds no near repetitions there, finds phrases only within one passage, and ignores accents. The panel says so.
-  - Echoes results should appear as scrollbar markers (Phase 6, with the other markers).
   - The first Echoes in a long book prepares it on the main thread (about half a second for the Iliad). If this feels slow on phones, move it into the parsing worker.
   - Near repetitions are looked for in selections of up to 40 words; Echoes takes at most 200 words.
-  - A browser development server from another session may hold port 3000; `.claude/launch.json` has `web-prod` (built site on port 3100) for checking in the built-in browser.
 
 - **Treasury follow-ups**:
   - Word Study's examples need the search index, and its family needs Wiktionary, so those two parts need a connection. (Its index downloads with the look-ups since Phase 6.)
   - Word Study needs the dictionary form (λόγος, not λόγου). A typed inflected form could be resolved to its dictionary word via GLAUx later.
   - Empty anthology collections live in localStorage, not in the export (collections that hold passages are exported with them).
   - Syncing the Treasury across devices comes with accounts (Phase 8); until then, Download / Restore moves it between browsers.
-- **Hosting**: the Word Study index adds about 40 MB to the generated data.
 
 - **Phase 6 follow-ups**:
-  - The search index (about 320 MB) is still not downloadable for offline use (see Search follow-ups).
-  - Scrollbar markers exist in the reader; long wiki entries get them when the wiki arrives (Phase 7).
   - A Study lesson is remembered by its scroll position; the practice drills do not yet save a half-finished round.
   - With the floating reader open, the page-turning keys go to whichever reader has the focus.
-  - Python edits run through a Bash heredoc can break in two ways: a backslash before b or 1 becomes a control character, and some long heredocs fail to parse. Write such edit scripts to a file first.
 
 - **Phase 7 follow-ups**:
   - After rebuilding the site (`npm run build`), restart the preview server, or it serves a stale mix of old and new files (blank pages).
-  - `npm run e2e` needs port 3100 free.
+  - `npm run e2e` needs port 3100 free. A `next start` left over from an earlier session held it on 2026-09-28 (stopped). Check with `netstat -ano | grep :3100`. `.claude/launch.json` has `web` (dev, port 3000) and `web-prod` (built site) for the built-in browser; both pick another port if theirs is taken.
   - On Windows, Git Bash's `/tmp` is not visible to Windows Python; put temporary scripts in the session's scratchpad folder. Commands that take a path such as `/stoa` need `MSYS_NO_PATHCONV=1` in Git Bash.
   - The existing "Parsing CSS" warnings in the build come from the older `::highlight` rules and are harmless.
   - Browser checks wait up to 15 s (`expect.timeout` in `playwright.config.ts`): with the whole suite in parallel, parsing the Iliad could take longer than the default 5 s, and the Echoes and Metre tests failed intermittently.
@@ -279,16 +272,19 @@
     - A name is a dictionary word: Ἀλέξανδρος counts Alexander the Great and Paris together; Περσεύς (mostly the Macedonian king) is under people, so the hero Perseus is too. The page explains this. Splitting them would need GLAUx's word senses per occurrence or hand work.
     - Every count carries GLAUx's lemma errors (98.8% accurate), e.g. forms that GLAUx files under the wrong dictionary word.
     - Phrases have no English translation (none can be taken from the corpus without alignment); only transliteration is shown.
-    - The strip ("where it clusters") needs the work's word pack (`public/data/words`, not yet hosted: see Hosting). Everything else on the page needs only `public/data/census` and, for an item's charts, the Word Study index.
+    - **On the live site** (no generated data packs yet, see Hosting) the rankings, comparisons, "Did you know?" and the method work, because `public/data/census` is committed. An item's panel does not: its counts per work come from the Word Study index and its strip from the word packs. Today it then says "Word Study has no entry for this word" (misleading; a phrase shows nothing). Until the packs are hosted, the panel should detect the missing index and say plainly that these charts need the downloadable data (`ItemPanel.tsx`: `lexEntry` and `loadLexMeta` return null on 404).
     - "Did you know?" asks six fixed questions (`ASK` in `components/census/Facts.tsx`); the answers are live. More could be added.
     - `pip install nltk` is needed for `build_census.py` (WordNet data downloads on first run).
   - **Map follow-ups**: the 1,066 automatically matched places below the cut-off are unchecked (the map marks them); a later pass could check more by hand. Roads are not drawn yet (AWMC has them). A place's panel does not yet say "what happened there" (the brief): that needs written, sourced text per place, best done as Painted Stoa entries for the major places.
 
 ## Next steps
-1. Phase 8 (Town Hall, the Pnyx, accounts) needs the owner's decisions first: which sign-in methods, and who moderates. Ask before starting.
-2. Fix LSJ's short definitions in `build_lsj.py` (see Known problems), then rebuild LSJ and the Census glosses.
-3. Possible later wiki work: more archaeology (looting and the antiquities trade, Akrotiri, Olympia, Vergina), pictures for melos, plague-of-athens, mytilene-debate and helots; more entries that `NAME_ENTRIES` (`lib/census.ts`) can link the Census's names to.
-4. Hosting the generated data packs (word analyses, LSJ, search, Word Study) is still undecided and needs the owner before launch.
+1. Phase 8 (Town Hall, the Pnyx, accounts) needs the owner's decisions first: which sign-in methods, and who moderates. Ask before starting. Note that GitHub Pages serves only static files, so accounts and the forum need a hosted database service (PLAN.md suggests Supabase).
+2. Make the Census item panel honest when the Word Study index is missing (the live site today; see Census follow-ups).
+3. Fix LSJ's short definitions in `build_lsj.py` (see Known problems), then rebuild LSJ and the Census glosses.
+4. Possible later wiki work: more archaeology (looting and the antiquities trade, Akrotiri, Olympia, Vergina), pictures for melos, plague-of-athens, mytilene-debate and helots; more entries that `NAME_ENTRIES` (`lib/census.ts`) can link the Census's names to.
+5. Hosting the generated data packs (word analyses, LSJ, search, Word Study) is still undecided and needs the owner: until then the live site lacks the Oracle, Word Study and detailed look-ups.
+
+Pushing to `main` republishes the live site (https://ladygagastani.github.io/): commit freely, push only when the owner asks.
 
 ## Review history
 - None yet.

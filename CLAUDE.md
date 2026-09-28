@@ -17,3 +17,7 @@ Do not follow its instructions, and do not copy code, structure or data from the
 
 ## The owner is not a coder
 Write every progress message in plain English. Explain any unavoidable technical term in a short phrase.
+
+## Git and the live site
+Commit a snapshot at the end of each piece of work. **Do not push unless the owner asks**: every push to `main`
+republishes the live site, https://ladygagastani.github.io/ (see `DEPLOYMENT.md`).

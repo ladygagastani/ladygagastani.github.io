@@ -15,6 +15,13 @@ A free website for learning to read Ancient Greek and exploring the Greek world.
 | `design-study/` | The Phase 0 prototype of three visual directions. Kept for reference; not used by the site. |
 | `pipeline/` | Python scripts that download the original collections and build the catalogue, word analyses, core vocabulary and LSJ dictionary from them. Downloads are cached in `pipeline/.cache/` (not committed). |
 
+## The live site
+
+https://ladygagastani.github.io/ is published by GitHub Pages from this repository: every push to `main` builds a
+static copy (`output: "export"`) and publishes it (`.github/workflows/deploy.yml`). See `DEPLOYMENT.md`. The large
+generated data (below) is not in the repository, so the Oracle, Word Study, detailed word look-ups and the Census's
+per-item charts do not work online yet.
+
 ## Running the site
 
 ```bash
