@@ -8,7 +8,9 @@ import { ENTRIES } from "@/wiki/index";
 export const STATIC_PAGES = [
   "/", "/library", "/read", "/search", "/downloads", "/treasury", "/treasury/word",
   "/academy", "/academy/alphabet", "/academy/review", "/academy/tables", "/academy/vocabulary", "/academy/practice",
-  "/stoa", "/stoa/kerameikos", "/stoa/census", "/stoa/periplus", "/town-hall", "/town-hall/pnyx",
+  "/stoa", "/stoa/kerameikos", "/stoa/census", "/stoa/periplus",
+  "/town-hall", "/town-hall/pnyx", "/town-hall/thread", "/town-hall/new", "/town-hall/member", "/town-hall/moderation",
+  "/town-hall/pnyx/debate", "/account",
   "/about", "/credits",
 ];
 

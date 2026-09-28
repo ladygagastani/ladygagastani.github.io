@@ -6,6 +6,7 @@ import { AREAS, NAV, SITE } from "@/config/areas";
 import { useSettings } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
 import ConnectionLight from "./ConnectionLight";
+import AccountButton from "./AccountButton";
 import styles from "./Header.module.css";
 
 function isActive(pathname: string, href: string) {
@@ -50,6 +51,7 @@ export default function Header() {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
             <span className={styles.txt}>{AREAS.search.name}</span>
           </Link>
+          <AccountButton />
           <button className={styles.tbtn} type="button" onClick={toggleTheme} aria-label="Switch between light and dark">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" /></svg>
           </button>

@@ -92,6 +92,10 @@ export default function EntryView({ e }: { e: Entry }) {
               {e.places!.map((id) => { const p = PLACE_NAME.get(id); return p && <Link key={id} href={`/stoa/periplus?p=${id}`} transitionTypes={["page-turn"]}><span lang="grc">{p.grc}</span> {p.en.split("/")[0].replace(/ \(.*\)$/, "")} →</Link>; })}
             </div>
           )}
+          <div className={styles.onMap}>
+            <p className="label">Argue it out</p>
+            <Link href={`/town-hall/pnyx?from=${e.slug}#propose`} transitionTypes={["page-turn"]}>Debate this in the Pnyx →</Link>
+          </div>
           {certs.size > 0 && (
             <div className={styles.certKey}>
               <p className="label">How sure is this?</p>

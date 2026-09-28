@@ -29,6 +29,7 @@ import EchoesPanel, { type EchoMarks, type EchoQuery, type EchoTarget } from "./
 import MetreBar from "./MetreBar";
 import ScrollMarkers, { MarkersLegend, type MarkerItem } from "./ScrollMarkers";
 import { useFloat } from "@/lib/float";
+import { ASK_KEY } from "@/lib/community/ask";
 import { lastOtherPage } from "@/lib/resume";
 import { metreIndex, publishedFor, loadLengths } from "@/lib/metre/load";
 import { renderPassages, type LineRender } from "@/lib/metre/render";
@@ -501,7 +502,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     selectSpans(spans, range.getBoundingClientRect());
   };
 
-  async function act(a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | "echoes" | { highlight: Colour }) {
+  async function act(a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | "echoes" | "ask" | { highlight: Colour }) {
     if (!sel || !edV) return;
     if (a === "echoes") {
       openEchoes(sel.start, sel.end);
@@ -525,6 +526,15 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     if (a === "xref-here") return;   // no first passage chosen yet
     const base = { work: workId, ed: edV, start: sel.start, end: sel.end, quote: sel.quote };
     const where = rangeLabel(sel.start.u, sel.end.u);
+    if (a === "ask") {
+      // the Town Hall's new-thread page picks this up (components/community/NewThread.tsx)
+      const tr = rows.filter((r) => sel.rowKeys.includes(r.key)).map((r) => blockText(r.trans)).filter(Boolean).join(" ");
+      const quote = { work: workId, ref: where, grc: sel.quote, eng: tr ? tr.slice(0, 1500) : undefined, cite: `${cite} ${where}`, href: href({ at: sel.start.u }) };
+      try { sessionStorage.setItem(ASK_KEY, JSON.stringify(quote)); } catch { /* private mode: the page opens without it */ }
+      window.getSelection()?.removeAllRanges(); setSel(null);
+      router.push("/town-hall/new?ask=1");
+      return;
+    }
     if (a === "share") {
       const rowsHit = rows.filter((r) => sel.rowKeys.includes(r.key));
       const tr = rowsHit.map((r) => blockText(r.trans)).filter(Boolean).join(" ");
