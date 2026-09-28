@@ -6,7 +6,7 @@
  */
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import TagInput from "@/components/notes/TagInput";
 import { problem, useAccount } from "@/lib/community/client";
 import { categories, startThread, type Quote } from "@/lib/community/data";
@@ -31,6 +31,7 @@ export default function NewThread() {
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const fid = useId(); // the boxes are tied to their labels by id and named outright, so every screen reader announces them
 
   if (!account.ready) return <div className={`wrap ${styles.status}`} aria-busy="true"><span className={styles.spinner} aria-hidden="true" /> One moment…</div>;
   if (!canWrite(account)) return <div className={`wrap ${styles.narrow}`}>{quote && <QuoteBlock quote={quote} />}<SignInPrompt what="start a thread" /></div>;
@@ -47,14 +48,14 @@ export default function NewThread() {
           </div>
         )}
         <div className={styles.form}>
-          <label><span>Category</span>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} required>
+          <label htmlFor={`${fid}-cat`}><span>Category</span>
+            <select id={`${fid}-cat`} aria-label="Category" value={category} onChange={(e) => setCategory(e.target.value)} required>
               <option value="" disabled>Choose where it belongs</option>
               {cats.state === "done" && cats.value.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
             </select>
           </label>
-          <label><span>Title <small>a question or a topic, 3–160 characters</small></span>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} required minLength={3} maxLength={160}
+          <label htmlFor={`${fid}-title`}><span>Title <small id={`${fid}-titleh`}>a question or a topic, 3–160 characters</small></span>
+            <input id={`${fid}-title`} aria-label="Title" aria-describedby={`${fid}-titleh`} value={title} onChange={(e) => setTitle(e.target.value)} required minLength={3} maxLength={160}
               placeholder={quote ? `What does ${quote.cite} mean?` : ""} /></label>
           <div className={styles.tagField}>
             <TagInput tags={tags} onChange={(t) => setTags(t.slice(0, 5))} />

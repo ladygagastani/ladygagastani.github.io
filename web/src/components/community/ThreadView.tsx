@@ -10,10 +10,10 @@ import { useEffect, useState } from "react";
 import { useReloadable } from "@/lib/use-load";
 import { isModerator, problem, useAccount } from "@/lib/community/client";
 import {
-  deletePost, deleteThread, editPost, editThread, lockThread, markAnswered, moderate, myVotes, posts, reply, thread, tree, vote,
+  categories, deletePost, deleteThread, editPost, editThread, lockThread, markAnswered, moderate, myVotes, posts, reply, thread, tree, vote,
   type Node, type Post, type Thread,
 } from "@/lib/community/data";
-import { AuthorLine, canWrite, Composer, PostText, QuoteBlock, ReportButton, SignInPrompt, VoteButton } from "./parts";
+import { AuthorLine, canWrite, Composer, DeleteButton, HideButton, PostText, QuoteBlock, ReportButton, SignInPrompt, VoteButton } from "./parts";
 import styles from "./Community.module.css";
 
 export default function ThreadView() {
@@ -23,9 +23,9 @@ export default function ThreadView() {
   useEffect(() => { account.start(); }, [account]);
   const uid = account.session?.user.id ?? null;
   const got = useReloadable(`thread|${id}|${uid}`, async () => {
-    const [t, ps] = await Promise.all([thread(id), posts(id)]);
+    const [t, ps, cats] = await Promise.all([thread(id), posts(id), categories()]);
     const votes = uid && t ? await myVotes(uid, [t.id], ps.map((p) => p.id)) : { threads: new Set<number>(), posts: new Set<number>() };
-    return { t, ps, votes };
+    return { t, ps, votes, cats };
   }, !!id);
   const data = got.data;
   const votes = data?.votes ?? { threads: new Set<number>(), posts: new Set<number>() };
@@ -49,7 +49,7 @@ export default function ThreadView() {
 
   return (
     <article className={`wrap ${styles.threadPage}`}>
-      <p className={styles.crumbs}><Link href="/town-hall">The Town Hall</Link> / <Link href={`/town-hall?c=${t.category_id}`}>{t.category_id.replace(/-/g, " ")}</Link></p>
+      <p className={styles.crumbs}><Link href="/town-hall">The Town Hall</Link> / <Link href={`/town-hall?c=${t.category_id}`}>{data.cats.find((c) => c.id === t.category_id)?.title ?? t.category_id.replace(/-/g, " ")}</Link></p>
       <ThreadHead t={t} mine={mine} mod={mod} writer={writer} votes={votes} toggle={toggle} reload={load} />
 
       {answered && (
@@ -97,21 +97,15 @@ function ThreadHead({ t, mine, mod, writer, votes, toggle, reload }: {
         <Composer label="Edit your question" submitLabel="Save" initial={t.body} autoFocus onCancel={() => setEditing(false)}
           onSubmit={async (body) => { await editThread(t.id, { body, title: title.trim() }); setEditing(false); await reload(); }} />
       ) : <PostText text={t.body} />}
-      <p className={styles.actions}>
+      <div className={styles.actions}>
         {mine && !editing && !t.locked && <button type="button" className={styles.linkBtn} onClick={() => setEditing(true)}>Edit</button>}
-        {(mine || mod) && <button type="button" className={styles.linkBtn} onClick={async () => {
-          if (!confirm("Delete this thread and all its replies? This cannot be undone.")) return;
-          try { await deleteThread(t.id); router.push("/town-hall"); } catch (e) { alert(problem(e)); }
-        }}>Delete</button>}
+        {(mine || mod) && <DeleteButton what="this thread and all its replies" onDelete={async () => { await deleteThread(t.id); router.push("/town-hall"); }} />}
         {!mine && <ReportButton kind="thread" id={t.id} />}
         {mod && <>
           <button type="button" className={styles.modBtn} onClick={async () => { await lockThread(t.id, !t.locked); await reload(); }}>{t.locked ? "Reopen" : "Close to replies"}</button>
-          <button type="button" className={styles.modBtn} onClick={async () => {
-            const reason = t.hidden ? null : prompt("Why is it hidden? (shown to the author)") ?? null;
-            await moderate("thread", t.id, !t.hidden, reason); await reload();
-          }}>{t.hidden ? "Show again" : "Hide"}</button>
+          <HideButton hidden={t.hidden} onChange={async (hide, reason) => { await moderate("thread", t.id, hide, reason); await reload(); }} />
         </>}
-      </p>
+      </div>
     </header>
   );
 }
@@ -153,21 +147,15 @@ function Reply({ p, depth, t, uid, mod, writer, votes, toggle, reload }: {
             ? <Composer label="Edit your reply" submitLabel="Save" initial={p.body} autoFocus onCancel={() => setMode("read")}
                 onSubmit={async (body) => { await editPost(p.id, body); setMode("read"); await reload(); }} />
             : <PostText text={p.body} />}
-          <p className={styles.actions}>
+          <div className={styles.actions}>
             {writer && !t.locked && depth < 6 && <button type="button" className={styles.linkBtn} onClick={() => setMode(mode === "reply" ? "read" : "reply")}>Reply</button>}
             {(asker || mod) && <button type="button" className={styles.linkBtn} onClick={async () => { await markAnswered(t.id, isAnswer ? null : p.id); await reload(); }}>
               {isAnswer ? "Not the answer" : "Mark as the answer"}</button>}
             {mine && mode === "read" && <button type="button" className={styles.linkBtn} onClick={() => setMode("edit")}>Edit</button>}
-            {(mine || mod) && <button type="button" className={styles.linkBtn} onClick={async () => {
-              if (!confirm("Delete this reply? This cannot be undone.")) return;
-              try { await deletePost(p.id); await reload(); } catch (e) { alert(problem(e)); }
-            }}>Delete</button>}
+            {(mine || mod) && <DeleteButton what="this reply" onDelete={async () => { await deletePost(p.id); await reload(); }} />}
             {!mine && <ReportButton kind="post" id={p.id} />}
-            {mod && <button type="button" className={styles.modBtn} onClick={async () => {
-              const reason = p.hidden ? null : prompt("Why is it hidden? (shown to the author)") ?? null;
-              await moderate("post", p.id, !p.hidden, reason); await reload();
-            }}>{p.hidden ? "Show again" : "Hide"}</button>}
-          </p>
+            {mod && <HideButton hidden={p.hidden} onChange={async (hide, reason) => { await moderate("post", p.id, hide, reason); await reload(); }} />}
+          </div>
           {mode === "reply" && (
             <Composer label={`Reply to ${p.author?.display_name ?? "this"}`} submitLabel="Reply" rows={3} autoFocus onCancel={() => setMode("read")}
               onSubmit={async (body) => { await reply({ thread_id: t.id, parent_id: p.id, body, quote: null }); setMode("read"); await reload(); }} />

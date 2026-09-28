@@ -14,7 +14,7 @@ import {
   argue, argumentsOf, castPebble, debate, deleteArgument, editArgument, moderate, myPebble, setDebate, tally, tree,
   type Argument, type Debate, type Node, type Tally,
 } from "@/lib/community/data";
-import { AuthorLine, canWrite, Composer, PostText, QuoteBlock, ReportButton, SignInPrompt } from "./parts";
+import { AuthorLine, canWrite, Composer, DeleteButton, HideButton, PostText, QuoteBlock, ReportButton, SignInPrompt } from "./parts";
 import { OpenControls, ResultBar } from "./Pnyx";
 import styles from "./Community.module.css";
 
@@ -160,19 +160,13 @@ function ArgCard({ a, depth, uid, mod, writer, reload }: { a: Argument; depth: n
         ? <Composer label="Edit your argument" submitLabel="Save" initial={a.body} autoFocus onCancel={() => setMode("read")}
             onSubmit={async (body) => { await editArgument(a.id, body); setMode("read"); await reload(); }} />
         : <PostText text={a.body} />}
-      <p className={styles.actions}>
+      <div className={styles.actions}>
         {writer && depth < 5 && <button type="button" className={styles.linkBtn} onClick={() => setMode(mode === "reply" ? "read" : "reply")}>Reply</button>}
         {mine && mode === "read" && <button type="button" className={styles.linkBtn} onClick={() => setMode("edit")}>Edit</button>}
-        {(mine || mod) && <button type="button" className={styles.linkBtn} onClick={async () => {
-          if (!confirm("Delete this argument? This cannot be undone.")) return;
-          try { await deleteArgument(a.id); await reload(); } catch (e) { alert(problem(e)); }
-        }}>Delete</button>}
+        {(mine || mod) && <DeleteButton what="this argument" onDelete={async () => { await deleteArgument(a.id); await reload(); }} />}
         {!mine && <ReportButton kind="argument" id={a.id} />}
-        {mod && <button type="button" className={styles.modBtn} onClick={async () => {
-          const reason = a.hidden ? null : prompt("Why is it hidden? (shown to the author)") ?? null;
-          await moderate("argument", a.id, !a.hidden, reason); await reload();
-        }}>{a.hidden ? "Show again" : "Hide"}</button>}
-      </p>
+        {mod && <HideButton hidden={a.hidden} onChange={async (hide, reason) => { await moderate("argument", a.id, hide, reason); await reload(); }} />}
+      </div>
       {mode === "reply" && (
         <Composer label={`Reply to ${a.author?.display_name ?? "this"}`} submitLabel="Reply" rows={3} autoFocus onCancel={() => setMode("read")}
           onSubmit={async (body) => { await argue({ debate_id: a.debate_id, side: a.side, parent_id: a.id, body, quote: null }); setMode("read"); await reload(); }} />

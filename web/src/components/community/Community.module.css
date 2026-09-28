@@ -161,6 +161,10 @@
 .reportForm label { display: grid; gap: 4px; font-size: 0.85rem; }
 .reportForm input { font: inherit; padding: 6px 8px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--bg); color: var(--ink); }
 .reportForm .chip { justify-self: start; cursor: pointer; }
+.reportForm > span:first-child { font-size: 0.85rem; }
+/* an open box goes on its own line, under the buttons: its width plus the margin fill the row */
+.actions .reportForm { order: 1; flex: 0 0 auto; width: min(100%, 480px); margin-right: calc(100% - min(100%, 480px)); }
+.askRow { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
 .modPanel { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 10px 12px; margin-top: 8px; border: 1px dashed var(--accent); border-radius: var(--radius); font-size: 0.9rem; }
 .modPanel input[type="number"] { width: 64px; font: inherit; padding: 2px 6px; }
 .modPanel input:not([type]) { font: inherit; padding: 2px 6px; }

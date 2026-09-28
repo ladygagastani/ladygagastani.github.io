@@ -122,6 +122,64 @@ export function ReportButton({ kind, id }: { kind: "thread" | "post" | "argument
   );
 }
 
+/** Delete, asked inline ("are you sure?") rather than in the browser's own pop-up box. */
+export function DeleteButton({ what, onDelete }: { what: string; onDelete: () => Promise<void> }) {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  return (
+    <>
+      <button type="button" className={styles.linkBtn} onClick={() => { setOpen(!open); setError(null); }} aria-expanded={open}>Delete</button>
+      {open && (
+        <span className={styles.reportForm} role="group" aria-label={`Delete ${what}`}>
+          <span>Delete {what}? This cannot be undone.</span>
+          <span className={styles.askRow}>
+            <button type="button" className="chip" disabled={busy} autoFocus onClick={async () => {
+              setBusy(true); setError(null);
+              try { await onDelete(); } catch (e) { setError(problem(e)); setBusy(false); }
+            }}>Yes, delete it</button>
+            <button type="button" className={styles.linkBtn} onClick={() => setOpen(false)}>Keep it</button>
+          </span>
+          {error && <span className={styles.error} role="alert">{error}</span>}
+        </span>
+      )}
+    </>
+  );
+}
+
+/** The moderator's Hide (asking why, inline; the reason is shown to the author) and Show again. */
+export function HideButton({ hidden, onChange }: { hidden: boolean; onChange: (hide: boolean, reason: string | null) => Promise<void> }) {
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const run = async (hide: boolean, why: string | null) => {
+    setBusy(true); setError(null);
+    try { await onChange(hide, why); setOpen(false); setReason(""); } catch (e) { setError(problem(e)); }
+    setBusy(false);
+  };
+  if (hidden) return <>
+    <button type="button" className={styles.modBtn} disabled={busy} onClick={() => run(false, null)}>Show again</button>
+    {error && <span className={styles.error} role="alert">{error}</span>}
+  </>;
+  return (
+    <>
+      <button type="button" className={styles.modBtn} onClick={() => setOpen(!open)} aria-expanded={open}>Hide</button>
+      {open && (
+        <form className={styles.reportForm} onSubmit={(e) => { e.preventDefault(); run(true, reason.trim() || null); }}>
+          <label><span>Why is it hidden? Optional; shown to the author.</span>
+            <input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} autoFocus /></label>
+          <span className={styles.askRow}>
+            <button type="submit" className="chip" disabled={busy}>Hide it</button>
+            <button type="button" className={styles.linkBtn} onClick={() => setOpen(false)}>Cancel</button>
+          </span>
+          {error && <span className={styles.error} role="alert">{error}</span>}
+        </form>
+      )}
+    </>
+  );
+}
+
 /** Shown instead of a writing box: sign in, confirm, or wait out a pause. */
 export function SignInPrompt({ what }: { what: string }) {
   const { session, profile } = useAccount();

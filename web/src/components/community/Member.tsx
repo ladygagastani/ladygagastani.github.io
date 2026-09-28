@@ -39,10 +39,10 @@ export default function Member() {
         <h2>{p.display_name}</h2>
         <p className={styles.small}>Member since {new Date(p.created_at).toLocaleDateString("en-GB", { month: "long", year: "numeric" })}</p>
         {p.bio ? <PostText text={p.bio} /> : <p className="muted">{me ? "You have not written about yourself yet." : "Nothing written here yet."}</p>}
-        <p className={styles.actions}>
+        <div className={styles.actions}>
           {me && <Link href="/account">Edit your profile</Link>}
           {!me && <ReportButton kind="profile" id={p.id} />}
-        </p>
+        </div>
         {mod && !me && <BanControls p={p} onDone={load} />}
       </section>
       <section className={styles.motions}>
