@@ -78,7 +78,7 @@ function SignIn({ next }: { next: string | null }) {
       <p className="label">Check your email</p>
       <h2>A letter is on its way</h2>
       <p>{sent}</p>
-      <p className={styles.fine}>Nothing arrived after a few minutes? Look in the spam folder, or <button type="button" className={styles.linkBtn} onClick={() => setSent(null)}>try again</button>.</p>
+      <p className={styles.fine}>The letter comes from mathesis.stoicheion@gmail.com and sometimes lands in the spam folder: look there first, and if it is there, mark it “not spam” so later letters arrive. Nothing after a few minutes? <button type="button" className={styles.linkBtn} onClick={() => setSent(null)}>try again</button>.</p>
     </section>
   );
   return (
