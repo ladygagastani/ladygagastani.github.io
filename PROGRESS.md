@@ -172,6 +172,15 @@
     - Keyboard: every page was tabbed through; no traps, every stop visibly marked. **Words in the reader can now be looked up by keyboard**: Tab reaches the text (one stop), ← → move word by word, ↑ ↓ line by line, Home / End, Enter or Space looks up, Escape returns to the word. The Markers legend closes with Escape.
     - A main heading (h1) on Account, New thread, Moderation and the empty Word Study.
     - Found on the way: the reader remembered a passage a few lines too early (so "where you left off" slipped back each visit, and the floating reader's test failed). Two causes: the header slides away when the reader jumps down (fixed by `scrollBelowHeader` in `lib/header.ts`), and a row's empty bottom padding counted as "showing" (fixed in `topKey`).
+  - **2. Speed: done** (commit "Phase 9 (2)"). Measured every main page as a mid-range phone on 4G (1.6 Mbit/s, 150 ms, CPU slowed 4x) with the built site served compressed like GitHub Pages (`scripts/serve-out.mjs` now gzips). First content now shows in 1.2–1.6 s on every page; layout shift under 0.1 everywhere.
+    - Every page fetched the whole catalogue (1.3 MB): the Settings panel's offline section, always on the page though hidden, worked out download sizes on load. It now does so only while Settings is open.
+    - Code on a simple page 310 → 215 KB compressed: the floating reader loads only when a book is floated (`FloatingReaderSlot.tsx`), and the Supabase library only for signed-in members or community pages (`lib/community/account.ts` holds the signed-in state without the library; `client.ts` re-exports it). The Treasury loads the sync code only for members.
+    - **Recently read texts are kept**: the last 30 texts read from GitHub go into the browser's Cache API ("texts-recent", `lib/texts/source.ts`; `public/sw.js` keeps that cache across builds). Texts are pinned to a commit, so a kept copy never goes stale. The Iliad opens again in 0.3 s, and offline.
+    - Pictures: `npx tsx scripts/fetch-images.ts sizes` makes 320/640/1024 px copies (`public/images/w*/`), used with srcset (`srcSet` in `src/wiki/images.ts`). The Kerameikos page's pictures 878 → 69 KB.
+    - Fonts: only the files the first screen needs are preloaded (291 → about 150 KB per page); every other alphabet range still loads when a page uses it.
+    - `main` is at least a screen tall, so the footer no longer appears and then jumps away while content arrives.
+    - The reader preloads the catalogue alongside its code.
+    - Left as it is: the reader's first opening of a long book on a slow phone (about 10 s for the Iliad, mostly its 830 KB of compressed XML from GitHub; texts come from GitHub unchanged by decision); the wiki front page carries all entries' text (83 KB) for its search; Next.js fetches the pages behind visible links in advance, including a wiki entry's lead picture.
 
 ## Decisions log
 | Date | Decision | Reason |
