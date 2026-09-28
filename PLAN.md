@@ -1,6 +1,6 @@
 # PLAN.md — How the site will be built
 
-Status: **agreed**; Phases 0–7 are built and Phase 8 (accounts, the Town Hall, the Pnyx, on Supabase) is built but not yet fully tested or published (see `PROGRESS.md`). The owner's decisions since this was written are in
+Status: **agreed**; Phases 0–7 are built and Phase 8 (accounts, the Town Hall, the Pnyx, on Supabase) is built and tested but not yet published, by the owner's choice (see `PROGRESS.md`). The owner's decisions since this was written are in
 `PROGRESS.md`'s decisions log, and win where they differ from this file. The main ones: hosting is **GitHub Pages**
 (static export), not Vercel; the map is **drawn by the site from its own files**, not MapLibre with tiles; texts are read
 from the original GitHub files, unchanged (§3a); the large data packs are a second GitHub Pages site at `/packs/`
