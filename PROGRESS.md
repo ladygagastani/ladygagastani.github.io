@@ -206,6 +206,15 @@
       10. **Colour by part of speech** is not offered (colour by case is); the brief says "or".
       11. **The map is drawn by the site from its own files** instead of AWMC tiles (owner-approved decision, 2026-09-27).
 
+## Handoff for bug-fix sessions (2026-09-28)
+- **State:** everything is live at https://mathesisstoicheion.github.io/ (Phases 0–9). Repository: https://github.com/mathesisstoicheion/mathesisstoicheion.github.io (`origin`); the data packs are the sibling repository `mathesisstoicheion/packs`. Work on `main`, which is the only branch. Two commits that change only this file may still be unpushed: check `git status -sb`.
+- **Before you finish a fix:** `cd web`, then `npx tsc --noEmit` and `npm test` (242 unit tests); for anything visible `npm run e2e` (231 browser tests, about 9 minutes; builds the site itself and needs port 3100 free). To try a single browser test against an already-running build: `node scripts/serve-out.mjs 3100`, then `npx playwright test -c playwright.nows.config.ts e2e/<file>`.
+- **Publishing:** pushing `main` republishes the live site (about a minute). **Push only when the owner asks.** Database changes are new files in `supabase/migrations/`, run by hand in the Supabase SQL editor (see "How to change the database"). The owner signs in to GitHub, Supabase and the site themselves; never type or read their passwords.
+- **After a publish**, `node scripts/live-check.mjs` opens the live site in Edge and checks the pages that use the forum's database.
+- **Known, not bugs:** the reset and sign-up emails may land in spam (see Next steps, item 1); the old address ladygagastani.github.io shows "not found"; the review's ranked gaps (wiki breadth, the nine lessons, audio) are in Phase 9, "4. Review against the brief".
+- **Traps:** the Bash tool can mangle a long heredoc or a backslash followed by b or 1 (write files with the Write/Edit tools); a stray `cat > file` without input waits forever; after `npm run build`, restart any preview server; Git Bash needs `MSYS_NO_PATHCONV=1` for paths such as `/stoa`.
+- **Owner:** not a coder; write every message in plain English and explain any technical term.
+
 ## Decisions log
 | Date | Decision | Reason |
 |---|---|---|
