@@ -11,3 +11,18 @@ export const headerHeight = () => px("--hdr-h");
 
 /** How many pixels of the header are showing at the top of the window now. */
 export const headerVisible = () => px("--hdr-vis");
+
+/**
+ * Scroll the window so `el` sits `gap` pixels below the top, clear of the header. Scrolling down
+ * past the header tucks it away and scrolling up brings it back, so the place to scroll to depends
+ * on which way the jump goes: plain scrollIntoView with a fixed scroll-margin would leave a gap
+ * (showing the passages before `el`) once the header has slid away.
+ */
+export function scrollBelowHeader(el: HTMLElement, gap: number, smooth = false) {
+  const h = headerHeight();
+  const hidden = scrollY + el.getBoundingClientRect().top - gap;   // the place if the header is tucked away
+  const dy = hidden - scrollY;
+  const pinned = !!document.querySelector("header:focus-within");  // Header.tsx keeps it showing while it has the focus
+  const tucked = !pinned && hidden > h && (dy > 6 || (dy >= -6 && headerVisible() === 0));
+  scrollTo({ top: Math.max(0, tucked ? hidden : hidden - h), behavior: smooth ? "smooth" : "auto" });
+}

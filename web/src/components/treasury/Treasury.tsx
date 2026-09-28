@@ -79,7 +79,7 @@ export default function Treasury() {
       {t.error && <p className={styles.error} role="alert">{t.error}</p>}
       {empty && (
         <div className={styles.welcome}>
-          <p className={styles.welcomeGr} lang="grc" aria-hidden="true">θησαυρός</p>
+          <p className={styles.welcomeGr} lang="grc" aria-hidden="true" data-decorative="">θησαυρός</p>
           <p>Your Treasury is empty so far. Open a text in <Link href="/library" transitionTypes={["page-turn"]}>the Mouseion</Link>, then
             select some Greek words, or click a passage number, to bookmark it, add it to your anthology, highlight it or write a note.
             Click any word to look it up, and press <b>Save word</b> to keep it here.</p>

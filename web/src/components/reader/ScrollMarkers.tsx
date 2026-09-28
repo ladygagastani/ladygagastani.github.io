@@ -105,7 +105,8 @@ export function MarkersLegend({ counts }: { counts: Partial<Record<MarkerKind, n
   }, [open]);
   const toggle = (k: MarkerKind) => set({ markers: shown.includes(k) ? shown.filter((x) => x !== k) : MARKER_KINDS.filter((x) => x === k || shown.includes(x)) });
   return (
-    <div className={styles.legendWrap} ref={box}>
+    <div className={styles.legendWrap} ref={box}
+      onKeyDown={(e) => { if (e.key === "Escape" && open) { e.stopPropagation(); setOpen(false); box.current?.querySelector("button")?.focus(); } }}>
       <button type="button" className={styles.legendBtn} aria-expanded={open} onClick={() => setOpen(!open)} title="What the marks beside the scroll bar mean">
         <span className={styles.legendIcon} aria-hidden="true" /> Markers
       </button>

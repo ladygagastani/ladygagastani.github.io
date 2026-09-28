@@ -175,9 +175,9 @@ export function exportHtml(d: TreasuryData, idx: CatalogIndex | null, origin: st
 <title>My Treasury · Mathesis Stoicheion · ${esc(when(Date.parse(d.exported) || Date.now()))}</title>
 <style>
 body{font:17px/1.6 Georgia,"Times New Roman",serif;max-width:46rem;margin:2rem auto;padding:0 1rem;color:#1B1410;background:#F6EEDF}
-h1{font-weight:normal;font-size:2.2rem;margin-bottom:0}h2{font-weight:normal;border-bottom:2px solid #A33A16;margin-top:2.5rem}
+h1{font-weight:normal;font-size:2.2rem;margin-bottom:0}h2{font-weight:normal;border-bottom:2px solid #93300F;margin-top:2.5rem}
 h3{font-size:1.05rem;margin:1.4rem 0 .4rem}.grc{font-family:"GFS Didot","Gentium Plus","Noto Serif",serif}
-a{color:#A33A16}.muted{color:#5A3E2B}ul{padding-left:1.2rem}li{margin:.4rem 0}.note{margin:.2rem 0 .6rem;padding-left:.8rem;border-left:3px solid #A33A16}
+a{color:#93300F}.muted{color:#5A3E2B}ul{padding-left:1.2rem}li{margin:.4rem 0}.note{margin:.2rem 0 .6rem;padding-left:.8rem;border-left:3px solid #93300F}
 .note p{margin:.3rem 0}.tags span{font-size:.85rem;border:1px solid #5A3E2B;border-radius:2px;padding:0 .4rem;margin-right:.3rem}
 @media (prefers-color-scheme:dark){body{background:#16110E;color:#EDCBA0}a{color:#E0673A}.muted{color:#BE9876}h2,.note{border-color:#E0673A}}
 </style></head><body>

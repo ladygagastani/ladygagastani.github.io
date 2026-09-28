@@ -27,7 +27,7 @@
   font-family: var(--f-greek); font-size: 1.05rem; padding: 0 14px; background: transparent; color: var(--ink);
   border: 1.5px solid var(--rule); border-radius: var(--radius);
 }
-.kbdBtn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.kbdBtn[aria-pressed="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-color: var(--ink); }
 .hint { font-size: 0.95rem; color: var(--ink-2); max-width: 80ch; }
 .readAs { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; font-size: 0.95rem; }
 .readAs select, .field select {
@@ -48,7 +48,7 @@
 @keyframes rise { from { opacity: 0; transform: translateY(-6px); } }
 
 /* ------------------------------------------------------------ references */
-.refs { display: grid; gap: 8px; padding: 16px 20px; background: var(--ink); color: var(--bg); border-radius: var(--radius); animation: rise 0.35s var(--ease); }
+.refs { display: grid; gap: 8px; padding: 16px 20px; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: var(--radius); animation: rise 0.35s var(--ease); }
 .refs .label { color: var(--accent); }
 .refs ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .refs a { color: var(--bg); text-decoration: none; font-size: 1.15rem; }
@@ -82,7 +82,7 @@
 .seg { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--radius); }
 .seg button { background: transparent; border: 0; padding: 6px 12px; font-size: 0.88rem; }
 .seg button + button { border-left: 1px solid var(--rule); }
-.seg button[aria-checked="true"] { background: var(--ink); color: var(--bg); }
+.seg button[aria-checked="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
 .lemmas { display: grid; gap: 8px; }
 
 .groups { list-style: none; margin: 0; padding: 0; border-top: 3px double var(--rule); }
@@ -99,7 +99,7 @@
 .groupDate { font-family: var(--f-label); font-size: 0.82rem; letter-spacing: 0.04em; color: var(--ink-2); white-space: nowrap; }
 .groupCount {
   font-variant-numeric: tabular-nums; min-width: 3.2em; text-align: center; padding: 2px 10px; border-radius: 999px;
-  background: var(--ink); color: var(--bg); font-size: 0.9rem;
+  background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); font-size: 0.9rem;
 }
 .hits { padding: 0 4px 16px; display: grid; gap: 10px; justify-items: start; }
 .hits ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; width: 100%; }

@@ -4,7 +4,7 @@
 .seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: var(--radius); }
 .seg button { background: transparent; border: 0; padding: 8px 12px; font-size: 0.9rem; }
 .seg button + button { border-left: 1px solid var(--rule); }
-.seg button[aria-checked="true"] { background: var(--ink); color: var(--bg); }
+.seg button[aria-checked="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
 
 /* stroke drawing */
 .stroke { margin: 0; display: grid; gap: 10px; justify-items: center; }
@@ -34,7 +34,7 @@
   transition: transform 0.2s var(--ease), background-color 0.2s;
 }
 .tile:hover { transform: translateY(-2px); }
-.tile[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tile[aria-selected="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-color: var(--ink); }
 .vowelTile { border-bottom: 3px solid var(--accent); }
 .vowelKey { display: inline-block; width: 22px; height: 3px; background: var(--accent); vertical-align: middle; }
 .tileGlyph { font-family: var(--f-greek); font-size: 1.8rem; line-height: 1.1; }
@@ -99,7 +99,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 .pathAbout { display: block; color: var(--ink-2); font-size: 0.95rem; }
 .pathMin { font-family: var(--f-label); font-size: 0.85rem; color: var(--ink-2); }
 .cardGr { font-family: var(--f-greek); color: var(--accent); font-size: 1.1rem; }
-.progress { display: grid; grid-template-columns: auto 1fr; gap: 20px 40px; align-items: center; padding: clamp(18px, 3vw, 28px); background: var(--ink); color: var(--bg); border-radius: var(--radius); }
+.progress { display: grid; grid-template-columns: auto 1fr; gap: 20px 40px; align-items: center; padding: clamp(18px, 3vw, 28px); background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: var(--radius); }
 .stats { display: flex; flex-wrap: wrap; gap: 12px 32px; }
 .stats div { display: grid; }
 .stats b { font-family: var(--f-display); font-size: 2.4rem; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
@@ -164,7 +164,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
   backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--radius);
   background: var(--surface); border-top: 3px double var(--rule); border-bottom: 3px double var(--rule); box-shadow: 0 24px 50px -30px var(--shadow);
 }
-.flashBack { transform: rotateY(180deg); background: var(--ink); color: var(--bg); }
+.flashBack { transform: rotateY(180deg); background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
 .flashWord { font-family: var(--f-greek); font-size: clamp(2.6rem, 8vw, 4rem); }
 .flashSmall { font-family: var(--f-greek); font-size: 1.4rem; color: var(--accent); }
 .flashGloss { font-size: 1.3rem; max-width: 36ch; }

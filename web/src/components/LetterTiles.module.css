@@ -7,7 +7,7 @@
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
   background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius);
 }
-.back { transform: rotateY(180deg); background: var(--ink); color: var(--bg); gap: 4px; padding: 12px; text-align: center; }
+.back { transform: rotateY(180deg); background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); gap: 4px; padding: 12px; text-align: center; }
 .glyph { font-family: var(--f-greek); font-size: 3.6rem; line-height: 1; }
 .glyph small { font-size: 0.6em; margin-left: 0.15em; color: var(--ink-2); }
 .back b { font-family: var(--f-display); font-size: 1.4rem; font-weight: 400; }

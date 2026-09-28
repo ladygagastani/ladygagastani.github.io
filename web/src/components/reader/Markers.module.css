@@ -26,7 +26,7 @@
 
 .tip {
   position: absolute; right: 22px; width: max-content; max-width: min(320px, 70vw); display: grid; gap: 3px;
-  padding: 8px 11px; background: var(--ink); color: var(--bg); border-radius: 4px; font-size: 0.88rem; line-height: 1.35;
+  padding: 8px 11px; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: 4px; font-size: 0.88rem; line-height: 1.35;
   box-shadow: 0 12px 28px -14px var(--shadow); pointer-events: none; animation: fade 0.15s both;
 }
 .tip :global(.label) { color: color-mix(in srgb, var(--bg) 70%, var(--ink)); font-size: 0.75rem; }

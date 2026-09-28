@@ -48,7 +48,7 @@
 /* ------------------------------------------------ the Town Hall */
 .hall { display: grid; gap: 22px; padding-bottom: 72px; }
 .featured {
-  display: grid; gap: 4px; padding: 16px 20px; text-decoration: none; color: var(--bg); background: var(--ink);
+  display: grid; gap: 4px; padding: 16px 20px; text-decoration: none; color: var(--bg); background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink);
   border-radius: var(--radius); box-shadow: 0 18px 30px -24px var(--shadow); position: relative; overflow: hidden;
 }
 .featured :global(.label) { color: color-mix(in srgb, var(--bg) 75%, transparent); }

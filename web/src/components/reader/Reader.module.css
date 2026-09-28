@@ -18,7 +18,7 @@
 .seg { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--radius); }
 .seg button { background: transparent; border: 0; padding: 8px 12px; font-size: 0.9rem; }
 .seg button + button { border-left: 1px solid var(--rule); }
-.seg button[aria-checked="true"] { background: var(--ink); color: var(--bg); }
+.seg button[aria-checked="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
 .seg button:disabled { opacity: 0.4; cursor: default; }
 
 .status { padding-block: 60px; display: grid; gap: 16px; justify-items: start; }
@@ -52,7 +52,7 @@
     background: transparent; border: 1px solid var(--rule); border-radius: var(--radius); font-size: 0.9rem;
   }
   .toolsBtn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; transition: transform 0.3s var(--ease); }
-  .toolsBtn[aria-expanded="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .toolsBtn[aria-expanded="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-color: var(--ink); }
   .toolsBtn[aria-expanded="true"] svg { transform: rotate(180deg); }
   .pager select { max-width: 42vw; }
   .bar:not([data-tools]) .goto, .bar:not([data-tools]) .more { display: none; }
@@ -116,6 +116,7 @@
 
 .w { cursor: pointer; border-radius: 3px; transition: background-color 0.15s; }
 .w:hover { background-color: color-mix(in srgb, var(--accent) 16%, transparent); }
+.w:focus-visible { outline-offset: 1px; background-color: color-mix(in srgb, var(--accent) 16%, transparent); }
 .sel { background-color: color-mix(in srgb, var(--accent) 28%, transparent); }
 
 .bottom { display: flex; justify-content: space-between; gap: 12px; padding-block: 24px; }
@@ -171,7 +172,7 @@
 .toolbar {
   position: fixed; z-index: 55; opacity: 0; transition: opacity 0.15s;
   display: flex; flex-wrap: wrap; align-items: center; gap: 2px; max-width: calc(100vw - 24px);
-  padding: 5px; background: var(--ink); color: var(--bg); border-radius: 8px; box-shadow: 0 16px 36px -14px var(--shadow);
+  padding: 5px; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: 8px; box-shadow: 0 16px 36px -14px var(--shadow);
 }
 .toolbar button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; background: transparent; border: 0; border-radius: 6px; font-size: 0.86rem; color: inherit; }
 .toolbar button:hover:not(:disabled) { background: color-mix(in srgb, var(--bg) 16%, transparent); }

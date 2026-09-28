@@ -34,6 +34,24 @@ test("clicking a word shows its analysis in this passage and its LSJ entry", asy
   await expect(panel).toContainText("sing");
 });
 
+test("words can be looked up with the keyboard alone", async ({ page }) => {
+  await openIliad(page);
+  // the text is one stop for Tab: the first word
+  await page.locator('article [data-w][tabindex="0"]').first().focus();
+  await expect(page.locator('[data-u="1.1"] [data-w="μῆνιν"]')).toBeFocused();
+  await page.keyboard.press("ArrowRight");
+  const aeide = page.locator('[data-u="1.1"] [data-w="ἄειδε"]');
+  await expect(aeide).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("complementary", { name: "Look-up: ἄειδε" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(aeide).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.locator('[data-u="1.2"] [data-w]:focus')).toHaveCount(1);
+  // the arrow keys moved between words, not pages
+  await expect(page.locator('[data-key="1.1"]').first()).toBeVisible();
+});
+
 test("bookmarks and highlights are kept after a reload", async ({ page }) => {
   await openIliad(page);
   await page.locator('[data-row="1.5"]').click();

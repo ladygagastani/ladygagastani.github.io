@@ -186,7 +186,7 @@ export default function Library() {
                 </>
               ) : (
                 <div className={styles.empty}>
-                  <p className={styles.emptyGr} lang="grc">βιβλία</p>
+                  <p className={styles.emptyGr} lang="grc" aria-hidden="true" data-decorative="">βιβλία</p>
                   <p className="muted">Choose an author to see their works, or search above.</p>
                 </div>
               )}
