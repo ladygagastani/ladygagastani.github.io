@@ -5,7 +5,7 @@
  */
 import Link from "next/link";
 import { useEffect } from "react";
-import { hasSavedSession, useAccount } from "@/lib/community/client";
+import { hasSavedSession, useAccount } from "@/lib/community/account";
 import styles from "./Header.module.css";
 
 export default function AccountButton() {

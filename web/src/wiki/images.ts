@@ -20,3 +20,10 @@ export interface ImageCredit {
 }
 
 export const IMAGES = data as Record<string, ImageCredit>;
+
+/** The smaller copies made of every picture (scripts/fetch-images.ts), under /images/w<width>/. */
+export const SIZES = [320, 640, 1024];
+
+/** A srcset naming every size of a picture, so each screen downloads one no larger than it needs. */
+export const srcSet = (im: ImageCredit) =>
+  [...SIZES.filter((w) => w < im.width).map((w) => `/images/w${w}/${im.file} ${w}w`), `/images/${im.file} ${im.width}w`].join(", ");

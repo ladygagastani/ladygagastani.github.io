@@ -2,12 +2,14 @@
  * Serve the static build (web/out, from `npm run build`) the way GitHub Pages does: /stoa/census is
  * out/stoa/census.html, a folder is its index.html, anything else missing is out/404.html. Used by
  * `npm start` and the browser tests, since `next start` does not work with `output: "export"`.
+ * Text files are sent gzip-compressed, as GitHub Pages sends them, so speed measured here is realistic.
  *
  *   node scripts/serve-out.mjs [port]      (default 3100)
  */
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize } from "node:path";
+import { createGzip } from "node:zlib";
 
 const ROOT = join(import.meta.dirname, "..", "out");
 const PORT = Number(process.argv[2] ?? process.env.PORT ?? 3100);
@@ -33,7 +35,8 @@ createServer((req, res) => {
   const found = file ?? join(ROOT, "404.html");
   // extensionless files are the app's icons (PNG)
   const type = TYPES[extname(found)] ?? (found.includes(`${join("out", "icons")}`) ? "image/png" : "application/octet-stream");
-  res.writeHead(file ? 200 : 404, { "Content-Type": type });
+  const gzip = /^(text\/|application\/(json|xml|manifest)|image\/svg)/.test(type) && /\bgzip\b/.test(req.headers["accept-encoding"] ?? "");
+  res.writeHead(file ? 200 : 404, { "Content-Type": type, ...(gzip ? { "Content-Encoding": "gzip", Vary: "Accept-Encoding" } : {}) });
   if (req.method === "HEAD") { res.end(); return; }
-  createReadStream(found).pipe(res);
+  (gzip ? createReadStream(found).pipe(createGzip()) : createReadStream(found)).pipe(res);
 }).listen(PORT, () => console.log(`serving web/out at http://localhost:${PORT}`));

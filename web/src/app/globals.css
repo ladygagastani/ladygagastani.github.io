@@ -194,7 +194,9 @@ html[data-motion="reduce"] ::view-transition-new(*) { animation: none !important
 ::view-transition-new(site-header) { animation: none; }
 
 /* ------------------------------------------------------------- shell */
-main { display: block; min-height: 60vh; outline: none; }
+/* at least a screen tall: content drawn in the browser arrives a moment after the page, and the
+   footer must not show and then jump away (a layout shift) */
+main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(100svh - var(--hdr-h)); outline: none; }
 
 .toast {
   position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 70;

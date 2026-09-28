@@ -5,8 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { ImportProblem, exportHtml, parseExport } from "@/lib/treasury-io";
 import { applyIncoming, gather, type ApplyReport } from "@/lib/treasury-apply";
 import { loadMap } from "@/lib/map";
-import { hasSavedSession, problem, useAccount } from "@/lib/community/client";
-import { lastSynced, syncTreasury } from "@/lib/community/sync";
+import { hasSavedSession, lastSynced, problem, useAccount } from "@/lib/community/account";
+import type { Position } from "@/lib/position";
+
+// the sync code (and the Supabase library) is loaded only for members who are signed in
+const syncTreasury = async (uid: string, onPositions?: (p: Record<string, Position>) => void) =>
+  (await import("@/lib/community/sync")).syncTreasury(uid, onPositions);
 import { useLoad } from "@/lib/use-load";
 import { plural, type TreasuryState } from "./data";
 import styles from "./Treasury.module.css";

@@ -11,10 +11,11 @@
  *   npx tsx scripts/fetch-images.ts info met <objectID>     one Met record
  *   npx tsx scripts/fetch-images.ts info commons "<File>"   one Commons record
  *   npx tsx scripts/fetch-images.ts                         fetch everything in the list
+ *   npx tsx scripts/fetch-images.ts sizes                   (re)make the smaller copies of every picture
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import sharp from "sharp";
-import type { ImageCredit } from "../src/wiki/images";
+import { SIZES, type ImageCredit } from "../src/wiki/images";
 
 const UA = { "User-Agent": "MathesisStoicheion/1.0 (non-commercial educational site; image credits pipeline)" };
 const MET = "https://collectionapi.metmuseum.org/public/collection/v1";
@@ -86,6 +87,11 @@ if (mode === "search") {
 } else if (mode === "info") {
   const x = a === "met" ? await met(b) : await commons(b);
   console.log(JSON.stringify({ ...x.credit, raw: x.raw, url: x.url }, null, 1));
+} else if (mode === "sizes") {
+  for (const file of Object.values(JSON.parse(readFileSync("src/data/images.json", "utf8")) as Record<string, ImageCredit>).map((x) => x.file)) {
+    await smaller(file);
+    console.log(file);
+  }
 } else {
   const list = JSON.parse(readFileSync("scripts/images.list.json", "utf8")) as ListItem[];
   const out: Record<string, ImageCredit> = {};
@@ -98,6 +104,7 @@ if (mode === "search") {
       const buf = Buffer.from(await (await get(x.url)).arrayBuffer());
       await sharp(buf).rotate().resize({ width: WIDTH, withoutEnlargement: true }).jpeg({ quality: 80, mozjpeg: true }).toFile(`public/images/${file}`);
     }
+    await smaller(file);
     const meta = await sharp(`public/images/${file}`).metadata();
     out[it.id] = {
       file, width: meta.width!, height: meta.height!, alt: it.alt,
@@ -111,3 +118,13 @@ if (mode === "search") {
 }
 }
 main();
+
+/** Smaller copies for small screens and cards: public/images/w<width>/<file> (src/wiki/images.ts SIZES). */
+async function smaller(file: string) {
+  const { width } = await sharp(`public/images/${file}`).metadata();
+  for (const w of SIZES) {
+    if (width! <= w) continue;
+    mkdirSync(`public/images/w${w}`, { recursive: true });
+    await sharp(`public/images/${file}`).resize({ width: w }).jpeg({ quality: 78, mozjpeg: true }).toFile(`public/images/w${w}/${file}`);
+  }
+}

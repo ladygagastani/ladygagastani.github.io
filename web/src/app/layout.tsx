@@ -6,7 +6,7 @@ import SettingsPanel, { SettingsApplier } from "@/components/SettingsPanel";
 import Toast from "@/components/Toast";
 import Reveal from "@/components/Reveal";
 import QuickSearch from "@/components/search/QuickSearch";
-import FloatingReader from "@/components/reader/FloatingReader";
+import FloatingReaderSlot from "@/components/reader/FloatingReaderSlot";
 import { ResumeTracker } from "@/components/Resume";
 import { Suspense } from "react";
 import { SITE } from "@/config/areas";
@@ -15,9 +15,12 @@ import "./globals.css";
 
 // next/font downloads these at build time and serves them from this site,
 // so visitors' browsers never contact Google (no-trackers decision).
+// Every alphabet range of each font is always available (the browser fetches one when a page uses
+// its letters); `subsets` only names the files preloaded with every page, so it lists just what the
+// first screen needs: Greek text and headings are GFS Didot, English is Alegreya.
 const didot = GFS_Didot({ weight: "400", subsets: ["greek", "greek-ext", "latin"], variable: "--font-didot", display: "swap" });
-const alegreya = Alegreya({ subsets: ["latin", "latin-ext", "greek", "greek-ext"], style: ["normal", "italic"], variable: "--font-alegreya", display: "swap" });
-const alegreyaSC = Alegreya_Sans_SC({ weight: ["500", "700"], subsets: ["latin", "greek"], variable: "--font-alegreya-sc", display: "swap" });
+const alegreya = Alegreya({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-alegreya", display: "swap" });
+const alegreyaSC = Alegreya_Sans_SC({ weight: ["500", "700"], subsets: ["latin"], variable: "--font-alegreya-sc", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: `${SITE.latin} · ${SITE.greek}`, template: `%s · ${SITE.latin}` },
@@ -50,7 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Toast />
         <Reveal />
         <QuickSearch />
-        <FloatingReader />
+        <FloatingReaderSlot />
         <Suspense fallback={null}><ResumeTracker /></Suspense>
       </body>
     </html>

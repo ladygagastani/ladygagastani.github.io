@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
 import type { Blk, Inl } from "@/wiki/markup";
 import { CERTAINTY, type Certainty, type Entry } from "@/wiki/types";
-import { IMAGES } from "@/wiki/images";
+import { IMAGES, srcSet } from "@/wiki/images";
 import { entryBySlug } from "@/wiki/index";
 import { SectionNote } from "./EntryNotes";
 import styles from "./Stoa.module.css";
@@ -64,7 +64,7 @@ export function Figure({ id, lead = false }: { id: string; lead?: boolean }) {
   return (
     <figure className={lead ? styles.lead : `${styles.figure} rv`}>
       {/* eslint-disable-next-line @next/next/no-img-element -- self-hosted, sized files; no image service */}
-      <img src={`/images/${im.file}`} width={im.width} height={im.height} alt={im.alt} loading={lead ? "eager" : "lazy"} decoding="async" className={im.height > im.width * 0.9 ? styles.tall : undefined} />
+      <img src={`/images/${im.file}`} srcSet={srcSet(im)} sizes={lead ? "(max-width: 1240px) 100vw, 1180px" : "(max-width: 980px) 100vw, 736px"} width={im.width} height={im.height} alt={im.alt} loading={lead ? "eager" : "lazy"} decoding="async" className={im.height > im.width * 0.9 ? styles.tall : undefined} />
       <figcaption>
         <span className={styles.figTitle}>{im.title}</span>{im.date && <>, {im.date}</>}. {im.place}.
         <span className={styles.credit}> {im.creator !== "Unknown" ? `${im.creator}. ` : ""}<a href={im.source} target="_blank" rel="noopener noreferrer">{im.sourceName}</a>, <a href={im.licenceUrl} target="_blank" rel="noopener noreferrer">{im.licence}</a>.</span>

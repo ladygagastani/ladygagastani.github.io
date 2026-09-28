@@ -9,9 +9,9 @@ import { applyIncoming, gather, type ApplyReport } from "@/lib/treasury-apply";
 import { parseExport } from "@/lib/treasury-io";
 import type { Position } from "@/lib/position";
 import { supabase } from "./client";
+import { LAST_SYNCED as LAST } from "./account";
 
-const LAST = "mathesis:synced";
-export const lastSynced = (): string | null => { try { return localStorage.getItem(LAST); } catch { return null; } };
+export { lastSynced } from "./account";
 
 export async function syncTreasury(uid: string, onPositions?: (p: Record<string, Position>) => void): Promise<{ report: ApplyReport | null; at: string }> {
   const sb = supabase();
