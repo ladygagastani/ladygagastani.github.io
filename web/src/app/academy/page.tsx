@@ -21,7 +21,7 @@ export default function AcademyPage() {
   return (
     <Page>
       <AreaHeader id="study" />
-      <div className="wrap" style={{ display: "grid", gap: 40, paddingBlock: 40 }}>
+      <div className="wrap" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr)", gap: 40, paddingBlock: 40 }}>
         <AcademyProgress />
 
         <section style={{ display: "grid", gap: 18 }} aria-labelledby="lessons-title">

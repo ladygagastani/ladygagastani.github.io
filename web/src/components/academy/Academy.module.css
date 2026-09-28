@@ -73,9 +73,9 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 .soon { opacity: 0.6; }
 
 /* tables of forms */
-.tables { display: grid; gap: 28px; }
+.tables { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
 .tablesTools { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
-.searchInput { flex: 1 1 320px; font: inherit; font-size: 1rem; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 10px 14px; }
+.searchInput { flex: 1 1 320px; min-width: 0; font: inherit; font-size: 1rem; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 10px 14px; }
 .found { display: grid; gap: 4px; font-size: 1.05rem; padding: 12px 16px; background: var(--surface); border-left: 3px solid var(--accent); }
 .table h2 { font-size: var(--step-2); }
 .table h2::first-letter { color: var(--accent); }
@@ -111,13 +111,13 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 @media (max-width: 760px) { .progress { grid-template-columns: 1fr; } }
 
 /* lessons */
-.lesson { display: grid; gap: 26px; }
+.lesson { display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px; }
 .lp { font-size: 1.12rem; line-height: 1.75; max-width: 70ch; }
 .tipBox { display: grid; gap: 6px; padding: 14px 18px; background: var(--surface); border-left: 3px solid var(--accent); max-width: 70ch; }
 .made { display: grid; gap: 8px; padding: 16px 18px; border: 1px dashed var(--rule); border-radius: var(--radius); }
 .made p { font-size: 1.1rem; }
-.check { display: grid; gap: 18px; padding: 20px; background: var(--surface); border-radius: var(--radius); }
-.q { border: 0; margin: 0; padding: 0; display: grid; gap: 10px; }
+.check { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 20px; background: var(--surface); border-radius: var(--radius); }
+.q { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
 .q legend { font-size: 1.08rem; font-weight: 600; margin-bottom: 8px; }
 .options { display: flex; flex-wrap: wrap; gap: 8px; }
 .options button { padding: 9px 14px; background: var(--bg); border: 1px solid var(--rule); border-radius: var(--radius); font-size: 1rem; transition: transform 0.15s, background-color 0.2s; }
@@ -136,8 +136,8 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 .revealAns { font-size: 0.95rem; color: var(--ink-2); }
 .revealed { border-color: var(--accent); }
 .revealed .revealAns { color: var(--ink); animation: lift 0.4s var(--ease); }
-.realList { display: grid; gap: 14px; }
-.real { margin: 0; display: grid; gap: 12px; padding: clamp(16px, 3vw, 26px); background: var(--surface); border-top: 3px double var(--rule); border-bottom: 3px double var(--rule); }
+.realList { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.real { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: clamp(16px, 3vw, 26px); background: var(--surface); border-top: 3px double var(--rule); border-bottom: 3px double var(--rule); }
 .realHead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center; }
 .realHead a { text-decoration: none; }
 .realBody { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 24px; }

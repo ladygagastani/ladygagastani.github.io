@@ -3,7 +3,11 @@
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--rule);
+  transition: transform 0.35s var(--ease), box-shadow 0.3s;
 }
+/* reading on: the header tucks itself away, and comes back on any scroll up */
+:global(html[data-hdr="hidden"]) .top { transform: translateY(calc(-100% - env(safe-area-inset-top, 0px) - 2px)); }
+:global(html[data-scrolled]) .top { box-shadow: 0 10px 24px -18px var(--shadow); }
 .row { display: flex; align-items: center; gap: 20px; min-height: 68px; }
 
 .brand { display: flex; flex-direction: column; text-decoration: none; line-height: 1.1; flex: none; }
@@ -44,9 +48,24 @@
 /* the button labels need more room than the page's column, so the header row widens where they show */
 @media (min-width: 1401px) { .top .row { max-width: max(var(--maxw), 1400px); } }
 @media (max-width: 680px) {
-  .row { flex-wrap: wrap; gap: 8px 16px; padding-block: 8px; }
-  .areas { order: 3; flex-basis: 100%; }
-  .tools { margin-left: auto; }
+  .row { flex-wrap: wrap; gap: 4px 12px; padding-block: 8px 0; min-height: 0; }
+  .areas { order: 3; flex-basis: 100%; margin-left: -12px; }
+  .areas a { padding-block: 6px 9px; }
+  .tools { margin-left: auto; gap: 6px; }
+  .tbtn { min-height: 38px; min-width: 38px; justify-content: center; padding: 0 9px; }
+  .light { padding-inline: 0; }
+}
+/* small phones: a smaller name, and the quick theme switch (also in Settings) steps aside, so the row fits */
+@media (max-width: 440px) {
+  .brandGr { font-size: 1.12rem; }
+  .brandEn { font-size: 0.66rem; letter-spacing: 0.1em; }
+  .theme { display: none; }
+}
+@media (max-width: 360px) {
+  .row { column-gap: 6px; }
+  .brandGr { font-size: 0.92rem; }
+  .tools { gap: 3px; }
+  .tbtn { min-width: 34px; min-height: 36px; padding: 0 7px; }
 }
 
 /* ------------------------------------------------------------ connection light */

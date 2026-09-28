@@ -110,7 +110,7 @@
 .threads path[data-on] { stroke: var(--accent); stroke-width: 2.4; opacity: 1; }
 @keyframes thread { from { stroke-dashoffset: 1; } }
 
-.side { position: sticky; top: calc(var(--bar-h, 64px) + 16px); max-height: calc(100vh - var(--bar-h, 64px) - 32px); overflow: auto; overscroll-behavior: contain; }
+.side { position: sticky; top: calc(var(--hdr-vis) + 16px); max-height: calc(100vh - var(--hdr-vis) - 32px); transition: top 0.35s var(--ease); overflow: auto; overscroll-behavior: contain; }
 .hint { padding: 18px 20px; border: 1px dashed var(--rule); border-radius: var(--radius); display: grid; gap: 8px; }
 .hint p { margin: 0; }
 

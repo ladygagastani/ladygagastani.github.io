@@ -128,7 +128,7 @@
 /* ------------------------------------------------ the ranging pole */
 .poleRail { position: absolute; top: 0; bottom: 0; left: max(10px, calc((100vw - var(--maxw)) / 2 - 18px)); width: 14px; z-index: 2; pointer-events: none; }
 .pole {
-  --p: 0; position: sticky; top: 110px; height: min(58vh, 520px); width: 12px; border: 1px solid var(--ink); border-radius: 2px;
+  --p: 0; position: sticky; top: calc(var(--hdr-vis) + 42px); transition: top 0.35s var(--ease); height: min(58vh, 520px); width: 12px; border: 1px solid var(--ink); border-radius: 2px;
   background: repeating-linear-gradient(180deg, var(--accent) 0 12.5%, var(--white-slip) 12.5% 25%);
   box-shadow: 0 10px 20px -12px var(--shadow);
 }

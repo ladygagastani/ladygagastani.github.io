@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: `Vocabulary · ${AREAS.study.name}` }
 export default function VocabularyPage() {
   return (
     <Page>
-      <div className="wrap" style={{ paddingBlock: "clamp(32px, 5vw, 56px)", display: "grid", gap: 20 }}>
+      <div className="wrap" style={{ paddingBlock: "clamp(32px, 5vw, 56px)", display: "grid", gridTemplateColumns: "minmax(0, 1fr)", gap: 20 }}>
         <nav className="label"><Link href={AREAS.study.href} transitionTypes={["page-turn"]}>{AREAS.study.name}</Link> › Vocabulary</nav>
         <h1 style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)" }}>Vocabulary by frequency <span lang="grc" style={{ color: "var(--accent)" }}>λέξεις</span></h1>
         <p className="muted" style={{ maxWidth: "62ch", fontSize: "1.1rem" }}>A few hundred words make up most of any Greek text. Learn the commonest first, and watch how much of a real text you can already recognise.</p>

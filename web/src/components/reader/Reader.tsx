@@ -37,6 +37,7 @@ import { lineHash, type MetreIndex } from "@/lib/metre/text";
 import { playLine as playLineRhythm } from "@/lib/metre/beat";
 import { loadWordPack, analyse as analyseWord } from "@/lib/lookup/words";
 import { caseOf } from "@/lib/lookup/postag";
+import { headerVisible } from "@/lib/header";
 import styles from "./Reader.module.css";
 
 type Load = { state: "loading"; step: string } | { state: "error"; message: string } | { state: "ready" };
@@ -154,6 +155,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const [share, setShare] = useState<ShareData | null>(null);
   const [openNote, setOpenNote] = useState<string | null>(null);
   const [marksOpen, setMarksOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);   // phones: the bar folds its tools away behind one button
   const allMarks = useMarks((s) => s.byWork[workId]) ?? NO_MARKS;
   useEffect(() => { if (workId) useMarks.getState().load(workId); }, [workId]);
   const [goto, setGoto] = useState("");
@@ -306,7 +308,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   /** The passage at the top of this pane now: the first showing more than a sliver below the sticky bar. */
   const topKey = () => {
     const bar = root().querySelector<HTMLElement>(`.${styles.bar}`);
-    const edge = bar ? bar.getBoundingClientRect().bottom : contained ? rootRef.current!.getBoundingClientRect().top : 68;
+    const edge = bar ? bar.getBoundingClientRect().bottom : contained ? rootRef.current!.getBoundingClientRect().top : headerVisible();
     return [...root().querySelectorAll<HTMLElement>("article [data-key]")].find((r) => r.getBoundingClientRect().bottom > edge + 24)?.dataset.key ?? null;
   };
   const onPosition = useRef(nav.onPosition);
@@ -737,7 +739,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   return (
     <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${word || echo || vocabOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""} ${floating ? styles.floating : ""}`}
       onPointerDown={() => useUI.getState().setActivePane(pane)} onFocusCapture={() => useUI.getState().setActivePane(pane)}>
-      {load.state === "ready" && <ScrollMarkers rootRef={rootRef} contained={contained} items={markerItems} onJump={jumpToRow} offset={68} depKey={`${chunk}|${rows.length}|${columns}|${translit}|${!!metre}|${word ? 1 : 0}`} />}
+      {load.state === "ready" && <ScrollMarkers rootRef={rootRef} contained={contained} items={markerItems} onJump={jumpToRow} depKey={`${chunk}|${rows.length}|${columns}|${translit}|${!!metre}|${word ? 1 : 0}`} />}
       {split && (
         <div className={styles.paneBar}>
           <span className="label">{pane === 1 ? "Left book" : "Right book"}</span>
@@ -799,7 +801,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
 
       {load.state === "ready" && doc && chunkInfo && (
         <>
-          <div className={`wrap ${styles.bar}`}>
+          <div className={`wrap ${styles.bar}`} data-tools={toolsOpen ? "open" : undefined}>
             <div className={styles.pager}>
               <button type="button" onClick={() => goChunk(chunk - 1)} disabled={chunk === 0} aria-label="Previous page">←</button>
               <select aria-label="Page" value={chunk} onChange={(e) => goChunk(+e.target.value)}>
@@ -807,10 +809,14 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
               </select>
               <button type="button" onClick={() => goChunk(chunk + 1)} disabled={chunk === doc.chunks.length - 1} aria-label="Next page">→</button>
             </div>
+            <button type="button" className={styles.toolsBtn} onClick={() => setToolsOpen(!toolsOpen)} aria-expanded={toolsOpen}>
+              Tools <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
             <form className={styles.goto} onSubmit={submitGoto} role="search">
               <input ref={gotoRef} id="reader-goto" value={goto} onChange={(e) => setGoto(e.target.value)} placeholder={`Go to ${doc.levels.join(".")}`} aria-label="Go to reference" />
               <button type="submit">Go</button>
             </form>
+            <div className={styles.more}>
             {!floating && aids}
             <div className={styles.marksMenu}>
               <button type="button" onClick={() => setMarksOpen(!marksOpen)} aria-expanded={marksOpen}>Your marks ({allMarks.length})</button>
@@ -835,6 +841,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
               </button>
             )}
             <button type="button" className={styles.helpBtn} onClick={() => setHelp((h) => !h)} aria-expanded={help}>Keys <kbd>?</kbd></button>
+            </div>
           </div>
 
           {cases && (

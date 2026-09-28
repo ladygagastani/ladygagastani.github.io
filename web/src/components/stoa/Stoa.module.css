@@ -80,7 +80,7 @@
 .entryGrid { display: grid; grid-template-columns: minmax(0, 46rem) minmax(220px, 280px); gap: clamp(28px, 5vw, 72px); justify-content: space-between; align-items: start; }
 .entryMain { display: grid; gap: 20px; font-size: 1.12rem; line-height: 1.75; min-width: 0; }
 .entryMain > p { margin: 0; }
-.entryAside { position: sticky; top: 90px; display: grid; gap: 22px; }
+.entryAside { position: sticky; top: calc(var(--hdr-vis) + 22px); transition: top 0.35s var(--ease); display: grid; gap: 22px; }
 @media (max-width: 980px) { .entryGrid { grid-template-columns: 1fr; } .entryAside { position: static; order: -1; } }
 
 .hook { font-size: 1.32rem; line-height: 1.6; }

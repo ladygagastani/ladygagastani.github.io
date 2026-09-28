@@ -6,6 +6,9 @@
    ===================================================================== */
 
 :root {
+  /* the site header: its height, and how much of it shows now (it slides away on scroll; lib/header.ts) */
+  --hdr-h: 68px;
+  --hdr-vis: var(--hdr-h);
   /* colour */
   --bg: #E6C39B;          /* pale fired clay */
   --bg-2: #DDB186;        /* deeper clay, hover and bands */
@@ -68,6 +71,8 @@
 /* ---------------------------------------------------------------- base */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+/* phones: nothing may nudge the page sideways (clip, unlike hidden, keeps sticky elements working) */
+body { overflow-x: clip; }
 body {
   margin: 0;
   background: var(--bg);

@@ -20,7 +20,7 @@
 
 .browse { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 28px; align-items: start; }
 .authors {
-  position: sticky; top: calc(84px + env(safe-area-inset-top, 0px)); max-height: calc(100vh - 110px); overflow-y: auto;
+  position: sticky; top: calc(var(--hdr-vis) + 16px + env(safe-area-inset-top, 0px)); max-height: calc(100vh - var(--hdr-vis) - 42px); transition: top 0.35s var(--ease); overflow-y: auto;
   border-top: 3px double var(--rule); border-bottom: 3px double var(--rule);
 }
 .authors ul { list-style: none; margin: 0; padding: 6px 0; }

@@ -21,7 +21,7 @@
 /* ------------------------------------------------ layout */
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); gap: clamp(24px, 4vw, 56px); align-items: start; }
 .main, .side { display: grid; gap: clamp(32px, 4vw, 48px); min-width: 0; }
-.side { position: sticky; top: 84px; gap: 28px; }
+.side { position: sticky; top: calc(var(--hdr-vis) + 16px); transition: top 0.35s var(--ease); gap: 28px; }
 @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } .side { position: static; } }
 
 .sec { display: grid; gap: 12px; align-content: start; animation: rise 0.5s var(--ease) both; }

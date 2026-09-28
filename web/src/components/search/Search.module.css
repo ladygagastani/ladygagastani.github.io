@@ -1,5 +1,5 @@
 /* The Oracle: search in the Black-Figure style */
-.page { display: grid; gap: 28px; padding-block: 32px 64px; }
+.page { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 32px 64px; }
 .gr { font-family: var(--f-greek); }
 .small { font-size: 0.86rem; color: var(--ink-2); }
 .warn { color: var(--accent); font-weight: 600; }
@@ -7,7 +7,7 @@
 .status { color: var(--ink-2); display: flex; align-items: center; gap: 12px; padding-block: 24px; }
 
 /* ------------------------------------------------------------ the box */
-.box { display: grid; gap: 12px; }
+.box { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 .tabs { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid var(--rule); }
 .tabs button {
   background: transparent; border: 0; padding: 10px 16px; font-family: var(--f-label); letter-spacing: 0.05em; font-size: 0.95rem;
@@ -57,7 +57,7 @@
 
 /* ------------------------------------------------------------ layout */
 .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: clamp(20px, 3vw, 40px); align-items: start; }
-.filters { position: sticky; top: calc(84px + env(safe-area-inset-top, 0px)); max-height: calc(100vh - 100px); overflow: hidden auto; }
+.filters { position: sticky; top: calc(var(--hdr-vis) + 16px + env(safe-area-inset-top, 0px)); max-height: calc(100vh - var(--hdr-vis) - 32px); transition: top 0.35s var(--ease); overflow: hidden auto; }
 .filterBody { display: grid; gap: 18px; justify-items: start; }
 .fs { border: 0; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
 .fs legend { font-family: var(--f-label); letter-spacing: 0.08em; font-size: 0.85rem; color: var(--accent); padding: 0; margin-bottom: 6px; }
@@ -121,7 +121,7 @@
 @keyframes pulse { from { opacity: 0.25; transform: scale(0.8); } to { opacity: 1; transform: scale(1.1); } }
 
 @media (max-width: 860px) {
-  .layout { grid-template-columns: 1fr; }
+  .layout { grid-template-columns: minmax(0, 1fr); }
   .filters { position: static; max-height: none; }
   .hit { grid-template-columns: 1fr; }
   .hitMeta { grid-column: 1; }
