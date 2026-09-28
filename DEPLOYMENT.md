@@ -1,57 +1,25 @@
-# GitHub Pages Deployment
+# Hosting on GitHub Pages
 
-The site is now configured for **static export** and automatic deployment to GitHub Pages.
+The site is live at **https://ladygagastani.github.io/**, from the repository
+https://github.com/ladygagastani/ladygagastani.github.io (public).
 
-## What was changed
+## How it works
+- `web/next.config.ts` has `output: "export"`, so `npm run build` writes a plain static site to `web/out/`.
+- Every push to `main` runs `.github/workflows/deploy.yml` on GitHub: it installs, builds and publishes `web/out/`.
+  Progress: the repository's **Actions** tab. A run takes about 3–4 minutes.
+- In the repository's Settings → Pages, **Source** is set to **GitHub Actions**.
 
-1. **`web/next.config.ts`**: Added `output: "export"` to enable static export builds
-2. **`.github/workflows/deploy.yml`**: Created GitHub Actions workflow to build and deploy automatically
-3. **`web/.nojekyll`**: Added to prevent GitHub from processing files with Jekyll
+## To publish a change
+Commit, then `git push`. That's all.
 
-## How to deploy
+## Why the repository is named `ladygagastani.github.io`
+A repository with that exact name is served at the top of the address (`/`). The code asks for its files
+there (`/data/…`, `/sw.js`, `/images/…`). A repository with any other name would be served at
+`/<name>/`, and those requests would fail unless the code were changed to use a base path.
 
-### Option 1: Automatic (Recommended)
-Once you push to GitHub:
-1. Go to your repository **Settings → Pages**
-2. Under "Build and deployment", select:
-   - **Source**: GitHub Actions
-   - **Branch**: (already configured in the workflow)
-
-The workflow will run automatically on every push to `main` and deploy to GitHub Pages.
-
-### Option 2: Manual
-Build and deploy locally:
-```bash
-cd web
-npm run build
-# Now web/out/ contains the static site
-```
-
-Then push both changes and the workflow will deploy.
-
-## Verification
-
-After deployment, your site will be at:
-- `https://<username>.github.io/` (for user/org repo) or
-- `https://<username>.github.io/<repo-name>/` (for a project repo)
-
-The GitHub Actions workflow runs each time you push to `main` and:
-1. Installs dependencies
-2. Runs `npm run build` to generate static files in `web/out/`
-3. Uploads to GitHub Pages
-
-## Build output
-
-- **Source**: `web/` (Next.js app with React)
-- **Built site**: `web/out/` (static HTML/CSS/JS)
-- **Deployed to**: GitHub Pages `gh-pages` branch (automatic)
-
-## Offline and service worker
-
-The service worker (`public/sw.js`) will work with the static export. The site remains fully functional offline after the first visit.
-
-## What's next
-
-1. Push these changes to GitHub
-2. Check Settings → Pages to verify the deployment source
-3. The site should be live within a few minutes
+## What does not work online yet
+These generated data packs are not in the repository (they are too large and gitignored), so they are not on the site:
+`public/data/words` (word analyses), `public/data/lsj` (LSJ), `public/data/search` (the Oracle's index) and
+`public/data/lexicon` (Word Study). Online, the Oracle search, Word Study and the detailed word look-ups
+need them; see "Hosting the generated data packs" in `PROGRESS.md`. Note that GitHub refuses single files
+over 100 MB and a Pages site should stay under 1 GB.
