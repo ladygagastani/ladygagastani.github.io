@@ -14,6 +14,7 @@ A free website for learning to read Ancient Greek and exploring the Greek world.
 | `web/` | The website (Next.js 16, React 19, TypeScript). |
 | `design-study/` | The Phase 0 prototype of three visual directions. Kept for reference; not used by the site. |
 | `pipeline/` | Python scripts that download the original collections and build the catalogue, word analyses, core vocabulary and LSJ dictionary from them. Downloads are cached in `pipeline/.cache/` (not committed). |
+| `supabase/migrations/` | The database behind accounts, the Town Hall and the Pnyx (Supabase), as SQL files run once each, in order, in the Supabase SQL editor. See PROGRESS.md, Phase 8. |
 
 ## The live site
 
@@ -94,6 +95,7 @@ Rebuilding the committed data, only when its sources change:
 - `wiki/kerameikos.ts` lists the archaeology section's layers and dig sites; `components/stoa/Kerameikos.tsx` draws it.
 - `lib/map.ts` and `components/map/Periplus.tsx` are the Periplus map; saved places show in the Treasury (`components/treasury/PlacesSection.tsx`).
 - `lib/census.ts` and `components/census/` are the Census (Most Mentioned); how it counts is written on the page itself (`Method.tsx`).
+- `lib/community/` (connection, data, Treasury sync) and `components/community/` are accounts, the Town Hall and the Pnyx; `config/supabase.ts` holds the public Supabase address and publishable key. Supabase is contacted only on those pages or when someone is signed in.
 - `data/` holds hand-checked content: the alphabet, stroke order, lessons, tables of forms and passages of the day.
 
 ## Content rules
