@@ -24,6 +24,8 @@ export interface TreasuryData {
   positions: Record<string, Position>;
   /** saved places on the Periplus: Pleiades id → when saved */
   places?: Record<string, number>;
+  /** marks and notes deleted, and when (so a sync does not bring them back) */
+  deleted?: Record<string, number>;
 }
 
 // ------------------------------------------------------------ merging
@@ -103,6 +105,7 @@ export function parseExport(text: string): TreasuryData {
     },
     positions: d.positions && typeof d.positions === "object" ? d.positions : {},
     places: d.places && typeof d.places === "object" ? Object.fromEntries(Object.entries(d.places).filter(([k, v]) => /^\d+$/.test(k) && typeof v === "number")) : {},
+    deleted: d.deleted && typeof d.deleted === "object" ? Object.fromEntries(Object.entries(d.deleted).filter(([, v]) => typeof v === "number")) : {},
   };
 }
 const isMark = (m: Mark) => !!m && typeof m.id === "string" && typeof m.work === "string" && typeof m.kind === "string" && !!m.start && typeof m.updated === "number";

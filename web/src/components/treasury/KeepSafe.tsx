@@ -1,26 +1,28 @@
 "use client";
 /** Export everything to one readable file, and restore from it (merging, never deleting). */
-import { useRef, useState } from "react";
-import { allMarks, allPageNotes, putAll, useMarks, usePageNotes } from "@/lib/annotations";
-import { useAcademy } from "@/lib/academy";
-import { allPositions, setAllPositions } from "@/lib/position";
-import {
-  EXPORT_APP, EXPORT_FORMAT, ImportProblem, exportHtml, mergeAcademy, mergeById, mergePositions, parseExport, type TreasuryData,
-} from "@/lib/treasury-io";
-import { loadMap, loadSavedPlaces, useSavedPlaces } from "@/lib/map";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { ImportProblem, exportHtml, parseExport } from "@/lib/treasury-io";
+import { applyIncoming, gather, type ApplyReport } from "@/lib/treasury-apply";
+import { loadMap } from "@/lib/map";
+import { hasSavedSession, problem, useAccount } from "@/lib/community/client";
+import { lastSynced, syncTreasury } from "@/lib/community/sync";
+import { useLoad } from "@/lib/use-load";
 import { plural, type TreasuryState } from "./data";
 import styles from "./Treasury.module.css";
 
-async function gather(): Promise<TreasuryData> {
-  await useAcademy.persist.rehydrate();
-  await loadSavedPlaces();
-  const { completed, days, deck } = useAcademy.getState();
-  return {
-    app: EXPORT_APP, format: EXPORT_FORMAT, exported: new Date().toISOString(),
-    marks: await allMarks(), notes: await allPageNotes(),
-    academy: { completed, days, deck }, positions: allPositions(), places: useSavedPlaces.getState().saved,
-  };
-}
+const reportLines = (r: ApplyReport) => {
+  const line = (what: string, x: { added: number; updated: number; unchanged: number }) =>
+    `${what}: ${x.added} added, ${x.updated} updated to a newer copy, ${x.unchanged} already here.`;
+  return [
+    line("Marks and notes on passages", r.marks),
+    line("Notes on authors and words", r.notes),
+    line("Words in your review deck", r.deck),
+    `Places you stopped reading: ${r.positions} updated.`,
+    `Saved places on the map: ${r.places} added.`,
+    ...(r.removed ? [`Deleted here because you deleted them on another device: ${r.removed}.`] : []),
+  ];
+};
 
 export default function KeepSafe({ t, summary }: { t: TreasuryState; summary: string }) {
   const file = useRef<HTMLInputElement>(null);
@@ -48,29 +50,12 @@ export default function KeepSafe({ t, summary }: { t: TreasuryState; summary: st
     setBusy(true);
     try {
       const incoming = parseExport(await f.text());
-      const mine = await gather();
-      const marks = mergeById(mine.marks, incoming.marks);
-      const notes = mergeById(mine.notes, incoming.notes);
-      await putAll(marks.write, notes.write);
-      const { academy, report: deck } = mergeAcademy(mine.academy, incoming.academy);
-      useAcademy.setState(academy);
-      const pos = mergePositions(mine.positions, incoming.positions);
-      setAllPositions(pos.positions);
-      await useMarks.getState().loadAll();
-      await usePageNotes.getState().load();
-      t.setPositions(pos.positions);
-      const placesAdded = useSavedPlaces.getState().merge(incoming.places ?? {});
-      const line = (what: string, r: { added: number; updated: number; unchanged: number }) =>
-        `${what}: ${r.added} added, ${r.updated} updated to a newer copy, ${r.unchanged} already here.`;
+      const r = await applyIncoming(incoming, t.setPositions);
       setResult({
         ok: true, lines: [
           `Restored from ${f.name}${incoming.exported ? ` (exported ${new Date(incoming.exported).toLocaleString("en-GB")})` : ""}.`,
-          line("Marks and notes on passages", marks.report),
-          line("Notes on authors and words", notes.report),
-          line("Words in your review deck", deck),
-          `Places you stopped reading: ${pos.changed} updated.`,
-          `Saved places on the map: ${placesAdded} added.`,
-          "Nothing already in this browser was deleted.",
+          ...reportLines(r),
+          ...(r.removed ? [] : ["Nothing already in this browser was deleted."]),
         ],
       });
     } catch (e) {
@@ -85,9 +70,9 @@ export default function KeepSafe({ t, summary }: { t: TreasuryState; summary: st
     <aside className={styles.keep} aria-labelledby="keep-h">
       <div>
         <h2 id="keep-h">Keep your Treasury safe</h2>
-        <p>Everything here lives only in this browser: {summary}. Nothing is sent anywhere.
-          Download it as one file that reads like a book in any browser, and restore from that file here, on this or another computer.
-          Restoring adds what is missing and updates what is older; it never deletes.</p>
+        <p>Everything here lives in this browser: {summary}. Download it as one file that reads like a book in any browser,
+          and restore from that file here, on this or another computer. Restoring adds what is missing and updates what is older.</p>
+        <Sync t={t} onResult={setResult} lines={reportLines} />
       </div>
       <div className={styles.keepActs}>
         <button type="button" className="btn" onClick={download} disabled={busy}>Download my Treasury</button>
@@ -102,5 +87,37 @@ export default function KeepSafe({ t, summary }: { t: TreasuryState; summary: st
         </div>
       )}
     </aside>
+  );
+}
+
+/** Keep in step with the account (only for members; Supabase is contacted only when signed in). */
+function Sync({ t, onResult, lines }: { t: TreasuryState; onResult: (r: { ok: boolean; lines: string[] }) => void; lines: (r: ApplyReport) => string[] }) {
+  const { session, start } = useAccount();
+  const [busy, setBusy] = useState(false);
+  const [last, setLast] = useState<string | null>(null);
+  useEffect(() => { if (hasSavedSession()) start(); }, [start]);
+  const uid = session?.user.id;
+  // once, when the Treasury opens for a signed-in member
+  const auto = useLoad(`treasury-sync|${uid}`, () => syncTreasury(uid!, t.setPositions), !!uid);
+  const run = async () => {
+    if (!uid) return;
+    setBusy(true);
+    try {
+      const { report, at } = await syncTreasury(uid, t.setPositions);
+      setLast(at);
+      onResult({ ok: true, lines: [`In step with your account (${new Date(at).toLocaleString("en-GB")}).`, ...(report ? lines(report) : ["Your account had no copy yet; this browser's Treasury is now saved there."])] });
+    } catch (e) { onResult({ ok: false, lines: [`Could not keep in step: ${problem(e)}`] }); } finally { setBusy(false); }
+  };
+  if (!session) return <p className={styles.small}><Link href="/account?next=/treasury">Sign in</Link> to keep your Treasury in step between your devices.</p>;
+  const shown = last ?? (auto.state === "done" ? auto.value.at : lastSynced());
+  const brought = auto.state === "done" && auto.value.report ? auto.value.report : null;
+  const changes = brought ? brought.marks.added + brought.marks.updated + brought.notes.added + brought.notes.updated + brought.removed : 0;
+  return (
+    <p className={styles.small}>
+      <button type="button" className="chip" onClick={run} disabled={busy || auto.state === "loading"}>{busy || auto.state === "loading" ? "Keeping in step…" : "Keep in step now"}</button>{" "}
+      {auto.state === "error" ? `Could not keep in step: ${problem(auto.message)}. ` : ""}
+      Kept in step with your account{shown ? `, last on ${new Date(shown).toLocaleString("en-GB")}` : ""}{changes ? ` (${changes} changes from your other devices)` : ""}.
+      A deletion here is deleted on your other devices too.
+    </p>
   );
 }
