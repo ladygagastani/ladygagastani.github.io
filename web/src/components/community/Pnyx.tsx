@@ -94,15 +94,16 @@ function Result({ id }: { id: number }) {
   return <ResultBar t={t} small />;
 }
 
-export function ResultBar({ t, small }: { t: Tally; small?: boolean }) {
+/** The count of pebbles; `running` while the vote is open (only the moderator sees it then), so no verdict yet. */
+export function ResultBar({ t, small, running }: { t: Tally; small?: boolean; running?: boolean }) {
   const total = t.votes_for + t.votes_against;
   const pc = total ? Math.round((t.votes_for / total) * 100) : 50;
   return (
     <div className={`${styles.result} ${small ? styles.resultSmall : ""}`} role="img"
       aria-label={`${t.votes_for} for, ${t.votes_against} against${t.changed_mind ? `; ${t.changed_mind} changed their mind` : ""}`}>
       <div className={styles.resultBar}><span style={{ width: `${pc}%` }} /></div>
-      <p><b>{t.votes_for}</b> for · <b>{t.votes_against}</b> against{total === 0 && " (no votes)"}{t.changed_mind > 0 && ` · ${t.changed_mind} changed their mind`}
-        {total > 0 && <> · <b>{t.votes_for === t.votes_against ? "tied" : t.votes_for > t.votes_against ? "carried" : "rejected"}</b></>}</p>
+      <p>{running && "So far: "}<b>{t.votes_for}</b> for · <b>{t.votes_against}</b> against{total === 0 && " (no votes)"}{t.changed_mind > 0 && ` · ${t.changed_mind} changed their mind`}
+        {total > 0 && !running && <> · <b>{t.votes_for === t.votes_against ? "tied" : t.votes_for > t.votes_against ? "carried" : "rejected"}</b></>}</p>
     </div>
   );
 }
@@ -121,8 +122,8 @@ export function OpenControls({ d, onDone }: { d: Debate; onDone: () => Promise<v
   };
   return (
     <div className={styles.modPanel}>
-      <label>Open for <input type="number" min={1} max={90} value={days} onChange={(e) => setDays(+e.target.value)} /> days</label>
-      <label className={styles.check}><input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} /> <span>Make it the motion of the week</span></label>
+      <label>Open for <input type="number" aria-label="Days the debate stays open" min={1} max={90} value={days} onChange={(e) => setDays(+e.target.value)} /> days</label>
+      <label className={styles.check}><input type="checkbox" aria-label="Make it the motion of the week" checked={featured} onChange={(e) => setFeatured(e.target.checked)} /> <span>Make it the motion of the week</span></label>
       <button type="button" className={styles.modBtn} onClick={() => act("open")}>Open the debate</button>
       <button type="button" className={styles.modBtn} onClick={() => act("declined")}>Decline</button>
       {error && <p className={styles.error}>{error}</p>}
@@ -155,9 +156,9 @@ function Propose({ entryTitles, onDone, writer }: { entryTitles: Record<string, 
         }}>
           {fromTitle && <p className={styles.note}>From the Painted Stoa: <Link href={`/stoa/${from}`}>{fromTitle}</Link></p>}
           <label><span>The motion <small>10–200 characters</small></span>
-            <input value={motion} onChange={(e) => setMotion(e.target.value)} required minLength={10} maxLength={200} /></label>
+            <input aria-label="The motion" value={motion} onChange={(e) => setMotion(e.target.value)} required minLength={10} maxLength={200} /></label>
           <label><span>Background <small>optional: what the question is and where to read about it</small></span>
-            <textarea value={blurb} onChange={(e) => setBlurb(e.target.value)} maxLength={4000} rows={4} /></label>
+            <textarea aria-label="Background" value={blurb} onChange={(e) => setBlurb(e.target.value)} maxLength={4000} rows={4} /></label>
           {error && <p className={styles.error} role="alert">{error}</p>}
           {msg && <p className={styles.ok} role="status">{msg}</p>}
           <button type="submit" className="btn">Propose</button>

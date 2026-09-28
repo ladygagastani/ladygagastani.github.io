@@ -128,7 +128,8 @@ function Urns({ open, pebble, count, writer, onCast }: {
       </div>
       {pebble && pebble.side !== pebble.first_side && <p className={styles.small}>You changed your mind: your first pebble went {pebble.first_side}.</p>}
       {error && <p className={styles.error}>{error}</p>}
-      {count && <ResultBar t={count} />}
+      {count && <ResultBar t={count} running={open} />}
+      {count && open && <p className={styles.small}>Only you, as the moderator, see the count while the vote is open.</p>}
     </section>
   );
 }
