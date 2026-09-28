@@ -40,5 +40,4 @@ Limits: GitHub refuses single files over 100 MB (the largest pack file is 11 MB)
 under 1 GB; the script stops if the packs come within 5% of that. Past 1 GB, split them over two repositories
 (for example `packs` and `packs2`) and point `search` at the second.
 
-Until the `packs` site exists, the Oracle, Word Study and the detailed word look-ups do not work online, and
-the Census shows its rankings but not an item's charts.
+The `packs` site has been live since 2026-09-28 (set up as above).
