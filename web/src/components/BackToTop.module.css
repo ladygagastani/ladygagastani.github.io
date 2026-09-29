@@ -1,0 +1,23 @@
+/* Back to top: a round button, bottom right, above the phone's bars (the same offsets as the toast). */
+.btt {
+  position: fixed; right: 16px; z-index: 30;
+  bottom: calc(20px + max(var(--tabbar-vis) + var(--readbar-vis), env(safe-area-inset-bottom, 0px)));
+  display: grid; justify-items: center; align-content: center; gap: 1px; width: 52px; height: 52px; padding: 0;
+  background: var(--inv-bg); color: var(--inv-fg); --accent: var(--accent-on-ink);
+  border: 1px solid var(--inv-edge); border-radius: 50%; box-shadow: 0 14px 30px -14px var(--shadow), 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent);
+  cursor: pointer; animation: bttIn 0.3s var(--ease) both; transition: bottom 0.35s var(--ease), transform 0.2s var(--ease);
+}
+.btt:hover { transform: translateY(-3px); }
+.btt:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.btt svg { width: 20px; height: 20px; fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.btt span { font-family: var(--f-label); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; }
+@keyframes bttIn { from { opacity: 0; transform: translateY(12px) scale(0.9); } }
+
+/* a minimised floating reader sits in the same corner: this one goes above it */
+:global(html:has([data-float-tab])) .btt { bottom: calc(84px + max(var(--tabbar-vis) + var(--readbar-vis), env(safe-area-inset-bottom, 0px))); }
+
+/* inside a pane that scrolls in its own box: a zero-height strip stuck to the pane's bottom edge */
+.inPane { position: sticky; bottom: 14px; height: 0; overflow: visible; display: flex; justify-content: flex-end; padding-right: 14px; z-index: 30; pointer-events: none; }
+.inPane .btt { position: static; pointer-events: auto; translate: 0 calc(-100%); width: 44px; height: 44px; }
+
+@media (prefers-reduced-motion: reduce) { .btt { animation: none; transition: none; } .btt:hover { transform: none; } }

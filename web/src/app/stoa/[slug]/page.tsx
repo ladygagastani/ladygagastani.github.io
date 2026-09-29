@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Page from "@/components/Page";
 import EntryView from "@/components/stoa/EntryView";
+import BackToTop from "@/components/BackToTop";
 import { ENTRIES, entryBySlug } from "@/wiki/index";
 import { inline, plain } from "@/wiki/markup";
 
@@ -21,6 +22,7 @@ export default async function EntryPage({ params }: { params: Promise<{ slug: st
   return (
     <Page>
       <EntryView e={e} />
+      <BackToTop />
     </Page>
   );
 }

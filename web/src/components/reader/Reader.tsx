@@ -43,6 +43,7 @@ import { headerVisible, scrollBelowHeader, setBars } from "@/lib/header";
 import ReadBar, { PHONE } from "./ReadBar";
 import { buzz } from "@/lib/haptics";
 import styles from "./Reader.module.css";
+import BackToTop from "@/components/BackToTop";
 
 type Load = { state: "loading"; step: string } | { state: "error"; message: string } | { state: "ready" };
 
@@ -1178,6 +1179,9 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           )}
         </>
       )}
+
+      {/* in a pane that scrolls in its own box the button scrolls that pane; otherwise the page (one button, not one per book) */}
+      {doc && <BackToTop paneRef={contained ? rootRef : undefined} page={pane === 1} />}
 
       {/* each panel keeps its own failures to itself: the text stays readable */}
       {vocabOpen && doc && !word && (
