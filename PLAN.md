@@ -191,16 +191,17 @@ the owner picks what to keep.
   "reduced motion"; gestures are tested on a real iPhone and a real Android phone.
 
 **1. Navigation**
-- A **bottom bar** on phones with five places: Home, Library, Academy, Stoa and "More" (Town Hall,
-  Treasury, Settings, account). It replaces the sideways-scrolling menu at the top, which shrinks to the
-  name and a search button.
+- A **bottom bar** on phones with five places, left to right: **Library** (the Mouseion), **Learn Greek**
+  (the Academy), **Wiki** (the Painted Stoa), **Forum** (the Town Hall) and **My Library** (the Treasury)
+  (owner's choice, 2026-09-29). It replaces the sideways-scrolling menu at the top, which shrinks to the
+  site's name (the way home), search, account and Settings.
 - **Search as a full-screen sheet** from the search button (today the quick search opens only with the
   keyboard's "/" key), with the Greek keyboard docked above the phone's own keyboard.
 - The bar and header **tuck away while reading** and come back with a small scroll up or a tap.
 
 **2. The reader, made for one hand**
-- **Swipe sideways to turn** to the next or previous book or chapter, with the page-turn (unrolling
-  scroll) animation. Swipes start only outside a text selection, so selecting words still works.
+- ~~Swipe sideways to turn to the next or previous book or chapter.~~ **Not wanted** (owner, 2026-09-29):
+  the reader stays scrolling; books and chapters change with the buttons in the reading bar.
 - A **reading bar at the bottom**: previous / next, contents, reading aids and "Aa" (text size and
   spacing). The top bar disappears.
 - **Tap the empty margin for a clean page**: all controls fade out; a thin line at the top shows how far
@@ -253,8 +254,9 @@ the owner picks what to keep.
 5. Testing on real phones, browser tests for the gestures, the phone checker raised to 44 px targets,
    and a review by a fresh session.
 
-**Decisions for the owner before Phase 10 starts**
-- The bottom bar: yes or no, and which five places it shows.
-- Swipe to turn pages in the reader: yes or no (some readers prefer only scrolling).
-- Vibration: offered or not.
-- Which of the ideas above to leave out or keep for later.
+**The owner's decisions (2026-09-29): Phase 10 is ready to start**
+- **Bottom bar: yes**, showing Library, Learn Greek, Wiki, Forum and My Library, in that order from left
+  to right.
+- **Swipe to turn pages in the reader: no.** The reader stays scrolling.
+- **Short vibrations: yes** (Android phones that allow them; a Settings switch turns them off).
+- **Every other idea in this section is approved**, as written above.
