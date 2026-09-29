@@ -27,9 +27,12 @@ test("the library can be filtered by how familiar a text's vocabulary is, and sa
   await expect(page.getByText(/\b[1-6]\d% common words/).first()).toBeVisible();
 });
 
-test("the library's author panel leads to the author page", async ({ page }) => {
+test("the library lists every author with their works, and an author's name leads to their page", async ({ page }) => {
   await page.goto("/library?a=tlg0012");
-  await page.getByRole("link", { name: "Author page →" }).click();
+  const homer = page.locator("#author-tlg0012");
+  await expect(homer).toBeInViewport();
+  await expect(homer.getByRole("link", { name: /^Iliad/ })).toBeVisible();
+  await homer.getByRole("link", { name: "Homer", exact: true }).click();
   await expect(page).toHaveURL(/\/library\/author\?a=tlg0012/);
   await expect(page.getByRole("heading", { level: 1, name: "Homer" })).toBeVisible();
 });

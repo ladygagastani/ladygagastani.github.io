@@ -11,11 +11,18 @@ import { AREAS, SITE } from "@/config/areas";
 import StoaCards, { type StoaCard } from "@/components/StoaCards";
 import { ENTRIES, categoryOf } from "@/wiki/index";
 import { inline, plain } from "@/wiki/markup";
+import { IMAGES, srcSet } from "@/wiki/images";
 import styles from "./home.module.css";
 
 // From the Painted Stoa: each entry reduced to what a home-page card shows (its first sentences).
 const firstSentences = (t: string) => { let out = ""; for (const x of t.split(/(?<=[.!?])\s+/)) { if (out && (out + " " + x).length > 230) break; out = out ? `${out} ${x}` : x; } return out; };
-const STOA_CARDS: StoaCard[] = ENTRIES.map((e) => ({ slug: e.slug, title: e.title, cat: categoryOf(e.category).title, catId: e.category, text: firstSentences(plain(inline(e.hook))) }));
+const STOA_CARDS: StoaCard[] = ENTRIES.map((e) => {
+  const im = e.image ? IMAGES[e.image] : undefined;
+  return {
+    slug: e.slug, title: e.title, cat: categoryOf(e.category).title, catId: e.category, text: firstSentences(plain(inline(e.hook))),
+    pic: im && { src: `/images/${im.file}`, srcSet: srcSet(im), alt: im.alt, credit: `${im.title} · ${im.sourceName} · ${im.licence}`, width: im.width, height: im.height },
+  };
+});
 
 export default function Home() {
   return (

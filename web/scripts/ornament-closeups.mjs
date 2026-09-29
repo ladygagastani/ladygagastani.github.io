@@ -1,6 +1,6 @@
 // Polish review helper: close-ups of the ends of every ornament band (meander, tongues, rays) and of the
 // Stoa's end columns, at phone and wide widths, stitched into one picture per page. Not part of the site.
-//   node scripts/ornament-closeups.mjs <outdir> <baseUrl> <path> [<path> ...]
+//   [DPR=1.25] node scripts/ornament-closeups.mjs <outdir> <baseUrl> <path> [<path> ...]
 import { chromium } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
 
@@ -8,7 +8,8 @@ const [outdir, base, ...paths] = process.argv.slice(2);
 mkdirSync(outdir, { recursive: true });
 const b = await chromium.launch({ channel: "msedge" });
 for (const [name, vp] of [["phone", { width: 375, height: 812 }], ["wide", { width: 1366, height: 900 }]]) {
-  const ctx = await b.newContext({ viewport: vp, deviceScaleFactor: 3, reducedMotion: "reduce" });
+  // DPR=1.25 or 1.5 imitates a Windows display set to 125% or 150%
+  const ctx = await b.newContext({ viewport: vp, deviceScaleFactor: +(process.env.DPR ?? 3), reducedMotion: "reduce" });
   const p = await ctx.newPage();
   for (const path of paths) {
     await p.goto(base + path, { waitUntil: "load" }); await p.waitForTimeout(1500);
@@ -40,15 +41,17 @@ for (const [name, vp] of [["phone", { width: 375, height: 812 }], ["wide", { wid
       }
     }
     if (!shots.length) { console.log("no ornaments on", path, name); continue; }
-    const sheet = await p.evaluate(async (shots) => {
+    // enlarged pixel for pixel, so a low scaling can still be judged
+    const zoom = Math.max(1, Math.round(4 / +(process.env.DPR ?? 3)) * 2);
+    const sheet = await p.evaluate(async ([shots, zoom]) => {
       const imgs = await Promise.all(shots.map(async (s) => { const i = new Image(); i.src = "data:image/png;base64," + s.png; await i.decode(); return i; }));
-      const cellW = Math.max(...imgs.map((i) => i.width)), cellH = Math.max(...imgs.map((i) => i.height)) + 40;
+      const cellW = Math.max(...imgs.map((i) => i.width)) * zoom, cellH = Math.max(...imgs.map((i) => i.height)) * zoom + 40;
       const cols = 4, rows = Math.ceil(imgs.length / cols);
       const c = document.createElement("canvas"); c.width = cols * (cellW + 16); c.height = rows * (cellH + 16);
-      const g = c.getContext("2d"); g.fillStyle = "#888"; g.fillRect(0, 0, c.width, c.height);
-      imgs.forEach((im, k) => { const x = (k % cols) * (cellW + 16) + 8, y = Math.floor(k / cols) * (cellH + 16) + 8; g.fillStyle = "#fff"; g.font = "28px sans-serif"; g.fillText(shots[k].label, x, y + 28); g.drawImage(im, x, y + 36); });
+      const g = c.getContext("2d"); g.imageSmoothingEnabled = false; g.fillStyle = "#888"; g.fillRect(0, 0, c.width, c.height);
+      imgs.forEach((im, k) => { const x = (k % cols) * (cellW + 16) + 8, y = Math.floor(k / cols) * (cellH + 16) + 8; g.fillStyle = "#fff"; g.font = "28px sans-serif"; g.fillText(shots[k].label, x, y + 28); g.drawImage(im, x, y + 36, im.width * zoom, im.height * zoom); });
       return c.toDataURL("image/png").split(",")[1];
-    }, shots);
+    }, [shots, zoom]);
     const file = `${outdir}/${path.replace(/[^a-z0-9]+/gi, "_").replace(/^_|_$/g, "") || "home"}-${name}.png`;
     writeFileSync(file, Buffer.from(sheet, "base64"));
     console.log(file, shots.length / 2, "ornaments");

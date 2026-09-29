@@ -231,6 +231,18 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
   return (
     <div className={`wrap ${styles.layout}`}>
       <div className={styles.mapCol}>
+        {/* the search comes first, above the map; its suggestions drop down over it */}
+        <div className={styles.search} role="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L21 21" /></svg>
+          <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find a place: Σπάρτη, Delos…" aria-label="Find a place" />
+          {found.length > 0 && (
+            <ul className={styles.found}>
+              {found.map((p) => (
+                <li key={p.id}><button type="button" onClick={() => { setQ(""); select(p.id); }}><b lang="grc">{p.grc}</b> <span>{p.en.split("/")[0]}</span> <small>{fmt(p.n)}</small></button></li>
+              ))}
+            </ul>
+          )}
+        </div>
         <div ref={stage} className={styles.stage} tabIndex={0} role="application" aria-label="Map of the Greek world. Use the arrow keys to move and plus or minus to zoom; places are listed in the panel."
           data-hover={hover ? "" : undefined}
           onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}
@@ -270,16 +282,6 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
       </div>
 
       <aside className={styles.panel} aria-live="polite">
-        <div className={styles.search}>
-          <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find a place: Σπάρτη, Delos…" aria-label="Find a place" />
-          {found.length > 0 && (
-            <ul className={styles.found}>
-              {found.map((p) => (
-                <li key={p.id}><button type="button" onClick={() => { setQ(""); select(p.id); }}><b lang="grc">{p.grc}</b> <span>{p.en.split("/")[0]}</span> <small>{fmt(p.n)}</small></button></li>
-              ))}
-            </ul>
-          )}
-        </div>
         {sel ? <PlaceCard p={sel} idx={idx} entries={entriesByPlace[sel.id] ?? []} saved={!!saved[sel.id]} onSave={() => toggleSaved(sel.id)} onClose={() => select(null)} />
           : <Intro places={places} meta={meta} onPick={select} />}
       </aside>

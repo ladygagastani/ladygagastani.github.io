@@ -48,6 +48,12 @@ export default function TownHall() {
   return (
     <div className={`wrap ${styles.hall}`}>
       <PullToRefresh onPull={listR.reload} busy={listR.busy} />
+      {/* the search comes first */}
+      <form role="search" onSubmit={(e) => { e.preventDefault(); go({ q: typed.trim() || null }); }} className={styles.search}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L21 21" /></svg>
+        <input enterKeyHint="search" type="search" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder="Search the Town Hall" aria-label="Search the Town Hall" />
+        <button type="submit" className="btn small">Search</button>
+      </form>
       {featured.state === "done" && featured.value && <FeaturedDebate d={featured.value} />}
 
       <nav className={styles.cats} aria-label="Categories">
@@ -62,10 +68,6 @@ export default function TownHall() {
       </nav>
 
       <div className={styles.toolbar}>
-        <form role="search" onSubmit={(e) => { e.preventDefault(); go({ q: typed.trim() || null }); }} className={styles.search}>
-          <input enterKeyHint="search" type="search" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder="Search the Town Hall" aria-label="Search the Town Hall" />
-          <button type="submit" className="chip">Search</button>
-        </form>
         <div className={styles.sorts} role="group" aria-label="Order">
           {SORTS.map(([s, label]) => <button key={s} type="button" className="chip" aria-pressed={sort === s} onClick={() => go({ sort: s === "active" ? null : s })}>{label}</button>)}
         </div>

@@ -2,10 +2,13 @@
 
 /* ------------------------------------------------ the front: a colonnade of painted panels */
 .index { display: grid; gap: 28px; padding-block: var(--after-head) 12px; }
+.searchRow { position: relative; }
+.searchRow svg { position: absolute; left: 16px; top: 50%; translate: 0 -50%; width: 20px; height: 20px; fill: none; stroke: var(--ink-2); stroke-width: 2; stroke-linecap: round; pointer-events: none; }
 .searchRow input {
-  width: 100%; font: inherit; font-size: 1.05rem; color: var(--ink); background: var(--surface);
-  border: 1px solid var(--rule); border-radius: var(--radius); padding: 12px 16px;
+  width: 100%; font: inherit; font-size: 1.1rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--rule); border-radius: var(--radius); padding: 14px 16px 14px 48px; transition: border-color 0.2s, box-shadow 0.2s;
 }
+.searchRow input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
 .found ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; }
 .found a { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 8px 10px; text-decoration: none; border-radius: var(--radius); }
 .found a:hover { background: var(--bg-2); }
@@ -17,6 +20,24 @@
   background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); border-radius: var(--radius);
   box-shadow: inset 0 0 0 6px var(--ink), inset 0 0 0 7px color-mix(in srgb, var(--accent) 60%, transparent);
   animation: lift 0.7s var(--ease) both;
+}
+.featured[data-pic], .featured:has(.featuredIcon) { grid-template-columns: minmax(0, 1fr) minmax(200px, 38%); align-items: center; gap: 18px clamp(20px, 3vw, 40px); }
+.featuredText { display: grid; gap: 10px; align-content: center; }
+.featuredPic {
+  width: 100%; height: auto; max-height: 320px; aspect-ratio: 4 / 3; object-fit: cover; object-position: center 35%;
+  border-radius: var(--radius); background: var(--bg-2); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
+  transition: transform 0.6s var(--ease);
+}
+.featured:hover .featuredPic { transform: scale(1.02); }
+.featuredPic[data-whole] { object-fit: contain; background: color-mix(in srgb, var(--inv-fg) 7%, var(--inv-bg)); padding: 10px; }
+.featuredIcon { justify-self: center; display: grid; place-items: center; width: 160px; height: 160px; border-radius: 50%; color: var(--accent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent), inset 0 0 0 10px color-mix(in srgb, var(--inv-fg) 6%, transparent); }
+.featuredIcon svg { width: 78px; height: 78px; }
+@media (max-width: 760px) {
+  .featured[data-pic], .featured:has(.featuredIcon) { grid-template-columns: minmax(0, 1fr); }
+  .featuredPic, .featuredIcon { order: -1; }
+  .featuredPic { max-height: 220px; aspect-ratio: 16 / 9; }
+  .featuredIcon { width: 110px; height: 110px; }
+  .featuredIcon svg { width: 54px; height: 54px; }
 }
 .featured :global(.label) { color: var(--accent); }
 .featured b { font-family: var(--f-display); font-weight: 400; font-size: clamp(2rem, 4.4vw, 3.4rem); line-height: 1.05; }
@@ -43,11 +64,18 @@
 }
 @keyframes rise { from { transform: translateY(16px); opacity: 0; } }
 .panelIn {
-  display: grid; gap: 10px; align-content: start; padding: 22px 20px 20px; margin-block: 18px; min-height: 240px;
-  background: var(--surface); border-top: 6px solid var(--accent); box-shadow: 0 18px 32px -28px var(--shadow);
+  display: grid; gap: 10px; align-content: start; padding: 22px 20px 20px; margin-block: 44px 18px; min-height: 240px;
+  background: var(--surface); box-shadow: 0 18px 32px -28px var(--shadow);
 }
-.panel:nth-child(3n + 2) .panelIn { border-top-color: var(--blue); }
-.panel:nth-child(3n) .panelIn { border-top-color: var(--ochre); }
+/* each category's sign, in a black-glaze roundel hung over the panel's top edge like a medallion */
+.roundel {
+  width: 56px; height: 56px; margin-top: -50px; display: grid; place-items: center; border-radius: 50%;
+  background: var(--inv-bg); color: var(--accent-on-ink);
+  box-shadow: 0 0 0 4px var(--bg), 0 0 0 5px color-mix(in srgb, var(--accent) 55%, transparent);
+  transition: transform 0.4s var(--ease);
+}
+.roundel svg { width: 30px; height: 30px; }
+.panel:hover .roundel { transform: rotate(-8deg) scale(1.06); }
 .panelIn h2 { font-size: 1.55rem; }
 .panelIn h2 a { text-decoration: none; }
 .panelIn h2 a:hover { text-decoration: underline; text-decoration-color: var(--accent); }

@@ -9,6 +9,8 @@ import { fold } from "@/lib/catalog";
 import { ENTRIES, entriesIn } from "@/wiki/index";
 import { inline, plain } from "@/wiki/markup";
 import { CATEGORIES } from "@/wiki/types";
+import { IMAGES, srcSet } from "@/wiki/images";
+import CategoryIcon from "./CategoryIcon";
 import styles from "./Stoa.module.css";
 
 const text = (s: string) => plain(inline(s));
@@ -25,11 +27,13 @@ export default function StoaIndex() {
   // one entry featured each day, the same for everyone (by date, not at random); the built page shows the first
   const day = useSyncExternalStore(noSubscribe, () => Math.floor(Date.now() / 864e5), () => 0);
   const featured = ENTRIES.length ? [...ENTRIES].sort((a, b) => a.slug.localeCompare(b.slug))[day % ENTRIES.length] : null;
+  const pic = featured?.image ? IMAGES[featured.image] : undefined;
 
   return (
     <div className={`wrap ${styles.index}`}>
-      <div className={styles.searchRow}>
-        <input enterKeyHint="search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${ENTRIES.length === 1 ? "the entry" : `${ENTRIES.length} entries`} in full: Melos, plague, ostracism…`} aria-label="Search the Painted Stoa" />
+      <div className={styles.searchRow} role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L21 21" /></svg>
+        <input enterKeyHint="search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search all ${ENTRIES.length} entries: Melos, plague…`} aria-label="Search the Painted Stoa" />
       </div>
       {n && (
         <section className={styles.found} aria-live="polite">
@@ -39,11 +43,17 @@ export default function StoaIndex() {
       )}
 
       {featured && !n && (
-        <Link href={`/stoa/${featured.slug}`} className={styles.featured} transitionTypes={["page-turn"]}>
-          <span className="label">On the wall today · {CATEGORIES.find((c) => c.id === featured.category)!.title}</span>
-          <b>{featured.title}</b>
-          <span className={styles.featuredHook}>{text(featured.hook)}</span>
-          <span className={styles.featuredGo}>Read the entry →</span>
+        <Link href={`/stoa/${featured.slug}`} className={styles.featured} transitionTypes={["page-turn"]} data-pic={pic ? "" : undefined}>
+          <span className={styles.featuredText}>
+            <span className="label">On the wall today · {CATEGORIES.find((c) => c.id === featured.category)!.title}</span>
+            <b>{featured.title}</b>
+            <span className={styles.featuredHook}>{text(featured.hook)}</span>
+            <span className={styles.featuredGo}>Read the entry →</span>
+          </span>
+          {pic
+            // eslint-disable-next-line @next/next/no-img-element -- self-hosted, sized files; no image service
+            ? <img className={styles.featuredPic} data-whole={pic.height > pic.width * 0.9 ? "" : undefined} src={`/images/${pic.file}`} srcSet={srcSet(pic)} sizes="(max-width: 760px) 100vw, 420px" alt={pic.alt} title={`${pic.title} · ${pic.sourceName} · ${pic.licence}`} width={pic.width} height={pic.height} loading="lazy" decoding="async" />
+            : <span className={styles.featuredIcon}><CategoryIcon id={featured.category} /></span>}
         </Link>
       )}
 
@@ -53,6 +63,7 @@ export default function StoaIndex() {
           return (
             <li key={c.id} id={c.id} className={styles.panel} style={{ "--i": i } as React.CSSProperties}>
               <div className={styles.panelIn}>
+                <span className={styles.roundel}><CategoryIcon id={c.id} /></span>
                 <h2>{c.href ? <Link href={c.href} transitionTypes={["page-turn"]}>{c.title}</Link> : c.title}</h2>
                 <p className={styles.blurb}>{c.blurb}</p>
                 {es.length > 0

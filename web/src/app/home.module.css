@@ -50,6 +50,17 @@
 .card h3 { font-size: 1.6rem; }
 .card p { color: color-mix(in srgb, var(--inv-fg) 80%, var(--inv-bg)); font-size: 1rem; }
 .card :global(.tag) { color: var(--inv-fg); align-self: flex-start; margin-top: auto; }
+/* a featured entry's picture across the top of its card (or its category's sign, when it has none) */
+.cardPic {
+  display: grid; place-items: center; margin: -24px -24px 4px; aspect-ratio: 16 / 10; overflow: hidden;
+  border-radius: var(--radius) var(--radius) 0 0; background: color-mix(in srgb, var(--inv-fg) 7%, var(--inv-bg));
+}
+.cardPic img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; transition: transform 0.7s var(--ease); }
+.cardLink:hover .cardPic img { transform: scale(1.04); }
+/* upright or round objects (a vase, a coin) are shown whole, not cropped */
+.cardPic img[data-whole] { object-fit: contain; padding: 10px; }
+.cardIcon { display: grid; place-items: center; width: 96px; height: 96px; border-radius: 50%; color: var(--accent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent); }
+.cardIcon svg { width: 48px; height: 48px; }
 
 .offline {
   display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(24px, 4vw, 56px); align-items: start;

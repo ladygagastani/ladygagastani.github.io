@@ -251,6 +251,13 @@ input { text-overflow: ellipsis; }
   .chip { position: relative; min-height: 36px; min-width: var(--tap); justify-content: center; }
   .chip::after { content: ""; position: absolute; inset: -4px 0; }
 }
+/* a row of joined buttons, one of which is chosen (role="radiogroup" with role="radio" buttons) */
+.segmented { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+.segmented > button { border: 0; background: transparent; color: inherit; padding: 8px 14px; font-size: 0.92rem; white-space: nowrap; transition: background-color 0.2s, color 0.2s; }
+.segmented > button + button { border-left: 1px solid var(--rule); }
+.segmented > button:hover:not([aria-checked="true"]) { background: var(--bg-2); }
+.segmented > button[aria-checked="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); }
+@media (pointer: coarse) { .segmented > button { min-height: var(--tap); } }
 .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.5; }
 .chip[aria-pressed="true"] .dot { opacity: 1; }
 

@@ -66,7 +66,16 @@ export default function Vocabulary() {
 
   return (
     <div className={styles.vocabPage}>
-      <section className={styles.coverage} aria-labelledby="cov-title">
+      {/* the search comes first; while it is in use, the word list moves up under it */}
+      <div className={`${styles.tablesTools} ${styles.vocabSearch}`} role="search">
+        <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} id="vocab-search" type="search" className={styles.searchInput} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find a word, in Greek or English" aria-label="Find a word" />
+        <select id="vocab-group" value={group} onChange={(e) => setGroup(e.target.value)} aria-label="Group">
+          <option value="">All groups</option>
+          {groups.map((g) => <option key={g} value={g}>{g}</option>)}
+        </select>
+      </div>
+
+      {!q.trim() && !group && <section className={styles.coverage} aria-labelledby="cov-title">
         <h2 id="cov-title">How much can you read?</h2>
         <label className={styles.covPick}><span className="label">Text</span>
           <select id="coverage-text" value={work} onChange={(e) => setWork(e.target.value)}>
@@ -88,17 +97,10 @@ export default function Vocabulary() {
           ))}
         </div>
         <p className={styles.small}>Share of the running words of this text ({total ? total.toLocaleString("en-GB") : "…"} words) whose dictionary form is in each set, counted from GLAUx&apos;s analyses. Knowing a word&apos;s dictionary form is only the first step: its forms still have to be recognised.</p>
-      </section>
+      </section>}
 
       <section className={styles.coreList} aria-labelledby="core-title">
-        <h2 id="core-title">The commonest words</h2>
-        <div className={styles.tablesTools}>
-          <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} id="vocab-search" type="search" className={styles.searchInput} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find a word, in Greek or English" aria-label="Find a word" />
-          <select id="vocab-group" value={group} onChange={(e) => setGroup(e.target.value)} aria-label="Group">
-            <option value="">All groups</option>
-            {groups.map((g) => <option key={g} value={g}>{g}</option>)}
-          </select>
-        </div>
+        <h2 id="core-title">{q.trim() || group ? `${shown.length} of the commonest words` : "The commonest words"}</h2>
         <div className={styles.scrollX}>
           <table className={styles.coreTable}>
             <thead><tr><th>#</th><th>Word</th><th>Meaning</th><th>Kind</th><th /></tr></thead>
