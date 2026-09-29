@@ -13,7 +13,7 @@
 .input:focus { outline: none; }
 .list { list-style: none; margin: 0; padding: 6px; max-height: 50vh; overflow: auto; }
 .list li { display: flex; gap: 12px; align-items: baseline; padding: 9px 12px; border-radius: var(--radius); cursor: pointer; }
-.list li[aria-selected="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
+.list li[aria-selected="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); }
 .list li[aria-selected="true"] .kind { color: var(--accent); }
 .list b[lang="grc"] { font-family: var(--f-greek); font-weight: 400; font-size: 1.12em; }
 .kind { flex: none; min-width: 10.5em; font-family: var(--f-label); font-size: 0.8rem; letter-spacing: 0.05em; color: var(--ink-2); }

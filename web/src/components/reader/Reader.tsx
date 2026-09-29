@@ -70,14 +70,16 @@ const MARK_ICON: Record<string, React.ReactNode> = {
 };
 
 /** One passage row: reference and your marks in the margin, Greek, translation, and any notes. */
-const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, translit, metre }: {
+const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, translit, metre, verses }: {
   row: Row; marks: Mark[]; openNote: string | null; onCloseNote: () => void; translit: boolean; metre: Map<string, (LineRender | null)[]> | null;
+  /** a text cited by verse: the margin shows only the verse number, as in a printed Bible (the chapter is in the bar) */
+  verses: boolean;
 }) {
   const notes = marks.filter((m) => m.kind === "note");
   return (
     <section className={styles.row} data-key={row.key}>
       <div className={styles.ref}>
-        <button type="button" data-row={row.key} title="Actions for this passage">{row.key}</button>
+        <button type="button" data-row={row.key} title="Actions for this passage" aria-label={verses ? row.key : undefined}>{verses ? row.key.split(".").pop() : row.key}</button>
         <span className={styles.grip} draggable data-drag={row.key} title="Drag into a note to quote this passage with its citation" aria-hidden="true" />
         {marks.some((m) => m.kind !== "highlight") && (
           <span className={styles.marks}>
@@ -206,6 +208,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const parsed = current?.parsed ?? null;
   const from = current?.from ?? null;
   const doc = parsed?.doc;
+  // the New Testament and the Septuagint are cited by verse: short units that read best as running text
+  const verses = doc?.levels.at(-1) === "verse";
 
   // ------------------------------------------------------------ which page, and which passage to show
   const target = at ?? remembered?.at ?? null;
@@ -251,9 +255,37 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const playLine = (line: HTMLElement) => { stopBeat.current = playLineRhythm(line, { playing: styles.playing, now: styles.beatNow }); };
   /** Bring a passage to the top, just below the sticky bar (and the site header, if it will be showing). */
   const bringToTop = (el: HTMLElement, smooth = false) => {
-    if (contained) { el.scrollIntoView({ block: "start", behavior: smooth ? "smooth" : "auto" }); return; }
     const bar = root().querySelector<HTMLElement>(`.${styles.bar}`);
+    if (contained) {
+      // measured, not scroll-margin: the bar's height changes as the window is resized
+      const sc = rootRef.current!, edge = bar ? bar.getBoundingClientRect().bottom : sc.getBoundingClientRect().top;
+      sc.scrollBy({ top: el.getBoundingClientRect().top - edge - 12, behavior: smooth ? "smooth" : "auto" });
+      return;
+    }
     scrollBelowHeader(el, (bar?.offsetHeight ?? 64) + 12, smooth);
+  };
+  /**
+   * Passages away from the screen are drawn only when reached (content-visibility in the CSS), with a
+   * guessed height until then, so the page settles over its first moments and a passage brought to the
+   * top would drift (under the sticky bar, or far away). Keep it in place until the page stops changing
+   * size, or the reader scrolls, taps, selects or presses a key. Returns the function that stops it.
+   */
+  const holdAtTop = (el: HTMLElement) => {
+    // anything the reader does, including starting to select words, ends the hold
+    const USER = ["wheel", "touchstart", "pointerdown", "keydown", "selectionchange"] as const;
+    let done = false, frame = 0;
+    const again = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(() => { if (!done) bringToTop(el); }); };
+    const ro = new ResizeObserver(again);
+    if (textRef.current) ro.observe(textRef.current);
+    const stop = () => {
+      if (done) return;
+      done = true; ro.disconnect(); cancelAnimationFrame(frame); clearTimeout(timer);
+      USER.forEach((ev) => removeEventListener(ev, stop, true));
+    };
+    USER.forEach((ev) => addEventListener(ev, stop, { capture: true, passive: true }));
+    const timer = setTimeout(stop, 2500);
+    again();
+    return stop;
   };
   const startKey = doc && startUnit > 0 ? doc.units[startUnit].ref.join(".") : null;
 
@@ -264,9 +296,9 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     const row = rows.find((r) => r.greek.some((u) => u.ref.join(".") === startKey));
     const el = row && root().querySelector<HTMLElement>(`[data-key="${CSS.escape(row.key)}"]`);
     if (!el) return;
-    requestAnimationFrame(() => bringToTop(el));
     if (at || tu) { el.classList.remove(styles.flash); void el.offsetWidth; el.classList.add(styles.flash); }
-    // bringToTop only reads `contained` and the page as it is
+    return holdAtTop(el);
+    // holdAtTop only reads `contained` and the page as it is
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rows, startKey, at, tu, contained]);
 
@@ -451,6 +483,12 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     if (!el) return;
     bringToTop(el, true);
     el.classList.remove(styles.flash); void el.offsetWidth; el.classList.add(styles.flash);
+    // passages drawn on the way may change the page's height: once the glide ends, settle it in place
+    const scroller: HTMLElement | Window = contained && rootRef.current ? rootRef.current : window;
+    let settled = false;
+    const settle = () => { if (settled) return; settled = true; clearTimeout(t); scroller.removeEventListener("scrollend", settle); holdAtTop(el); };
+    const t = setTimeout(settle, 900);  // browsers without the scrollend event
+    scroller.addEventListener("scrollend", settle, { once: true });
   };
 
   // highlights are drawn onto the word spans after each render of the page
@@ -795,7 +833,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const setCols = (c: Columns) => setSettings({ columns: c });
 
   return (
-    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${word || echo || vocabOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""} ${floating ? styles.floating : ""}`}
+    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${verses ? styles.verses : ""} ${word || echo || vocabOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""} ${floating ? styles.floating : ""}`}
       onPointerDown={() => useUI.getState().setActivePane(pane)} onFocusCapture={() => useUI.getState().setActivePane(pane)}>
       {load.state === "ready" && <ScrollMarkers rootRef={rootRef} contained={contained} items={markerItems} onJump={jumpToRow} depKey={`${chunk}|${rows.length}|${columns}|${translit}|${!!metre}|${word ? 1 : 0}`} />}
       {split && (
@@ -930,7 +968,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           </div>
 
           <article ref={textRef} className={`wrap ${styles.text} ${metre ? styles.metreOn : ""}`} onClick={onTextClick} onKeyDown={onTextKey} onMouseUp={onTextMouseUp} onDragStart={onDragStart} aria-label={`${cite}, ${chunkInfo.label}`}>
-            {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} translit={translit} metre={metre} />)}
+            {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} translit={translit} metre={metre} verses={verses} />)}
           </article>
           {sel && <PassageToolbar sel={sel} onAction={act} onClose={() => setSel(null)}
             xref={split ? (pendingXref && pendingXref.pane !== pane ? "here" : "start") : null} />}

@@ -28,7 +28,7 @@
 .seg { display: flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
 .seg button { flex: 1 1 auto; margin: -1px 0 0 -1px; padding: 9px 10px; background: transparent; border: 0; box-shadow: inset 1px 1px 0 var(--rule); font-size: 0.9rem; }
 .seg button:focus-visible { outline-offset: -4px; }  /* the frame clips anything outside it */
-.seg button[aria-checked="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
+.seg button[aria-checked="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); }
 
 .sample { padding: 14px 16px; background: var(--bg); border-radius: var(--radius); transition: font-size 0.2s, line-height 0.2s; }
 .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }

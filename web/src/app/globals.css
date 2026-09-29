@@ -26,6 +26,11 @@
   --ok: #275B34;
   /* inside panels painted in the ink colour (black in this theme): see "on-ink" below */
   --accent-on-ink: #E0673A; --accent-ink-on-ink: #16110E; --ink-2-on-ink: #BE9876;
+  /* two roles that differ by theme. Panels (feature cards, toolbars, tooltips): black gloss on the clay
+     page here, a raised black panel in the dark theme. Selected things (pressed chips, chosen tabs, main
+     buttons): solid ink here, a rust tint with a red edge in the dark theme, so nothing large turns bright. */
+  --inv-bg: var(--ink); --inv-fg: var(--bg); --inv-edge: var(--ink);
+  --sel-bg: var(--ink); --sel-fg: var(--bg); --sel-edge: var(--ink); --accent-on-sel: var(--accent-on-ink);
 
   /* type */
   --f-greek: var(--font-didot), "Gentium Book Plus", "Noto Serif", Georgia, serif;
@@ -59,7 +64,9 @@
     --ink: #EDCBA0; --ink-2: #BE9876; --accent: #E0673A; --accent-ink: #16110E;
     --band: #C8703A; --white-slip: #2B2019; --blue: #8FB0CC; --ochre: #D9A15A;
     --rule: rgba(237, 203, 160, 0.22); --shadow: rgba(0, 0, 0, 0.6); --ok: #7CC08E;
-    --accent-on-ink: #93300F; --accent-ink-on-ink: #F6ECDD; --ink-2-on-ink: #5A3E2B;
+    --accent-on-ink: #E0673A; --accent-ink-on-ink: #16110E; --ink-2-on-ink: #BE9876;
+    --inv-bg: #2A1F18; --inv-fg: #EDCBA0; --inv-edge: rgba(237, 203, 160, 0.22);
+    --sel-bg: #4A2616; --sel-fg: #F6E2C4; --sel-edge: #E0673A; --accent-on-sel: #F2A27A;
     color-scheme: dark;
   }
 }
@@ -68,7 +75,9 @@
   --ink: #EDCBA0; --ink-2: #BE9876; --accent: #E0673A; --accent-ink: #16110E;
   --band: #C8703A; --white-slip: #2B2019; --blue: #8FB0CC; --ochre: #D9A15A;
   --rule: rgba(237, 203, 160, 0.22); --shadow: rgba(0, 0, 0, 0.6); --ok: #7CC08E;
-  --accent-on-ink: #93300F; --accent-ink-on-ink: #F6ECDD; --ink-2-on-ink: #5A3E2B;
+  --accent-on-ink: #E0673A; --accent-ink-on-ink: #16110E; --ink-2-on-ink: #BE9876;
+  --inv-bg: #2A1F18; --inv-fg: #EDCBA0; --inv-edge: rgba(237, 203, 160, 0.22);
+  --sel-bg: #4A2616; --sel-fg: #F6E2C4; --sel-edge: #E0673A; --accent-on-sel: #F2A27A;
   color-scheme: dark;
 }
 
@@ -92,6 +101,8 @@ p { margin: 0; }
 a { color: inherit; }
 button { font: inherit; color: inherit; cursor: pointer; }
 img { max-width: 100%; }
+/* anything linked to by #id lands clear of the site header, whose height changes with the screen */
+[id] { scroll-margin-top: calc(var(--hdr-h) + 16px); }
 /* a long placeholder or value that does not fit ends in "…" instead of being cut mid-letter */
 input { text-overflow: ellipsis; }
 /* on touch screens, tick boxes and radio buttons are big enough for a finger */
@@ -103,7 +114,7 @@ input { text-overflow: ellipsis; }
 .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gutter); }
 .label { font-family: var(--f-label); font-size: var(--step--1); letter-spacing: 0.08em; color: var(--ink-2); }
 .muted { color: var(--ink-2); }
-.skip { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); padding: 8px 14px; }
+.skip { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); padding: 8px 14px; }
 .skip:focus { left: 8px; }
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
@@ -137,7 +148,7 @@ input { text-overflow: ellipsis; }
 /* ------------------------------------------------------------- buttons */
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
-  padding: 13px 22px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--bg);
+  padding: 13px 22px; border: 1.5px solid var(--sel-edge); background: var(--sel-bg); color: var(--sel-fg);
   border-radius: var(--radius); font-weight: 600; font-size: 1rem; text-decoration: none;
   transition: transform 0.2s var(--ease), background-color 0.2s, color 0.2s;
 }
@@ -151,7 +162,7 @@ input { text-overflow: ellipsis; }
   display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px;
   border: 1px solid var(--rule); border-radius: 999px; font-size: var(--step--1); background: transparent;
 }
-.chip[aria-pressed="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); border-color: var(--sel-edge); }
 .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.5; }
 .chip[aria-pressed="true"] .dot { opacity: 1; }
 
@@ -205,7 +216,7 @@ main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(
 .toast {
   position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 70;
   transform: translate(-50%, 20px); opacity: 0; pointer-events: none; max-width: calc(100vw - 32px);
-  background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); padding: 10px 18px; border-radius: 6px; font-size: 0.95rem;
+  background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); padding: 10px 18px; border-radius: 6px; font-size: 0.95rem;
   transition: opacity 0.25s, transform 0.25s var(--ease);
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }

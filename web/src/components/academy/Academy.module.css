@@ -6,7 +6,7 @@
 .seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
 .seg button { flex: 1 1 auto; margin: -1px 0 0 -1px; background: transparent; border: 0; box-shadow: inset 1px 1px 0 var(--rule); padding: 9px 12px; font-size: 0.9rem; }
 .seg button:focus-visible { outline-offset: -4px; }  /* the frame clips anything outside it */
-.seg button[aria-checked="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
+.seg button[aria-checked="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); }
 
 /* stroke drawing */
 .stroke { margin: 0; display: grid; gap: 10px; justify-items: center; }
@@ -36,7 +36,7 @@
   transition: transform 0.2s var(--ease), background-color 0.2s;
 }
 .tile:hover { transform: translateY(-2px); }
-.tile[aria-selected="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-color: var(--ink); }
+.tile[aria-selected="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); border-color: var(--sel-edge); }
 .vowelTile { border-bottom: 3px solid var(--accent); }
 .vowelKey { display: inline-block; width: 22px; height: 3px; background: var(--accent); vertical-align: middle; }
 .tileGlyph { font-family: var(--f-greek); font-size: 1.8rem; line-height: 1.1; }
@@ -115,15 +115,15 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
   .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
 }
 .cardGr { font-family: var(--f-greek); color: var(--accent); font-size: 1.1rem; }
-.progress { display: grid; grid-template-columns: auto 1fr; gap: 20px 40px; align-items: center; padding: clamp(18px, 3vw, 28px); background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: var(--radius); }
+.progress { display: grid; grid-template-columns: auto 1fr; gap: 20px 40px; align-items: center; padding: clamp(18px, 3vw, 28px); background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); border-radius: var(--radius); }
 .stats { display: flex; flex-wrap: wrap; gap: 12px 32px; }
 .stats div { display: grid; }
 .stats b { font-family: var(--f-display); font-size: 2.4rem; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
-.stats small { font-size: 0.5em; color: color-mix(in srgb, var(--bg) 70%, var(--ink)); }
-.stats span { font-family: var(--f-label); font-size: 0.85rem; letter-spacing: 0.05em; color: color-mix(in srgb, var(--bg) 75%, var(--ink)); }
+.stats small { font-size: 0.5em; color: color-mix(in srgb, var(--inv-fg) 70%, var(--inv-bg)); }
+.stats span { font-family: var(--f-label); font-size: 0.85rem; letter-spacing: 0.05em; color: color-mix(in srgb, var(--inv-fg) 75%, var(--inv-bg)); }
 .nextStep { display: grid; gap: 6px; }
 .nextStep a { color: inherit; font-weight: 600; text-decoration-color: var(--accent); text-underline-offset: 3px; }
-.nextStep :global(.muted) { color: color-mix(in srgb, var(--bg) 70%, var(--ink)); }
+.nextStep :global(.muted) { color: color-mix(in srgb, var(--inv-fg) 70%, var(--inv-bg)); }
 @media (max-width: 760px) { .progress { grid-template-columns: minmax(0, 1fr); } }
 
 /* lessons */
@@ -180,11 +180,11 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
   backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--radius);
   background: var(--surface); border-top: 3px double var(--rule); border-bottom: 3px double var(--rule); box-shadow: 0 24px 50px -30px var(--shadow);
 }
-.flashBack { transform: rotateY(180deg); background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
+.flashBack { transform: rotateY(180deg); background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); }
 .flashWord { font-family: var(--f-greek); font-size: clamp(2.6rem, 8vw, 4rem); }
 .flashSmall { font-family: var(--f-greek); font-size: 1.4rem; color: var(--accent); }
 .flashGloss { font-size: 1.3rem; max-width: 36ch; }
-.flashBack .small { color: color-mix(in srgb, var(--bg) 75%, var(--ink)); }
+.flashBack .small { color: color-mix(in srgb, var(--inv-fg) 75%, var(--inv-bg)); }
 .grades { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; width: min(620px, 100%); }
 .grade { display: grid; gap: 2px; padding: 10px; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); text-align: center; transition: transform 0.15s; }
 .grade:hover { transform: translateY(-2px); border-color: var(--ink-2); }

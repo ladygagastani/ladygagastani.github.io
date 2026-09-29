@@ -123,6 +123,7 @@ now top priorities; the owner decides:
 | 7 | Wiki, maps and archaeology | 25+ fully sourced flagship entries across all categories. |
 | 8 | Town Hall, the Pnyx, accounts | |
 | 9 | Polish, performance, accessibility, full review | |
+| **10** | **The phone edition** *(added 2026-09-29, owner's request)* | The whole site redesigned for phones: navigation in thumb reach, gestures, bigger buttons, a reader made for one hand. See section 7. |
 
 Every phase ends with a plain-English report and a review by a separate, fresh session before it
 counts as done. Groundwork the floating reader depends on (no page reloads, a shared "what's open"
@@ -167,3 +168,93 @@ state) is built into Phase 1, even though the floating window itself comes in Ph
 - audio: whether to find licensed recordings or leave audio out until we have them (Phase 3);
 - which sign-in methods to offer, and who moderates the forum (Phase 8);
 - a domain name (before launch).
+
+---
+
+## 7. Phase 10: the phone edition (proposed 2026-09-29)
+
+**Goal.** Today the site *works* on a phone; it was designed for a big screen and then made to fit.
+Phase 10 designs it for the phone first: beautiful at 375 px wide, everything reachable with one thumb,
+and gestures that feel natural, without losing anything the big-screen site does. These are proposals:
+the owner picks what to keep.
+
+**Ground rules**
+- Every button and link at least **44 × 44 px** to touch (today many are 32–38 px), with at least 8 px
+  between neighbours. One set of button sizes for the whole site: 48 px main buttons, 44 px ordinary
+  buttons, 36 px chips inside a 44 px touch area.
+- Controls you use often sit in the **bottom third** of the screen, where the thumb rests.
+- Spacing on an **8-point grid**, and a separate, smaller heading scale for phones (area titles take
+  almost half the first screen now).
+- Room for the notch and the home bar (safe areas), and the browser's top bar coloured like the theme
+  (clay by day, black gloss by night).
+- Every gesture also has a visible button, so nobody has to know the gesture; motion respects
+  "reduced motion"; gestures are tested on a real iPhone and a real Android phone.
+
+**1. Navigation**
+- A **bottom bar** on phones with five places: Home, Library, Academy, Stoa and "More" (Town Hall,
+  Treasury, Settings, account). It replaces the sideways-scrolling menu at the top, which shrinks to the
+  name and a search button.
+- **Search as a full-screen sheet** from the search button (today the quick search opens only with the
+  keyboard's "/" key), with the Greek keyboard docked above the phone's own keyboard.
+- The bar and header **tuck away while reading** and come back with a small scroll up or a tap.
+
+**2. The reader, made for one hand**
+- **Swipe sideways to turn** to the next or previous book or chapter, with the page-turn (unrolling
+  scroll) animation. Swipes start only outside a text selection, so selecting words still works.
+- A **reading bar at the bottom**: previous / next, contents, reading aids and "Aa" (text size and
+  spacing). The top bar disappears.
+- **Tap the empty margin for a clean page**: all controls fade out; a thin line at the top shows how far
+  through the book you are.
+- **Pinch the text to change its size**, remembered in Settings.
+- **The look-up sheet** gets a handle and three heights (peek, half, full): drag it up for LSJ, swipe it
+  down to close, swipe it sideways for the next or previous word of the passage.
+- **Press and hold** a word for a quick one-line meaning without opening the sheet; press and hold a
+  passage number for its actions (bookmark, note, share).
+- **"Try it first" mode** (a learning aid): the translation stays hidden under each verse or passage
+  until you tap it, so you read the Greek before the English.
+- A **contents drawer** that slides in from the left edge: books, chapters, your bookmarks.
+- Poetry that fits: an option to fit a whole hexameter line to the width instead of wrapping it.
+
+**3. The Academy on a phone**
+- **Flashcards you swipe**: right for "knew it", left for "again", up for "easy", with the buttons kept.
+- **Trace the letter**: on the alphabet page, draw each letter with a finger over its stroke-order guide.
+- Practice answers as **large buttons in the lower half** of the screen, never needing the keyboard.
+- The daily session as a **full-screen sequence** (review, one drill, one real sentence), like pages of
+  a small book, swiped forward.
+
+**4. Pages and cards**
+- Long pages shortened with **swipeable card rows** (the Painted Stoa cards, reading levels, the
+  Academy's tools) that snap into place, instead of one long column.
+- **Collapsible sections** on the home page, remembered, so a returning reader sees "Continue reading"
+  first.
+- The home **amphora smaller on phones**, turned by tilting the phone (where the phone allows it)
+  as well as by dragging.
+- Full-width rows for every list, the whole row tappable (no tiny links inside dense lists).
+- Inputs at 16 px or larger (iPhones zoom into smaller ones), with the right phone keyboard
+  (search key, no autocorrect for Greek or Beta Code).
+
+**5. Gestures elsewhere**
+- **Pull down to refresh** the Town Hall and a thread.
+- The map: **two fingers to move it**, one finger scrolls the page (with a short hint the first time),
+  so the page can never get stuck on the map.
+- Swipe between tabs where a page has tabs (the Oracle's search kinds, the Census's lists).
+- A short **vibration** on save, bookmark and correct answer, on Android phones that allow it (iPhones
+  do not let websites vibrate), off by a Settings switch.
+
+**6. Installing the site like an app**
+- Polished "Add to home screen": icon, splash screen in the theme colours, opening straight into
+  the bottom bar, and a clear sign when the phone is offline.
+
+**Order of work**
+1. Foundations: button sizes, spacing, heading scale for phones, safe areas, theme colour, bottom bar.
+2. The reader (the biggest part).
+3. The Academy.
+4. Every other page, one area at a time, light and dark.
+5. Testing on real phones, browser tests for the gestures, the phone checker raised to 44 px targets,
+   and a review by a fresh session.
+
+**Decisions for the owner before Phase 10 starts**
+- The bottom bar: yes or no, and which five places it shows.
+- Swipe to turn pages in the reader: yes or no (some readers prefer only scrolling).
+- Vibration: offered or not.
+- Which of the ideas above to leave out or keep for later.

@@ -34,16 +34,16 @@
   transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), color 0.3s;
 }
 .shelf::before {   /* black gloss poured in from the left when chosen */
-  content: ""; position: absolute; inset: 0; background: var(--ink); transform: scaleX(0); transform-origin: left;
+  content: ""; position: absolute; inset: 0; background: var(--sel-bg); transform: scaleX(0); transform-origin: left;
   transition: transform 0.45s cubic-bezier(0.6, 0, 0.2, 1); z-index: 0;
 }
 .shelf > * { position: relative; z-index: 1; }
 .shelf b { font-family: var(--f-display); font-weight: 400; font-size: 1.45rem; line-height: 1.05; }
 .shelf span { font-size: 0.88rem; color: var(--ink-2); transition: color 0.3s; }
 .shelf:hover { transform: translateY(-2px); box-shadow: 0 14px 24px -20px var(--shadow); }
-.shelf[aria-pressed="true"] { color: var(--bg); }
+.shelf[aria-pressed="true"] { color: var(--sel-fg); border-color: var(--sel-edge); }
 .shelf[aria-pressed="true"]::before { transform: none; }
-.shelf[aria-pressed="true"] span { color: color-mix(in srgb, var(--bg) 78%, transparent); }
+.shelf[aria-pressed="true"] span { color: color-mix(in srgb, var(--sel-fg) 78%, transparent); }
 .shelf:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .cats { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -128,7 +128,7 @@
 @keyframes panel-in { from { opacity: 0; transform: translateX(14px); } }
 .panel p { margin: 0; }
 .close { position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; border: 1px solid var(--rule); border-radius: 50%; background: transparent; color: var(--ink); cursor: pointer; }
-.close:hover { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
+.close:hover { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); }
 .panelWord { font-family: var(--f-greek); font-weight: 400; font-size: clamp(2rem, 3.4vw, 2.6rem); line-height: 1.05; margin: 0; padding-right: 34px; overflow-wrap: anywhere; }
 .panelSub { color: var(--ink-2); font-style: italic; }
 .stats { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-block: 1px solid var(--rule); padding: 10px 0; }

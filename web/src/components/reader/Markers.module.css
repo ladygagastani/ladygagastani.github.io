@@ -26,10 +26,10 @@
 
 .tip {
   position: absolute; right: 22px; width: max-content; max-width: min(320px, 70vw); display: grid; gap: 3px;
-  padding: 8px 11px; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: 4px; font-size: 0.88rem; line-height: 1.35;
+  padding: 8px 11px; background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); border-radius: 4px; font-size: 0.88rem; line-height: 1.35;
   box-shadow: 0 12px 28px -14px var(--shadow); pointer-events: none; animation: fade 0.15s both;
 }
-.tip :global(.label) { color: color-mix(in srgb, var(--bg) 70%, var(--ink)); font-size: 0.75rem; }
+.tip :global(.label) { color: color-mix(in srgb, var(--inv-fg) 70%, var(--inv-bg)); font-size: 0.75rem; }
 .preview { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 @keyframes fade { from { opacity: 0; } }
 

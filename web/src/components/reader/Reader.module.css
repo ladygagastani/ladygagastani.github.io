@@ -18,7 +18,7 @@
 .seg { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--radius); }
 .seg button { background: transparent; border: 0; padding: 8px 12px; font-size: 0.9rem; }
 .seg button + button { border-left: 1px solid var(--rule); }
-.seg button[aria-checked="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
+.seg button[aria-checked="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); }
 .seg button:disabled { opacity: 0.4; cursor: default; }
 
 .status { padding-block: 60px; display: grid; gap: 16px; justify-items: start; }
@@ -52,7 +52,7 @@
     background: transparent; border: 1px solid var(--rule); border-radius: var(--radius); font-size: 0.9rem;
   }
   .toolsBtn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; transition: transform 0.3s var(--ease); }
-  .toolsBtn[aria-expanded="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-color: var(--ink); }
+  .toolsBtn[aria-expanded="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); border-color: var(--sel-edge); }
   .toolsBtn[aria-expanded="true"] svg { transform: rotate(180deg); }
   .pager select { max-width: 42vw; }
   .bar:not([data-tools]) .goto, .bar:not([data-tools]) .more { display: none; }
@@ -84,6 +84,7 @@
 .ref button {
   font-family: var(--f-label); font-size: 0.82rem; letter-spacing: 0.04em; color: var(--accent);
   background: transparent; border: 0; padding: 2px 0; cursor: copy; font-variant-numeric: tabular-nums;
+  max-width: 100%; overflow-wrap: anywhere;  /* long references wrap in the margin instead of running into the text */
 }
 .ref button:hover { text-decoration: underline; }
 
@@ -172,14 +173,14 @@
 .toolbar {
   position: fixed; z-index: 55; opacity: 0; transition: opacity 0.15s;
   display: flex; flex-wrap: wrap; align-items: center; gap: 2px; max-width: calc(100vw - 24px);
-  padding: 5px; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: 8px; box-shadow: 0 16px 36px -14px var(--shadow);
+  padding: 5px; background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); border-radius: 8px; box-shadow: 0 16px 36px -14px var(--shadow);
 }
 .toolbar button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; background: transparent; border: 0; border-radius: 6px; font-size: 0.86rem; color: inherit; }
-.toolbar button:hover:not(:disabled) { background: color-mix(in srgb, var(--bg) 16%, transparent); }
+.toolbar button:hover:not(:disabled) { background: color-mix(in srgb, var(--inv-fg) 16%, transparent); }
 .toolbar button:disabled { opacity: 0.45; cursor: default; }
 .toolbar svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
-.swatches { display: inline-flex; gap: 4px; padding: 0 8px; border-left: 1px solid color-mix(in srgb, var(--bg) 30%, transparent); border-right: 1px solid color-mix(in srgb, var(--bg) 30%, transparent); }
-.swatches button { width: 20px; height: 20px; padding: 0; border-radius: 50%; border: 2px solid var(--bg); }
+.swatches { display: inline-flex; gap: 4px; padding: 0 8px; border-left: 1px solid color-mix(in srgb, var(--inv-fg) 30%, transparent); border-right: 1px solid color-mix(in srgb, var(--inv-fg) 30%, transparent); }
+.swatches button { width: 20px; height: 20px; padding: 0; border-radius: 50%; border: 2px solid var(--inv-fg); }
 .sw-red { background: #C0492B !important; } .sw-ochre { background: #D9A441 !important; } .sw-blue { background: #4F7CA8 !important; } .sw-green { background: #6E9A5B !important; }
 
 .w[data-hl] { border-radius: 2px; }
@@ -279,6 +280,27 @@
 /* the same, for passages shown outside the reader (the lessons), which have no margin column */
 .metreInset.metreOn .line { grid-template-columns: 3.2em minmax(0, 1fr); }
 .metreInset .beatBtn, .metreInset .metreQ { left: -4.4em; }
+
+/* texts cited by verse (the New Testament, the Septuagint): each unit is a sentence or two, so they read
+   as running text, as in a printed Bible: no rule between verses, little space, the verse number in the margin */
+/* the space sits inside the cells, so the rule between Greek and English runs on unbroken */
+.verses .row { padding-block: 0; border-bottom-color: transparent; }
+.verses .ref, .verses .grc, .verses .tr { padding-block: 4px; }
+.verses .row:first-child > * { padding-top: 14px; }
+.verses .row:last-child > * { padding-bottom: 14px; }
+.verses .ref button[data-row] { font-size: 0.8rem; padding-top: 0.5em; }
+.verses .grc .p, .verses .tr .p { margin-bottom: 0; }
+@container (max-width: 520px) {
+  .verses .row, .verses.cols-greek .row, .verses.cols-trans .row { grid-template-columns: 1.8em minmax(0, 1fr); column-gap: 8px; padding-block: 4px 14px; }
+  .verses .ref, .verses .grc, .verses .tr, .verses .row:first-child > *, .verses .row:last-child > * { padding-block: 0; }
+  .verses .ref { grid-row: 1 / span 2; flex-direction: column; align-items: stretch; gap: 2px; margin: 0; }
+  .verses .ref button[data-row] { min-height: 30px; min-width: 0; padding: 0.55em 0 0; text-align: left; }
+  .verses .marks button { width: 26px; height: 26px; padding: 4px; }
+  .verses .grc, .verses .tr, .verses .notes { grid-column: 2; }
+  /* the English sits right under its verse, set smaller, so each pair reads as one */
+  .verses .tr { margin-top: 4px; padding-top: 0; border-top: 0; font-size: 0.94rem; line-height: 1.6; }
+  .verses.cols-trans .tr { font-size: 1.05rem; margin-top: 0; }
+}
 
 /* ------------------------------------------------------------ reading aids */
 .aids { display: flex; flex-wrap: wrap; gap: 6px; }

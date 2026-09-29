@@ -5,9 +5,9 @@
 /* where to begin: three bands of difficulty */
 .start { display: grid; grid-template-columns: 0.8fr repeat(3, 1fr); gap: 20px; align-items: start; }
 .startHead { display: grid; gap: 6px; }
-.level { display: grid; gap: 8px; padding: 20px 22px; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: var(--radius); }
+.level { display: grid; gap: 8px; padding: 20px 22px; background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); border-radius: var(--radius); }
 .level h2 { font-size: 1.6rem; color: var(--accent); }
-.level :global(.muted) { color: color-mix(in srgb, var(--bg) 75%, var(--ink)); font-size: 0.95rem; }
+.level :global(.muted) { color: color-mix(in srgb, var(--inv-fg) 75%, var(--inv-bg)); font-size: 0.95rem; }
 .level ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; }
 .level a { text-decoration: none; font-weight: 600; }
 .level a:hover { text-decoration: underline; text-decoration-color: var(--accent); }
@@ -30,7 +30,7 @@
   padding: 6px 10px; background: transparent; border: 0; border-radius: var(--radius); font-size: 0.97rem;
 }
 .authors button:hover { background: var(--bg-2); }
-.authors button[aria-current="true"] { background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); }
+.authors button[aria-current="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); }
 .authors small { color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .authors button[aria-current="true"] small { color: inherit; opacity: 0.7; }
 

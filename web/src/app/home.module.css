@@ -35,14 +35,14 @@
 .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .card {
   display: flex; flex-direction: column; gap: 12px; padding: 24px;
-  background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg); border-radius: var(--radius);
+  background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); border-radius: var(--radius);
   transition: transform 0.35s var(--ease), box-shadow 0.35s;
 }
 .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -24px var(--shadow); }
 .card :global(.label) { color: var(--accent); }
 .card h3 { font-size: 1.6rem; }
-.card p { color: color-mix(in srgb, var(--bg) 80%, var(--ink)); font-size: 1rem; }
-.card :global(.tag) { color: var(--bg); align-self: flex-start; margin-top: auto; }
+.card p { color: color-mix(in srgb, var(--inv-fg) 80%, var(--inv-bg)); font-size: 1rem; }
+.card :global(.tag) { color: var(--inv-fg); align-self: flex-start; margin-top: auto; }
 
 .offline {
   display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(24px, 4vw, 56px); align-items: start;
@@ -59,12 +59,12 @@
 .resumeIn { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px 40px; align-items: stretch; animation: lift 0.6s var(--ease) both; }
 .resumeMain { display: grid; gap: 10px; align-content: start; }
 .resumeLast {
-  display: grid; gap: 4px; padding: 20px 24px; text-decoration: none; background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg);
+  display: grid; gap: 4px; padding: 20px 24px; text-decoration: none; background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg);
   border-radius: var(--radius); border-left: 6px solid var(--accent); transition: transform 0.3s var(--ease);
 }
 .resumeLast:hover { transform: translateY(-3px); }
 .resumeLast b { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.15; }
-.resumeLast span { color: color-mix(in srgb, var(--bg) 78%, var(--ink)); }
+.resumeLast span { color: color-mix(in srgb, var(--inv-fg) 78%, var(--inv-bg)); }
 .resumeLast small { font-family: var(--f-label); letter-spacing: 0.05em; color: var(--accent); }
 .resumeLast .arr { display: inline-block; transition: transform 0.25s var(--ease); }
 .resumeLast:hover .arr { transform: translateX(5px); }
@@ -93,13 +93,13 @@
 .forumEmpty { color: var(--ink-2); max-width: 46ch; }
 .forumMotion {
   display: flex; flex-direction: column; gap: 12px; padding: clamp(20px, 3vw, 32px); text-decoration: none; justify-content: center;
-  background: var(--ink); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--bg);
+  background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg);
   border-radius: var(--radius); border-left: 6px solid var(--accent); transition: transform 0.3s var(--ease), box-shadow 0.3s;
 }
 .forumMotion:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -24px var(--shadow); }
 .forumMotion :global(.label) { color: var(--accent); }
 .forumMotion b { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.4rem, 2.4vw, 1.9rem); line-height: 1.2; }
-.forumMotionK { color: color-mix(in srgb, var(--bg) 78%, var(--ink)); font-size: 0.95rem; }
+.forumMotionK { color: color-mix(in srgb, var(--inv-fg) 78%, var(--inv-bg)); font-size: 0.95rem; }
 .forumMotion small { font-family: var(--f-label); letter-spacing: 0.05em; color: var(--accent); }
 @media (max-width: 980px) { .forum { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .forumMotion { transition: none; } .forumMotion:hover { transform: none; } }
