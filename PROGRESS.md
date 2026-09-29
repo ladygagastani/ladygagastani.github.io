@@ -341,6 +341,11 @@ From the owner's review of the old site ("Handoff.md", item 2). The old site mad
 - **Not done, and cannot be done from here: telling Google about it.** After publishing, the owner can add the site to Google Search Console (https://search.google.com/search-console), verify it (the owner signs in themselves), and submit https://mathesisstoicheion.github.io/sitemap.xml. Pages appear in search only after the crawlers visit, which takes days to weeks; nothing here can speed it up or promise a ranking. Bing has the same (Webmaster Tools).
 - Not done: the reader (`/read?w=`) still shows one generic title and preview for every text (its address is a query, which a static site cannot describe per work); a shared link to a work should use its `/work/...` page. The browser tab title while reading is not changed here.
 
+## Back to top (2026-09-29)
+- A round **"Top"** button (`components/BackToTop.tsx`) appears after about a screen of scrolling on the **reader** and on every **Painted Stoa entry**, and takes you back to the top (keyboard focus goes to the top too; smooth unless motion is reduced). It sits bottom right above the phone's bars, and above a minimised floating reader.
+- With **two books side by side** (or in the floating window) each book has its own button inside its box, which scrolls only that book. On a phone, where the two books stack, there is just one.
+- Test: `e2e/back-to-top.spec.ts` (2), passing against the dev server.
+
 ## Decisions log
 | Date | Decision | Reason |
 |---|---|---|
