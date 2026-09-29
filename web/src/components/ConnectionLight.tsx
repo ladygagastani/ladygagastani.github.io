@@ -80,8 +80,8 @@ export default function ConnectionLight() {
             <li>Your notes, marks and saved words live in this browser and work offline.</li>
           </ul>
           <div className={styles.connActs}>
-            <button type="button" className="btn" onClick={() => s.reconnect()} disabled={!!s.busy}>{s.busy ? "Working…" : "Reconnect"}</button>
-            <Link className="btn ghost" href={AREAS.downloads.href} transitionTypes={["page-turn"]} onClick={() => setOpen(false)}>{AREAS.downloads.name}</Link>
+            <button type="button" className="btn small" onClick={() => s.reconnect()} disabled={!!s.busy}>{s.busy ? "Working…" : "Reconnect"}</button>
+            <Link className="btn small ghost" href={AREAS.downloads.href} transitionTypes={["page-turn"]} onClick={() => setOpen(false)}>{AREAS.downloads.name}</Link>
           </div>
           {s.report && (
             <div className={styles.connReport} role="status" data-ok={s.report.ok}>

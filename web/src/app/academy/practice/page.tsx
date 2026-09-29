@@ -11,7 +11,7 @@ export default function PracticePage() {
     <Page>
       <div className="wrap" style={{ paddingBlock: "clamp(32px, 5vw, 56px)", display: "grid", gridTemplateColumns: "minmax(0, 1fr)", gap: 20 }}>
         <nav className="label"><Link href={AREAS.study.href} transitionTypes={["page-turn"]}>{AREAS.study.name}</Link> › Practice</nav>
-        <h1 style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)" }}>Practice <span lang="grc" style={{ color: "var(--accent)" }}>ἄσκησις</span></h1>
+        <h1 className="page-title">Practice <span lang="grc">ἄσκησις</span></h1>
         <p className="muted" style={{ maxWidth: "62ch", fontSize: "1.1rem" }}>Short drills. Endings come from the checked tables; the sentences are real, and their answers come from hand-checked analyses.</p>
         <PracticeClient />
       </div>

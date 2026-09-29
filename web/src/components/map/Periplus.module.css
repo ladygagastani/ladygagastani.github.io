@@ -8,7 +8,7 @@
   --map-halo: var(--bg-2);
   --map-sea-name: #E6C39B;
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); gap: clamp(18px, 3vw, 36px); align-items: start;
-  padding-bottom: 60px;
+  padding-block: var(--after-head) 60px;
 }
 :global([data-theme="dark"]) .layout {
   --map-land: #2A1F18; --map-sea: #0B0806; --map-coast: #C8703A; --map-wave: rgba(200, 112, 58, 0.10);

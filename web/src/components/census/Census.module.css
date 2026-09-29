@@ -2,7 +2,7 @@
 /* Rankings are black-gloss bands with an added-red tip. Every animation rests on the finished
    state, so with reduced motion (animation: none, handled site-wide) the page is simply complete. */
 
-.census { padding-bottom: 72px; display: grid; gap: 22px; }
+.census { padding-block: var(--after-head) 72px; display: grid; gap: 22px; }
 .status { padding: 60px 0; display: flex; gap: 12px; align-items: center; color: var(--ink-2); }
 .spinner { display: inline-block; vertical-align: -3px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--rule); border-top-color: var(--accent); animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -14,7 +14,7 @@
 
 /* ------------------------------------------------ the tally */
 .tally {
-  margin: 8px 0 6px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0;
+  margin: 0 0 6px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0;
   border-block: 1.5px solid var(--ink);
 }
 .tally > div {
@@ -137,7 +137,6 @@
 .stats dd { margin: 0; font-family: var(--f-display); font-size: 1.6rem; line-height: 1.1; font-variant-numeric: tabular-nums; display: grid; }
 .stats dd small { font-family: var(--f-body); font-size: 0.8rem; color: var(--ink-2); }
 .go { display: flex; flex-wrap: wrap; gap: 8px; }
-.go :global(.btn) { padding: 8px 14px; font-size: 0.92rem; }
 .stoa { font-size: 0.93rem; }
 .charts { display: grid; gap: 16px; }
 .clusters { display: grid; gap: 8px; }

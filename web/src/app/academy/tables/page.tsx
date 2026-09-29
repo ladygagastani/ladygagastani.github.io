@@ -11,7 +11,7 @@ export default function TablesPage() {
     <Page>
       <div className="wrap" style={{ paddingBlock: "clamp(32px, 5vw, 56px)", display: "grid", gridTemplateColumns: "minmax(0, 1fr)", gap: 20 }}>
         <nav className="label"><Link href={AREAS.study.href} transitionTypes={["page-turn"]}>{AREAS.study.name}</Link> › Tables of forms</nav>
-        <h1 style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)" }}>Tables of forms <span lang="grc" style={{ color: "var(--accent)" }}>παραδείγματα</span></h1>
+        <h1 className="page-title">Tables of forms <span lang="grc">παραδείγματα</span></h1>
         <p className="muted" style={{ maxWidth: "62ch", fontSize: "1.1rem" }}>
           The standard patterns of Attic Greek. Learn the endings, not every word: thousands of words follow these same tables.
         </p>

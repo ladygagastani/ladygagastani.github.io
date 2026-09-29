@@ -1,4 +1,4 @@
-.page { display: grid; gap: 28px; padding-block: 32px; }
+.page { display: grid; gap: 28px; padding-block: var(--after-head) 32px; }
 .card { display: grid; gap: 16px; padding: clamp(20px, 3vw, 36px); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); }
 .card h2 { font-size: var(--step-2); }
 .cardHead { display: flex; justify-content: space-between; align-items: center; gap: 12px; }

@@ -2,7 +2,7 @@
 /* Every animation here starts from a hidden "from" and rests on the finished state, so with
    reduced motion (animation: none) the page is simply complete. */
 
-.page { padding-top: 24px; }
+.page { padding-top: var(--after-head); }
 
 /* ------------------------------------------------ the section drawing */
 .drawing {

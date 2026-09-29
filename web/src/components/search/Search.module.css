@@ -1,5 +1,5 @@
 /* The Oracle: search in the Black-Figure style */
-.page { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 32px 64px; }
+.page { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: var(--after-head) 64px; }
 .gr { font-family: var(--f-greek); }
 .small { font-size: 0.86rem; color: var(--ink-2); }
 .warn { color: var(--accent); font-weight: 600; }

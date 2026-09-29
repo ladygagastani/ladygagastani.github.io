@@ -62,7 +62,7 @@ export default function AuthorProfile({ related }: { related: Record<string, Rel
     return (
       <div className="wrap">
         <p className={styles.crumb}><Link href={AREAS.library.href}>← {AREAS.library.name}</Link></p>
-        <h1 className={styles.name}>No such author</h1>
+        <h1 className={`page-title ${styles.name}`}>No such author</h1>
         <p className={styles.msg}>That author is not in the catalogue. <Link href={AREAS.library.href}>Browse the library</Link>.</p>
       </div>
     );
@@ -73,7 +73,7 @@ export default function AuthorProfile({ related }: { related: Record<string, Rel
       <p className={styles.crumb}><Link href={AREAS.library.href}>← {AREAS.library.name} · {AREAS.library.english}</Link></p>
       <header className={styles.head}>
         <div className="area-kicker"><span className="tongues draw" aria-hidden="true" /><span className="label">Author</span></div>
-        <h1 className={styles.name}>{author.name}</h1>
+        <h1 className={`page-title ${styles.name}`}>{author.name}</h1>
         <dl className={styles.facts}>
           {facts.when && <div><dt>Wrote in</dt><dd title={DATE_NOTE}>{facts.when}</dd></div>}
           {facts.genres.length > 0 && <div><dt>Kinds of writing</dt><dd>{facts.genres.map(([g, n]) => `${g}${n > 1 ? ` (${n})` : ""}`).join(", ")}</dd></div>}

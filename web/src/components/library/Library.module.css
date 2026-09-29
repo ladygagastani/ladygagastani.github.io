@@ -1,4 +1,4 @@
-.lib { display: grid; gap: clamp(40px, 6vw, 72px); padding-block: 32px 24px; }
+.lib { display: grid; gap: clamp(40px, 6vw, 72px); padding-block: var(--after-head) 24px; }
 .lib > section { width: 100%; }  /* a grid item with auto side margins would shrink to its content */
 .error { color: var(--accent); padding-block: 40px; }
 

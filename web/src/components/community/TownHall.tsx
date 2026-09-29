@@ -70,7 +70,7 @@ export default function TownHall() {
           {SORTS.map(([s, label]) => <button key={s} type="button" className="chip" aria-pressed={sort === s} onClick={() => go({ sort: s === "active" ? null : s })}>{label}</button>)}
         </div>
         {signedIn
-          ? <Link className="btn" href={`/town-hall/new${c ? `?c=${c}` : ""}`}>Start a thread <span className="arr">→</span></Link>
+          ? <Link className="btn small" href={`/town-hall/new${c ? `?c=${c}` : ""}`}>Start a thread <span className="arr">→</span></Link>
           : null}
       </div>
       <SignInPrompt what="start a thread or reply" />

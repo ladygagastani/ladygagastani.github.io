@@ -3,7 +3,7 @@
 .crumb a { text-decoration: none; }
 .crumb a:hover { color: var(--accent); }
 .head { display: grid; gap: 14px; }
-.name { font-size: clamp(2.4rem, 5.5vw, 4.4rem); line-height: 1.05; }
+.name { line-height: 1.05; }
 .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px 28px; margin: 6px 0 0; }
 .facts dt { font-family: var(--f-label); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); }
 .facts dd { margin: 4px 0 0; font-size: 1.05rem; }

@@ -285,6 +285,16 @@ Plan: `PLAN.md` section 7. Phones are **up to 760 px wide** everywhere (CSS medi
 - **Published** (2026-09-29): the owner asked to push to live; `main` pushed (commit ea7a00d), live about a minute later. `node scripts/live-check.mjs` passed (forum reads 200, no console errors), and the live map opens and flies to Sparta on a phone-sized screen with no errors. The branch `phone-map-and-symmetry` holds the same commits (pushed for a pull request) and can be deleted.
 - **Local builds need webpack now.** Windows Smart App Control (a security setting, left on) blocks Next.js's fast compiler file (`@next/swc-win32-x64-msvc`) since 2026-09-29, and Turbopack cannot run without it. Use `npx next build --webpack` and `next dev --webpack` (the `web` entry in `.claude/launch.json` passes it). The live site is built by GitHub on Linux and is unaffected. `next.config.ts` now has `agentRules: false` (stops `next dev` writing AGENTS.md/CLAUDE.md into `web/`) and `devIndicators: false`.
 
+## Neat ornaments and one set of measures (2026-09-29)
+The owner: "The spiral decoration separators end abruptly and unevenly … in the wiki the left side shows 5 stripes and the right side 4 … make it all look nice and neat."
+- **Meander bands end cleanly at both sides.** The band is now drawn from separate layers (`globals.css`, `--meander-*`): the repeating key, a top and bottom rail, and an end post at each side; the keys are spaced to fit a whole number into the band (`mask-repeat: round`) inside 2.4 px of padding, so no key is ever cut off and no key touches an end post. The same variables draw the home page's section bands (`home.module.css` `.block::before`) and the floating reader's title-bar band. Tongue and ray bands also fit whole tiles.
+- **The Painted Stoa's columns** are symmetrical: both end columns have 5 grooves (`--column` in `Stoa.module.css`), and the colonnade is centred. **The Treasury's triglyphs** are drawn in proportions, so they stay even at 18 px and at 14 px on phones.
+- **One space under every area's header band** (`--after-head` in `globals.css`: 24 px on phones, 32 px on wide screens). Before, each area set its own (8 px on the Census, 24–40 px elsewhere, none at all on the map).
+- **One size for the title of a page inside an area** (`.page-title` in `globals.css`): the alphabet, lessons, tables, review, practice, vocabulary, the studio and author pages. Lessons, the studio and author pages had drifted to other sizes.
+- **One small button** (`.btn.small`, 44 px tall on touch screens) for tools inside panels: the Census's item panel, "Start a thread" in the Town Hall and the connection panel. They had three slightly different sizes.
+- Left as they are, on purpose: the home page title and Word Study's headword are larger (they are the page's centrepiece); the Town Hall's Search chip matches the height of the box beside it; the Oracle's example chips use a larger type for their Greek.
+- Helpers (not part of the site; need a served build): `node scripts/consistency-audit.mjs <site> <paths…>` lists what differs from page to page (bands off the text column, title sizes, the space under the header band, button and chip heights, corner rounding); `node scripts/ornament-closeups.mjs <folder> <site> <paths…>` makes close-ups of both ends of every band.
+
 ## Decisions log
 | Date | Decision | Reason |
 |---|---|---|

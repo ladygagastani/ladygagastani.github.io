@@ -23,8 +23,8 @@
 /* a meander band along the bottom of the title bar */
 .bar::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: var(--accent); opacity: 0.8;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") repeat-x 0 0 / 6px 6px;
-          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") repeat-x 0 0 / 6px 6px;
+  -webkit-mask: var(--meander-tile) round no-repeat 0 0 / 6px 6px;
+          mask: var(--meander-tile) round no-repeat 0 0 / 6px 6px;
 }
 .grip { width: 10px; height: 18px; flex: none; opacity: 0.55; background: radial-gradient(circle, currentColor 1.2px, transparent 1.6px) 0 0 / 5px 6px; }
 .title { flex: 1; min-width: 0; display: grid; line-height: 1.15; }

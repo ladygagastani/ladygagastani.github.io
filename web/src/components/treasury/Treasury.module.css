@@ -1,5 +1,5 @@
 /* ================================================================ the Treasury */
-.treasury { display: grid; gap: clamp(28px, 4vw, 44px); padding-block: 28px 24px; }
+.treasury { display: grid; gap: clamp(28px, 4vw, 44px); padding-block: var(--after-head) 24px; }
 .error { color: var(--accent); }
 .small { font-size: 0.88rem; color: var(--ink-2); }
 
@@ -15,7 +15,9 @@
 .frieze {
   --tri: 18px;
   --groove: color-mix(in srgb, var(--ink) 45%, var(--surface));
-  --triglyph: repeating-linear-gradient(90deg, var(--groove) 0 1.5px, var(--inv-bg) 1.5px 5px, var(--groove) 5px 6.5px);
+  /* a triglyph as the Greeks cut it, the same from either side: a half-groove at each edge, two whole grooves between */
+  --triglyph: linear-gradient(90deg, var(--groove) 0 8.33%, var(--inv-bg) 8.33% 25%, var(--groove) 25% 41.67%, var(--inv-bg) 41.67% 58.33%,
+    var(--groove) 58.33% 75%, var(--inv-bg) 75% 91.67%, var(--groove) 91.67% 100%);   /* in proportion, so it scales with --tri */
   list-style: none; margin: 0; padding: 0 var(--tri) 0 0;
   display: grid; grid-template-columns: repeat(8, 1fr);
   border-top: 3px solid var(--inv-bg); border-bottom: 3px solid var(--inv-bg);

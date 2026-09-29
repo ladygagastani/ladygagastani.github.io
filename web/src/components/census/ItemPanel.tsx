@@ -106,9 +106,9 @@ export default function ItemPanel({ meta, cat, item, listed, scope, links, onClo
       {!failed && !noIndex && lex.state === "done" && !lex.value[0] && <p className={styles.warn}>Word Study has no entry for this word, so its spread cannot be shown.</p>}
 
       <nav className={styles.go} aria-label="More about it">
-        <Link className="btn" href={oracle} transitionTypes={["page-turn"]}>Every mention <span className="arr">→</span></Link>
-        {!phrase && <Link className="btn ghost" href={wordHref(item.text)} transitionTypes={["page-turn"]}>Word Study</Link>}
-        {place.state === "done" && place.value && <Link className="btn ghost" href={`/stoa/periplus?p=${place.value.id}`} transitionTypes={["page-turn"]}>On the map</Link>}
+        <Link className="btn small" href={oracle} transitionTypes={["page-turn"]}>Every mention <span className="arr">→</span></Link>
+        {!phrase && <Link className="btn small ghost" href={wordHref(item.text)} transitionTypes={["page-turn"]}>Word Study</Link>}
+        {place.state === "done" && place.value && <Link className="btn small ghost" href={`/stoa/periplus?p=${place.value.id}`} transitionTypes={["page-turn"]}>On the map</Link>}
       </nav>
       {entries.length > 0 && (
         <p className={styles.stoa}>In the Painted Stoa: {entries.map((e, i) => <span key={e.slug}>{i > 0 && " · "}<Link href={`/stoa/${e.slug}`} transitionTypes={["page-turn"]}>{e.title}</Link></span>)}</p>

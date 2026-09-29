@@ -18,6 +18,8 @@
   --readbar-vis: var(--readbar-h);
   /* the smallest comfortable touch target (Phase 10) */
   --tap: 44px;
+  /* the space between an area page's header band and its first content, the same on every area page */
+  --after-head: clamp(24px, 4vw, 32px);
   /* colour */
   --bg: #E6C39B;          /* pale fired clay */
   --bg-2: #DDB186;        /* deeper clay, hover and bands */
@@ -179,16 +181,34 @@ input { text-overflow: ellipsis; }
 @keyframes pull-spin { to { transform: rotate(360deg); } }
 
 /* ------------------------------------------------------------- ornament */
-/* Bands are drawn with CSS masks so they take any colour. */
+/* Bands are drawn with CSS masks so they take any colour. The tiles repeat "round": only whole tiles,
+   stretched a hair to fill the width exactly, so a band never ends in a cut-off piece. The meander's key
+   sits in the middle of its tile (the same gap on both sides); its two rails are drawn as one unbroken line
+   each (drawn per tile they showed hairline seams), and a thin upright closes each end into a frame.
+   --meander-tile keeps the rails in the tile, for bands too small to show a seam. */
+:root {
+  --meander-key: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M3.5 19V4H16.5V16H7.5V8H12.5V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+  --meander-tile: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3.5 19V4H16.5V16H7.5V8H12.5V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+  --solid: linear-gradient(#000 0 0);
+  --meander-image: var(--meander-key), var(--solid), var(--solid), var(--solid), var(--solid);
+  --meander-size: 16px 16px, 100% 1.6px, 100% 1.6px, 1.6px 100%, 1.6px 100%;
+  --meander-position: left top, left top, left bottom, left top, right top;
+  --meander-repeat: round no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  /* the keys are laid inside the padding (2.4 px each side), so the first and last stand clear of the uprights */
+  --meander-origin: content-box, border-box, border-box, border-box, border-box;
+}
 .meander, .tongues, .rays {
   background: var(--band);
-  -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
+  -webkit-mask-repeat: round no-repeat; mask-repeat: round no-repeat;
 }
 .meander {
   height: 16px;
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
-          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M0 1H20M0 19H20M3 19V4H16V16H7V8H12V12' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
-  -webkit-mask-size: 16px 16px; mask-size: 16px 16px;
+  -webkit-mask-image: var(--meander-image); mask-image: var(--meander-image);
+  -webkit-mask-size: var(--meander-size); mask-size: var(--meander-size);
+  -webkit-mask-position: var(--meander-position); mask-position: var(--meander-position);
+  -webkit-mask-repeat: var(--meander-repeat); mask-repeat: var(--meander-repeat);
+  -webkit-mask-origin: var(--meander-origin); mask-origin: var(--meander-origin);
+  padding-inline: 2.4px;
 }
 .tongues {
   height: 14px;
@@ -214,6 +234,9 @@ input { text-overflow: ellipsis; }
 }
 .btn:hover { transform: translateY(-2px); }
 .btn.ghost { background: transparent; color: var(--ink); }
+/* the small button, for tools inside a panel; still a full touch target on touch screens */
+.btn.small { padding: 9px 16px; font-size: 0.92rem; gap: 8px; }
+@media (pointer: coarse) { .btn.small { min-height: var(--tap); } }
 .btn .arr { transition: transform 0.25s var(--ease); }
 .btn:hover .arr { transform: translateX(4px); }
 .btn[aria-disabled="true"], .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
@@ -317,6 +340,10 @@ main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(
   .area-origin { font-size: 1.02rem; line-height: 1.5; margin-top: 12px; }
   .area-head .meander { margin-top: 24px; }
 }
+
+/* the title of a page inside an area (a lesson, an author, the alphabet…): one size everywhere */
+.page-title { font-size: clamp(2.4rem, 5vw, 4rem); }
+.page-title > [lang="grc"] { color: var(--accent); }
 
 .soon { padding-block: clamp(32px, 5vw, 56px); }
 .soon-card { max-width: 720px; display: grid; gap: 16px; justify-items: start; }
