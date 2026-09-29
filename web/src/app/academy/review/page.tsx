@@ -3,8 +3,9 @@ import Link from "next/link";
 import Page from "@/components/Page";
 import Review from "@/components/academy/Review";
 import { AREAS } from "@/config/areas";
+import { NOINDEX } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `Daily review · ${AREAS.study.name}` };
+export const metadata: Metadata = { title: `Daily review · ${AREAS.study.name}`, ...NOINDEX };
 
 export default function ReviewPage() {
   return (

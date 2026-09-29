@@ -4,8 +4,9 @@ import Page from "@/components/Page";
 import AreaHeader from "@/components/AreaHeader";
 import Search from "@/components/search/Search";
 import { AREAS } from "@/config/areas";
+import { NOINDEX } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `${AREAS.search.name} · ${AREAS.search.english}` };
+export const metadata: Metadata = { title: `${AREAS.search.name} · ${AREAS.search.english}`, ...NOINDEX };
 
 export default function SearchPage() {
   return (

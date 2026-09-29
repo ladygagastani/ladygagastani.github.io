@@ -5,8 +5,9 @@ import AreaHeader from "@/components/AreaHeader";
 import Periplus, { type EntryLink } from "@/components/map/Periplus";
 import { AREAS } from "@/config/areas";
 import { ENTRIES } from "@/wiki/index";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `${AREAS.map.name} · ${AREAS.map.english}` };
+export const metadata: Metadata = { title: `${AREAS.map.name} · ${AREAS.map.english}`, description: PAGE_DESCRIPTIONS.periplus };
 
 // the Painted Stoa's entries about each place, by Pleiades id
 const entriesByPlace: Record<string, EntryLink[]> = {};

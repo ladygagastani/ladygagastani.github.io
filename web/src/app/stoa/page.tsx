@@ -6,8 +6,9 @@ import { join } from "node:path";
 import StoaIndex, { type RefCard } from "@/components/stoa/StoaIndex";
 import type { Catalog } from "@/lib/catalog";
 import { AREAS } from "@/config/areas";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `${AREAS.wiki.name} · ${AREAS.wiki.english}` };
+export const metadata: Metadata = { title: `${AREAS.wiki.name} · ${AREAS.wiki.english}`, description: PAGE_DESCRIPTIONS.stoa };
 
 // Counts for the reference cards, taken from the catalogue when the site is built.
 const CATALOG = JSON.parse(readFileSync(join(process.cwd(), "public/data/catalog.json"), "utf8")) as Catalog;

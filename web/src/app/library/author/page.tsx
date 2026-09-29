@@ -1,22 +1,18 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Page from "@/components/Page";
-import AuthorProfile, { type RelatedEntry } from "@/components/library/AuthorProfile";
+import AuthorProfile from "@/components/library/AuthorProfile";
 import { AREAS } from "@/config/areas";
-import { ENTRIES } from "@/wiki/index";
-import { inline, plain } from "@/wiki/markup";
+import { siteData } from "@/lib/build-data";
+import { entriesForAuthor, type RelatedEntry } from "@/wiki/related";
 
-export const metadata: Metadata = { title: `An author · ${AREAS.library.name}` };
+// the app's own author page: every author opens here by ?a=..., so none of those addresses is indexed;
+// each author's page for search engines is /author/<id>
+export const metadata: Metadata = { title: `An author · ${AREAS.library.name}`, robots: { index: false, follow: true } };
 
-// The Painted Stoa entries that cite each author's works (read at build time: an entry counts when
-// any passage in it, a quotation, a link or a "read it yourself" reference, points into that author's texts).
+// The Painted Stoa entries that cite each author's works (read at build time)
 const related: Record<string, RelatedEntry[]> = {};
-for (const e of ENTRIES) {
-  const authors = new Set([...JSON.stringify(e).matchAll(/tlg\d{4}(?=\.tlg\d{3})/g)].map((m) => m[0]));
-  const hook = plain(inline(e.hook));
-  const first = hook.split(/(?<=[.!?])\s+/)[0] ?? hook;
-  for (const a of authors) (related[a] ??= []).push({ slug: e.slug, title: e.title, kicker: e.kicker, hook: first });
-}
+for (const a of siteData().idx.catalog.authors) { const e = entriesForAuthor(a.id); if (e.length) related[a.id] = e; }
 
 export default function AuthorPage() {
   return (

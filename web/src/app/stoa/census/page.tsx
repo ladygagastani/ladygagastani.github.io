@@ -7,8 +7,9 @@ import type { EntryLink, Links } from "@/components/census/shared";
 import { AREAS } from "@/config/areas";
 import { NAME_ENTRIES } from "@/lib/census";
 import { ENTRIES, entryBySlug } from "@/wiki/index";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `${AREAS.census.name} · ${AREAS.census.english}` };
+export const metadata: Metadata = { title: `${AREAS.census.name} · ${AREAS.census.english}`, description: PAGE_DESCRIPTIONS.census };
 
 // the Painted Stoa's entries about each name and each place (read at build time)
 const link = (slug: string): EntryLink => ({ slug, title: entryBySlug.get(slug)!.title });

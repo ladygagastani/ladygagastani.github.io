@@ -3,8 +3,9 @@ import Link from "next/link";
 import Page from "@/components/Page";
 import Vocabulary from "@/components/academy/Vocabulary";
 import { AREAS } from "@/config/areas";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `Vocabulary · ${AREAS.study.name}` };
+export const metadata: Metadata = { title: `Vocabulary · ${AREAS.study.name}`, description: PAGE_DESCRIPTIONS.vocabulary };
 
 export default function VocabularyPage() {
   return (

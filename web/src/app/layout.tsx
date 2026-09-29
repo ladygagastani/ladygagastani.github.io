@@ -12,6 +12,7 @@ import { ResumeTracker } from "@/components/Resume";
 import { Suspense } from "react";
 import { SITE } from "@/config/areas";
 import { BOOT_SCRIPT, THEME_COLOURS } from "@/lib/settings";
+import { SHARE_IMAGE, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 // next/font downloads these at build time and serves them from this site,
@@ -24,8 +25,12 @@ const alegreya = Alegreya({ subsets: ["latin"], style: ["normal", "italic"], var
 const alegreyaSC = Alegreya_Sans_SC({ weight: ["500", "700"], subsets: ["latin"], variable: "--font-alegreya-sc", display: "swap" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { default: `${SITE.latin} · ${SITE.greek}`, template: `%s · ${SITE.latin}` },
   description: SITE.tagline,
+  // what a link to any page looks like when it is shared (a page with its own title and description overrides these)
+  openGraph: { type: "website", siteName: SITE.latin, locale: "en_GB", images: [SHARE_IMAGE] },
+  twitter: { card: "summary_large_image", images: [SHARE_IMAGE.url] },
   // added to an iPhone's home screen, it opens as an app of its own (the manifest says the same for other phones)
   appleWebApp: { capable: true, title: SITE.latin, statusBarStyle: "default" },
   icons: { apple: "/apple-touch-icon.png" },

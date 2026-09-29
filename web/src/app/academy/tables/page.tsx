@@ -3,8 +3,9 @@ import Link from "next/link";
 import Page from "@/components/Page";
 import Tables from "@/components/academy/Tables";
 import { AREAS } from "@/config/areas";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `Tables of forms · ${AREAS.study.name}` };
+export const metadata: Metadata = { title: `Tables of forms · ${AREAS.study.name}`, description: PAGE_DESCRIPTIONS.tables };
 
 export default function TablesPage() {
   return (

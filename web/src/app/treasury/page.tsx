@@ -4,8 +4,9 @@ import Page from "@/components/Page";
 import AreaHeader from "@/components/AreaHeader";
 import Treasury from "@/components/treasury/Treasury";
 import { AREAS } from "@/config/areas";
+import { NOINDEX } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `${AREAS.treasury.name} · ${AREAS.treasury.english}` };
+export const metadata: Metadata = { title: `${AREAS.treasury.name} · ${AREAS.treasury.english}`, ...NOINDEX };
 
 export default function TreasuryPage() {
   return (

@@ -7,6 +7,7 @@ import { loadCatalog, fold, greekEditions, hasTranslation, type CatalogIndex, ty
 import { loadWorksMeta, FAMILIES, PERIODS, familyOf, periodOf, centuries, DATE_NOTE, type WorkMeta } from "@/lib/works-meta";
 import { commonShare, loadDifficulty, VOCAB_BANDS } from "@/lib/difficulty";
 import { scrollBelowHeader } from "@/lib/header";
+import { workPath } from "@/lib/seo";
 import styles from "./Library.module.css";
 
 /**
@@ -35,7 +36,7 @@ const n = (x: number) => x.toLocaleString("en-GB");
 const initial = (s: string) => fold(s).replace(/^[^a-z]+/, "").charAt(0).toUpperCase() || "#";
 const byName = (a: string, b: string) => fold(a).localeCompare(fold(b), "en");
 
-export function WorkItem({ w, author, meta, common }: { w: CatWork; author?: CatAuthor; meta?: WorkMeta; common: number | null }) {
+export function WorkItem({ w, author, meta, common, about = false }: { w: CatWork; author?: CatAuthor; meta?: WorkMeta; common: number | null; about?: boolean }) {
   const grc = greekEditions(w)[0];
   const tr = hasTranslation(w);
   return (
@@ -49,6 +50,7 @@ export function WorkItem({ w, author, meta, common }: { w: CatWork; author?: Cat
         {tr ? <span className={styles.badge}>English</span> : <span className={`${styles.badge} ${styles.off}`}>Greek only</span>}
         {common !== null && <span title={`${common}% of this text's running words are among the 516 core words, the commonest in Greek`}>{common}% common words</span>}
         {grc && <span className={styles.size}>{kb(grc.size)}</span>}
+        {about && <Link href={workPath(w.id)} transitionTypes={["page-turn"]} className={styles.aboutLink}>About</Link>}
       </span>
     </li>
   );

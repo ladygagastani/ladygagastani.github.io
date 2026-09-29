@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Page from "@/components/Page";
 import NewThread from "@/components/community/NewThread";
+import { NOINDEX } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "A new thread · The Town Hall" };
+export const metadata: Metadata = { title: "A new thread · The Town Hall", ...NOINDEX };
 
 export default function NewPage() {
   return (

@@ -23,6 +23,8 @@ describe("the offline copy", () => {
       if (DEV_PAGES.includes(p)) continue;
       if (p === "/academy/lesson/[id]") { for (const l of LESSONS) expect(kept.has(`/academy/lesson/${l.id}`), l.id).toBe(true); continue; }
       if (p === "/stoa/[slug]") { for (const e of ENTRIES) expect(kept.has(`/stoa/${e.slug}`), e.slug).toBe(true); continue; }
+      // a page for every author and every work, for search engines and link previews: made at build time, kept offline once visited, not in advance
+      if (p === "/author/[id]" || p === "/work/[id]") { expect(kept.has(p), p).toBe(false); continue; }
       expect(STATIC_PAGES, p).toContain(p);
     }
   });

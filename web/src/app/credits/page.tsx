@@ -5,8 +5,9 @@ import { LSJ_CREDIT } from "@/lib/lookup/lsj";
 import { IMAGES } from "@/wiki/images";
 import { ENTRIES } from "@/wiki/index";
 import styles from "../prose.module.css";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Credits, licences & privacy" };
+export const metadata: Metadata = { title: "Credits, licences & privacy", description: PAGE_DESCRIPTIONS.credits };
 
 // Only list what the site actually uses today. Add each new source, image or library here when it arrives.
 const SOFTWARE = [

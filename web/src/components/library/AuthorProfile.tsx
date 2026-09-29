@@ -9,7 +9,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { loadCatalog, hasTranslation, type CatalogIndex } from "@/lib/catalog";
+import { loadCatalog, hasTranslation, type CatalogIndex, type CatAuthor } from "@/lib/catalog";
 import { centuries, DATE_NOTE, loadWorksMeta, type WorkMeta } from "@/lib/works-meta";
 import { commonShare, loadDifficulty } from "@/lib/difficulty";
 import { lifeSpan, loadAuthorsMeta, type AuthorMeta } from "@/lib/authors-meta";
@@ -18,10 +18,12 @@ import { WorkItem } from "./Library";
 import lib from "./Library.module.css";
 import styles from "./AuthorProfile.module.css";
 
-export interface RelatedEntry { slug: string; title: string; kicker: string; hook: string }
+export type { RelatedEntry } from "@/wiki/related";
+import type { RelatedEntry } from "@/wiki/related";
 
 const num = (n: number) => n.toLocaleString("en-GB");
 
+/** The page's own loading and "no such author" states; the page itself is AuthorView, which the static /author/[id] pages build at deploy time. */
 export default function AuthorProfile({ related }: { related: Record<string, RelatedEntry[]> }) {
   const id = useSearchParams().get("a");
   const [idx, setIdx] = useState<CatalogIndex | null>(null);
@@ -32,8 +34,30 @@ export default function AuthorProfile({ related }: { related: Record<string, Rel
   useEffect(() => { loadCatalog().then(setIdx, () => setFailed(true)); loadWorksMeta().then(setMeta); loadDifficulty().then(setDiff); loadAuthorsMeta().then(setWho); }, []);
 
   const author = idx && id ? idx.author.get(id) : undefined;
+  if (failed) return <div className="wrap"><p className={styles.msg} role="alert">The catalogue could not be opened. Check your connection and try again.</p></div>;
+  if (!idx) return <div className="wrap"><p className={styles.msg}>Opening the catalogue…</p></div>;
+  if (!author) {
+    return (
+      <div className="wrap">
+        <p className={styles.crumb}><Link href={AREAS.library.href}>← {AREAS.library.name}</Link></p>
+        <h1 className={`page-title ${styles.name}`}>No such author</h1>
+        <p className={styles.msg}>That author is not in the catalogue. <Link href={AREAS.library.href}>Browse the library</Link>.</p>
+      </div>
+    );
+  }
+  return <AuthorView author={author} meta={meta} diff={diff} who={who[author.id]} related={related[author.id] ?? []} />;
+}
+
+/**
+ * The author's page itself. It takes plain data, so it can be drawn while the site is built (the static
+ * /author/[id] pages that search engines and link previews read) as well as in the browser.
+ */
+export function AuthorView({ author, meta, diff, who: wd, related: entries, landing = false }: {
+  author: CatAuthor; meta: Record<string, WorkMeta>; diff: Record<string, [number, number]>; who: AuthorMeta | undefined; related: RelatedEntry[];
+  /** the static /author/[id] page: each work also links to its own page */
+  landing?: boolean;
+}) {
   const facts = useMemo(() => {
-    if (!author) return null;
     const ms = author.works.map((w) => meta[w.id]).filter((m): m is WorkMeta => !!m);
     const froms = ms.map((m) => m.from).filter((x): x is number => x !== null);
     const tos = ms.map((m) => m.to).filter((x): x is number => x !== null);
@@ -50,27 +74,11 @@ export default function AuthorProfile({ related }: { related: Record<string, Rel
   }, [author, meta]);
 
   // where to begin: the works with an English translation whose words are the most familiar
-  const begin = useMemo(() => {
-    if (!author) return [];
-    return author.works
-      .map((w) => ({ w, p: commonShare(diff[w.id]) }))
-      .filter((x): x is { w: typeof x.w; p: number } => x.p !== null && hasTranslation(x.w))
-      .sort((a, b) => b.p - a.p).slice(0, 3);
-  }, [author, diff]);
+  const begin = useMemo(() => author.works
+    .map((w) => ({ w, p: commonShare(diff[w.id]) }))
+    .filter((x): x is { w: typeof x.w; p: number } => x.p !== null && hasTranslation(x.w))
+    .sort((a, b) => b.p - a.p).slice(0, 3), [author, diff]);
 
-  if (failed) return <div className="wrap"><p className={styles.msg} role="alert">The catalogue could not be opened. Check your connection and try again.</p></div>;
-  if (!idx) return <div className="wrap"><p className={styles.msg}>Opening the catalogue…</p></div>;
-  if (!author || !facts) {
-    return (
-      <div className="wrap">
-        <p className={styles.crumb}><Link href={AREAS.library.href}>← {AREAS.library.name}</Link></p>
-        <h1 className={`page-title ${styles.name}`}>No such author</h1>
-        <p className={styles.msg}>That author is not in the catalogue. <Link href={AREAS.library.href}>Browse the library</Link>.</p>
-      </div>
-    );
-  }
-  const entries = related[author.id] ?? [];
-  const wd = who[author.id];
   const lived = lifeSpan(wd);
   return (
     <div className={`wrap ${styles.page}`}>
@@ -95,7 +103,7 @@ export default function AuthorProfile({ related }: { related: Record<string, Rel
           <h2 id="begin-title">Where to begin</h2>
           <p className="muted">The works here with a translation and the most familiar vocabulary: the fewest rare words to look up. That is vocabulary only; grammar, dialect and ideas may still be demanding.</p>
           <ul className={lib.works}>
-            {begin.map(({ w, p }) => <WorkItem key={w.id} w={w} meta={meta[w.id]} common={p} />)}
+            {begin.map(({ w, p }) => <WorkItem key={w.id} w={w} meta={meta[w.id]} common={p} about={landing} />)}
           </ul>
         </section>
       )}
@@ -103,7 +111,7 @@ export default function AuthorProfile({ related }: { related: Record<string, Rel
       <section className={styles.sec} aria-labelledby="works-title">
         <h2 id="works-title">What {author.name} wrote</h2>
         <ul className={lib.works}>
-          {author.works.map((w) => <WorkItem key={w.id} w={w} meta={meta[w.id]} common={commonShare(diff[w.id])} />)}
+          {author.works.map((w) => <WorkItem key={w.id} w={w} meta={meta[w.id]} common={commonShare(diff[w.id])} about={landing} />)}
         </ul>
       </section>
 

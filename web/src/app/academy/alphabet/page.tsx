@@ -3,8 +3,9 @@ import Link from "next/link";
 import Page from "@/components/Page";
 import Alphabet from "@/components/academy/Alphabet";
 import { AREAS } from "@/config/areas";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `The alphabet · ${AREAS.study.name}` };
+export const metadata: Metadata = { title: `The alphabet · ${AREAS.study.name}`, description: PAGE_DESCRIPTIONS.alphabet };
 
 export default function AlphabetPage() {
   return (

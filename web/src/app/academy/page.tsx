@@ -6,8 +6,9 @@ import AcademyProgress from "@/components/academy/AcademyProgress";
 import { AREAS } from "@/config/areas";
 import { LESSONS } from "@/data/lessons";
 import styles from "@/components/academy/Academy.module.css";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `${AREAS.study.name} · ${AREAS.study.english}` };
+export const metadata: Metadata = { title: `${AREAS.study.name} · ${AREAS.study.english}`, description: PAGE_DESCRIPTIONS.academy };
 
 const TOOLS = [
   { href: "/academy/today", title: "Today's session", gr: "ἡμέρα", text: "A few minutes a day: your flashcards, one ending, one real sentence." },

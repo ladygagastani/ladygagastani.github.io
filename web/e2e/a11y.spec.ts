@@ -11,7 +11,7 @@ import { offlinePages } from "../src/config/pages";
 const REPORT = !!process.env.A11Y_REPORT;
 
 // pages that need something to show: a book in the reader, a word, a search
-const EXTRA = ["/read?w=tlg0012.tlg001", "/treasury/word?l=λόγος", "/search?q=μῆνιν"];
+const EXTRA = ["/read?w=tlg0012.tlg001", "/treasury/word?l=λόγος", "/search?q=μῆνιν", "/author/tlg0011", "/work/tlg0012-tlg001"];
 const PAGES = [...[...new Set(offlinePages())].filter((p) => !["/town-hall/thread", "/town-hall/member", "/town-hall/pnyx/debate"].includes(p)), ...EXTRA];
 
 async function audit(page: Page, path: string, theme: "light" | "dark") {

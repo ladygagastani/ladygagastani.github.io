@@ -47,3 +47,6 @@ under 1 GB; the script stops if the packs come within 5% of that. Past 1 GB, spl
 (for example `packs` and `packs2`) and point `search` at the second.
 
 The `packs` site has been live since 2026-09-28 (set up as above).
+
+## Being found by search engines
+The build writes `/robots.txt`, `/sitemap.xml` (about 2,270 addresses) and a page with its own title, description and preview image for every author (`/author/<id>`) and work (`/work/<id-with-a-dash>`). See "Search engines and link previews" in `PROGRESS.md`. Nothing is sent to search engines automatically. To ask Google to look: add the site in Google Search Console, verify it, and submit `https://mathesisstoicheion.github.io/sitemap.xml` (the same in Bing Webmaster Tools). The site's address is set once, as `SITE_URL` in `web/src/lib/seo.ts`; change it there if the domain ever changes, and make the share image again with `node scripts/make-share-card.mjs` if its wording should change.

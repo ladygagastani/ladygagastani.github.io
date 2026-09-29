@@ -4,8 +4,9 @@ import Page from "@/components/Page";
 import RefHead from "@/components/stoa/RefHead";
 import WikiAuthors from "@/components/stoa/WikiAuthors";
 import { AREAS } from "@/config/areas";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `Authors · ${AREAS.wiki.name}` };
+export const metadata: Metadata = { title: `Authors · ${AREAS.wiki.name}`, description: PAGE_DESCRIPTIONS.authors };
 
 export default function AuthorsPage() {
   return (

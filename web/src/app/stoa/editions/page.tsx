@@ -3,8 +3,9 @@ import Page from "@/components/Page";
 import RefHead from "@/components/stoa/RefHead";
 import WikiEditions from "@/components/stoa/WikiEditions";
 import { AREAS } from "@/config/areas";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `Editions & translations · ${AREAS.wiki.name}` };
+export const metadata: Metadata = { title: `Editions & translations · ${AREAS.wiki.name}`, description: PAGE_DESCRIPTIONS.editions };
 
 export default function EditionsPage() {
   return (

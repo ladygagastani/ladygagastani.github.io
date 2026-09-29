@@ -159,3 +159,7 @@
   .meta .genre { display: none; }
 }
 @media (max-width: 760px) { .workLink { align-self: stretch; min-height: var(--tap); align-content: center; } }
+
+.aboutLink { text-decoration: underline; text-underline-offset: 3px; color: var(--ink-2); }
+.aboutLink:hover { color: var(--accent); }
+@media (pointer: coarse) { .aboutLink { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap); } }

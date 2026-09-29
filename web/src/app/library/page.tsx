@@ -4,8 +4,9 @@ import Page from "@/components/Page";
 import AreaHeader from "@/components/AreaHeader";
 import Library from "@/components/library/Library";
 import { AREAS } from "@/config/areas";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `${AREAS.library.name} · ${AREAS.library.english}` };
+export const metadata: Metadata = { title: `${AREAS.library.name} · ${AREAS.library.english}`, description: PAGE_DESCRIPTIONS.library };
 
 export default function LibraryPage() {
   return (

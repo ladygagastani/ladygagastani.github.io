@@ -3,8 +3,9 @@ import Page from "@/components/Page";
 import RefHead from "@/components/stoa/RefHead";
 import WikiEras from "@/components/stoa/WikiEras";
 import { AREAS } from "@/config/areas";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `Eras of Greek · ${AREAS.wiki.name}` };
+export const metadata: Metadata = { title: `Eras of Greek · ${AREAS.wiki.name}`, description: PAGE_DESCRIPTIONS.eras };
 
 export default function ErasPage() {
   return (

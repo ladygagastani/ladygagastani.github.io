@@ -14,6 +14,18 @@ export const STATIC_PAGES = [
   "/about", "/credits",
 ];
 
+/**
+ * Pages kept out of search results and told to crawlers to skip (robots.txt): a person's own space, tools
+ * that need a person to use them, and the app's query-address pages (each author's and work's page for search
+ * engines is /author/<id> and /work/<id>; those two are made for every author and work, are not kept offline
+ * in advance, and are the only pages the sitemap lists besides the public ones here).
+ */
+export const PRIVATE_PAGES = [
+  "/account", "/treasury", "/treasury/word", "/read", "/search", "/library/author",
+  "/town-hall/thread", "/town-hall/new", "/town-hall/member", "/town-hall/moderation", "/town-hall/pnyx/debate",
+  "/academy/today", "/academy/review",
+];
+
 /** Pages that exist only while developing (the recording studio): never kept offline. */
 export const DEV_PAGES = ["/academy/studio"];
 

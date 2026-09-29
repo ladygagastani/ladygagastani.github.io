@@ -3,8 +3,9 @@ import { Suspense } from "react";
 import Page from "@/components/Page";
 import WordStudy from "@/components/treasury/WordStudy";
 import { AREAS } from "@/config/areas";
+import { NOINDEX } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `Word Study · ${AREAS.treasury.name}` };
+export const metadata: Metadata = { title: `Word Study · ${AREAS.treasury.name}`, ...NOINDEX };
 
 // One static page serves every word (chosen by ?l=…), like the reader, so it can work offline once cached.
 export default function WordStudyPage() {

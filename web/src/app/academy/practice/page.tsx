@@ -3,8 +3,9 @@ import Link from "next/link";
 import Page from "@/components/Page";
 import PracticeClient from "@/components/academy/PracticeClient";
 import { AREAS } from "@/config/areas";
+import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
-export const metadata: Metadata = { title: `Practice · ${AREAS.study.name}` };
+export const metadata: Metadata = { title: `Practice · ${AREAS.study.name}`, description: PAGE_DESCRIPTIONS.practice };
 
 export default function PracticePage() {
   return (

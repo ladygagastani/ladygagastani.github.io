@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Page from "@/components/Page";
 import Moderation from "@/components/community/Moderation";
+import { NOINDEX } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "The moderator's desk · The Town Hall" };
+export const metadata: Metadata = { title: "The moderator's desk · The Town Hall", ...NOINDEX };
 
 export default function ModerationPage() {
   return (
