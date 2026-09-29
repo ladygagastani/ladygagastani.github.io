@@ -97,9 +97,11 @@ export default function SectionDrawing({ layers }: { layers: Layer[] }) {
           <text x={108} y={4} className={styles.note}>1 m</text>
         </g>
 
-        {/* the layers' numbers, as on a real drawing; each links to its part of the page */}
+        {/* the layers' numbers, as on a real drawing; each links to its part of the page. On a phone they sit
+            closer than a finger's width, so the list under the drawing offers the same links as full rows
+            (data-tap-equivalent tells scripts/phone-audit.mjs so) */}
         {layers.map((l, i) => (
-          <a key={l.id} href={`#${l.id}`} className={styles.ctx} aria-label={`Layer ${i + 1}: ${l.title}`}>
+          <a key={l.id} href={`#${l.id}`} className={styles.ctx} aria-label={`Layer ${i + 1}: ${l.title}`} data-tap-equivalent="">
             {/* a wider circle, unseen, so a finger can find the number on a small screen */}
             <circle cx={labelX} cy={mid(i, labelX)} r={36} className={styles.ctxHit} />
             <circle cx={labelX} cy={mid(i, labelX)} r={15} />

@@ -75,6 +75,7 @@
 .resumeMore a { text-decoration-color: var(--accent); text-underline-offset: 3px; }
 .resumeMore small { color: var(--ink-2); font-size: 0.85rem; }
 .resumeClear { justify-self: start; border: 0; background: transparent; padding: 0; color: var(--ink-2); font-size: 0.85rem; text-decoration: underline; }
+@media (pointer: coarse) { .resumeClear { min-height: var(--tap); } }
 @media (max-width: 760px) { .resumeIn { grid-template-columns: minmax(0, 1fr); } }
 .cardLink { text-decoration: none; transition: transform 0.3s var(--ease), box-shadow 0.3s; }
 .cardLink:hover { transform: translateY(-4px); }
