@@ -15,7 +15,23 @@ export interface Thread {
   id: number; category_id: string; author_id: string; title: string; body: string; tags: string[]; quote: Quote | null;
   created_at: string; edited_at: string | null; last_activity_at: string; reply_count: number; score: number;
   answered_post_id: number | null; locked: boolean; hidden: boolean; hidden_reason: string | null; author: Author | null;
+  /** only in the site's own boards (bug reports, suggestions); set by the moderator */
+  status?: ThreadStatus | null;
 }
+
+/** The boards about the site itself, whose threads carry a status. */
+export const SITE_BOARDS = { bugs: "bugs", ideas: "ideas" } as const;
+export type ThreadStatus = "open" | "confirmed" | "planned" | "fixed" | "done" | "declined" | "duplicate";
+/** What each status is called, and which board uses it (a bug is fixed, an idea is done). */
+export const STATUS: Record<ThreadStatus, { label: string; boards: string[]; closed: boolean }> = {
+  open:      { label: "Open",               boards: ["bugs", "ideas"], closed: false },
+  confirmed: { label: "Confirmed",          boards: ["bugs"],          closed: false },
+  planned:   { label: "Planned",            boards: ["ideas"],         closed: false },
+  fixed:     { label: "Fixed",              boards: ["bugs"],          closed: true },
+  done:      { label: "Done",               boards: ["ideas"],         closed: true },
+  declined:  { label: "Not planned",        boards: ["bugs", "ideas"], closed: true },
+  duplicate: { label: "Already reported",   boards: ["bugs", "ideas"], closed: true },
+};
 export interface Post {
   id: number; thread_id: number; parent_id: number | null; author_id: string; body: string; quote: Quote | null;
   created_at: string; edited_at: string | null; score: number; hidden: boolean; hidden_reason: string | null; author: Author | null;
@@ -53,12 +69,15 @@ export async function categories(): Promise<Category[]> {
   return must(await supabase().from("forum_categories").select("*").order("sort"));
 }
 
-export interface ThreadQuery { category?: string | null; tag?: string | null; q?: string | null; author?: string | null; sort?: "active" | "new" | "top" | "unanswered"; page?: number }
+export interface ThreadQuery { category?: string | null; tag?: string | null; q?: string | null; author?: string | null; sort?: "active" | "new" | "top" | "unanswered"; page?: number;
+  /** bug reports and suggestions only: still open, or finished with */
+  state?: "open" | "closed" | null }
 export async function threads(o: ThreadQuery = {}): Promise<{ rows: Thread[]; more: boolean }> {
   let q = supabase().from("threads").select(`*, ${THREAD_AUTHOR}`);
   if (o.category) q = q.eq("category_id", o.category);
   if (o.tag) q = q.contains("tags", [o.tag]);
   if (o.author) q = q.eq("author_id", o.author);
+  if (o.state) q = q.in("status", (Object.keys(STATUS) as ThreadStatus[]).filter((k) => STATUS[k].closed === (o.state === "closed")));
   if (o.sort === "unanswered") q = q.is("answered_post_id", null).eq("reply_count", 0);
   if (o.q?.trim()) {
     const term = o.q.trim().replace(/[%_,()]/g, " ");
@@ -84,6 +103,10 @@ export async function startThread(t: { category_id: string; title: string; body:
 }
 export async function editThread(id: number, t: Partial<Pick<Thread, "title" | "body" | "tags" | "category_id">>) {
   must(await supabase().from("threads").update(t).eq("id", id));
+}
+/** The moderator's status for a bug report or a suggestion (the database refuses anyone else). */
+export async function setThreadStatus(id: number, status: ThreadStatus) {
+  must(await supabase().rpc("set_thread_status", { p_thread: id, p_status: status }));
 }
 export async function deleteThread(id: number) { must(await supabase().from("threads").delete().eq("id", id)); }
 export async function reply(p: { thread_id: number; parent_id: number | null; body: string; quote: Quote | null }): Promise<void> {

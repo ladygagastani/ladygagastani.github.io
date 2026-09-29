@@ -2,7 +2,8 @@
 /**
  * One thread of the Town Hall: the question (with a quoted passage if it came from the reader),
  * the replies as a conversation tree, upvotes, "marked as answered", editing and deleting your
- * own words, reporting, and the moderator's tools. URL: /town-hall/thread?id=<id>
+ * own words, reporting, and the moderator's tools. A bug report or suggestion shows its status, which
+ * the moderator sets here. What people you have hidden wrote folds away. URL: /town-hall/thread?id=<id>
  */
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -10,10 +11,10 @@ import { useEffect, useState } from "react";
 import { useReloadable } from "@/lib/use-load";
 import { isModerator, problem, useAccount } from "@/lib/community/client";
 import {
-  categories, deletePost, deleteThread, editPost, editThread, lockThread, markAnswered, moderate, myVotes, posts, reply, thread, tree, vote,
-  type Node, type Post, type Thread,
+  categories, deletePost, deleteThread, editPost, editThread, lockThread, markAnswered, moderate, myVotes, posts, reply, setThreadStatus, STATUS, thread, tree, vote,
+  type Node, type Post, type Thread, type ThreadStatus,
 } from "@/lib/community/data";
-import { AuthorLine, canWrite, Composer, DeleteButton, HideButton, PostText, QuoteBlock, ReportButton, SignInPrompt, VoteButton } from "./parts";
+import { AuthorLine, canWrite, Composer, DeleteButton, Folded, HideButton, PostText, QuoteBlock, ReportButton, SignInPrompt, StatusTag, VoteButton } from "./parts";
 import PullToRefresh from "@/components/PullToRefresh";
 import styles from "./Community.module.css";
 
@@ -88,17 +89,19 @@ function ThreadHead({ t, mine, mod, writer, votes, toggle, reload }: {
         <div>
           {editing ? (
             <input className={styles.titleInput} value={title} onChange={(e) => setTitle(e.target.value)} aria-label="Title" minLength={3} maxLength={160} />
-          ) : <h1>{t.title}</h1>}
+          ) : <h1>{t.title}<StatusTag status={t.status} /></h1>}
           <AuthorLine author={t.author} at={t.created_at} edited={t.edited_at} />
           {t.tags.length > 0 && <p className={styles.tagRow}>{t.tags.map((g) => <Link key={g} className={styles.tag} href={`/town-hall?tag=${encodeURIComponent(g)}`}>{g}</Link>)}</p>}
         </div>
       </div>
       {t.hidden && <p className={styles.error}>Hidden by the moderator{t.hidden_reason ? `: ${t.hidden_reason}` : ""}. Only you and the moderator can see it.</p>}
-      {t.quote && <QuoteBlock quote={t.quote} />}
-      {editing ? (
-        <Composer label="Edit your question" submitLabel="Save" initial={t.body} autoFocus onCancel={() => setEditing(false)}
-          onSubmit={async (body) => { await editThread(t.id, { body, title: title.trim() }); setEditing(false); await reload(); }} />
-      ) : <PostText text={t.body} />}
+      <Folded author={mine ? null : t.author} what="A thread">
+        {t.quote && <QuoteBlock quote={t.quote} />}
+        {editing ? (
+          <Composer label="Edit your question" submitLabel="Save" initial={t.body} autoFocus onCancel={() => setEditing(false)}
+            onSubmit={async (body) => { await editThread(t.id, { body, title: title.trim() }); setEditing(false); await reload(); }} />
+        ) : <PostText text={t.body} />}
+      </Folded>
       <div className={styles.actions}>
         {mine && !editing && !t.locked && <button type="button" className={styles.linkBtn} onClick={() => setEditing(true)}>Edit</button>}
         {(mine || mod) && <DeleteButton what="this thread and all its replies" onDelete={async () => { await deleteThread(t.id); router.push("/town-hall"); }} />}
@@ -106,9 +109,32 @@ function ThreadHead({ t, mine, mod, writer, votes, toggle, reload }: {
         {mod && <>
           <button type="button" className={styles.modBtn} onClick={async () => { await lockThread(t.id, !t.locked); await reload(); }}>{t.locked ? "Reopen" : "Close to replies"}</button>
           <HideButton hidden={t.hidden} onChange={async (hide, reason) => { await moderate("thread", t.id, hide, reason); await reload(); }} />
+          {t.status && <StatusControl t={t} reload={reload} />}
         </>}
       </div>
     </header>
+  );
+}
+
+/** The moderator's status for a bug report or a suggestion (only the statuses its board uses). */
+function StatusControl({ t, reload }: { t: Thread; reload: () => Promise<void> }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const choices = (Object.keys(STATUS) as ThreadStatus[]).filter((k) => STATUS[k].boards.includes(t.category_id));
+  return (
+    <span className={styles.statusRow}>
+      <label>
+        <span className="visually-hidden">Status</span>
+        <select aria-label="Status" value={t.status ?? "open"} disabled={busy} onChange={async (e) => {
+          setBusy(true); setError(null);
+          try { await setThreadStatus(t.id, e.target.value as ThreadStatus); await reload(); } catch (err) { setError(problem(err)); }
+          setBusy(false);
+        }}>
+          {choices.map((k) => <option key={k} value={k}>{STATUS[k].label}</option>)}
+        </select>
+      </label>
+      {error && <span className={styles.error} role="alert">{error}</span>}
+    </span>
   );
 }
 
@@ -144,11 +170,13 @@ function Reply({ p, depth, t, uid, mod, writer, votes, toggle, reload }: {
         <div className={styles.replyBody}>
           <AuthorLine author={p.author} at={p.created_at} edited={p.edited_at} extra={isAnswer ? <span className={styles.answerTag}>✓ the answer</span> : null} />
           {p.hidden && <p className={styles.error}>Hidden by the moderator{p.hidden_reason ? `: ${p.hidden_reason}` : ""}.</p>}
-          {p.quote && <QuoteBlock quote={p.quote} />}
-          {mode === "edit"
-            ? <Composer label="Edit your reply" submitLabel="Save" initial={p.body} autoFocus onCancel={() => setMode("read")}
-                onSubmit={async (body) => { await editPost(p.id, body); setMode("read"); await reload(); }} />
-            : <PostText text={p.body} />}
+          <Folded author={mine ? null : p.author} what="A reply">
+            {p.quote && <QuoteBlock quote={p.quote} />}
+            {mode === "edit"
+              ? <Composer label="Edit your reply" submitLabel="Save" initial={p.body} autoFocus onCancel={() => setMode("read")}
+                  onSubmit={async (body) => { await editPost(p.id, body); setMode("read"); await reload(); }} />
+              : <PostText text={p.body} />}
+          </Folded>
           <div className={styles.actions}>
             {writer && !t.locked && depth < 6 && <button type="button" className={styles.linkBtn} onClick={() => setMode(mode === "reply" ? "read" : "reply")}>Reply</button>}
             {(asker || mod) && <button type="button" className={styles.linkBtn} onClick={async () => { await markAnswered(t.id, isAnswer ? null : p.id); await reload(); }}>

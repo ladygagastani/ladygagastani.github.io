@@ -9,7 +9,8 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState, type ReactNode } from "react";
 import NoteField from "@/components/notes/NoteField";
 import { isBanned, problem, useAccount } from "@/lib/community/client";
-import { ago, report, type Author, type Quote } from "@/lib/community/data";
+import { ago, report, STATUS, type Author, type Quote, type ThreadStatus } from "@/lib/community/data";
+import { useHidden, useHiddenPeople } from "@/lib/community/hidden";
 import styles from "./Community.module.css";
 
 // ------------------------------------------------------------ text
@@ -82,6 +83,39 @@ export function AuthorLine({ author, at, edited, extra }: { author: Author | nul
       {extra}
     </p>
   );
+}
+
+/** A bug report's or a suggestion's status, as a small tag. */
+export function StatusTag({ status }: { status: ThreadStatus | null | undefined }) {
+  if (!status || !STATUS[status]) return null;
+  return <span className={`${styles.statusTag} ${STATUS[status].closed ? styles.statusClosed : ""}`} data-status={status}>{STATUS[status].label}</span>;
+}
+
+// ------------------------------------------------------------ people you have hidden
+/**
+ * Something written by a person this member has hidden: one quiet line with "Show it" (for this
+ * visit only). Anything by anyone else is shown as it is.
+ */
+export function Folded({ author, what, children }: { author: Author | null; what: string; children: ReactNode }) {
+  const hidden = useHidden();
+  const [open, setOpen] = useState(false);
+  if (!author || !hidden[author.id] || open) return <>{children}</>;
+  return (
+    <p className={styles.folded}>
+      {what} by {author.display_name}, whom you have hidden.{" "}
+      <button type="button" className={styles.linkBtn} onClick={() => setOpen(true)}>Show it</button>
+    </p>
+  );
+}
+
+/** On a member's page: stop (or start again) seeing what they write. Only this browser knows. */
+export function HidePersonButton({ id, name }: { id: string; name: string }) {
+  const hidden = useHidden();
+  const { hide, show } = useHiddenPeople();
+  return hidden[id]
+    ? <button type="button" className={styles.linkBtn} onClick={() => show(id)}>Show their posts again</button>
+    : <button type="button" className={styles.linkBtn} onClick={() => hide(id, name)}
+        title="Their threads leave your lists and their replies fold away. Only this browser knows; they are not told.">Hide this person&apos;s posts</button>;
 }
 
 // ------------------------------------------------------------ actions

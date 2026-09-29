@@ -1,7 +1,8 @@
 "use client";
 /**
  * A member's page: display name, what they wrote about themselves, their threads; for the
- * moderator, a pause (ban) with a reason and an end date. URL: /town-hall/member?id=<uuid>
+ * moderator, a pause (ban) with a reason and an end date. Anyone can hide what a member writes,
+ * in their own browser only. URL: /town-hall/member?id=<uuid>
  */
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -9,7 +10,7 @@ import { useEffect, useState } from "react";
 import { useReloadable } from "@/lib/use-load";
 import { isModerator, problem, useAccount } from "@/lib/community/client";
 import { ago, ban, profile, threads, type Thread } from "@/lib/community/data";
-import { PostText, ReportButton } from "./parts";
+import { HidePersonButton, PostText, ReportButton } from "./parts";
 import styles from "./Community.module.css";
 
 interface PublicProfile { id: string; display_name: string; bio: string; role: string; created_at: string; banned_until: string | null }
@@ -42,6 +43,7 @@ export default function Member() {
         <div className={styles.actions}>
           {me && <Link href="/account">Edit your profile</Link>}
           {!me && <ReportButton kind="profile" id={p.id} />}
+          {!me && <HidePersonButton id={p.id} name={p.display_name} />}
         </div>
         {mod && !me && <BanControls p={p} onDone={load} />}
       </section>

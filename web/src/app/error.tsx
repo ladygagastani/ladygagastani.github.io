@@ -5,6 +5,7 @@
  */
 import Link from "next/link";
 import { useEffect } from "react";
+import ReportBugLink from "@/components/ReportBugLink";
 
 export default function PageError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => { console.error(error); }, [error]);
@@ -19,6 +20,7 @@ export default function PageError({ error, reset }: { error: Error & { digest?: 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
         <button type="button" className="btn" onClick={reset}>Try again</button>
         <Link className="btn ghost" href="/">The Propylaea (home)</Link>
+        <ReportBugLink className="btn ghost" err={error.message}>Tell us about it</ReportBugLink>
       </div>
       <details className="muted" style={{ fontSize: "0.85rem" }}>
         <summary>What happened</summary>

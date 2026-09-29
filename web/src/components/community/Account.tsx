@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { isBanned, isModerator, problem, supabase, useAccount } from "@/lib/community/client";
 import { updateProfile } from "@/lib/community/data";
+import { useHidden, useHiddenPeople } from "@/lib/community/hidden";
 import styles from "./Community.module.css";
 
 type Mode = "in" | "join" | "forgot";
@@ -32,10 +33,11 @@ export default function Account() {
       <div className={`wrap ${styles.narrow}`}>
         {next && <p className={styles.note}>You are signed in. <Link href={next}>Go back to where you were →</Link></p>}
         {profile ? <ProfileCard key={profile.id} email={session.user.email ?? ""} onSaved={refreshProfile} /> : <p className="muted">Loading your profile…</p>}
+        <HiddenPeople />
       </div>
     );
   }
-  return <div className={`wrap ${styles.narrow}`}><SignIn next={next} /></div>;
+  return <div className={`wrap ${styles.narrow}`}><SignIn next={next} /><HiddenPeople /></div>;
 }
 
 // ------------------------------------------------------------ signing in and joining
@@ -185,6 +187,28 @@ function ProfileCard({ email, onSaved }: { email: string; onSaved: () => Promise
           It cannot be undone. Your notes and marks in this browser stay here.</p>
         <DeleteAccount />
       </details>
+    </section>
+  );
+}
+
+/** The people whose posts this browser folds away, each with "Show again". Shown only when there are some. */
+function HiddenPeople() {
+  const hidden = useHidden();
+  const show = useHiddenPeople((s) => s.show);
+  const ids = Object.keys(hidden).sort((a, b) => hidden[a].localeCompare(hidden[b]));
+  if (!ids.length) return null;
+  return (
+    <section className={styles.card} aria-labelledby="hidden-h">
+      <h2 id="hidden-h">People you have hidden</h2>
+      <p className={styles.fine}>Their threads leave your lists and their replies and arguments fold away. Only this browser knows; they are not told.</p>
+      <ul className={styles.hiddenList}>
+        {ids.map((id) => (
+          <li key={id}>
+            <Link href={`/town-hall/member?id=${id}`}>{hidden[id]}</Link>
+            <button type="button" className={styles.linkBtn} onClick={() => show(id)}>Show again</button>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

@@ -346,6 +346,16 @@ From the owner's review of the old site ("Handoff.md", item 2). The old site mad
 - With **two books side by side** (or in the floating window) each book has its own button inside its box, which scrolls only that book. On a phone, where the two books stack, there is just one.
 - Test: `e2e/back-to-top.spec.ts` (2), passing against the dev server.
 
+## Bug reports, suggestions and hiding a person (2026-09-29)
+From the owner's review of the old site (Handoff.md §11): the forum had a bug-report board with its own form, a suggestions board, and a private "hide this person".
+- **Two new boards**, "Bug reports" (`bugs`) and "Suggestions" (`ideas`), added by `supabase/migrations/20260929120000_bugs_and_ideas.sql`. A thread in either has a **status**: bugs Open / Confirmed / Fixed, ideas Open / Planned / Done, and for both Not planned / Already reported (`STATUS` in `lib/community/data.ts`). The database sets it to Open when a thread arrives (or is moved in), clears it when moved out, and only the moderator changes it (`set_thread_status`; members are not granted the column). The moderator sees a status menu under the thread; everyone sees a tag beside the title, in lists too; the two boards filter All / Open / Closed (`?state=`).
+- **The bug form** (`components/community/BugForm.tsx`, at `/town-hall/new?c=bugs`): a title, "What happened?", optional steps and what you expected, the page (filled in), a plain description of the browser such as "Edge 140 on Windows, window 1366 × 900" (`describeBrowser` in `lib/community/bug.ts`), all editable before sending. It is posted as an ordinary thread with bold headings (`bugBody`). The unsent report is kept as a draft (`mathesis:draft:bug`). Suggestions use the normal thread form ("Suggest an idea").
+- **Ways in:** "Report a bug" and "Suggest an idea" in the footer of every page (the bug link carries the page you were on, `components/ReportBugLink.tsx`); "Tell us about it" on the error page (carries the page and the error's message); the boards' own "Report a bug →" / "Suggest an idea →" buttons.
+- **Hide this person's posts** (on a member's page): kept only in this browser (`mathesis:hidden-people`, `lib/community/hidden.ts`); they are not told. Their threads leave the Town Hall's lists ("N threads from people you have hidden are not shown. Show them"), and their threads, replies and Pnyx arguments fold to one line with "Show it". The account page lists hidden people with "Show again" (signed in or not).
+- **Privacy page** updated: hidden people are stored in the browser; what a bug report contains and that it is public.
+- Tests: `bug.test.ts` (5 unit); `e2e/bug-reports.spec.ts` (4, with a pretend member and database, nothing sent to the real forum). 284 unit passed.
+- **Not live yet, and the order matters:** the database script must be run in Supabase's SQL editor **before** this is published, or sending a bug report fails (the board would not exist yet). Nothing here posts in the real forum.
+
 ## Decisions log
 | Date | Decision | Reason |
 |---|---|---|

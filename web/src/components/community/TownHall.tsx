@@ -2,15 +2,18 @@
 /**
  * The Town Hall: the forum's categories, the threads (newest activity first, or new, or most
  * valued, or still unanswered), a search, and the rules. Anyone may read; members write.
- * URL: ?c=<category>&tag=&q=&sort=
+ * In the site's own boards (bug reports, suggestions) each thread shows its status, and they can be
+ * narrowed to open or closed ones. Threads by people you have hidden leave the list (with a count).
+ * URL: ?c=<category>&tag=&q=&sort=&state=
  */
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAccount } from "@/lib/community/client";
-import { ago, categories, debates, threads, type Category, type Debate, type Thread, type ThreadQuery } from "@/lib/community/data";
+import { ago, categories, debates, SITE_BOARDS, threads, type Category, type Debate, type Thread, type ThreadQuery } from "@/lib/community/data";
+import { useHidden } from "@/lib/community/hidden";
 import { useLoad, useReloadable, type Load } from "@/lib/use-load";
-import { SignInPrompt } from "./parts";
+import { SignInPrompt, StatusTag } from "./parts";
 import PullToRefresh from "@/components/PullToRefresh";
 import styles from "./Community.module.css";
 
@@ -25,6 +28,10 @@ export default function TownHall() {
   const tag = params.get("tag");
   const q = params.get("q") ?? "";
   const sort = (SORTS.find(([s]) => s === params.get("sort"))?.[0] ?? "active") as NonNullable<ThreadQuery["sort"]>;
+  const siteBoard = c === SITE_BOARDS.bugs || c === SITE_BOARDS.ideas;
+  const state = siteBoard && (params.get("state") === "open" || params.get("state") === "closed") ? params.get("state") as "open" | "closed" : null;
+  const hidden = useHidden();
+  const [showHidden, setShowHidden] = useState(false);
   const [page, setPage] = useState(0);
   const [typed, setTyped] = useState(q);
   const go = (changes: Record<string, string | null>) => {
@@ -36,7 +43,7 @@ export default function TownHall() {
 
   const cats = useLoad("forum-categories", categories);
   // reloadable: a pull to refresh keeps the list on screen until the new one arrives
-  const listR = useReloadable(`threads|${c}|${tag}|${q}|${sort}|${page}`, () => threads({ category: c, tag, q, sort, page }));
+  const listR = useReloadable(`threads|${c}|${tag}|${q}|${sort}|${state}|${page}`, () => threads({ category: c, tag, q, sort, state, page }));
   const list: Load<Awaited<ReturnType<typeof threads>>> = listR.data !== undefined ? { state: "done", value: listR.data }
     : listR.error ? { state: "error", message: (listR.error as Error).message ?? String(listR.error) } : { state: "loading" };
   const featured = useLoad("featured-debate", async () => (await debates()).find((d) => d.featured && d.status === "open") ?? null);
@@ -44,6 +51,8 @@ export default function TownHall() {
   const catById = new Map((cats.state === "done" ? cats.value : []).map((x) => [x.id, x]));
   const current = c ? catById.get(c) : null;
   const offline = cats.state === "error" || list.state === "error";
+  const rows = list.state === "done" ? list.value.rows.filter((t) => showHidden || !hidden[t.author_id]) : [];
+  const leftOut = list.state === "done" ? list.value.rows.length - rows.length : 0;
 
   return (
     <div className={`wrap ${styles.hall}`}>
@@ -57,11 +66,11 @@ export default function TownHall() {
       {featured.state === "done" && featured.value && <FeaturedDebate d={featured.value} />}
 
       <nav className={styles.cats} aria-label="Categories">
-        <button type="button" className={styles.cat} aria-pressed={!c} onClick={() => go({ c: null })}>
+        <button type="button" className={styles.cat} aria-pressed={!c} onClick={() => go({ c: null, state: null })}>
           <b>Everything</b><span>All the conversations</span>
         </button>
         {cats.state === "done" && cats.value.map((x: Category, i) => (
-          <button key={x.id} type="button" className={styles.cat} aria-pressed={c === x.id} onClick={() => go({ c: x.id })} style={{ "--i": i } as React.CSSProperties}>
+          <button key={x.id} type="button" className={styles.cat} aria-pressed={c === x.id} onClick={() => go({ c: x.id, state: null })} style={{ "--i": i } as React.CSSProperties}>
             <b>{x.title}</b><span>{x.blurb}</span>
           </button>
         ))}
@@ -71,8 +80,14 @@ export default function TownHall() {
         <div className={styles.sorts} role="group" aria-label="Order">
           {SORTS.map(([s, label]) => <button key={s} type="button" className="chip" aria-pressed={sort === s} onClick={() => go({ sort: s === "active" ? null : s })}>{label}</button>)}
         </div>
+        {siteBoard && (
+          <div className={`${styles.sorts} ${styles.three}`} role="group" aria-label="Status">
+            {([[null, "All"], ["open", "Open"], ["closed", "Closed"]] as const).map(([k, label]) =>
+              <button key={label} type="button" className="chip" aria-pressed={state === k} onClick={() => go({ state: k })}>{label}</button>)}
+          </div>
+        )}
         {signedIn
-          ? <Link className="btn small" href={`/town-hall/new${c ? `?c=${c}` : ""}`}>Start a thread <span className="arr">→</span></Link>
+          ? <Link className="btn small" href={`/town-hall/new${c ? `?c=${c}` : ""}`}>{c === SITE_BOARDS.bugs ? "Report a bug" : c === SITE_BOARDS.ideas ? "Suggest an idea" : "Start a thread"} <span className="arr">→</span></Link>
           : null}
       </div>
       <SignInPrompt what="start a thread or reply" />
@@ -85,12 +100,18 @@ export default function TownHall() {
         </h2>
         {offline && <p className={styles.error}>The Town Hall could not be reached. It needs a connection; check the connection light at the top of the page.</p>}
         {list.state === "loading" && <p className="muted"><span className={styles.spinner} aria-hidden="true" /> Gathering the conversations…</p>}
-        {list.state === "done" && list.value.rows.length === 0 && (
-          <p className={styles.empty}>{q || tag ? "Nothing matches." : "No conversations here yet. The first one could be yours."}</p>
+        {list.state === "done" && rows.length === 0 && (
+          <p className={styles.empty}>{q || tag || state ? "Nothing matches." : leftOut ? "Nothing here but threads from people you have hidden." : "No conversations here yet. The first one could be yours."}</p>
         )}
-        {list.state === "done" && list.value.rows.length > 0 && (
+        {leftOut > 0 && (
+          <p className={styles.small}>
+            {leftOut === 1 ? "One thread" : `${leftOut} threads`} from people you have hidden {leftOut === 1 ? "is" : "are"} not shown.{" "}
+            <button type="button" className={styles.linkBtn} onClick={() => setShowHidden(true)}>Show {leftOut === 1 ? "it" : "them"}</button>
+          </p>
+        )}
+        {rows.length > 0 && (
           <ol className={styles.threads}>
-            {list.value.rows.map((t: Thread, i) => (
+            {rows.map((t: Thread, i) => (
               <li key={t.id} style={{ "--i": i } as React.CSSProperties}>
                 <div className={styles.threadScore} aria-label={`${t.score} votes`}><b>{t.score}</b><small>votes</small></div>
                 <div className={styles.threadMain}>
@@ -98,6 +119,7 @@ export default function TownHall() {
                     {t.answered_post_id && <span className={styles.answered} title="Answered">✓</span>}
                     {t.locked && <span title="Closed to new replies">🔒︎ </span>}
                     {t.title}
+                    <StatusTag status={t.status} />
                   </Link>
                   <p className={styles.threadMeta}>
                     {!c && catById.get(t.category_id) && <button type="button" className={styles.catTag} onClick={() => go({ c: t.category_id })}>{catById.get(t.category_id)!.title}</button>}

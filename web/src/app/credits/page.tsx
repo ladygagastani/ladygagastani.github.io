@@ -101,7 +101,7 @@ export default function CreditsPage() {
         <ul>
           <li>No adverts, no analytics, no trackers and no cookies.</li>
           <li>Fonts and code are served from this site, so your browser does not contact Google or any other company just to show a page.</li>
-          <li>Your settings, reading positions, bookmarks, notes, highlights, saved words, unsent forum drafts and everything else in the Treasury are stored only in this browser, on this computer. “Download my Treasury” saves a copy as a file on your computer; nothing is uploaded.</li>
+          <li>Your settings, reading positions, bookmarks, notes, highlights, saved words, unsent forum drafts and everything else in the Treasury, and the people you have hidden in the Town Hall, are stored only in this browser, on this computer. “Download my Treasury” saves a copy as a file on your computer; nothing is uploaded.</li>
           <li>When you are online and a text is not in your downloaded library, your browser fetches that text&apos;s file from GitHub (raw.githubusercontent.com).</li>
           <li>When you look up a word or open its Word Study page while online, that word (and nothing else) is sent to Wiktionary (en.wiktionary.org).</li>
           <li>Downloading the library fetches the text files from GitHub. Links to Logeion and Perseus take you to those sites only when you click them.</li>
@@ -115,6 +115,8 @@ export default function CreditsPage() {
           </li>
           <li>What you write in the Town Hall and the Pnyx, and your display name, are public. Your upvotes can be seen by others; your
             pebble in a debate cannot: only the totals are shown, once the debate closes. Reports are seen only by the moderator.</li>
+          <li>A bug report is a public thread like any other. The form fills in the page you were on and a short description of your browser
+            (its name and version, the system, and the window&apos;s size); you see both before sending and can change or remove them. Nothing else about your computer is sent.</li>
           <li>If you choose to keep your Treasury in step between devices, a copy of it is stored in your account, readable only by you.</li>
           <li>You can delete your account at any time from your account page: this removes your account, your profile, everything you
             wrote in the Town Hall and the Pnyx, your votes and your stored Treasury.</li>

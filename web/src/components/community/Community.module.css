@@ -89,7 +89,7 @@
 .sorts .chip { cursor: pointer; }
 .sorts { display: flex; flex-wrap: wrap; gap: 6px; }
 /* phones: the four orders as an even two-by-two grid */
-@media (max-width: 760px) { .sorts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex: 1 1 100%; } .sorts :global(.chip) { justify-content: center; } }
+@media (max-width: 760px) { .sorts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex: 1 1 100%; } .sorts :global(.chip) { justify-content: center; } .sorts.three { grid-template-columns: repeat(3, 1fr); } }
 .listHead { font-size: var(--step-1); margin: 0 0 8px; }
 
 .threads { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--ink); }
@@ -242,3 +242,23 @@
 .danger p { margin: 8px 0; font-size: 0.9rem; color: var(--ink-2); }
 
 @media (pointer: coarse) { .linkBtn { min-height: var(--tap); } }
+
+/* ------------------------------------------------ bug reports and suggestions */
+/* a status tag: open ones in the accent, finished ones in green (fixed, done) or plain (not planned, already reported) */
+.statusTag {
+  display: inline-block; font-family: var(--f-label); font-size: 0.74rem; letter-spacing: 0.06em; line-height: 1.5;
+  padding: 0 8px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent); white-space: nowrap; vertical-align: 0.15em;
+}
+.statusClosed { border-color: var(--ink-2); color: var(--ink-2); }
+.statusTag[data-status="fixed"], .statusTag[data-status="done"] { border-color: var(--ok); color: var(--ok); }
+.threadTitle .statusTag, .threadHead h1 .statusTag { margin-left: 8px; }
+.statusRow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.statusRow select { font: inherit; font-size: 0.85rem; padding: 3px 8px; border: 1px dashed var(--accent); border-radius: 999px; background: transparent; color: var(--accent); }
+
+.form textarea { resize: vertical; min-height: 5.5em; }
+
+/* something by a person you have hidden */
+.folded { margin: 0; padding: 6px 0; font-size: 0.9rem; color: var(--ink-2); font-style: italic; }
+.folded .linkBtn { font-style: normal; }
+.hiddenList { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.hiddenList li { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }

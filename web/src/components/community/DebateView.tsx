@@ -14,7 +14,7 @@ import {
   argue, argumentsOf, castPebble, debate, deleteArgument, editArgument, moderate, myPebble, setDebate, tally, tree,
   type Argument, type Debate, type Node, type Tally,
 } from "@/lib/community/data";
-import { AuthorLine, canWrite, Composer, DeleteButton, HideButton, PostText, QuoteBlock, ReportButton, SignInPrompt } from "./parts";
+import { AuthorLine, canWrite, Composer, DeleteButton, Folded, HideButton, PostText, QuoteBlock, ReportButton, SignInPrompt } from "./parts";
 import { OpenControls, ResultBar } from "./Pnyx";
 import styles from "./Community.module.css";
 
@@ -156,11 +156,13 @@ function ArgCard({ a, depth, uid, mod, writer, reload }: { a: Argument; depth: n
       <AuthorLine author={a.author} at={a.created_at} edited={a.edited_at}
         extra={a.cites_source ? <span className={styles.cites} title="Cites a source">❦ cites a source</span> : null} />
       {a.hidden && <p className={styles.error}>Hidden by the moderator{a.hidden_reason ? `: ${a.hidden_reason}` : ""}.</p>}
-      {a.quote && <QuoteBlock quote={a.quote} />}
-      {mode === "edit"
-        ? <Composer label="Edit your argument" submitLabel="Save" initial={a.body} autoFocus onCancel={() => setMode("read")}
-            onSubmit={async (body) => { await editArgument(a.id, body); setMode("read"); await reload(); }} />
-        : <PostText text={a.body} />}
+      <Folded author={mine ? null : a.author} what="An argument">
+        {a.quote && <QuoteBlock quote={a.quote} />}
+        {mode === "edit"
+          ? <Composer label="Edit your argument" submitLabel="Save" initial={a.body} autoFocus onCancel={() => setMode("read")}
+              onSubmit={async (body) => { await editArgument(a.id, body); setMode("read"); await reload(); }} />
+          : <PostText text={a.body} />}
+      </Folded>
       <div className={styles.actions}>
         {writer && depth < 5 && <button type="button" className={styles.linkBtn} onClick={() => setMode(mode === "reply" ? "read" : "reply")}>Reply</button>}
         {mine && mode === "read" && <button type="button" className={styles.linkBtn} onClick={() => setMode("edit")}>Edit</button>}
