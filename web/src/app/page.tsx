@@ -12,6 +12,10 @@ import StoaCards, { type StoaCard } from "@/components/StoaCards";
 import { ENTRIES, categoryOf } from "@/wiki/index";
 import { inline, plain } from "@/wiki/markup";
 import { IMAGES, srcSet } from "@/wiki/images";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { hasTranslation, type Catalog } from "@/lib/catalog";
+import { PATHS } from "@/data/paths";
 import styles from "./home.module.css";
 
 // From the Painted Stoa: each entry reduced to what a home-page card shows (its first sentences).
@@ -24,9 +28,32 @@ const STOA_CARDS: StoaCard[] = ENTRIES.map((e) => {
   };
 });
 
+// The library's size, counted from the catalogue when the site is built.
+const CATALOG = JSON.parse(readFileSync(join(process.cwd(), "public/data/catalog.json"), "utf8")) as Catalog;
+const WORKS = CATALOG.authors.flatMap((a) => a.works);
+const STATS: [number, string][] = [
+  [CATALOG.authors.length, "authors"],
+  [WORKS.length, "works"],
+  [WORKS.filter(hasTranslation).length, "with an English translation"],
+];
+
+// Each reading path's works, named from the catalogue ("Plato, Apology").
+const WORK_NAME = new Map(CATALOG.authors.flatMap((a) => a.works.map((w) => [w.id, `${a.name}, ${w.title}`] as const)));
+
 export default function Home() {
   return (
     <Page>
+      {/* ---------------------------------------------------------------- for beginners: where to start */}
+      <div className="wrap">
+        <aside className={styles.newcomer} aria-label="New to Greek?">
+          <p><span className="label">New to Greek?</span> Start in the Academy: the letters and their sounds first, then short lessons with real sentences. You need no Greek to begin.</p>
+          <div className={styles.newcomerActs}>
+            <Link className="btn small" href={AREAS.study.href} transitionTypes={["page-turn"]}>Go to the Academy <span className="arr" aria-hidden="true">→</span></Link>
+            <Link className="btn small ghost" href="/academy/alphabet" transitionTypes={["page-turn"]}>Begin with the alphabet</Link>
+          </div>
+        </aside>
+      </div>
+
       {/* ---------------------------------------------------------------- hero */}
       <section className={styles.hero} aria-labelledby="hero-title">
         <div className={`wrap ${styles.heroGrid}`}>
@@ -40,6 +67,9 @@ export default function Home() {
               <Link className="btn" href={AREAS.study.href} transitionTypes={["page-turn"]}>Start learning Greek <span className="arr" aria-hidden="true">→</span></Link>
               <Link className="btn ghost" href={AREAS.library.href} transitionTypes={["page-turn"]}>Open the library</Link>
             </div>
+            <dl className={styles.stats}>
+              {STATS.map(([n, what]) => <div key={what}><dt>{n.toLocaleString("en-GB")}</dt><dd>{what}</dd></div>)}
+            </dl>
           </div>
           <Amphora />
         </div>
@@ -83,6 +113,30 @@ export default function Home() {
             <p className="muted" data-fold-hide="">A different famous passage each day, read live from the original files. Every word can be looked up.</p>
           </div>
           <div className="rv" data-fold-hide=""><PassageOfTheDay /></div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- reading paths */}
+      <section className={styles.block} aria-labelledby="paths-title">
+        <div className="wrap">
+          <div className={`${styles.secHead} rv`}>
+            <div><span className="label">{AREAS.library.name} · {AREAS.library.english}</span>
+              <h2 id="paths-title" className={styles.h2}>Where to read next</h2></div>
+            <p className="muted">Six short paths through the library, each in a sensible order. Every step opens the Greek with its English beside it.</p>
+          </div>
+          <ul className={`${styles.paths} rv`}>
+            {PATHS.map((p) => (
+              <li key={p.id} className={styles.pathCard}>
+                <h3>{p.title}</h3>
+                <p className={styles.pathBlurb}>{p.blurb}</p>
+                <ol>
+                  {p.steps.map(([w, note]) => (
+                    <li key={w}><Link href={`/read?w=${w}`} transitionTypes={["page-turn"]}><b>{WORK_NAME.get(w)}</b></Link><span>{note}</span></li>
+                  ))}
+                </ol>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

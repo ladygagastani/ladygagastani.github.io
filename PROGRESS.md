@@ -306,6 +306,12 @@ The owner asked for a more modern Library after the design of their other site (
 - Helpers: `node scripts/peek.mjs <out.png> <url> [wide|phone] [light|dark] ["<js>"]` photographs one screen after an optional scroll (the browser pane's screenshots go blank on very long pages).
 - Tests: `e2e/library.spec.ts` (5); `e2e/author.spec.ts` updated for the new list.
 
+## Home page: a way in for beginners, and reading paths (2026-09-29)
+- **"New to Greek?" strip** above the opening (Academy and alphabet buttons; on phones only the sentence, since the opening's own button is a screen away), and the **library's size** (authors, works, works with an English translation) under the opening's buttons. The counts are read from `catalog.json` when the site is built, so they can never drift.
+- **"Where to read next"**: six reading paths of five works each (First steps in Greek prose; Epic; The Athenian stage; Philosophy; Koine; History), in `web/src/data/paths.ts`. Three columns on a wide screen, two on a tablet, and a row of cards to swipe on a phone. Every step opens the reader. `paths.test.ts` checks that every step is a real work with a Greek edition **and an English translation** (two steps were swapped for that reason: the Argonautica and Marcus Aurelius have no translation in the collection).
+- Checked in the browser at desktop and phone width (no sideways overflow, no console errors); `npm test` 246 passed. Not yet run: `npm run e2e`, and a production build (the dev server on port 3000 was left running, and building would disturb it).
+- Not committed to `main` on the live site until the owner asks for a push.
+
 ## Decisions log
 | Date | Decision | Reason |
 |---|---|---|
