@@ -354,7 +354,7 @@ From the owner's review of the old site (Handoff.md §11): the forum had a bug-r
 - **Hide this person's posts** (on a member's page): kept only in this browser (`mathesis:hidden-people`, `lib/community/hidden.ts`); they are not told. Their threads leave the Town Hall's lists ("N threads from people you have hidden are not shown. Show them"), and their threads, replies and Pnyx arguments fold to one line with "Show it". The account page lists hidden people with "Show again" (signed in or not).
 - **Privacy page** updated: hidden people are stored in the browser; what a bug report contains and that it is public.
 - Tests: `bug.test.ts` (5 unit); `e2e/bug-reports.spec.ts` (4, with a pretend member and database, nothing sent to the real forum). 284 unit passed.
-- **Not live yet, and the order matters:** the database script must be run in Supabase's SQL editor **before** this is published, or sending a bug report fails (the board would not exist yet). Nothing here posts in the real forum.
+- **The database script was run on 2026-09-29** (the owner signed in; the editor's text matched the file's SHA-256 before Run; "Success"). Checked afterwards from outside: both boards are listed, the status column answers, and a visitor calling `set_thread_status` is refused. Nothing was posted in the real forum.
 
 ## Decisions log
 | Date | Decision | Reason |
