@@ -9,8 +9,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAccount } from "@/lib/community/client";
 import { ago, categories, debates, threads, type Category, type Debate, type Thread, type ThreadQuery } from "@/lib/community/data";
-import { useLoad } from "@/lib/use-load";
+import { useLoad, useReloadable, type Load } from "@/lib/use-load";
 import { SignInPrompt } from "./parts";
+import PullToRefresh from "@/components/PullToRefresh";
 import styles from "./Community.module.css";
 
 const SORTS: [NonNullable<ThreadQuery["sort"]>, string][] = [["active", "Latest activity"], ["new", "Newest"], ["top", "Most valued"], ["unanswered", "Unanswered"]];
@@ -34,7 +35,10 @@ export default function TownHall() {
   };
 
   const cats = useLoad("forum-categories", categories);
-  const list = useLoad(`threads|${c}|${tag}|${q}|${sort}|${page}`, () => threads({ category: c, tag, q, sort, page }));
+  // reloadable: a pull to refresh keeps the list on screen until the new one arrives
+  const listR = useReloadable(`threads|${c}|${tag}|${q}|${sort}|${page}`, () => threads({ category: c, tag, q, sort, page }));
+  const list: Load<Awaited<ReturnType<typeof threads>>> = listR.data !== undefined ? { state: "done", value: listR.data }
+    : listR.error ? { state: "error", message: (listR.error as Error).message ?? String(listR.error) } : { state: "loading" };
   const featured = useLoad("featured-debate", async () => (await debates()).find((d) => d.featured && d.status === "open") ?? null);
   const signedIn = !!useAccount((s) => s.session);
   const catById = new Map((cats.state === "done" ? cats.value : []).map((x) => [x.id, x]));
@@ -43,6 +47,7 @@ export default function TownHall() {
 
   return (
     <div className={`wrap ${styles.hall}`}>
+      <PullToRefresh onPull={listR.reload} busy={listR.busy} />
       {featured.state === "done" && featured.value && <FeaturedDebate d={featured.value} />}
 
       <nav className={styles.cats} aria-label="Categories">
@@ -58,7 +63,7 @@ export default function TownHall() {
 
       <div className={styles.toolbar}>
         <form role="search" onSubmit={(e) => { e.preventDefault(); go({ q: typed.trim() || null }); }} className={styles.search}>
-          <input type="search" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder="Search the Town Hall" aria-label="Search the Town Hall" />
+          <input enterKeyHint="search" type="search" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder="Search the Town Hall" aria-label="Search the Town Hall" />
           <button type="submit" className="chip">Search</button>
         </form>
         <div className={styles.sorts} role="group" aria-label="Order">

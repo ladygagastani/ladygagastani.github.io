@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSettings, prefersReducedMotion } from "@/lib/settings";
 import styles from "./Amphora.module.css";
 
 /**
  * A neck-amphora turned on a lathe in WebGL, with its decoration painted procedurally in the
  * black-figure manner: black gloss on clay, with added red. It turns slowly and can be dragged.
+ * On phones it also turns as the phone is tilted, where the phone allows it (an iPhone asks first).
  * three.js is loaded only when this component mounts, so other pages never download it.
  */
 export default function Amphora() {
@@ -14,6 +15,31 @@ export default function Amphora() {
   const motion = useSettings((s) => s.motion);
   const reduceRef = useRef(false);
   useEffect(() => { reduceRef.current = prefersReducedMotion(motion); }, [motion]);
+
+  // tilting the phone left or right turns the vase that way (on top of its own slow turn)
+  const tiltRef = useRef(0);
+  const [tilt, setTilt] = useState<"off" | "ask" | "on">("off");
+  const stopTilt = useRef<() => void>(() => {});
+  const listenTilt = () => {
+    const on = (e: DeviceOrientationEvent) => {
+      if (e.gamma === null) return;
+      tiltRef.current = Math.max(-1, Math.min(1, e.gamma / 40));
+      setTilt((t) => (t === "on" ? t : "on"));
+    };
+    addEventListener("deviceorientation", on);
+    stopTilt.current = () => removeEventListener("deviceorientation", on);
+  };
+  useEffect(() => {
+    if (typeof DeviceOrientationEvent === "undefined" || !matchMedia("(pointer: coarse)").matches) return;
+    const D = DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> };
+    if (typeof D.requestPermission === "function") setTilt("ask");
+    else listenTilt();
+    return () => stopTilt.current();
+  }, []);
+  const askTilt = () => {
+    const D = DeviceOrientationEvent as unknown as { requestPermission: () => Promise<string> };
+    D.requestPermission().then((r) => { if (r === "granted") listenTilt(); else setTilt("off"); }, () => setTilt("off"));
+  };
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -157,7 +183,7 @@ export default function Amphora() {
       const ro = new ResizeObserver(resize); ro.observe(stage);
 
       const SPEED = 0.0045;
-      let rot = -0.6, vel = reduceRef.current ? 0 : SPEED, rise = reduceRef.current ? 1 : 0, visible = true, raf = 0;
+      let rot = -0.6, vel = reduceRef.current ? 0 : SPEED, rise = reduceRef.current ? 1 : 0, visible = true, raf = 0, tilted = 0;
       let drag: { x: number; rot: number } | null = null;
       const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
       io.observe(stage);
@@ -176,7 +202,8 @@ export default function Amphora() {
         if (!drag) { vel += ((reduce ? 0 : SPEED) - vel) * 0.02; rot += vel; }
         rise = reduce ? 1 : Math.min(1, rise + 0.012);
         const e = 1 - Math.pow(1 - rise, 3);
-        vase.rotation.y = rot; vase.position.y = -0.35 * (1 - e); vase.scale.setScalar(0.9 + 0.1 * e);
+        tilted += (tiltRef.current * 0.9 - tilted) * 0.06;   // eased, so a shaky hand does not jolt it
+        vase.rotation.y = rot + tilted; vase.position.y = -0.35 * (1 - e); vase.scale.setScalar(0.9 + 0.1 * e);
         renderer.render(scene, camera);
       };
       const start = () => { if (disposed) return; paint(); texture.needsUpdate = true; frame(); };
@@ -195,7 +222,10 @@ export default function Amphora() {
   return (
     <figure className={styles.figure}>
       <div ref={stageRef} className={styles.stage}><div className={styles.shadow} aria-hidden="true" /></div>
-      <figcaption className={styles.cap}>A neck-amphora in the black-figure style: black gloss painted on orange clay. Drag to turn it.</figcaption>
+      <figcaption className={styles.cap}>
+        A neck-amphora in the black-figure style: black gloss painted on orange clay. Drag to turn it{tilt === "on" ? ", or tilt your phone" : ""}.
+        {tilt === "ask" && <> <button type="button" className={styles.tiltBtn} onClick={askTilt}>Turn it by tilting the phone</button></>}
+      </figcaption>
     </figure>
   );
 }

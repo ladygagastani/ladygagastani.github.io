@@ -527,3 +527,9 @@ p.translit { margin: -0.3em 0 0.8em; }
 /* "Fit lines": whole verse lines, the Greek shrunk to the longest line on the page (--fit, measured in Reader.tsx) */
 .fitLines .grc { font-size: calc(var(--greek-size) * var(--fit, 1)); }
 .fitLines:not([data-fit-wrap]) .lt { white-space: nowrap; }
+
+/* phones: the passage numbers (which open the passage's actions) and the breadcrumbs are finger-sized */
+@media (max-width: 760px) {
+  .ref button[data-row] { min-height: var(--tap); min-width: var(--tap); text-align: left; }
+  .crumbs a { display: inline-flex; align-items: center; min-height: var(--tap); min-width: var(--tap); padding-block: 0; }
+}

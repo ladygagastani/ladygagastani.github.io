@@ -20,19 +20,20 @@ export function useLoad<T>(key: string, fn: () => Promise<T>, enabled = true): L
  * Like useLoad, and reloadable: reload() fetches again and keeps showing the last result until the
  * new one arrives (so a vote or a new reply does not blank the page).
  */
-export function useReloadable<T>(key: string, fn: () => Promise<T>, enabled = true): { data: T | undefined; error: unknown; reload: () => void } {
+export function useReloadable<T>(key: string, fn: () => Promise<T>, enabled = true): { data: T | undefined; error: unknown; reload: () => void; busy: boolean } {
   const [ver, setVer] = useState(0);
-  const [st, setSt] = useState<{ key: string; data?: T; error?: unknown }>({ key: "" });
+  const [st, setSt] = useState<{ key: string; data?: T; error?: unknown; ver?: number }>({ key: "" });
   useEffect(() => {
     if (!enabled) return;
     let live = true;
     fn().then(
-      (data) => { if (live) setSt({ key, data }); },
-      (error: unknown) => { if (live) setSt((s) => ({ key, data: s.key === key ? s.data : undefined, error })); },
+      (data) => { if (live) setSt({ key, data, ver }); },
+      (error: unknown) => { if (live) setSt((s) => ({ key, data: s.key === key ? s.data : undefined, error, ver })); },
     );
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, ver, enabled]);
   const same = st.key === key;
-  return { data: same ? st.data : undefined, error: same ? st.error : undefined, reload: () => setVer((v) => v + 1) };
+  // busy: the newest request (a reload included) has not answered yet
+  return { data: same ? st.data : undefined, error: same ? st.error : undefined, reload: () => setVer((v) => v + 1), busy: !same || st.ver !== ver };
 }

@@ -146,13 +146,16 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
   // ---- pointer handling: drag to pan, two fingers to pinch, wheel to zoom
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const moved = useRef(0);
+  // touch screens are handled below (two fingers move the map, one scrolls the page); this is the mouse and pen
   const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "touch") return;
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     moved.current = 0;
     cancelAnimationFrame(anim.current);
   };
   const onPointerMove = (e: React.PointerEvent) => {
+    if (e.pointerType === "touch") return;
     const prev = pointers.current.get(e.pointerId);
     if (!prev) return;
     const rect = stage.current!.getBoundingClientRect();
@@ -171,6 +174,49 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
   };
   const onPointerUp = (e: React.PointerEvent) => { pointers.current.delete(e.pointerId); };
+
+  // Touch: two fingers move and zoom the map; one finger scrolls the page, so the page can never get stuck
+  // on the map. The first couple of times a finger drags across it alone, a hint says so.
+  const [hint, setHint] = useState(false);
+  useEffect(() => {
+    const el = stage.current;
+    if (!el) return;
+    let last: { x: number; y: number; d: number } | null = null, one: { x: number; y: number } | null = null, hinted = false, timer = 0;
+    const mid = (t: TouchList) => ({ x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2, d: Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) });
+    const start = (e: TouchEvent) => {
+      moved.current = 0;
+      cancelAnimationFrame(anim.current);
+      if (e.touches.length === 2) { last = mid(e.touches); one = null; }
+      else if (e.touches.length === 1) { one = { x: e.touches[0].clientX, y: e.touches[0].clientY }; hinted = false; }
+    };
+    const move = (e: TouchEvent) => {
+      if (e.touches.length === 2 && last) {
+        e.preventDefault();
+        const m = mid(e.touches), r = el.getBoundingClientRect(), v = viewRef.current;
+        setView(clampView({ k: v.k, tx: v.tx + m.x - last.x, ty: v.ty + m.y - last.y }));
+        if (last.d > 0) zoomAt(m.d / last.d, m.x - r.left, m.y - r.top);
+        moved.current += 10;
+        last = m;
+      } else if (e.touches.length === 1 && one && !hinted) {
+        const dx = e.touches[0].clientX - one.x, dy = e.touches[0].clientY - one.y;
+        if (Math.hypot(dx, dy) < 24) return;
+        hinted = true;
+        let n = 0;
+        try { n = Number(localStorage.getItem("mathesis:map-hint")) || 0; localStorage.setItem("mathesis:map-hint", String(n + 1)); } catch { /* ignore */ }
+        if (n < 2) { setHint(true); clearTimeout(timer); timer = window.setTimeout(() => setHint(false), 2200); }
+      }
+    };
+    const end = (e: TouchEvent) => { if (e.touches.length < 2) last = null; if (!e.touches.length) one = null; };
+    el.addEventListener("touchstart", start, { passive: true });
+    el.addEventListener("touchmove", move, { passive: false });
+    el.addEventListener("touchend", end);
+    el.addEventListener("touchcancel", end);
+    return () => {
+      clearTimeout(timer);
+      el.removeEventListener("touchstart", start); el.removeEventListener("touchmove", move);
+      el.removeEventListener("touchend", end); el.removeEventListener("touchcancel", end);
+    };
+  }, [clampView, zoomAt]);
   useEffect(() => {
     const el = stage.current;
     if (!el) return;
@@ -251,6 +297,7 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
           onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}
           onDoubleClick={(e) => { const r = stage.current!.getBoundingClientRect(); zoomAt(2, e.clientX - r.left, e.clientY - r.top, true); }}
           onKeyDown={onKey}>
+          {hint && <p className={styles.touchHint} role="status">Use two fingers to move the map</p>}
           {w > 0 && (
             <svg width={w} height={h} className={styles.svg} aria-hidden="true">
               <defs>
@@ -300,7 +347,7 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
 
       <aside className={styles.panel} aria-live="polite">
         <div className={styles.search}>
-          <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find a place: Σπάρτη, Delos…" aria-label="Find a place" />
+          <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find a place: Σπάρτη, Delos…" aria-label="Find a place" />
           {found.length > 0 && (
             <ul className={styles.found}>
               {found.map((p) => (

@@ -23,16 +23,21 @@ for (const path of paths) {
       if ((e instanceof SVGElement && e.ownerSVGElement) || !visible(e) || /absolute|fixed/.test(getComputedStyle(e).position) || spill.some((s) => s.contains(e))) continue;
       const w = e.closest(".wrap"), wr = w.getBoundingClientRect(), cs = getComputedStyle(w), r = e.getBoundingClientRect();
       const out = r.right > wr.right - parseFloat(cs.paddingRight) + 1.5 || r.left < wr.left + parseFloat(cs.paddingLeft) - 1.5;
-      if (out && !clipped(e, w) && !e.closest("header")) spill.push(e);  // the header's menu reaches into the margin on purpose
+      // the header's menu, and rows of cards to swipe (.snap-row), reach into the margin on purpose
+      if (out && !clipped(e, w) && !e.closest("header, .snap-row")) spill.push(e);
     }
     wide.push(...spill.slice(0, 6).map((e) => `${desc(e)} (into the margin)`));
     const small = [...document.querySelectorAll("a[href], button, input:not([type=hidden]), select, textarea, [role=button], [role=tab]")]
       .filter((e) => visible(e) && !e.closest("[data-decorative]")).filter((e) => { const r = e.getBoundingClientRect(); return r.height < TAP - 0.5 || r.width < TAP - 0.5; })
       // an inline link inside a sentence is exempt, as WCAG allows
       .filter((e) => !(e.tagName === "A" && getComputedStyle(e).display === "inline"))
+      // a tick box or radio button inside its label is tapped by the whole label
+      .filter((e) => !(e.tagName === "INPUT" && /checkbox|radio/.test(e.type) && e.closest("label") && e.closest("label").getBoundingClientRect().height >= TAP - 0.5))
+      // a touch area stretched by ::after (chips, whole-row links) counts as the target
+      .filter((e) => { const a = getComputedStyle(e, "::after"); if (a.content === "none" || a.position !== "absolute") return true; const box = e.closest("li, tr") ?? e; const r = e.getBoundingClientRect(); return !(r.height + 8 >= TAP - 0.5 || box.getBoundingClientRect().height >= TAP - 0.5); })
       .slice(0, TAP > 24 ? 40 : 8).map((e) => { const r = e.getBoundingClientRect(); return `${desc(e)} ${Math.round(r.width)}x${Math.round(r.height)}`; });
     const tiny = new Set();
-    for (const e of document.querySelectorAll("body *")) { if (!visible(e) || ![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) continue; const fs = parseFloat(getComputedStyle(e).fontSize); if (fs < 11.5) tiny.add(`${fs.toFixed(1)}px ${desc(e)}`); }
+    for (const e of document.querySelectorAll("body *")) { if (e instanceof SVGElement || !visible(e) || ![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) continue; const fs = parseFloat(getComputedStyle(e).fontSize); if (fs < 11.5) tiny.add(`${fs.toFixed(1)}px ${desc(e)}`); }
     return { overflow: document.documentElement.scrollWidth - W, wide, small, tiny: [...tiny].slice(0, 6) };
   }, TAP);
   const bad = r.overflow > 1 || r.wide.length || r.small.length || r.tiny.length;

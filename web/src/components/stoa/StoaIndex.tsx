@@ -29,7 +29,7 @@ export default function StoaIndex() {
   return (
     <div className={`wrap ${styles.index}`}>
       <div className={styles.searchRow}>
-        <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${ENTRIES.length === 1 ? "the entry" : `${ENTRIES.length} entries`} in full: Melos, plague, ostracism…`} aria-label="Search the Painted Stoa" />
+        <input enterKeyHint="search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${ENTRIES.length === 1 ? "the entry" : `${ENTRIES.length} entries`} in full: Melos, plague, ostracism…`} aria-label="Search the Painted Stoa" />
       </div>
       {n && (
         <section className={styles.found} aria-live="polite">

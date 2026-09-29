@@ -29,8 +29,15 @@
   background: var(--map-land); animation: unroll 0.9s var(--ease) both;
 }
 .stage:active { cursor: grabbing; }
-/* phones: the map takes every drag on it, so it leaves room above and below where a finger scrolls the page */
-@media (pointer: coarse) and (max-width: 760px) { .stage { height: 58vh; height: 58svh; min-height: 340px; } }
+/* touch screens: one finger scrolls the page (two move the map: Periplus.tsx); phones keep some page in view */
+@media (pointer: coarse) { .stage { touch-action: pan-y; cursor: auto; } }
+@media (pointer: coarse) and (max-width: 760px) { .stage { height: 62vh; height: 62svh; min-height: 340px; } }
+.touchHint {
+  position: absolute; z-index: 5; left: 50%; top: 50%; translate: -50% -50%; margin: 0; padding: 10px 16px; border-radius: 999px; pointer-events: none;
+  background: var(--inv-bg); color: var(--inv-fg); font-family: var(--f-label); letter-spacing: 0.03em; white-space: nowrap;
+  animation: hint-in 0.3s var(--ease);
+}
+@keyframes hint-in { from { opacity: 0; scale: 0.92; } }
 .stage:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 @keyframes unroll { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
 .svg { display: block; user-select: none; }
@@ -110,3 +117,9 @@
 .spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--rule); border-top-color: var(--accent); animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 /* reduced motion is handled site-wide (globals.css), honouring the reader's own setting */
+
+/* phones: finger-sized controls and rows (Phase 10) */
+@media (max-width: 760px) {
+  .controls button { width: var(--tap); height: var(--tap); }
+  .found button, .top button { min-height: var(--tap); }
+}

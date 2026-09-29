@@ -154,7 +154,7 @@ export default function ScrollCase() {
           </div>
           {scope === "authors" && (
             <div className={styles.picker}>
-              <input type="search" id="scrollcase-author-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find an author" aria-label="Find an author" />
+              <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} type="search" id="scrollcase-author-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find an author" aria-label="Find an author" />
               <ul>
                 {authors.map((a) => (
                   <li key={a.id}><label className={styles.check}><input type="checkbox" checked={picked.has(a.id)}

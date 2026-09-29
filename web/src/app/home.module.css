@@ -105,3 +105,35 @@
 .forumMotion small { font-family: var(--f-label); letter-spacing: 0.05em; color: var(--accent); }
 @media (max-width: 980px) { .forum { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .forumMotion { transition: none; } .forumMotion:hover { transform: none; } }
+
+/* Phones: each section folds away from the button beside its title, remembered (HomeFold.tsx) */
+.foldRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.foldBtn { display: none; }
+@media (max-width: 760px) {
+  .foldBtn {
+    display: grid; place-items: center; flex: none; width: var(--tap); height: var(--tap); padding: 0;
+    border: 1px solid var(--rule); border-radius: 50%; background: transparent; color: var(--ink-2);
+  }
+  .foldBtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; transition: transform 0.3s var(--ease); }
+  .foldBtn[aria-expanded="false"] svg { transform: rotate(-90deg); }
+  /* the title's block takes the full width, so every fold button sits at the right edge */
+  .secHead > div:first-child { flex: 1 1 100%; }
+  .foldRow .h2 { margin-top: 6px; }
+  :global(html[data-folds~="learn"]) .block[data-fold="learn"] [data-fold-hide],
+  :global(html[data-folds~="passage"]) .block[data-fold="passage"] [data-fold-hide],
+  :global(html[data-folds~="stoa"]) .block[data-fold="stoa"] [data-fold-hide],
+  :global(html[data-folds~="forum"]) .block[data-fold="forum"] [data-fold-hide],
+  :global(html[data-folds~="offline"]) .block[data-fold="offline"] [data-fold-hide] { display: none; }
+  :global(html[data-folds~="learn"]) .block[data-fold="learn"],
+  :global(html[data-folds~="passage"]) .block[data-fold="passage"],
+  :global(html[data-folds~="stoa"]) .block[data-fold="stoa"],
+  :global(html[data-folds~="forum"]) .block[data-fold="forum"],
+  :global(html[data-folds~="offline"]) .block[data-fold="offline"] { padding-block: 18px; }
+}
+@media (max-width: 760px) {
+  :global(html[data-folds~="learn"]) .block[data-fold="learn"] .secHead,
+  :global(html[data-folds~="passage"]) .block[data-fold="passage"] .secHead,
+  :global(html[data-folds~="stoa"]) .block[data-fold="stoa"] .secHead,
+  :global(html[data-folds~="forum"]) .block[data-fold="forum"] .secHead,
+  :global(html[data-folds~="offline"]) .block[data-fold="offline"] .secHead { margin-bottom: 0; }
+}

@@ -20,7 +20,7 @@ export default function StoaCards({ cards, styles }: { cards: StoaCard[]; styles
   const arch = pick(cards.filter((c) => c.catId === "archaeology"), day, 1);
   const other = pick(cards.filter((c) => c.catId !== "dark" && c.catId !== "archaeology"), day, 7);
   return (
-    <div className={styles.cards}>
+    <div className={`${styles.cards} snap-row`}>
       {[dark, other, arch].filter((c): c is StoaCard => !!c).map((c) => (
         <Link key={c.slug} href={`/stoa/${c.slug}`} className={`${styles.card} ${styles.cardLink} rv`} transitionTypes={["page-turn"]}>
           <span className="label">{c.cat}</span>

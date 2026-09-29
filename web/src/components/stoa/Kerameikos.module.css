@@ -56,9 +56,10 @@
 .scale path { stroke: var(--ink); stroke-width: 1.6; fill: none; }
 .note { font-family: var(--f-label); font-size: 15px; letter-spacing: 0.06em; fill: var(--ink-2); paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
 
-.ctx circle { fill: var(--surface); stroke: var(--ink); stroke-width: 1.6; transition: fill 0.2s; }
+.ctx .ctxHit { fill: transparent; stroke: none; }
+.ctx circle:not(.ctxHit) { fill: var(--surface); stroke: var(--ink); stroke-width: 1.6; transition: fill 0.2s; }
 .ctx text { font-family: var(--f-display); font-size: 17px; fill: var(--ink); pointer-events: none; }
-.ctx:hover circle, .ctx:focus-visible circle { fill: var(--accent); }
+.ctx:hover circle:not(.ctxHit), .ctx:focus-visible circle:not(.ctxHit) { fill: var(--accent); }
 .ctx:hover text, .ctx:focus-visible text { fill: var(--accent-ink); }
 .ctx { cursor: pointer; outline: none; }
 

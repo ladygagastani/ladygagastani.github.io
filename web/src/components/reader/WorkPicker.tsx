@@ -33,7 +33,7 @@ export default function WorkPicker({ onPick, onClose }: { onPick: (work: string)
           <h2 id="picker-title">Open a second book</h2>
           <button type="button" className={styles.x} onClick={() => ref.current?.close()} aria-label="Close">×</button>
         </div>
-        <input id="picker-search" type="search" className={styles.pickerInput} value={q} onChange={(e) => setQ(e.target.value)}
+        <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} id="picker-search" type="search" className={styles.pickerInput} value={q} onChange={(e) => setQ(e.target.value)}
           placeholder="Search authors and works (English or Greek)" aria-label="Search for a work" autoFocus />
         <ul className={styles.pickerList}>
           {results.map((r) => (

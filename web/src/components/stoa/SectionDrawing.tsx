@@ -100,6 +100,8 @@ export default function SectionDrawing({ layers }: { layers: Layer[] }) {
         {/* the layers' numbers, as on a real drawing; each links to its part of the page */}
         {layers.map((l, i) => (
           <a key={l.id} href={`#${l.id}`} className={styles.ctx} aria-label={`Layer ${i + 1}: ${l.title}`}>
+            {/* a wider circle, unseen, so a finger can find the number on a small screen */}
+            <circle cx={labelX} cy={mid(i, labelX)} r={36} className={styles.ctxHit} />
             <circle cx={labelX} cy={mid(i, labelX)} r={15} />
             <text x={labelX} y={mid(i, labelX) + 5} textAnchor="middle">{i + 1}</text>
           </a>

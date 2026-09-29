@@ -103,4 +103,5 @@ export const BOOT_SCRIPT = `(function(){try{var s=JSON.parse(localStorage.getIte
 if(s.theme==="light"||s.theme==="dark"){e.setAttribute("data-theme",s.theme);var m=document.createElement("meta");m.id=${JSON.stringify(THEME_META)};m.name="theme-color";m.content=${JSON.stringify(THEME_COLOURS)}[s.theme];document.head.prepend(m);}
 if(s.motion==="reduce"||s.motion==="full")e.setAttribute("data-motion",s.motion);
 if(s.greekSize)e.style.setProperty("--greek-size",s.greekSize+"rem");
-if(s.leading)e.style.setProperty("--reading-leading",String(s.leading));}catch(_){}})();`;
+if(s.leading)e.style.setProperty("--reading-leading",String(s.leading));}catch(_){}
+try{var f=JSON.parse(localStorage.getItem("mathesis:folds")||"[]");if(f.length)document.documentElement.setAttribute("data-folds",f.join(" "));}catch(_){}})();`;

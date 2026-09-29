@@ -78,7 +78,7 @@ export default function Tables() {
   return (
     <div className={styles.tables}>
       <div className={styles.tablesTools}>
-        <input id="tables-search" type="search" value={q} onChange={(e) => setQ(e.target.value)} className={styles.searchInput}
+        <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} id="tables-search" type="search" value={q} onChange={(e) => setQ(e.target.value)} className={styles.searchInput}
           placeholder="Find a form, e.g. λογου (accents optional)" aria-label="Find a form" />
         <div className={styles.seg} role="radiogroup" aria-label="Show">
           {GROUPS.map(([g, l]) => <button key={g} type="button" role="radio" aria-checked={group === g} onClick={() => setGroup(g)}>{l}</button>)}

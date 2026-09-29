@@ -22,6 +22,7 @@ import ItemPanel from "./ItemPanel";
 import Facts from "./Facts";
 import Method from "./Method";
 import { fmt, useLoad, type Links, type Shown } from "./shared";
+import { useSwipeNav } from "@/lib/use-swipe-nav";
 import styles from "./Census.module.css";
 
 export default function Census({ links }: { links: Links }) {
@@ -81,9 +82,14 @@ function CensusView({ meta, links }: { meta: CensusMeta; links: Links }) {
 
   const setScope = (s: Scope, prefix = "") => go([...scopeParams(s, prefix)]);
   const shelf = cat.shelf;
+  // phones: a sideways swipe moves to the next or previous list on this shelf (gods, people, places…)
+  const swipe = useSwipeNav((d) => {
+    const row = cats.filter((c) => c.shelf === shelf), i = row.findIndex((c) => c.id === cat.id) + d;
+    if (i >= 0 && i < row.length) go([["c", row[i].id], ["i", null]]);
+  });
 
   return (
-    <div className={`wrap ${styles.census}`}>
+    <div className={`wrap ${styles.census}`} {...swipe}>
       <Tally meta={meta} />
 
       <nav className={styles.shelves} aria-label="What to count">

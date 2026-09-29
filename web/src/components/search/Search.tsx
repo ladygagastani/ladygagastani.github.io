@@ -20,6 +20,7 @@ import { allMarks, allPageNotes, type Mark, type PageNote } from "@/lib/annotati
 import { useAcademy } from "@/lib/academy";
 import type { TeiDoc } from "@/lib/tei/types";
 import GreekKeyboard from "./GreekKeyboard";
+import { useSwipeNav } from "@/lib/use-swipe-nav";
 import styles from "./Search.module.css";
 import { stoaLabel, useStoaTitles } from "@/wiki/useTitles";
 
@@ -89,6 +90,11 @@ export default function Search() {
   }, [idx, meta, scope.a, scope.w, scope.g, scope.p, scope.d]);
 
   const refs: RefHit[] = useMemo(() => (idx && abbrevs && q && /\d/.test(q) ? readReference(q, idx, abbrevs) : []), [idx, abbrevs, q]);
+  // phones: a sideways swipe over the results moves to the next or previous kind of search
+  const swipe = useSwipeNav((d) => {
+    const i = TABS.findIndex((t) => t.id === tab) + d;
+    if (i >= 0 && i < TABS.length) go({ m: TABS[i].id === "forms" ? null : TABS[i].id, lem: null }, true);
+  });
 
   return (
     <div className={`wrap ${styles.page}`}>
@@ -113,6 +119,7 @@ export default function Search() {
         </section>
       )}
 
+      <div {...swipe}>
       {tab === "library" ? (
         <LibraryResults q={q} idx={idx} />
       ) : (
@@ -133,6 +140,7 @@ export default function Search() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -79,7 +79,7 @@ export default function AuthorsSection({ t }: { t: TreasuryState }) {
       </div>
       <div className={styles.filters}>
         <span className={styles.pick}>
-          <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find an author to write about" aria-label="Find an author"
+          <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find an author to write about" aria-label="Find an author"
             onKeyDown={(e) => { if (e.key === "Enter" && matches[0]) open(matches[0].id); }} />
           {matches.length > 0 && (
             <ul className={styles.pickList}>

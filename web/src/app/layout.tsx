@@ -26,6 +26,9 @@ const alegreyaSC = Alegreya_Sans_SC({ weight: ["500", "700"], subsets: ["latin"]
 export const metadata: Metadata = {
   title: { default: `${SITE.latin} · ${SITE.greek}`, template: `%s · ${SITE.latin}` },
   description: SITE.tagline,
+  // added to an iPhone's home screen, it opens as an app of its own (the manifest says the same for other phones)
+  appleWebApp: { capable: true, title: SITE.latin, statusBarStyle: "default" },
+  icons: { apple: "/apple-touch-icon.png" },
 };
 
 export const viewport: Viewport = {

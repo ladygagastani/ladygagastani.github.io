@@ -77,3 +77,9 @@
   .filters .small { grid-column: 1 / -1; }
   .filters > :global(.chip) { justify-self: start; }
 }
+
+/* phones: every row of the list is finger-sized (Phase 10) */
+@media (max-width: 760px) {
+  .authors button { min-height: var(--tap); align-items: center; }
+  .workLink { align-self: stretch; min-height: var(--tap); align-content: center; }
+}

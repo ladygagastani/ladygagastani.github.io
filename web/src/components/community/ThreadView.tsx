@@ -14,6 +14,7 @@ import {
   type Node, type Post, type Thread,
 } from "@/lib/community/data";
 import { AuthorLine, canWrite, Composer, DeleteButton, HideButton, PostText, QuoteBlock, ReportButton, SignInPrompt, VoteButton } from "./parts";
+import PullToRefresh from "@/components/PullToRefresh";
 import styles from "./Community.module.css";
 
 export default function ThreadView() {
@@ -49,6 +50,7 @@ export default function ThreadView() {
 
   return (
     <article className={`wrap ${styles.threadPage}`}>
+      <PullToRefresh onPull={got.reload} busy={got.busy} />
       <p className={styles.crumbs}><Link href="/town-hall">The Town Hall</Link> / <Link href={`/town-hall?c=${t.category_id}`}>{data.cats.find((c) => c.id === t.category_id)?.title ?? t.category_id.replace(/-/g, " ")}</Link></p>
       <ThreadHead t={t} mine={mine} mod={mod} writer={writer} votes={votes} toggle={toggle} reload={load} />
 

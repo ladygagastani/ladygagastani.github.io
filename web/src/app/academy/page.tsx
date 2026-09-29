@@ -48,7 +48,7 @@ export default function AcademyPage() {
 
         <section style={{ display: "grid", gap: 18 }} aria-labelledby="tools-title">
           <h2 id="tools-title">Practice and reference</h2>
-          <div className={styles.hub}>
+          <div className={`${styles.hub} snap-row`}>
             {TOOLS.map((t) => (
               <Link key={t.href} href={t.href} transitionTypes={["page-turn"]} className={styles.card}>
                 <span className={styles.cardGr} lang="grc">{t.gr}</span>

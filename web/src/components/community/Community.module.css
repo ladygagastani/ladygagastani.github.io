@@ -233,3 +233,5 @@
 .danger { border-top: 1px solid var(--rule); padding-top: 12px; }
 .danger summary { cursor: pointer; color: var(--accent); font-size: 0.92rem; }
 .danger p { margin: 8px 0; font-size: 0.9rem; color: var(--ink-2); }
+
+@media (pointer: coarse) { .linkBtn { min-height: var(--tap); } }

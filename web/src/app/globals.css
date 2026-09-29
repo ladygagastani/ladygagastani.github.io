@@ -135,6 +135,8 @@ img { max-width: 100%; }
 [id] { scroll-margin-top: calc(var(--hdr-h) + 16px); }
 /* a long placeholder or value that does not fit ends in "…" instead of being cut mid-letter */
 input { text-overflow: ellipsis; }
+/* phones: a menu under 16 px makes iPhones zoom the page when it is tapped; and every menu is finger-sized */
+@media (max-width: 760px) { select { font-size: 16px !important; min-height: var(--tap); } }
 /* on touch screens, tick boxes and radio buttons are big enough for a finger */
 @media (pointer: coarse) { input[type="checkbox"], input[type="radio"] { width: 20px; height: 20px; flex: none; } }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -151,6 +153,30 @@ input { text-overflow: ellipsis; }
 .skip { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); padding: 12px 16px; }
 .skip:focus { left: 8px; }
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* phones: a row of cards to swipe through sideways, each snapping into place, the next one peeking in
+   from the edge so it is plain there is more (the home page's Painted Stoa cards, the Academy's tools) */
+@media (max-width: 760px) {
+  .snap-row {
+    display: grid !important; grid-template-columns: none !important; grid-auto-flow: column; grid-auto-columns: min(84%, 340px);
+    gap: 12px !important; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin-inline: calc(-1 * var(--gutter)); padding: 4px var(--gutter) 14px; scroll-padding-inline: var(--gutter);
+  }
+  .snap-row::-webkit-scrollbar { display: none; }
+  .snap-row > * { scroll-snap-align: start; }
+}
+
+/* pull down to refresh (PullToRefresh.tsx): a ring slides down from under the header, turning as it comes */
+.pull {
+  position: fixed; z-index: 29; left: 50%; top: calc(var(--hdr-vis) + env(safe-area-inset-top, 0px)); width: 40px; height: 40px; margin-left: -20px;
+  display: grid; place-items: center; border: 1px solid var(--rule); border-radius: 50%; background: var(--surface); box-shadow: 0 10px 24px -14px var(--shadow);
+  transform: translateY(calc(var(--pull, 0px) - 46px)); opacity: var(--turn, 0); pointer-events: none; transition: transform 0.15s var(--ease), opacity 0.15s;
+}
+.pull[data-waiting] { opacity: 1; }
+.pull-ring { width: 20px; height: 20px; border: 2.5px solid var(--accent); border-right-color: transparent; border-radius: 50%; transform: rotate(calc(var(--turn, 0) * 320deg)); }
+.pull[data-ready] .pull-ring { border-color: var(--ok); border-right-color: transparent; }
+.pull[data-waiting] .pull-ring { animation: pull-spin 0.8s linear infinite; }
+@keyframes pull-spin { to { transform: rotate(360deg); } }
 
 /* ------------------------------------------------------------- ornament */
 /* Bands are drawn with CSS masks so they take any colour. */
@@ -199,7 +225,7 @@ input { text-overflow: ellipsis; }
 .chip[aria-pressed="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); border-color: var(--sel-edge); }
 /* touch screens: a chip is drawn at least 36 px tall, and a finger may land up to 4 px beyond it (a 44 px target) */
 @media (pointer: coarse) {
-  .chip { position: relative; min-height: 36px; }
+  .chip { position: relative; min-height: 36px; min-width: var(--tap); justify-content: center; }
   .chip::after { content: ""; position: absolute; inset: -4px 0; }
 }
 .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.5; }
@@ -315,3 +341,6 @@ main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(
   text-decoration: underline 2px var(--accent);
   text-underline-offset: 4px;
 }
+
+/* touch screens: a label holding a tick box or radio button is at least finger-tall (the whole label is the target) */
+@media (pointer: coarse) { label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) { min-height: var(--tap); align-items: center; } }

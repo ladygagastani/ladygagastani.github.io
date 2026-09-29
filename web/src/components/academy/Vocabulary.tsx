@@ -93,7 +93,7 @@ export default function Vocabulary() {
       <section className={styles.coreList} aria-labelledby="core-title">
         <h2 id="core-title">The commonest words</h2>
         <div className={styles.tablesTools}>
-          <input id="vocab-search" type="search" className={styles.searchInput} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find a word, in Greek or English" aria-label="Find a word" />
+          <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} id="vocab-search" type="search" className={styles.searchInput} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find a word, in Greek or English" aria-label="Find a word" />
           <select id="vocab-group" value={group} onChange={(e) => setGroup(e.target.value)} aria-label="Group">
             <option value="">All groups</option>
             {groups.map((g) => <option key={g} value={g}>{g}</option>)}

@@ -143,7 +143,7 @@ export default function Library() {
           </p>
         </div>
         <div className={styles.tools}>
-          <input id="library-search" type="search" value={q} onChange={(e) => setQ(e.target.value)}
+          <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} id="library-search" type="search" value={q} onChange={(e) => setQ(e.target.value)}
             placeholder="Search authors and works, in English or Greek (accents optional)" aria-label="Search the library" />
           <button type="button" className="chip" aria-pressed={onlyEnglish} onClick={() => setOnlyEnglish(!onlyEnglish)}>
             <span className="dot" />With English translation

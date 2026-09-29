@@ -159,3 +159,9 @@
 .onMap a { color: var(--accent); text-decoration: none; }
 .onMap a:hover { text-decoration: underline; }
 .onMap span { font-family: var(--f-greek); }
+
+/* phones: the contents and the "on the map" links are finger-sized rows (Phase 10) */
+@media (max-width: 760px) {
+  .contents a { display: flex; align-items: center; min-height: var(--tap); }
+  .onMap a { display: inline-flex; align-items: center; min-height: var(--tap); }
+}

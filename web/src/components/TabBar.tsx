@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { CSSProperties, ReactNode } from "react";
 import { AREAS, TABS, type AreaId } from "@/config/areas";
+import { status, useConnection } from "@/lib/connection";
 import styles from "./TabBar.module.css";
 
 const ICONS: Partial<Record<AreaId, ReactNode>> = {
@@ -28,8 +29,11 @@ const under = (pathname: string, href: string) => pathname === href || pathname.
 export default function TabBar() {
   const pathname = usePathname();
   const current = TABS.findIndex((t) => [AREAS[t.id].href, ...(t.also ?? [])].some((h) => under(pathname, h)));
+  const offline = status(useConnection()) === "offline";
   return (
     <nav className={styles.bar} aria-label="Areas of the site" style={{ viewTransitionName: "site-tabbar" }}>
+      {/* a plain sign on the phone when the connection is gone (the header's light says it on every screen) */}
+      {offline && <p className={styles.offline} role="status">Offline · your downloaded texts, library and study still work</p>}
       <div className={styles.tabs} style={{ "--i": Math.max(current, 0) } as CSSProperties} data-none={current < 0 || undefined}>
         <span className={styles.ind} aria-hidden="true" />
         {TABS.map((t, i) => {

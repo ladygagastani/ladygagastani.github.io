@@ -162,7 +162,7 @@ export function NotesSection({ t }: { t: TreasuryState }) {
       </div>
       {notes.length > 0 && (
         <div className={styles.filters}>
-          <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find in your notes (Greek or English)" aria-label="Find in your notes" />
+          <input enterKeyHint="search" autoCorrect="off" autoCapitalize="off" spellCheck={false} type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find in your notes (Greek or English)" aria-label="Find in your notes" />
           <span className={styles.seg} role="group" aria-label="Order">
             <button type="button" aria-pressed={order === "work"} onClick={() => setOrder("work")}>By work</button>
             <button type="button" aria-pressed={order === "new"} onClick={() => setOrder("new")}>Newest</button>

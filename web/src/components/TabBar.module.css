@@ -52,3 +52,11 @@
 @media (max-width: 359px) {
   .label { font-size: 0.72rem; letter-spacing: 0; }
 }
+
+/* the offline sign, just above the bar */
+.offline {
+  position: absolute; left: 0; right: 0; bottom: 100%; margin: 0; padding: 6px 12px; text-align: center;
+  background: var(--accent); color: var(--accent-ink); font-family: var(--f-label); font-size: 0.8rem; letter-spacing: 0.03em;
+  animation: offline-in 0.3s var(--ease);
+}
+@keyframes offline-in { from { transform: translateY(100%); opacity: 0; } }
