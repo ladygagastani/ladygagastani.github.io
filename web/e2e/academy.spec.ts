@@ -39,3 +39,16 @@ test("vocabulary shows how much of a text the commonest words cover", async ({ p
   await page.goto("/academy/vocabulary");
   await expect(page.locator("[class*=covRow]").nth(1)).toContainText(/\d+%/, { timeout: 30_000 });
 });
+
+test("the alphabet is on the Academy's front page and in lesson 1: tap a letter to see how it sounds", async ({ page }) => {
+  for (const url of ["/academy", "/academy/lesson/letters"]) {
+    await page.goto(url);
+    const grid = page.getByRole("listbox", { name: /The 24 letters/ });
+    await expect(grid.getByRole("option")).toHaveCount(24);
+    await grid.getByRole("option", { name: /gamma/ }).click();
+    await expect(page.getByText(/always hard, as in "go"/)).toBeVisible();
+    await page.getByRole("radio", { name: "Modern Greek" }).first().click();
+    await expect(page.getByText(/a soft throaty g/)).toBeVisible();
+    await page.getByRole("radio", { name: "Classical Attic" }).first().click();
+  }
+});

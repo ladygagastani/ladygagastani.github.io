@@ -3,6 +3,7 @@ import Link from "next/link";
 import Page from "@/components/Page";
 import AreaHeader from "@/components/AreaHeader";
 import AcademyProgress from "@/components/academy/AcademyProgress";
+import AlphabetGlance from "@/components/academy/AlphabetGlance";
 import { AREAS } from "@/config/areas";
 import { LESSONS } from "@/data/lessons";
 import styles from "@/components/academy/Academy.module.css";
@@ -25,6 +26,10 @@ export default function AcademyPage() {
       <AreaHeader id="study" />
       <div className="wrap" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr)", gap: 40, paddingBlock: "var(--after-head) 40px" }}>
         <AcademyProgress />
+
+        <section aria-label="The alphabet">
+          <AlphabetGlance headingLevel={2} />
+        </section>
 
         <section style={{ display: "grid", gap: 18 }} aria-labelledby="lessons-title">
           <div>

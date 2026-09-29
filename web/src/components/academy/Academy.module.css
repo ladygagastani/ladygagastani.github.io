@@ -324,3 +324,29 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 @media (max-width: 760px) { .segStack { display: grid; grid-template-columns: minmax(0, 1fr); } }
 
 @media (max-width: 760px) { .seg button { min-width: var(--tap); } }
+
+/* ------------------------------------------------ the alphabet at a glance (lesson 1, the Academy's front page) */
+/* even rows: 8 x 3 wide, 6 x 4 on a tablet, 4 x 6 on a phone; the tiles settle in one after another */
+.glance { display: grid; gap: 14px; }
+.glanceHead { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
+.glanceTitle { margin: 0; font-size: var(--step-2); }
+.glanceTitle span { font-family: var(--f-greek); color: var(--ink-2); font-size: 0.8em; margin-left: 0.3em; }
+.glance .alphaGrid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+.glance .tile { animation: glanceTile 0.55s var(--ease) both; animation-delay: calc(var(--i, 0) * 28ms); }
+@keyframes glanceTile { from { opacity: 0; transform: translateY(10px) scale(0.94); } }
+.glanceCard {
+  min-height: 92px; display: grid; align-items: center; padding: 14px 18px; scroll-margin-bottom: calc(var(--tabbar-vis, 0px) + 16px);
+  border: 1px solid var(--rule); border-left: 3px solid var(--accent); border-radius: var(--radius); background: var(--surface);
+}
+.glanceCard p { margin: 0; }
+.glanceIn { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; animation: glanceIn 0.35s var(--ease) both; }
+@keyframes glanceIn { from { opacity: 0; transform: translateX(-8px); } }
+.glanceBig { font-family: var(--f-greek); font-size: 3.2rem; line-height: 1; min-width: 2.2ch; text-align: center; color: var(--accent); }
+.glanceName { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; font-size: 1.1rem; margin-bottom: 4px !important; }
+.glanceName b { font-family: var(--f-display); font-weight: 400; font-size: 1.3rem; }
+@media (max-width: 900px) { .glance .alphaGrid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+@media (max-width: 520px) {
+  .glance .alphaGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .glanceBig { font-size: 2.4rem; }
+  .glanceIn { gap: 12px; }
+}

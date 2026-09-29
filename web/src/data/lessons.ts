@@ -12,6 +12,7 @@ import type { TextKind } from "@/lib/metre/text";
 export type Section =
   | { kind: "p"; text: string }
   | { kind: "tip"; text: string }
+  | { kind: "alphabet" }                       // the 24 letters, tap to hear (components/academy/AlphabetGlance)
   | { kind: "table"; paradigm: string; title?: string }
   | { kind: "made"; title?: string; items: { grc: string; en: string; note?: string }[] }
   | { kind: "reveal"; title: string; items: { grc: string; answer: string }[] }
@@ -27,7 +28,8 @@ export const LESSONS: Lesson[] = [
     words: ["λόγος", "ψυχή", "θεός", "κόσμος", "ἄνθρωπος"],
     sections: [
       { kind: "p", text: "Greek has 24 letters. Many look familiar, because our own alphabet grew from a Greek one (it reached the Romans by way of the Etruscans), and mathematics and science still use Greek letters. A few are traps: «ρ» is an r, «η» is a long e, «ν» is an n, and «χ» is not an x." },
-      { kind: "p", text: "Before you learn a single word, you can already learn to **read aloud**. Greek spelling is regular: each letter keeps its sound, so once you know the letters you can say any word you see. Open **The alphabet** in the Academy whenever you want to check a letter." },
+      { kind: "alphabet" },
+      { kind: "p", text: "Before you learn a single word, you can already learn to **read aloud**. Greek spelling is regular: each letter keeps its sound, so once you know the letters you can say any word you see. Tap the letters above as often as you like; **The alphabet** page in the Academy also shows how to write each one." },
       { kind: "tip", text: "Two letters stand for two sounds each: «ξ» is ks and «ψ» is ps. And «θ φ χ» are single letters, even though we spell them with two in English (th, ph, ch)." },
       { kind: "reveal", title: "Say these words, then check", items: [
         { grc: "λόγος", answer: "logos: word, speech, reason (English \"logic\")" },

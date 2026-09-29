@@ -18,6 +18,7 @@ import { lineHash } from "@/lib/metre/text";
 import { playLine } from "@/lib/metre/beat";
 import WordPanel, { type WordContext } from "@/components/reader/WordPanel";
 import { ParadigmTable } from "./Tables";
+import AlphabetGlance from "./AlphabetGlance";
 import styles from "./Academy.module.css";
 import readerStyles from "@/components/reader/Reader.module.css";
 
@@ -150,6 +151,7 @@ function RealPassage({ item, onWord }: { item: Extract<Section, { kind: "real" }
 function SectionView({ s, onWord }: { s: Section; onWord: (w: string, ctx: WordContext | null) => void }) {
   switch (s.kind) {
     case "p": return <p className={styles.lp}><Rich text={s.text} /></p>;
+    case "alphabet": return <AlphabetGlance />;
     case "tip": return <aside className={styles.tipBox}><span className="label">Tip</span><p><Rich text={s.text} /></p></aside>;
     case "table": { const p = PARADIGMS.find((x) => x.id === s.paradigm); return p ? <ParadigmTable p={p} /> : null; }
     case "made": return (
