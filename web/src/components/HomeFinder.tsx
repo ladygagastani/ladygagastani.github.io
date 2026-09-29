@@ -31,6 +31,7 @@ export default function HomeFinder({ starts, total }: { starts: Start[]; total: 
   const query = fold(q.trim());
   const hits = useMemo<Hit[] | null>(() => {
     if (!idx || (!query && tr === "all")) return null;
+    const terms = query.split(/\s+/).filter(Boolean);
     const out: { h: Hit; rank: number }[] = [];
     for (const a of idx.catalog.authors) {
       const author = fold(a.name);
@@ -39,13 +40,13 @@ export default function HomeFinder({ starts, total }: { starts: Start[]; total: 
         if ((tr === "with" && !has) || (tr === "greek" && has)) continue;
         const grc = greekEditions(w)[0]?.label ?? null;
         const title = fold(w.title);
+        const hay = `${author} ${title} ${grc ? fold(grc) : ""} ${fold(w.id)}`;
         let rank = 9;
         // someone typing a name wants that author's works first; the well-known ones lead each group
         if (!query) rank = 5;
-        else if (author.startsWith(query) || author.includes(` ${query}`)) rank = 0;
-        else if (title.startsWith(query)) rank = 1;
-        else if (title.includes(query) || (grc && fold(grc).includes(query))) rank = 2;
-        else if (author.includes(query) || fold(w.id).includes(query)) rank = 3;
+        else if (terms.every((t) => hay.includes(t))) {
+          rank = author.startsWith(terms[0]) || author.includes(` ${terms[0]}`) ? 0 : title.startsWith(terms[0]) ? 1 : 2;
+        }
         if (rank < 9) out.push({ h: { id: w.id, title: w.title, author: a.name, grc, tr: has }, rank: rank * 100 + (known.has(w.id) ? 0 : 50) });
       }
     }

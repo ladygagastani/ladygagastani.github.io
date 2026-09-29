@@ -15,6 +15,20 @@
 .found b { font-family: var(--f-display); font-weight: 400; font-size: 1.2rem; }
 .found span { color: var(--ink-2); font-size: 0.95rem; }
 
+/* the reference pages: Authors, Eras, Editions */
+.reference { display: grid; gap: 10px; }
+.reference ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.reference a {
+  display: grid; gap: 4px; align-content: start; height: 100%; padding: 16px 20px; text-decoration: none; color: inherit;
+  background: var(--surface); border: 1px solid var(--rule); border-top: 3px solid var(--accent); border-radius: var(--radius);
+  transition: transform 0.3s var(--ease), border-color 0.2s, box-shadow 0.3s;
+}
+.reference a:hover, .reference a:focus-visible { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 28px -20px var(--shadow); }
+.reference b { font-family: var(--f-display); font-weight: 400; font-size: 1.35rem; }
+.reference a > span:last-child { color: var(--ink-2); font-size: 0.95rem; }
+.refGr { font-family: var(--f-greek); color: var(--accent); font-size: 0.95rem; }
+@media (max-width: 900px) { .reference ul { grid-template-columns: minmax(0, 1fr); } }
+
 .featured {
   position: relative; display: grid; gap: 10px; padding: clamp(24px, 4vw, 40px); text-decoration: none; overflow: hidden;
   background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); border-radius: var(--radius);

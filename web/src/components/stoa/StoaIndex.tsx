@@ -18,7 +18,10 @@ const noSubscribe = () => () => {};
 /** What a search looks in, folded once: the title, the hook and the whole text of each entry (not only its opening). */
 const HAYSTACK = ENTRIES.map((e) => ({ e, hay: fold(`${e.title} ${e.greek ?? ""} ${e.kicker} ${text(e.hook)} ${e.body}`) }));
 
-export default function StoaIndex() {
+/** A reference page the Wiki offers besides its entries (Authors, Eras, Editions). */
+export interface RefCard { href: string; title: string; greek: string; blurb: string }
+
+export default function StoaIndex({ reference = [] }: { reference?: RefCard[] }) {
   const [q, setQ] = useState("");
   const n = fold(q).trim();
   const found = useMemo(() => (n ? HAYSTACK.filter((h) => h.hay.includes(n)).map((h) => h.e) : []), [n]);
@@ -55,6 +58,23 @@ export default function StoaIndex() {
             ? <img className={styles.featuredPic} data-whole={pic.height > pic.width * 0.9 ? "" : undefined} src={`/images/${pic.file}`} srcSet={srcSet(pic)} sizes="(max-width: 760px) 100vw, 420px" alt={pic.alt} title={`${pic.title} · ${pic.sourceName} · ${pic.licence}`} width={pic.width} height={pic.height} loading="lazy" decoding="async" />
             : <span className={styles.featuredIcon}><CategoryIcon id={featured.category} /></span>}
         </Link>
+      )}
+
+      {!n && reference.length > 0 && (
+        <nav className={styles.reference} aria-labelledby="ref-h">
+          <h2 id="ref-h" className="label">Reference</h2>
+          <ul>
+            {reference.map((r) => (
+              <li key={r.href}>
+                <Link href={r.href} transitionTypes={["page-turn"]}>
+                  <span className={styles.refGr} lang="grc">{r.greek}</span>
+                  <b>{r.title}</b>
+                  <span>{r.blurb}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       )}
 
       <ol className={styles.colonnade}>

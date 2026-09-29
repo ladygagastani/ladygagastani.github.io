@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { loadCatalog, hasTranslation, type CatalogIndex } from "@/lib/catalog";
 import { centuries, DATE_NOTE, loadWorksMeta, type WorkMeta } from "@/lib/works-meta";
 import { commonShare, loadDifficulty } from "@/lib/difficulty";
+import { lifeSpan, loadAuthorsMeta, type AuthorMeta } from "@/lib/authors-meta";
 import { AREAS } from "@/config/areas";
 import { WorkItem } from "./Library";
 import lib from "./Library.module.css";
@@ -26,8 +27,9 @@ export default function AuthorProfile({ related }: { related: Record<string, Rel
   const [idx, setIdx] = useState<CatalogIndex | null>(null);
   const [meta, setMeta] = useState<Record<string, WorkMeta>>({});
   const [diff, setDiff] = useState<Record<string, [number, number]>>({});
+  const [who, setWho] = useState<Record<string, AuthorMeta>>({});
   const [failed, setFailed] = useState(false);
-  useEffect(() => { loadCatalog().then(setIdx, () => setFailed(true)); loadWorksMeta().then(setMeta); loadDifficulty().then(setDiff); }, []);
+  useEffect(() => { loadCatalog().then(setIdx, () => setFailed(true)); loadWorksMeta().then(setMeta); loadDifficulty().then(setDiff); loadAuthorsMeta().then(setWho); }, []);
 
   const author = idx && id ? idx.author.get(id) : undefined;
   const facts = useMemo(() => {
@@ -68,19 +70,23 @@ export default function AuthorProfile({ related }: { related: Record<string, Rel
     );
   }
   const entries = related[author.id] ?? [];
+  const wd = who[author.id];
+  const lived = lifeSpan(wd);
   return (
     <div className={`wrap ${styles.page}`}>
       <p className={styles.crumb}><Link href={AREAS.library.href}>← {AREAS.library.name} · {AREAS.library.english}</Link></p>
       <header className={styles.head}>
         <div className="area-kicker"><span className="tongues draw" aria-hidden="true" /><span className="label">Author</span></div>
         <h1 className={`page-title ${styles.name}`}>{author.name}</h1>
+        {wd?.desc && <p className={styles.note}>{wd.desc.charAt(0).toUpperCase() + wd.desc.slice(1)}{wd.place ? `, born at ${wd.place}` : ""}. <span className="muted">From <a href={`https://www.wikidata.org/wiki/${wd.q}`} target="_blank" rel="noreferrer noopener">Wikidata</a>{wd.wp ? <>; <a href={wd.wp} target="_blank" rel="noreferrer noopener">Wikipedia</a></> : null}.</span></p>}
         <dl className={styles.facts}>
-          {facts.when && <div><dt>Wrote in</dt><dd title={DATE_NOTE}>{facts.when}</dd></div>}
+          {lived && <div><dt>Lived</dt><dd title="From Wikidata">{lived}</dd></div>}
+          {facts.when && facts.when !== lived && <div><dt>Wrote in</dt><dd title={DATE_NOTE}>{facts.when}</dd></div>}
           {facts.genres.length > 0 && <div><dt>Kinds of writing</dt><dd>{facts.genres.map(([g, n]) => `${g}${n > 1 ? ` (${n})` : ""}`).join(", ")}</dd></div>}
           {facts.dialects.length > 0 && <div><dt>Dialect</dt><dd>{facts.dialects.join(", ")}</dd></div>}
           <div><dt>In the library</dt><dd>{author.works.length} work{author.works.length === 1 ? "" : "s"}, {facts.english} with an English translation{facts.words > 0 ? `; ${num(facts.words)} words analysed` : ""}</dd></div>
         </dl>
-        {!facts.when && <p className={styles.note}>GLAUx, the source of the dates and kinds of writing, does not analyse this author&apos;s texts, so none are shown. Nothing is guessed.</p>}
+        {!facts.when && !lived && <p className={styles.note}>GLAUx, the source of the dates and kinds of writing, does not analyse this author&apos;s texts, so none are shown. Nothing is guessed.</p>}
       </header>
       <div><div className="meander draw" aria-hidden="true" /></div>
 
@@ -104,7 +110,7 @@ export default function AuthorProfile({ related }: { related: Record<string, Rel
       {entries.length > 0 && (
         <section className={styles.sec} aria-labelledby="stoa-title">
           <h2 id="stoa-title">In {AREAS.wiki.name}</h2>
-          <p className="muted">Entries that quote or point to {author.name}'s Greek.</p>
+          <p className="muted">Entries that quote or point to {author.name}&apos;s Greek.</p>
           <div className={styles.cards}>
             {entries.map((e) => (
               <Link key={e.slug} href={`/stoa/${e.slug}`} className={styles.card} transitionTypes={["page-turn"]}>

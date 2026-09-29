@@ -63,6 +63,7 @@ export default function CreditsPage() {
           <li><b>Liddell–Scott–Jones Greek-English Lexicon (LSJ)</b>: {LSJ_CREDIT}</li>
           <li><b>Short definitions of the commonest words</b> and their frequency ranks: <a href="https://dcc.dickinson.edu/greek-core-list" rel="noopener">Dickinson College Commentaries Greek Core Vocabulary</a>, by Christopher Francese and collaborators, CC BY-SA 3.0.</li>
           <li><b>Scansion of verse</b> (long and short syllables, and the metre of each line) for Homer, Hesiod, Apollonius, Nonnus, Pindar, Theognis, the Greek Anthology, three plays of Aeschylus and other poets: <a href="https://hypotactic.com" rel="noopener">hypotactic.com</a>, by David Chamberlain, CC BY 4.0. The vowel lengths the site&apos;s own scanner uses for other texts were also learned from these scansions.</li>
+          <li><b>Authors&apos; dates, birthplaces and descriptions</b> on the Wiki&apos;s Authors and Eras pages and on each author&apos;s page: <a href="https://www.wikidata.org" rel="noopener">Wikidata</a> (property P3576, the TLG author ID, matches its people to the library&apos;s authors), CC0. Built by <code>pipeline/build_authors_meta.py</code>; where Wikidata has no date, the dating of works in GLAUx is used and marked.</li>
           <li><b>Wiktionary</b> entries, fetched live when you look up a word, and each word&apos;s origin, related Greek words and English descendants on its Word Study page: English Wiktionary contributors, CC BY-SA 4.0.</li>
         </ul>
 
