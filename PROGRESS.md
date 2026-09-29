@@ -282,6 +282,7 @@ Plan: `PLAN.md` section 7. Phones are **up to 760 px wide** everywhere (CSS medi
   - even pairs of buttons: the Treasury's Download / Restore, the passage of the day's Copy citation / Read on;
   - two-by-two grids: the Oracle's four kinds of search and its four examples, the Town Hall's four orders;
   - the map's filter chips stretch so every row fills the width; the alphabet's three pronunciations are three even rows (`segStack`).
+- **Published** (2026-09-29): the owner asked to push to live; `main` pushed (commit ea7a00d), live about a minute later. `node scripts/live-check.mjs` passed (forum reads 200, no console errors), and the live map opens and flies to Sparta on a phone-sized screen with no errors. The branch `phone-map-and-symmetry` holds the same commits (pushed for a pull request) and can be deleted.
 - **Local builds need webpack now.** Windows Smart App Control (a security setting, left on) blocks Next.js's fast compiler file (`@next/swc-win32-x64-msvc`) since 2026-09-29, and Turbopack cannot run without it. Use `npx next build --webpack` and `next dev --webpack` (the `web` entry in `.claude/launch.json` passes it). The live site is built by GitHub on Linux and is unaffected. `next.config.ts` now has `agentRules: false` (stops `next dev` writing AGENTS.md/CLAUDE.md into `web/`) and `devIndicators: false`.
 
 ## Decisions log
