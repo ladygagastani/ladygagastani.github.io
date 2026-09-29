@@ -23,9 +23,10 @@ test("the reader's controls sit in a bar at the bottom, above the site's bar", a
     const r = (await btn.boundingBox())!;
     expect(Math.min(r.width, r.height)).toBeGreaterThanOrEqual(44);
   }
-  // the end of the page clears both bars
-  await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
-  await expect.poll(() => page.evaluate(() => {
+  // the end of the page clears both bars (the page grows as passages are drawn, so go to the end each time)
+  await expect.poll(() => page.evaluate(async () => {
+    scrollTo(0, document.documentElement.scrollHeight);
+    await new Promise((f) => setTimeout(f, 400));
     const last = document.querySelector("main")!.lastElementChild!.getBoundingClientRect();
     return Math.round(document.querySelector("[data-readbar]")!.getBoundingClientRect().top - last.bottom);
   })).toBeGreaterThanOrEqual(-1);

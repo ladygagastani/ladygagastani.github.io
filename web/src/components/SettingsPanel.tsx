@@ -10,6 +10,7 @@ import styles from "./SettingsPanel.module.css";
 
 const THEMES: [ThemePref, string][] = [["auto", "Automatic"], ["light", "Papyrus (light)"], ["dark", "Black-figure (dark)"]];
 const MOTIONS: [MotionPref, string][] = [["auto", "Automatic"], ["reduce", "Reduced"], ["full", "Full"]];
+const ON_OFF: ["on" | "off", string][] = [["on", "On"], ["off", "Off"]];
 
 /**
  * Loads saved settings after hydration (so server and client first render match) and applies
@@ -110,6 +111,12 @@ export default function SettingsPanel() {
           <h3 className="label">Animation</h3>
           <Segmented label="Animation" value={s.motion} options={MOTIONS} onChange={(motion) => s.set({ motion })} />
           <p className={styles.hint}>Automatic follows your device&apos;s &ldquo;reduce motion&rdquo; setting.</p>
+        </section>
+
+        <section className={styles.group}>
+          <h3 className="label">Short vibrations</h3>
+          <Segmented label="Short vibrations" value={s.vibrate ? "on" : "off"} options={ON_OFF} onChange={(v) => s.set({ vibrate: v === "on" })} />
+          <p className={styles.hint}>A short buzz when you save a word, bookmark a passage or answer right, on phones that allow it (most Android phones; iPhones do not let websites vibrate).</p>
         </section>
 
         <section className={styles.group}>

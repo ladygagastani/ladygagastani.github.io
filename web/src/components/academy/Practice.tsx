@@ -7,6 +7,7 @@ import { loadWordPack, type WordPack } from "@/lib/lookup/words";
 import { readTag } from "@/lib/lookup/postag";
 import { loadPassage, type LoadedPassage } from "@/lib/passage";
 import { useAcademy } from "@/lib/academy";
+import { buzz } from "@/lib/haptics";
 import { Blocks } from "@/components/reader/Blocks";
 import styles from "./Academy.module.css";
 import readerStyles from "@/components/reader/Reader.module.css";
@@ -27,7 +28,8 @@ function makeEndingQ(): EndingQ {
   return { prompt: `${p.rows[r]}, ${p.cols[c]}`, lemma: p.lemma, answer, options };
 }
 
-function Endings({ onScore }: { onScore: (ok: boolean) => void }) {
+/** `once`: a single question with no Next button (the daily session moves on by itself). */
+export function Endings({ onScore, once = false }: { onScore: (ok: boolean) => void; once?: boolean }) {
   const [q, setQ] = useState<EndingQ>(makeEndingQ);
   const [picked, setPicked] = useState<string | null>(null);
   return (
@@ -37,13 +39,13 @@ function Endings({ onScore }: { onScore: (ok: boolean) => void }) {
         {q.options.map((o) => (
           <button key={o} type="button" lang="grc" disabled={!!picked}
             className={`${styles.optGr} ${picked ? (o === q.answer ? styles.right : o === picked ? styles.wrong : "") : ""}`}
-            onClick={() => { setPicked(o); onScore(o === q.answer); }}>{o}</button>
+            onClick={() => { setPicked(o); onScore(o === q.answer); if (o === q.answer) buzz("right"); }}>{o}</button>
         ))}
       </div>
       {picked && (
         <div className={styles.drillFoot}>
           <p className={picked === q.answer ? styles.good : styles.bad} role="status">{picked === q.answer ? "Right." : <>It is <span lang="grc" className={styles.inlineGr}>{q.answer}</span>.</>}</p>
-          <button type="button" className="btn" onClick={() => { setQ(makeEndingQ()); setPicked(null); }}>Next</button>
+          {!once && <button type="button" className="btn" onClick={() => { setQ(makeEndingQ()); setPicked(null); }}>Next</button>}
         </div>
       )}
     </div>
@@ -71,7 +73,8 @@ function pickParseQ(pack: WordPack): ParseQ | null {
   return null;
 }
 
-function Parsing({ onScore }: { onScore: (ok: boolean) => void }) {
+/** `once`: a single sentence with no Next button (the daily session moves on by itself). */
+export function Parsing({ onScore, once = false }: { onScore: (ok: boolean) => void; once?: boolean }) {
   const WORK = "tlg0031.tlg004";          // the Gospel of John, hand-annotated (PROIEL) in GLAUx
   const [pack, setPack] = useState<WordPack | null>(null);
   const [round, setRound] = useState(0);
@@ -122,7 +125,7 @@ function Parsing({ onScore }: { onScore: (ok: boolean) => void }) {
       <div className={styles.options}>
         {CASE_NAMES.map((c) => (
           <button key={c} type="button" disabled={!!caseAns} className={caseAns ? (c === rightCase ? styles.right : c === caseAns ? styles.wrong : "") : ""}
-            onClick={() => { setCaseAns(c); onScore(c === rightCase); }}>{c}</button>
+            onClick={() => { setCaseAns(c); onScore(c === rightCase); if (c === rightCase) buzz("right"); }}>{c}</button>
         ))}
       </div>
       {caseAns && (
@@ -131,7 +134,7 @@ function Parsing({ onScore }: { onScore: (ok: boolean) => void }) {
           <div className={styles.options}>
             {["singular", "plural"].map((n) => (
               <button key={n} type="button" disabled={!!numAns} className={numAns ? (n === rightNum ? styles.right : n === numAns ? styles.wrong : "") : ""}
-                onClick={() => { setNumAns(n); onScore(n === rightNum); }}>{n}</button>
+                onClick={() => { setNumAns(n); onScore(n === rightNum); if (n === rightNum) buzz("right"); }}>{n}</button>
             ))}
           </div>
         </>
@@ -140,7 +143,7 @@ function Parsing({ onScore }: { onScore: (ok: boolean) => void }) {
         <div className={styles.drillFoot}>
           <p role="status"><span lang="grc" className={styles.inlineGr}>{q.form}</span>: {parse.pos}, {parse.detail}, from <span lang="grc" className={styles.inlineGr}>{q.lemma}</span>.
             <span className={styles.small}> Analysis checked by hand (PROIEL treebank, via GLAUx).</span></p>
-          <button type="button" className="btn" onClick={() => setRound((r) => r + 1)}>Next sentence</button>
+          {!once && <button type="button" className="btn" onClick={() => setRound((r) => r + 1)}>Next sentence</button>}
         </div>
       )}
     </div>

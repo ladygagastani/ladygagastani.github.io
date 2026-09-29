@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useAcademy, dueCards, previewIntervals, Rating, type DeckCard } from "@/lib/academy";
 import { coreWords, coreEntry, type CoreEntry } from "@/lib/lookup/core";
 import { audioKey } from "@/lib/audio";
 import { useUI } from "@/lib/ui";
+import { useSwipeCard, type SwipeDir } from "@/lib/use-swipe-card";
+import { buzz } from "@/lib/haptics";
 import Say from "./Say";
 import styles from "./Academy.module.css";
 
@@ -28,14 +30,23 @@ function AddCommon({ n = 20 }: { n?: number }) {
   return <button type="button" className="btn" onClick={addNext}>Add the next {n} commonest words</button>;
 }
 
-export default function Review() {
+/** A throw of the card answers it: right "knew it", left "again", up "easy" (Hard has its button only). */
+const SWIPE: Record<SwipeDir, Rating> = { right: Rating.Good, left: Rating.Again, up: Rating.Easy };
+
+/**
+ * The daily review. `limit` ends the round after that many cards (the daily session uses a short one)
+ * and calls `onDone`.
+ */
+export default function Review({ limit, onDone }: { limit?: number; onDone?: (n: number) => void } = {}) {
   const deck = useAcademy((s) => s.deck);
   const review = useAcademy((s) => s.review);
   const [shown, setShown] = useState(false);
   const [doneToday, setDoneToday] = useState(0);
   const [core, setCore] = useState<CoreEntry | null>(null);
   const due = useMemo(() => dueCards(deck), [deck]);
-  const card: DeckCard | undefined = due[0];
+  const finished = limit !== undefined && doneToday >= limit;
+  const card: DeckCard | undefined = finished ? undefined : due[0];
+  const flash = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let live = true;
@@ -46,9 +57,14 @@ export default function Review() {
   const answer = (g: Rating) => {
     if (!card) return;
     review(card.id, g as Exclude<Rating, Rating.Manual>);
+    if (g === Rating.Good || g === Rating.Easy) buzz("right");
     setShown(false);
     setDoneToday((n) => n + 1);
   };
+  const swipe = useSwipeCard({ el: () => flash.current, enabled: () => shown, onSwipe: (d) => answer(SWIPE[d]) });
+  // the round is over (or there was nothing to review): tell the daily session, once
+  const told = useRef(false);
+  useEffect(() => { if (!card && onDone && !told.current) { told.current = true; onDone(doneToday); } }, [card, onDone, doneToday]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -60,6 +76,14 @@ export default function Review() {
     return () => removeEventListener("keydown", onKey);
   });
 
+  if (!card && onDone) {
+    return (
+      <div className={styles.reviewEmpty}>
+        <p className={styles.reviewBig}>{doneToday ? `${doneToday} card${doneToday === 1 ? "" : "s"} reviewed.` : Object.keys(deck).length ? "No cards are due today." : "Your deck is empty for now."}</p>
+        {!Object.keys(deck).length && <p className="muted">Words you save in the reader or learn in the lessons come here. <AddCommon n={10} /></p>}
+      </div>
+    );
+  }
   if (!card) {
     return (
       <div className={styles.reviewEmpty}>
@@ -76,8 +100,12 @@ export default function Review() {
   const iv = previewIntervals(card);
   return (
     <div className={styles.review}>
-      <p className={styles.small}>{due.length} to review{doneToday ? ` · ${doneToday} done` : ""} · Space to turn · 1–4 to answer</p>
-      <div className={`${styles.flash} ${shown ? styles.flipped : ""}`}>
+      <p className={styles.small}>{limit !== undefined ? `${Math.min(limit, doneToday + 1)} of ${Math.min(limit, due.length + doneToday)}` : `${due.length} to review${doneToday ? ` · ${doneToday} done` : ""}`}<span className={styles.keysHint}> · Space to turn · 1–4 to answer</span></p>
+      <div ref={flash} className={`${styles.flash} ${shown ? styles.flipped : ""}`} data-noswipe="" {...swipe}
+        onClick={() => { if (!shown) setShown(true); }}>
+        <span className={styles.lean} data-for="right" aria-hidden="true">Knew it</span>
+        <span className={styles.lean} data-for="left" aria-hidden="true">Again</span>
+        <span className={styles.lean} data-for="up" aria-hidden="true">Easy</span>
         <div className={styles.flashIn}>
           <div className={styles.flashFront}>
             <span lang="grc" className={styles.flashWord}>{card.lemma}</span>
@@ -93,6 +121,8 @@ export default function Review() {
       {!shown ? (
         <button type="button" className="btn" onClick={() => setShown(true)}>Show the meaning</button>
       ) : (
+        <>
+        <p className={styles.swipeHint}>Swipe the card: right if you knew it, left to see it again soon, up if it was easy.</p>
         <div className={styles.grades} role="group" aria-label="How well did you know it?">
           {GRADES.map((x) => (
             <button key={x.key} type="button" className={styles.grade} onClick={() => answer(x.g)}>
@@ -100,6 +130,7 @@ export default function Review() {
             </button>
           ))}
         </div>
+        </>
       )}
       <p className={styles.small}>Scheduling by FSRS (ts-fsrs). Definitions from the DCC Greek Core Vocabulary or LSJ.</p>
     </div>

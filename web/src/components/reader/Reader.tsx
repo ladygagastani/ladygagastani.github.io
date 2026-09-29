@@ -39,6 +39,7 @@ import { loadWordPack, analyse as analyseWord } from "@/lib/lookup/words";
 import { caseOf } from "@/lib/lookup/postag";
 import { headerVisible, scrollBelowHeader, setBars } from "@/lib/header";
 import ReadBar, { PHONE } from "./ReadBar";
+import { buzz } from "@/lib/haptics";
 import styles from "./Reader.module.css";
 
 type Load = { state: "loading"; step: string } | { state: "error"; message: string } | { state: "ready" };
@@ -711,6 +712,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     } else {
       await useMarks.getState().add({ ...base, kind: a });
       toast(a === "bookmark" ? `Bookmarked ${where}.` : `Added ${where} to your favourite passages.`);
+      buzz();
     }
     window.getSelection()?.removeAllRanges();
     setSel(null);

@@ -11,6 +11,7 @@ import { readTag } from "@/lib/lookup/postag";
 import { coreEntry, CORE_CREDIT, type CoreEntry } from "@/lib/lookup/core";
 import { useUI } from "@/lib/ui";
 import { useAcademy } from "@/lib/academy";
+import { buzz } from "@/lib/haptics";
 import { placeNamed, type Place } from "@/lib/map";
 import styles from "./Reader.module.css";
 
@@ -377,6 +378,7 @@ export default function WordPanel({ word, ctx, onClose, onEchoes, onStep, sheet 
         // save the dictionary form, with the clearest short definition we have
         const gloss = (core.key === lsjKey && core.value?.def) || l?.value?.entries[0]?.s || "";
         const added = useAcademy.getState().addCard(headword, gloss, "saved");
+        if (added) buzz();
         toast(added ? `Saved ${headword} to your daily review.` : `${headword} is already in your daily review.`);
       }}>Save word to my review</button>
       </div>
