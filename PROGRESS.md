@@ -355,6 +355,7 @@ From the owner's review of the old site (Handoff.md §11): the forum had a bug-r
 - **Privacy page** updated: hidden people are stored in the browser; what a bug report contains and that it is public.
 - Tests: `bug.test.ts` (5 unit); `e2e/bug-reports.spec.ts` (4, with a pretend member and database, nothing sent to the real forum). 284 unit passed.
 - **The database script was run on 2026-09-29** (the owner signed in; the editor's text matched the file's SHA-256 before Run; "Success"). Checked afterwards from outside: both boards are listed, the status column answers, and a visitor calling `set_thread_status` is refused. Nothing was posted in the real forum.
+- **Published 2026-09-29** (commit a211348, together with the unpublished home-page finder, wiki reference pages and search-engine pages). Before: production build (2,292 pages) and all 301 browser tests passed. After: `live-check.mjs` passed, and on the live site the two boards, the Open/Closed filter, the footer's Report a bug (carrying the page), Back to top, `/work/…` pages and the sitemap all work, with no console errors.
 
 ## Decisions log
 | Date | Decision | Reason |
