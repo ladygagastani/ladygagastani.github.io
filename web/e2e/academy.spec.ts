@@ -77,6 +77,18 @@ test("lesson 14: one scene in three voices, and the middle and passive tables", 
   await scene.getByRole("button", { name: "Again" }).click();
   await expect(page.getByRole("table").first()).toContainText("ἐλυόμην");
   await expect(page.getByRole("table").nth(1)).toContainText("ἐλύθησαν");
+  await expect(page.getByRole("link", { name: /Next: Participles/ })).toBeVisible();
+  await expect(page.locator("[data-quote]").first()).toBeVisible({ timeout: 30_000 });
+});
+
+test("lesson 15: participles on a timeline (before, at the same time, after) and their tables", async ({ page }) => {
+  await page.goto("/academy/lesson/participles");
+  const strips = page.locator("figure").filter({ hasText: "the other bar is the main verb" });
+  for (const w of ["before", "at the same time", "after"]) await expect(strips.getByText(w, { exact: true })).toBeVisible();
+  await expect(strips).toContainText("συλλαμβάνει Κῦρον ὡς ἀποκτενῶν");
+  await strips.getByRole("button", { name: "Again" }).click();
+  await expect(page.getByRole("table").first()).toContainText("λυούσης");
+  await expect(page.getByRole("table").nth(1)).toContainText("λυσάντων");
   await expect(page.getByRole("link", { name: /Next:/ })).toHaveCount(0);
   await expect(page.locator("[data-quote]").first()).toBeVisible({ timeout: 30_000 });
 });

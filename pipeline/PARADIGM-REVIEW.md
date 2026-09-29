@@ -26,4 +26,17 @@ On 2026-09-29 the middle and passive of λύω were added (tables `luomai` and `
 
 The imperfect active ἐλύετε (above) is likewise found as ἐλέγετε 17 and ἐπέμπετε 3.
 
+On 2026-09-29 the present and aorist active participles of λύω were added (`luon`, `lusas`, 48 forms): 270 of 320 attested. The 23 λύω participle forms not attested with the expected analysis are regular; the same endings, with the same analysis, on other verbs:
+
+| λύω form(s) | The same ending elsewhere (GLAUx) |
+|---|---|
+| neuter λύοντος, λύοντι, λυόντων, λύουσι(ν) | ἔχοντος 442, ἔχοντι 168, ἐχόντων 850, ἔχουσιν 51 as neuter (annotators often tag the identical masculine) |
+| λύουσι (masc. dat. pl.) | ἔχουσι 404 as the participle (the same spelling is also "they loosen") |
+| λυουσῶν, λυούσαις, λυούσας | ἐχουσῶν 132, ἐχούσαις 90, ἐχούσας 328; λεγουσῶν 8, λεγούσαις 4, λεγούσας 13 |
+| λῦσαν (neuter) | ποιῆσαν 41 nom., 13 acc. |
+| neuter λύσαντα, λύσαντος, λύσαντι, λυσάντων | ποιήσαντα 11, ποιήσαντος 6, ποιήσαντι 1, ποιησάντων 2 as neuter |
+| λυσάσης, λυσάσῃ, λυσάσας | 161 feminine genitives in -σάσης (ποιησάσης 10), 21 datives in -σάσῃ, 9 accusatives in -σάσας |
+| λυσασῶν, λυσάσαις | 4 in -σασῶν (ὀμοσασῶν, γεννησασῶν…), 10 in -σάσαις (κυησάσαις 2…) |
+| λύσασι(ν) masc. and neut. | ἀκούσασιν 26, ποιήσασιν 12 (masc.); neuter ἀδικήσασι, γεννήσασιν and 8 more |
+
 Any new form that shows up in the check's list must be reviewed here before it is published.

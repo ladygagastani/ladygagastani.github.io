@@ -178,6 +178,30 @@ export const PARADIGMS: Paradigm[] = [
     ],
     tags: ["1s", "2s", "3s", "1p", "2p", "3p"].map((pn) => [["f", "m"], ["a", "m"], ["a", "p"]].map(([t, v]) => `v${pn[0]}${pn[1]}${t}i${v}---`)),
   },
+  {
+    id: "luon", title: "Participle, present active: λύων, λύουσα, λῦον", lemma: "λύω", group: "verb", lesson: "participles",
+    note: "The masculine and neuter decline like third-declension nouns (stem λυοντ-), the feminine like δόξα. Every present active participle of an -ω verb has these endings.",
+    rows: CASES.slice(0, 4), cols: ["masc. sg", "fem. sg", "neut. sg", "masc. pl", "fem. pl", "neut. pl"],
+    cells: [
+      ["λύων", "λύουσα", "λῦον", "λύοντες", "λύουσαι", "λύοντα"],
+      ["λύοντος", "λυούσης", "λύοντος", "λυόντων", "λυουσῶν", "λυόντων"],
+      ["λύοντι", "λυούσῃ", "λύοντι", "λύουσι(ν)", "λυούσαις", "λύουσι(ν)"],
+      ["λύοντα", "λύουσαν", "λῦον", "λύοντας", "λυούσας", "λύοντα"],
+    ],
+    tags: C.slice(0, 4).map((c) => ["s", "s", "s", "p", "p", "p"].map((n, i) => `v-${n}ppa${"mfnmfn"[i]}${c}-`)),
+  },
+  {
+    id: "lusas", title: "Participle, aorist active: λύσας, λύσασα, λῦσαν", lemma: "λύω", group: "verb", lesson: "participles",
+    note: "The same pattern with the aorist's σα: stem λυσαντ-, feminine λυσασ-. No augment: that belongs only to the indicative.",
+    rows: CASES.slice(0, 4), cols: ["masc. sg", "fem. sg", "neut. sg", "masc. pl", "fem. pl", "neut. pl"],
+    cells: [
+      ["λύσας", "λύσασα", "λῦσαν", "λύσαντες", "λύσασαι", "λύσαντα"],
+      ["λύσαντος", "λυσάσης", "λύσαντος", "λυσάντων", "λυσασῶν", "λυσάντων"],
+      ["λύσαντι", "λυσάσῃ", "λύσαντι", "λύσασι(ν)", "λυσάσαις", "λύσασι(ν)"],
+      ["λύσαντα", "λύσασαν", "λῦσαν", "λύσαντας", "λυσάσας", "λύσαντα"],
+    ],
+    tags: C.slice(0, 4).map((c) => ["s", "s", "s", "p", "p", "p"].map((n, i) => `v-${n}apa${"mfnmfn"[i]}${c}-`)),
+  },
 ];
 
 /** Split a cell into its forms, expanding "(ν)" (movable nu) to both spellings. */

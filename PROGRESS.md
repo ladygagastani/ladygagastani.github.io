@@ -368,11 +368,15 @@ The owner asked for more Academy lessons (learning first), and for the alphabet 
 - **Checked:** every quotation read from the source files (`NETWORK=1 npx vitest run src/data/lessons.test.ts`: passes for all 13 lessons); the πόλις table against GLAUx (`pipeline/check_paradigms.py`: all 11 forms attested; `PARADIGM-REVIEW.md` updated). Made-up practice sentences are labelled as such. Grammar follows the standard Attic descriptions (as in Smyth's *Greek Grammar*).
 - Tests: `e2e/academy.spec.ts` (+2: the alphabet on both pages; lessons 10–13). Pictures checked wide (light) and phone (dark): no sideways overflow, no console errors. Not yet published.
 
-## Lesson 14: the middle and passive (2026-09-29)
+## Lessons 14 and 15: the middle and passive, participles (2026-09-29)
 - **Lesson 14, *Middle and passive: λύομαι*** (`middle-passive` in `data/lessons.ts`): the three voices; middle and passive sharing their forms in the present and imperfect (the rest of the sentence decides: an object, or «ὑπό» + genitive); the future and aorist middle (σ) and aorist passive (θη); deponent verbs (βούλομαι, γίγνομαι, ἔρχομαι; John's «ἀπεκρίθη», 56 times, counted in GLAUx); «πείθομαι» "believe, obey". Real passages: Iliad 1.13 (Chryses comes «λυσόμενος» "to ransom" his daughter) against 1.29 (Agamemnon: «οὐ λύσω»), Anabasis 1.1.3 («πείθεται»), Matthew 4.1 («ἀνήχθη … ὑπὸ τοῦ πνεύματος»), John 1.3 («ἐγένετο»).
 - **A new drawing** (`components/academy/Voice.tsx`, section kind `voice`): one scene three times, in black-figure silhouettes. A father frees his daughter; an arrow draws from the doer, the rope falls from her, the subject stands on a patch of red, the verb is marked in the sentence; in the middle a second arrow returns to the father. Plays when scrolled into view, "Again" replays; still (final state) with reduced motion.
 - **Two new tables** (`luomai`: present and imperfect middle/passive; `luo-mp-aorist`: future middle, aorist middle, aorist passive). λύω itself is rare in these forms (18 of the 36 not attested for λύω); every ending was confirmed on verbs built the same way (παύω, βούλομαι, γίγνομαι, πείθω, σῴζω), recorded in `pipeline/PARADIGM-REVIEW.md`.
-- Checked: `NETWORK=1 npx vitest run src/data/lessons.test.ts` (all 14 lessons' quotations found in the source files); `e2e/academy.spec.ts` (+1); accessibility (both themes) and the phone audit at 44 px clean for the lesson and the tables page. Not yet published.
+- Checked: `NETWORK=1 npx vitest run src/data/lessons.test.ts` (all 14 lessons' quotations found in the source files); `e2e/academy.spec.ts` (+1); accessibility (both themes) and the phone audit at 44 px clean for the lesson and the tables page.
+- **Lesson 15, *Participles: verbs that work as adjectives*** (`participles`): what a participle is (and the name «μετοχή», "sharing", which Latin *participium* translates); the present and aorist active tables; the other voices in brief (-μενος, λυθείς, λύσων); tense as time relative to the main verb; the three uses (as a noun with the article, describing, circumstantial). Real passages: John 3.36 («ὁ πιστεύων»), John 1.29 («ἐρχόμενον», «ὁ αἴρων»), Iliad 1.13 again («λυσόμενος», «φέρων»), Anabasis 1.1.3 («ἐξαιτησαμένη»).
+- **A second new drawing** (`components/academy/Timeline.tsx`, section kind `timeline`): three real phrases from Anabasis 1.1.2–3, each on a strip of time. The main verb is a plain bar, the participle a red one before it («λαβὼν», aorist), alongside it («ἔχων», present) or after it, dashed as only intended («ὡς ἀποκτενῶν», future). The bars grow in the order the actions happen. The timeline's Greek is checked against the source file like the "Read it yourself" passages, and a unit test checks that each marked word is in its sentence.
+- **Two more tables** (`luon`, `lusas`): 23 of their 48 forms are not attested for λύω itself; every ending was confirmed on other verbs (`PARADIGM-REVIEW.md`).
+- Checked: all 15 lessons' quotations (`NETWORK=1`); `e2e/academy.spec.ts` (+1); accessibility of every lesson in both themes; the phone audit at 44 px. Not yet published.
 
 ## Decisions log
 | Date | Decision | Reason |
@@ -463,8 +467,8 @@ The owner asked for more Academy lessons (learning first), and for the alphabet 
 
 ## Known problems
 - **Phase 3 follow-ups**:
-  - More lessons: 14 so far (10–14 added on 2026-09-29: prepositions, adjectives, the third declension, imperfect and aorist, middle and passive). Still planned: participles, infinitives, contract verbs, -μι verbs, and more of the third declension (πατήρ, ἀνήρ, βασιλεύς).
-  - More tables: contract verbs, participles, more of the third declension.
+  - More lessons: 15 so far (10–15 added on 2026-09-29: prepositions, adjectives, the third declension, imperfect and aorist, middle and passive, participles). Still planned: infinitives, contract verbs, -μι verbs, and more of the third declension (πατήρ, ἀνήρ, βασιλεύς).
+  - More tables: contract verbs, the middle/passive and aorist passive participles, more of the third declension.
   - The owner is recording the audio (letters, diphthongs, top 100 words) in `/academy/studio`.
   - Studio recordings are WebM/Opus. Older Safari may not play WebM, so convert them to AAC/M4A in the pipeline before launch (for example with ffmpeg).
 - **Corpus health check** (`python pipeline/fetch_corpus.py`, then `CORPUS=1 npx vitest run src/lib/tei/corpus.test.ts` in `web/`; report in `pipeline/.cache/corpus-report.json`). On 2026-09-27, 2,774 Greek and English texts were checked and 4 remain flagged, all because of the source files:

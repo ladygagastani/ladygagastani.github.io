@@ -18,6 +18,8 @@ export type Section =
   | { kind: "shift"; title: string; items: { a: string; aEn: string; b: string; bEn: string; note: string }[] }  // same words, new order (Shift.tsx)
   | { kind: "voice"; caption: string; items: { voice: "active" | "middle" | "passive"; grc: string; verb: string; en: string; note: string;
       left: { grc: string; role: string }; right: { grc: string; role: string } }[] }   // one scene in three voices, drawn (Voice.tsx)
+  | { kind: "timeline"; title: string; items: { work: string; ref: string; label: string; grc: string; ptc: string; verb: string;
+      time: "before" | "same" | "after"; en: string; note: string }[] }   // when a participle's action happens, drawn (Timeline.tsx); grc is checked against the source
   | { kind: "table"; paradigm: string; title?: string }
   | { kind: "made"; title?: string; items: { grc: string; en: string; note?: string }[] }
   | { kind: "reveal"; title: string; items: { grc: string; answer: string }[] }
@@ -435,6 +437,63 @@ export const LESSONS: Lesson[] = [
           note: "«ἀνήχθη» \"was led up\" is an aorist passive of «ἀνάγω» (augment after «ἀν-»; γ becomes χ before the θ), and «ὑπὸ τοῦ πνεύματος» \"by the Spirit\" names who led. «πειρασθῆναι ὑπὸ τοῦ διαβόλου», \"to be tempted by the devil\", is passive too (an infinitive, met in a later lesson). The square brackets show a word the editors were unsure of." },
         { work: "tlg0031.tlg004", ref: "1.3", quote: "πάντα διʼ αὐτοῦ ἐγένετο", label: "Gospel of John 1.3",
           note: "«ἐγένετο», from «γίγνομαι», is middle in form, active in meaning: \"all things came into being through him\"." },
+      ] },
+    ],
+  },
+  {
+    id: "participles", title: "Participles: verbs that work as adjectives", greek: "μετοχή", minutes: 25,
+    summary: "λύων \"freeing\", λύσας \"having freed\": how Greek packs a whole clause into one word.",
+    words: ["πιστεύω", "λαμβάνω", "φέρω", "μήτηρ", "ἀποκτείνω"],
+    sections: [
+      { kind: "p", text: "A **participle** is a verb that works as an adjective: \"the *believing* man\", \"Cyrus, *having taken* a friend along\". Like an adjective, it **agrees** with a noun in gender, number and case. Like a verb, it has a **tense** and a **voice**, and it can take an object." },
+      { kind: "p", text: "The Greek grammarians called it «μετοχή», \"sharing\", because it shares in the nature of both the verb and the noun. The Latin *participium*, and so our *participle*, translates that name." },
+      { kind: "table", paradigm: "luon" },
+      { kind: "tip", text: "As with third-declension nouns (lesson 12), the genitive shows the stem: «λύων», «λύοντος», stem «λυοντ-». Look for «-οντ-» and «-ουσ-»: that is a present active participle." },
+      { kind: "table", paradigm: "lusas" },
+      { kind: "p", text: "**The other voices** are easier still. Middle and passive participles end in «-μενος, -μένη, -μενον» and decline like «ἀγαθός»: «λυόμενος» \"ransoming\" or \"being freed\", «λυσάμενος» \"having ransomed\" (aorist middle). The aorist passive is «λυθείς, λυθεῖσα, λυθέν» \"having been freed\". The future adds «σ»: «λύσων» \"about to free\", «λυσόμενος» \"about to ransom\"." },
+      { kind: "p", text: "**A participle's tense is about time compared with the main verb**, not with now. A present participle happens *at the same time* as the main verb, an aorist participle usually *before* it, and a future participle *after* it, often as a purpose: what someone means to do." },
+      { kind: "timeline", title: "Before, during, after: three participles from the same page of Xenophon", items: [
+        { work: "tlg0032.tlg006", ref: "1.1.2", label: "Anabasis 1.1.2", time: "before",
+          grc: "ἀναβαίνει οὖν ὁ Κῦρος λαβὼν Τισσαφέρνην ὡς φίλον", ptc: "λαβὼν", verb: "ἀναβαίνει",
+          en: "So Cyrus goes up, having taken Tissaphernes along as a friend.",
+          note: "Aorist participle: the taking comes first. «λαβών» is from «λαμβάνω» \"take\", whose aorist stem is «λαβ-». There is no augment: that belongs only to the indicative." },
+        { work: "tlg0032.tlg006", ref: "1.1.2", label: "Anabasis 1.1.2", time: "same",
+          grc: "τῶν Ἑλλήνων ἔχων ὁπλίτας ἀνέβη τριακοσίους", ptc: "ἔχων", verb: "ἀνέβη",
+          en: "And he went up with three hundred Greek hoplites (literally \"having\").",
+          note: "Present participle: he has them all the while he goes. «τριακοσίους» \"three hundred\" stands far from «ὁπλίτας» \"hoplites\"; the matching endings show that they belong together." },
+        { work: "tlg0032.tlg006", ref: "1.1.3", label: "Anabasis 1.1.3", time: "after",
+          grc: "συλλαμβάνει Κῦρον ὡς ἀποκτενῶν", ptc: "ἀποκτενῶν", verb: "συλλαμβάνει",
+          en: "He arrests Cyrus, meaning to kill him.",
+          note: "Future participle with «ὡς»: what the king intends to do next. It never happened: their mother pleaded for Cyrus and sent him back to his province." },
+      ] },
+      { kind: "p", text: "**Three ways to use a participle.** With the article, it becomes a noun: «ὁ πιστεύων» \"the one who believes, whoever believes\". With the article and a noun, it describes like an adjective: «ὁ ἀμνὸς ὁ αἴρων τὴν ἁμαρτίαν» \"the lamb who takes away the sin\". Without an article, it adds the circumstances of the main action: when, while, because or although. «λαβὼν Τισσαφέρνην» can be \"having taken Tissaphernes\", \"after taking\" or \"when he had taken\"." },
+      { kind: "tip", text: "Translate first with \"-ing\" or \"having …-ed\"; then choose the English that fits best: \"who…\", \"when…\", \"because…\", \"although…\". Greek leaves the link to the context." },
+      { kind: "made", title: "Practice sentences (made up for this lesson)", items: [
+        { grc: "ὁ λύων τὸν δοῦλον", en: "the one who frees the slave", note: "Article + participle: a noun. The participle takes an object like any verb." },
+        { grc: "λύσας τὸν ἵππον, ὁ ἀνὴρ ἀπῆλθεν.", en: "Having untied the horse, the man went away.", note: "Aorist: the untying comes first." },
+        { grc: "ἡ μήτηρ λέγουσα τὸν λόγον δακρύει.", en: "The mother weeps as she tells the story.", note: "Present: at the same time. «λέγουσα» is feminine, agreeing with «ἡ μήτηρ»." },
+      ] },
+      { kind: "reveal", title: "Name the participle", items: [
+        { grc: "λύοντες", answer: "present active, masculine nominative plural: \"freeing\"" },
+        { grc: "λύσασα", answer: "aorist active, feminine nominative singular: \"having freed\"" },
+        { grc: "λυομένου", answer: "present middle or passive, masculine or neuter genitive singular: \"ransoming\" or \"being freed\"" },
+        { grc: "λυθέντες", answer: "aorist passive, masculine nominative plural: \"having been freed\"" },
+      ] },
+      { kind: "check", items: [
+        { q: "«ὁ πιστεύων» means…", options: ["he believed", "the one who believes", "they believe", "to believe"], answer: 1, why: "Article + participle: \"the one who believes\"." },
+        { q: "An aorist participle usually shows an action…", options: ["before the main verb", "at the same time as the main verb", "after the main verb"], answer: 0, why: "The aorist looks back: \"having done\". The present is at the same time; the future looks ahead." },
+        { q: "Which participle agrees with «τὴν μητέρα»?", options: ["λύουσα", "λύουσαν", "λύοντα", "λυούσης"], answer: 1, why: "«τὴν μητέρα» is feminine accusative singular, so «λύουσαν»." },
+        { q: "Why does «λαβών» have no augment?", options: ["The augment belongs only to the indicative", "It is a present participle", "It begins with a consonant", "It is plural"], answer: 0, why: "Participles never take the augment, even in the aorist." },
+      ] },
+      { kind: "real", title: "Read it yourself", items: [
+        { work: "tlg0031.tlg004", ref: "3.36", quote: "ὁ πιστεύων εἰς τὸν υἱὸν ἔχει ζωὴν αἰώνιον", label: "Gospel of John 3.36",
+          note: "«ὁ πιστεύων», article + present participle: \"the one who believes\". Later in the verse, «ὁ δὲ ἀπειθῶν» \"but the one who disobeys\" has the same shape." },
+        { work: "tlg0031.tlg004", ref: "1.29", quote: "βλέπει τὸν Ἰησοῦν ἐρχόμενον πρὸς αὐτόν", label: "Gospel of John 1.29",
+          note: "«ἐρχόμενον» \"coming\", from «ἔρχομαι», agrees with «τὸν Ἰησοῦν» (masculine accusative singular). Then «ὁ ἀμνὸς τοῦ θεοῦ ὁ αἴρων τὴν ἁμαρτίαν τοῦ κόσμου», \"the lamb of God who takes away the sin of the world\": the participle «αἴρων» takes an object, like any verb." },
+        { work: "tlg0012.tlg001", ref: "1.13", quote: "λυσόμενός τε θύγατρα φέρων τʼ ἀπερείσιʼ ἄποινα", label: "Homer, Iliad 1.12–13",
+          note: "Back to Chryses (lesson 14). Two participles tell why and how he came: «λυσόμενος» (future middle) \"to ransom\" and «φέρων» (present) \"bringing\". Both are masculine nominative singular, agreeing with Chryses, the subject of «ἦλθε» \"he came\"." },
+        { work: "tlg0032.tlg006", ref: "1.1.3", quote: "ἡ δὲ μήτηρ ἐξαιτησαμένη αὐτὸν ἀποπέμπει", label: "Xenophon, Anabasis 1.1.3",
+          note: "«ἐξαιτησαμένη», an aorist middle participle, is feminine nominative, agreeing with «ἡ μήτηρ»: \"the mother, having begged for him, sends him back\". First she pleads, then she sends him: the aorist shows the order." },
       ] },
     ],
   },
