@@ -18,11 +18,14 @@ export interface Settings {
   translit: boolean;   // reader aid: transliteration under the Greek
   cases: boolean;      // reader aid: colour words by case
   metre: boolean;      // reader aid: show the scansion of verse
+  tryFirst: boolean;   // reader aid: each translation stays hidden until tapped, so the Greek is read first
+  fitLines: boolean;   // reader aid: verse lines shrink to fit the width instead of wrapping
+  vibrate: boolean;    // phones: a short vibration on a save, a bookmark, a right answer (lib/haptics.ts)
   pron: Pronunciation; // pronunciation system shown in the Academy
   markers: MarkerKind[];   // reader: which kinds of marker to show beside the scroll bar
 }
 
-export const DEFAULTS: Settings = { theme: "auto", motion: "auto", greekSize: 1.25, leading: 1.75, columns: "both", translit: false, cases: false, metre: false, pron: "attic", markers: MARKER_KINDS };
+export const DEFAULTS: Settings = { theme: "auto", motion: "auto", greekSize: 1.25, leading: 1.75, columns: "both", translit: false, cases: false, metre: false, tryFirst: false, fitLines: false, vibrate: true, pron: "attic", markers: MARKER_KINDS };
 export const LIMITS = {
   greekSize: { min: 1, max: 2, step: 0.0625 },
   leading: { min: 1.4, max: 2.2, step: 0.1 },
@@ -57,7 +60,7 @@ export const useSettings = create<SettingsStore>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => safeStorage),
-      partialize: ({ theme, motion, greekSize, leading, columns, translit, cases, metre, pron, markers }) => ({ theme, motion, greekSize, leading, columns, translit, cases, metre, pron, markers }),
+      partialize: ({ theme, motion, greekSize, leading, columns, translit, cases, metre, tryFirst, fitLines, vibrate, pron, markers }) => ({ theme, motion, greekSize, leading, columns, translit, cases, metre, tryFirst, fitLines, vibrate, pron, markers }),
       skipHydration: true,
     },
   ),

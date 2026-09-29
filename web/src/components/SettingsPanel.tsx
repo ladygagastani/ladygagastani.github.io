@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useSettings, LIMITS, applySettings, type ThemePref, type MotionPref } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
 import { useAcademy } from "@/lib/academy";
+import { useDragToClose } from "@/lib/use-drag-close";
 import OfflineActions from "./OfflineActions";
 import styles from "./SettingsPanel.module.css";
 
@@ -56,42 +57,17 @@ export default function SettingsPanel() {
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
-    if (open && !d.open) { d.style.removeProperty("--drag"); d.showModal(); }
+    if (open && !d.open) { reset(); d.showModal(); }
     if (!open && d.open) d.close();
+    // reset is the same function every time in effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // Phones: the sheet follows a finger dragging its top edge down, and goes away if let go far enough down.
-  const drag = useRef<{ id: number; y: number; dy: number; on: boolean } | null>(null);
-  const endDrag = (e: React.PointerEvent, mayClose: boolean) => {
-    const g = drag.current, d = ref.current;
-    if (!g || g.id !== e.pointerId) return;
-    drag.current = null;
-    if (!g.on || !d) return;
-    d.classList.remove(styles.dragging);
-    // put away: it slides on down from where the finger left it; otherwise it springs back up
-    if (mayClose && g.dy > Math.min(120, d.offsetHeight * 0.25)) close();
-    else d.style.setProperty("--drag", "0px");
-  };
-  const dragProps = {
-    onPointerDown: (e: React.PointerEvent) => {
-      if (e.button === 0 && matchMedia("(max-width: 760px)").matches) drag.current = { id: e.pointerId, y: e.clientY, dy: 0, on: false };
-    },
-    onPointerMove: (e: React.PointerEvent) => {
-      const g = drag.current, d = ref.current;
-      if (!g || !d || g.id !== e.pointerId) return;
-      const dy = Math.max(0, e.clientY - g.y);
-      if (!g.on) {
-        if (dy < 8) return;  // a tap on the Close button stays a tap
-        g.on = true;
-        e.currentTarget.setPointerCapture(e.pointerId);
-        d.classList.add(styles.dragging);
-      }
-      g.dy = dy;
-      d.style.setProperty("--drag", `${dy}px`);
-    },
-    onPointerUp: (e: React.PointerEvent) => endDrag(e, true),
-    onPointerCancel: (e: React.PointerEvent) => endDrag(e, false),
-  };
+  const { handlers: dragProps, reset } = useDragToClose({
+    el: () => ref.current, onClose: close, direction: "down", draggingClass: styles.dragging,
+    when: () => matchMedia("(max-width: 760px)").matches,
+  });
 
   return (
     <dialog

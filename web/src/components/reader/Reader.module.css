@@ -135,6 +135,10 @@
 @keyframes slide-in { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (min-width: 1280px) { .withPanel .text, .withPanel .cols, .withPanel .bar, .withPanel .bottom { margin-right: 400px; margin-left: 0; } }
 .panelHead { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+/* wide screens: the look-up's parts sit straight in the panel's grid; phones: they scroll below a fixed head */
+.panelBody { display: contents; }
+.grab, .stepBtn, .moreBtn { display: none; }
+.quick { margin: 0; }
 .pw { font-family: var(--f-greek); font-size: 2rem; line-height: 1.1; }
 .x { width: 36px; height: 36px; flex: none; font-size: 24px; line-height: 1; background: transparent; border: 1px solid var(--rule); border-radius: var(--radius); }
 .sec { display: grid; gap: 8px; }
@@ -418,3 +422,108 @@ p.translit { margin: -0.3em 0 0.8em; }
 .floatFold[open] summary { margin-bottom: 10px; }
 .floatFoldIn { display: grid; gap: 12px; animation: slide-in 0.25s var(--ease); }
 .floatTitle { font-family: var(--f-display); font-size: 1.15rem; }
+
+/* ------------------------------------------------------------ phones (Phase 10) */
+/* The page's sticky bar gives way to ReadBar along the bottom (the floating window and side-by-side keep it). */
+.gotoPhone { display: grid; gap: 6px; }
+.gotoPhone > div { display: flex; gap: 8px; }
+.gotoPhone input {
+  flex: 1; min-width: 0; min-height: var(--tap); font: inherit; font-size: 1.05rem; color: var(--ink);
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 10px; padding: 8px 12px;
+}
+.gotoPhone .btn { padding: 0 20px; min-height: var(--tap); }
+.marksPhone { list-style: none; margin: 0; padding: 0; display: grid; }
+.marksPhone button {
+  width: 100%; min-height: var(--tap); display: grid; gap: 2px; padding: 8px 4px; text-align: left; background: transparent; color: var(--ink);
+  border: 0; border-bottom: 1px solid color-mix(in srgb, var(--rule) 50%, transparent);
+}
+@media (max-width: 760px) {
+  .barAway { display: none; }
+  /* two fingers on the text resize the Greek (Reader.tsx) instead of zooming the page */
+  .reader:not(.floating):not(.pane) .text { touch-action: pan-x pan-y; }
+  .seg button { min-height: var(--tap); padding-inline: 16px; }
+  .floatBtn { min-height: var(--tap); height: auto; padding: 8px 14px; border-radius: 10px; text-align: left; }
+}
+
+/* Phones: the look-up as a sheet with a handle and three heights (WordPanel.tsx): peek, half and full.
+   --sheet-h is registered as a length so that WordPanel can read each height in pixels. */
+@property --sheet-h { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@media (max-width: 760px) {
+  .panel.wordSheet {
+    --sheet-h: min(46dvh, 400px);
+    display: flex; flex-direction: column; gap: 0; overflow: hidden; padding: 0;
+    top: auto; max-height: none; height: var(--sheet-h);
+    border-radius: 16px 16px 0 0; box-shadow: 0 -24px 48px -24px var(--shadow);
+    transition: height 0.35s var(--ease), translate 0.25s var(--ease);
+    animation: sheet-up 0.35s var(--ease);
+  }
+  .panel.wordSheet[data-snap="half"] { --sheet-h: 70dvh; }
+  .panel.wordSheet[data-snap="full"] { --sheet-h: calc(100dvh - env(safe-area-inset-top, 0px) - 10px); }
+  .panel.wordSheet.sheetDragging { transition: none; }
+  .wordSheet .panelHead {
+    position: relative; flex: none; align-items: center; gap: 4px; padding: 22px 12px 10px 16px;
+    border-bottom: 1px solid color-mix(in srgb, var(--rule) 50%, transparent); touch-action: none; cursor: grab;
+  }
+  .wordSheet .grab { display: block; position: absolute; top: 8px; left: 50%; width: 40px; height: 5px; margin-left: -20px; border-radius: 3px; background: var(--rule); }
+  .wordSheet .pw { flex: 1; min-width: 0; font-size: 1.75rem; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .wordSheet .stepBtn, .wordSheet .moreBtn {
+    display: grid; place-items: center; flex: none; width: var(--tap); height: var(--tap); padding: 0;
+    background: transparent; color: var(--ink); border: 0; border-radius: 10px; font-size: 1.9rem; line-height: 1;
+  }
+  .wordSheet .stepBtn:active, .wordSheet .moreBtn:active { background: var(--bg-2); }
+  .wordSheet .moreBtn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; }
+  .wordSheet .x { width: var(--tap); height: var(--tap); border-radius: 10px; }
+  .wordSheet .panelBody {
+    display: grid; align-content: start; gap: 18px; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+    padding: 16px 20px calc(24px + env(safe-area-inset-bottom, 0px)); touch-action: pan-y;
+    animation: word-in 0.3s var(--ease);
+  }
+  .wordSheet .panelBody[data-dir="-1"] { animation-name: word-in-back; }
+  .wordSheet .lsj { max-height: none; overflow: visible; }
+  .wordSheet .quick { font-size: 1.05rem; font-style: italic; }
+}
+@keyframes sheet-up { from { transform: translateY(40%); opacity: 0.4; } }
+@keyframes word-in { from { opacity: 0; transform: translateX(28px); } }
+@keyframes word-in-back { from { opacity: 0; transform: translateX(-28px); } }
+
+/* The passage toolbar: a × and the quick meaning of one word are for phones, where it docks along the bottom
+   with finger-sized buttons (PassageToolbar.tsx). */
+.tbClose, .quickRow { display: none; }
+@media (max-width: 760px) {
+  .reader:not(.floating) .toolbar {
+    left: 0 !important; right: 0; top: auto !important; bottom: 0; max-width: none; border-radius: 16px 16px 0 0;
+    flex-wrap: wrap; justify-content: center; gap: 2px 4px;
+    padding: 8px max(8px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px));
+    animation: sheet-up 0.3s var(--ease);
+  }
+  .reader:not(.floating) .toolbar button { flex: none; min-height: var(--tap); padding: 6px 12px; flex-direction: column; gap: 2px; font-size: 0.78rem; }
+  .reader:not(.floating) .toolbar svg { width: 20px; height: 20px; }
+  .reader:not(.floating) .swatches { align-self: center; gap: 8px; padding: 0 10px; }
+  .reader:not(.floating) .swatches button { width: 30px; height: 30px; min-height: 30px; padding: 0; }
+  .reader:not(.floating) .swatches button::after { content: ""; position: absolute; inset: -7px -4px; }
+  .reader:not(.floating) .swatches button { position: relative; }
+  .reader:not(.floating) .toolbar .tbClose { display: grid; place-items: center; order: 99; width: var(--tap); font-size: 1.6rem; line-height: 1; }
+  .quickRow {
+    display: flex; flex-basis: 100%; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 4px 6px 8px; border-bottom: 1px solid color-mix(in srgb, var(--inv-fg) 22%, transparent); margin-bottom: 4px;
+  }
+  .quickRow p { margin: 0; font-size: 1rem; line-height: 1.35; }
+  .quickRow b { font-family: var(--f-greek); font-weight: 400; font-size: 1.25rem; color: var(--accent); margin-right: 6px; }
+  .quickRow button { flex-direction: row !important; font-size: 0.9rem !important; border: 1px solid color-mix(in srgb, var(--inv-fg) 35%, transparent) !important; }
+  .quickNone { opacity: 0.7; font-style: italic; }
+}
+
+/* "Try it first": each translation waits under a veil until tapped (Reader.tsx, RowView) */
+.tr[data-veiled] { position: relative; min-height: 3.2em; }
+.tr[data-veiled] > :not(.reveal) { visibility: hidden; max-height: 4.8em; overflow: hidden; }
+.reveal {
+  position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; padding: 8px 12px; min-height: var(--tap);
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--rule) 22%, transparent) 0 8px, transparent 8px 16px), var(--surface);
+  border: 1px dashed var(--rule); border-radius: 8px; color: var(--ink-2); font-family: var(--f-label); font-size: 0.85rem; letter-spacing: 0.03em;
+  text-align: center; cursor: pointer; transition: color 0.2s, border-color 0.2s;
+}
+.reveal:hover, .reveal:focus-visible { color: var(--accent); border-color: var(--accent); }
+
+/* "Fit lines": whole verse lines, the Greek shrunk to the longest line on the page (--fit, measured in Reader.tsx) */
+.fitLines .grc { font-size: calc(var(--greek-size) * var(--fit, 1)); }
+.fitLines:not([data-fit-wrap]) .lt { white-space: nowrap; }

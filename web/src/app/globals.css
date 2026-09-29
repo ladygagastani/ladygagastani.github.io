@@ -13,6 +13,9 @@
      shows now (it tucks away with the header). 0 on wider screens, which have no such bar. */
   --tabbar-h: 0px;
   --tabbar-vis: var(--tabbar-h);
+  /* phones, in the reader: its own bar just above that one (ReadBar.tsx), and how much of it shows */
+  --readbar-h: 0px;
+  --readbar-vis: var(--readbar-h);
   /* the smallest comfortable touch target (Phase 10) */
   --tap: 44px;
   /* colour */
@@ -75,7 +78,8 @@
     --step-4: clamp(2.6rem, 13vw, 3.4rem);
   }
 }
-html[data-hdr="hidden"] { --tabbar-vis: 0px; }
+@media (max-width: 760px) { html:has([data-readbar]) { --readbar-h: 54px; } }
+html[data-hdr="hidden"] { --tabbar-vis: 0px; --readbar-vis: 0px; }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -107,7 +111,7 @@ html { -webkit-text-size-adjust: 100%; }
 body { overflow-x: clip; }
 body {
   margin: 0;
-  padding-bottom: var(--tabbar-h);  /* the end of every page clears the phone bar */
+  padding-bottom: calc(var(--tabbar-h) + var(--readbar-h));  /* the end of every page clears the phone bars */
   background: var(--bg);
   color: var(--ink);
   font: 400 var(--step-0) / 1.6 var(--f-body);
@@ -252,7 +256,7 @@ html[data-motion="reduce"] ::view-transition-new(*) { animation: none !important
 main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(100svh - var(--hdr-h)); outline: none; }
 
 .toast {
-  position: fixed; left: 50%; bottom: calc(20px + max(var(--tabbar-vis), env(safe-area-inset-bottom, 0px))); z-index: 70;
+  position: fixed; left: 50%; bottom: calc(20px + max(var(--tabbar-vis) + var(--readbar-vis), env(safe-area-inset-bottom, 0px))); z-index: 70;
   transform: translate(-50%, 20px); opacity: 0; pointer-events: none; max-width: calc(100vw - 32px);
   background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); padding: 10px 18px; border-radius: 6px; font-size: 0.95rem;
   transition: opacity 0.25s, transform 0.25s var(--ease);

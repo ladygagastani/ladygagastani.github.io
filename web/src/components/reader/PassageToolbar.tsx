@@ -2,7 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import type { Colour } from "@/lib/annotations";
+import { useQuickGloss, type WordContext } from "./WordPanel";
 import styles from "./Reader.module.css";
+
+const PHONE = "(max-width: 760px)";
 
 export interface Selection {
   start: { u: string; i: number };
@@ -14,17 +17,32 @@ export interface Selection {
 
 const COLOURS: [Colour, string][] = [["red", "Red"], ["ochre", "Ochre"], ["blue", "Blue"], ["green", "Green"]];
 
-/** Floating toolbar for a selected passage. */
-export default function PassageToolbar({ sel, onAction, onClose, xref = null }: {
+/**
+ * Floating toolbar for a selected passage. On phones it docks along the bottom of the screen instead
+ * (the phone's own Copy and Share menu sits by the words), with finger-sized buttons; when one word is
+ * selected (press and hold it) it starts with the word's dictionary form and one-line meaning.
+ */
+export default function PassageToolbar({ sel, onAction, onClose, xref = null, word = null, onLookUp }: {
   sel: Selection;
   onAction: (a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | "echoes" | "ask" | { highlight: Colour }) => void;
   onClose: () => void;
   xref?: "start" | "here" | null;   // side-by-side only: begin a cross-reference, or finish one here
+  /** the one word selected, for its quick meaning (phones) */
+  word?: { w: string; ctx: WordContext | null } | null;
+  onLookUp?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const quick = useQuickGloss(word?.w ?? null, word?.ctx ?? null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (matchMedia(PHONE).matches && !el.parentElement?.closest("[data-float-window]")) {
+      // placed along the bottom by the CSS: move the page if the words would be hidden behind it
+      el.style.opacity = "1";
+      const cover = el.getBoundingClientRect().top - 16;
+      if (sel.rect.bottom > cover) scrollBy({ top: sel.rect.bottom - cover, behavior: "smooth" });
+      return;
+    }
     const w = el.offsetWidth, h = el.offsetHeight;
     // inside the floating window, "fixed" is measured from the window, not the screen
     const box = el.parentElement?.closest("[data-float-window]")?.getBoundingClientRect();
@@ -43,6 +61,13 @@ export default function PassageToolbar({ sel, onAction, onClose, xref = null }: 
 
   return (
     <div ref={ref} className={styles.toolbar} role="toolbar" aria-label="Passage actions" onMouseDown={(e) => e.preventDefault()}>
+      {word && (
+        <div className={styles.quickRow}>
+          <p><b lang="grc">{quick.lemma ?? word.w}</b> {quick.done ? (quick.gloss || <span className={styles.quickNone}>no short definition</span>) : "…"}</p>
+          {onLookUp && <button type="button" onClick={onLookUp}>More</button>}
+        </div>
+      )}
+      <button type="button" className={styles.tbClose} onClick={onClose} aria-label="Close passage actions">×</button>
       <button type="button" onClick={() => onAction("bookmark")} title="Bookmark this place">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z" /></svg><span>Bookmark</span>
       </button>

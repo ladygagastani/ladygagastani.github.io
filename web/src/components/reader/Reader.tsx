@@ -12,7 +12,7 @@ import { parseInWorker, type Parsed } from "@/lib/tei/client";
 import { alignChunk, coverage, type Row } from "@/lib/tei/align";
 import { findRef, chunkOf } from "@/lib/tei/refs";
 import { getPosition, savePosition } from "@/lib/position";
-import { useSettings, type Columns } from "@/lib/settings";
+import { useSettings, LIMITS, type Columns } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
 import { AREAS } from "@/config/areas";
 import { Blocks } from "./Blocks";
@@ -37,7 +37,8 @@ import { lineHash, type MetreIndex } from "@/lib/metre/text";
 import { playLine as playLineRhythm } from "@/lib/metre/beat";
 import { loadWordPack, analyse as analyseWord } from "@/lib/lookup/words";
 import { caseOf } from "@/lib/lookup/postag";
-import { headerVisible, scrollBelowHeader } from "@/lib/header";
+import { headerVisible, scrollBelowHeader, setBars } from "@/lib/header";
+import ReadBar, { PHONE } from "./ReadBar";
 import styles from "./Reader.module.css";
 
 type Load = { state: "loading"; step: string } | { state: "error"; message: string } | { state: "ready" };
@@ -70,12 +71,16 @@ const MARK_ICON: Record<string, React.ReactNode> = {
 };
 
 /** One passage row: reference and your marks in the margin, Greek, translation, and any notes. */
-const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, translit, metre, verses }: {
+const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, translit, metre, verses, tryFirst }: {
   row: Row; marks: Mark[]; openNote: string | null; onCloseNote: () => void; translit: boolean; metre: Map<string, (LineRender | null)[]> | null;
   /** a text cited by verse: the margin shows only the verse number, as in a printed Bible (the chapter is in the bar) */
   verses: boolean;
+  /** "Try it first": the translation stays hidden until it is tapped */
+  tryFirst: boolean;
 }) {
   const notes = marks.filter((m) => m.kind === "note");
+  const [shown, setShown] = useState(false);
+  const veiled = tryFirst && !shown && row.trans.length > 0;
   return (
     <section className={styles.row} data-key={row.key}>
       <div className={styles.ref}>
@@ -94,7 +99,8 @@ const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, trans
       <div className={styles.grc} lang="grc">
         {row.greek.map((u) => <div key={u.ref.join(".")} data-u={u.ref.join(".")}><Blocks blocks={u.blocks} greek keyPrefix={u.ref.join(".")} translit={translit} metre={metre?.get(u.ref.join("."))} /></div>)}
       </div>
-      <div className={styles.tr}>
+      <div className={styles.tr} data-veiled={veiled || undefined}>
+        {veiled && <button type="button" className={styles.reveal} onClick={() => setShown(true)}>Tap to see the translation</button>}
         {row.trans.length ? <Blocks blocks={row.trans} greek={false} keyPrefix={`t${row.key}`} /> : <span className={styles.none} aria-label="No translation for this passage">—</span>}
       </div>
       {notes.length > 0 && (
@@ -142,6 +148,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const translit = useSettings((s) => s.translit);
   const cases = useSettings((s) => s.cases);
   const metreOn = useSettings((s) => s.metre);
+  const tryFirst = useSettings((s) => s.tryFirst);
+  const fitLines = useSettings((s) => s.fitLines);
   const [vocabOpen, setVocabOpen] = useState(false);
 
   const workId = P("w") ?? "";
@@ -348,7 +356,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   /** The passage at the top of this pane now: the first showing more than a sliver below the sticky bar. */
   const topKey = () => {
     const bar = root().querySelector<HTMLElement>(`.${styles.bar}`);
-    const edge = bar ? bar.getBoundingClientRect().bottom : contained ? rootRef.current!.getBoundingClientRect().top : headerVisible();
+    // (on phones the page's sticky bar gives way to ReadBar at the bottom, and is not drawn)
+    const edge = bar?.offsetHeight ? bar.getBoundingClientRect().bottom : contained ? rootRef.current!.getBoundingClientRect().top : headerVisible();
     // a row's empty padding below its last line does not count as showing
     return [...root().querySelectorAll<HTMLElement>("article [data-key]")]
       .find((r) => r.getBoundingClientRect().bottom - parseFloat(getComputedStyle(r).paddingBottom) > edge + 24)?.dataset.key ?? null;
@@ -390,6 +399,80 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     ro.observe(bar);
     return () => ro.disconnect();
   }, [hasRows]);
+
+  // Pinch the text with two fingers to change the size of the Greek (remembered in Settings). The passage
+  // between the fingers stays where it is while the lines re-flow around it.
+  useEffect(() => {
+    const el = textRef.current;
+    if (!el || contained) return;
+    let d0 = 0, size0 = 0, live = 0, anchor: HTMLElement | null = null, anchorY = 0, frame = 0;
+    const { min, max, step } = LIMITS.greekSize;
+    const gap = (t: TouchList) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+    const start = (e: TouchEvent) => {
+      if (e.touches.length !== 2) return;
+      d0 = gap(e.touches); size0 = live = useSettings.getState().greekSize;
+      const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2, my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      anchor = document.elementFromPoint(mx, my)?.closest<HTMLElement>("[data-key]") ?? null;
+      anchorY = anchor?.getBoundingClientRect().top ?? 0;
+    };
+    const move = (e: TouchEvent) => {
+      if (!d0 || e.touches.length !== 2) return;
+      e.preventDefault();   // the page itself must not zoom
+      live = Math.min(max, Math.max(min, size0 * gap(e.touches) / d0));
+      document.documentElement.style.setProperty("--greek-size", `${live}rem`);
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => { if (anchor) scrollBy(0, anchor.getBoundingClientRect().top - anchorY); });
+    };
+    const end = (e: TouchEvent) => {
+      if (!d0 || e.touches.length >= 2) return;
+      d0 = 0;
+      useSettings.getState().set({ greekSize: Math.round(live / step) * step });
+    };
+    const noZoom = (e: Event) => e.preventDefault();   // Safari's own pinch gesture
+    el.addEventListener("touchstart", start, { passive: true });
+    el.addEventListener("touchmove", move, { passive: false });
+    el.addEventListener("touchend", end);
+    el.addEventListener("touchcancel", end);
+    el.addEventListener("gesturestart", noZoom);
+    return () => {
+      cancelAnimationFrame(frame);
+      el.removeEventListener("touchstart", start); el.removeEventListener("touchmove", move);
+      el.removeEventListener("touchend", end); el.removeEventListener("touchcancel", end); el.removeEventListener("gesturestart", noZoom);
+    };
+  }, [contained, hasRows]);
+
+  // "Fit lines": verse lines stay whole, and the Greek shrinks until the longest line on the page fits
+  // (never below half its size; past that, lines wrap again).
+  const fitOn = useSettings((s) => s.fitLines);
+  const greekSize = useSettings((s) => s.greekSize);
+  useEffect(() => {
+    const el = textRef.current;
+    if (!el || !fitOn) return;
+    let frame = 0;
+    const measure = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        el.style.setProperty("--fit", "1");
+        el.removeAttribute("data-fit-wrap");
+        let worst = 0;
+        for (const line of el.querySelectorAll<HTMLElement>(`.${styles.line}`)) {
+          const lt = line.querySelector<HTMLElement>(`.${styles.lt}`), ln = line.querySelector<HTMLElement>(`.${styles.ln}`);
+          if (!lt) continue;
+          const room = line.clientWidth - (ln?.offsetWidth ?? 0);
+          if (room > 0) worst = Math.max(worst, lt.scrollWidth / room);
+        }
+        const fit = worst > 1 ? 1 / worst : 1;
+        el.style.setProperty("--fit", String(Math.max(0.5, fit * 0.99)));
+        if (fit < 0.5) el.setAttribute("data-fit-wrap", "");
+      });
+    };
+    measure();
+    // only a change of width matters (the fitting itself changes the height)
+    let w = el.clientWidth;
+    const ro = new ResizeObserver(() => { if (el.clientWidth !== w) { w = el.clientWidth; measure(); } });
+    ro.observe(el);
+    return () => { cancelAnimationFrame(frame); ro.disconnect(); el.style.removeProperty("--fit"); };
+  }, [fitOn, hasRows, chunk, greekSize, contained]);
 
   // ------------------------------------------------------------ navigation
   const query = (o: { ed?: string; tr?: string | null; at?: string }) => {
@@ -551,6 +634,36 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     const spans = [...root().querySelectorAll<HTMLElement>("article [data-u] [data-w]")].filter((sp) => range.intersectsNode(sp));
     selectSpans(spans, range.getBoundingClientRect());
   };
+  // Touch screens send no mouse-up after pressing and holding to select words, so follow the selection
+  // itself: once it rests for a moment, the passage toolbar opens for it (and closes when it is cleared).
+  const touchSel = useRef(false);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined, touch = false;
+    const onDown = (e: PointerEvent) => { touch = e.pointerType === "touch"; };
+    const onChange = () => {
+      if (!touch) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const s = getSelection(), a = textRef.current;
+        if (s && !s.isCollapsed && s.rangeCount && a?.contains(s.anchorNode)) { touchSel.current = true; onTextMouseUpRef.current(); }
+        else if (touchSel.current) { touchSel.current = false; setSel(null); }
+      }, 350);
+    };
+    addEventListener("pointerdown", onDown, true);
+    document.addEventListener("selectionchange", onChange);
+    return () => { clearTimeout(timer); removeEventListener("pointerdown", onDown, true); document.removeEventListener("selectionchange", onChange); };
+  }, []);
+  const onTextMouseUpRef = useRef(onTextMouseUp);
+  useEffect(() => { onTextMouseUpRef.current = onTextMouseUp; });
+  /** The one word selected, if the selection is a single word, with where it is (for its quick meaning). */
+  const selWord = useMemo(() => {
+    if (!sel || sel.start.u !== sel.end.u || sel.start.i !== sel.end.i || !doc) return null;
+    const unit = rootRef.current?.querySelector<HTMLElement>(`[data-u="${CSS.escape(sel.start.u)}"]`);
+    const span = unit?.querySelectorAll<HTMLElement>("[data-w]")[sel.start.i];
+    if (!unit || !span) return null;
+    const same = [...unit.querySelectorAll<HTMLElement>("[data-w]")].filter((x) => norm(x.dataset.w!) === norm(span.dataset.w!));
+    return { w: span.dataset.w!, ctx: { work: workId, unitKey: sel.start.u, occurrence: same.indexOf(span), keys: unitKeys, depth: doc.levels.length }, span };
+  }, [sel, doc, workId, unitKeys]);
 
   async function act(a: "bookmark" | "favourite" | "note" | "share" | "xref" | "xref-here" | "echoes" | "ask" | { highlight: Colour }) {
     if (!sel || !edV) return;
@@ -709,6 +822,13 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       if (m.kind === "note") setOpenNote(openNote === m.id ? null : m.id);
       else if (m.kind === "xref" && m.link) openInPane(pane === 1 ? 2 : 1, m.link.work, m.link.ed, m.link.start.u);
       else { useMarks.getState().remove(m.id); toast(m.kind === "bookmark" ? "Bookmark removed." : "Removed from favourites."); }
+      return;
+    }
+    // phones: a tap on the page away from any word or button puts the controls away for a clean page,
+    // or brings them back (a look-up open is closed first)
+    if (!contained && matchMedia(PHONE).matches && !el.closest("a, button, input, select, textarea, label, summary, [role='button']")
+      && !getSelection()?.toString()) {
+      if (word) closeWord(); else setBars();
     }
   };
 
@@ -821,16 +941,42 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     );
   }
 
+  /** Look up the next (1) or previous (-1) word on the page, from the one being looked up. */
+  function stepWord(dir: 1 | -1) {
+    const words = [...(textRef.current?.querySelectorAll<HTMLElement>("[data-w]") ?? [])];
+    const cur = textRef.current?.querySelector<HTMLElement>(`.${styles.sel}`);
+    const next = cur ? words[words.indexOf(cur) + dir] : undefined;
+    if (next) openWord(next);
+  }
+
+  /** Close the look-up, back to the word that was looked up, so the keyboard carries on from there. */
+  function closeWord() {
+    const back = root().querySelector<HTMLElement>(`.${styles.sel}`);
+    setWord(null); root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel));
+    back?.focus({ preventScroll: true });
+  }
+
   const chunkInfo = doc?.chunks[chunk];
+  const hasLines = rows.some((r) => r.greek.some((u) => u.blocks.some((b) => b.t === "l")));
   const aids = (
     <div className={styles.aids} role="group" aria-label="Reading aids">
       <button type="button" className="chip" aria-pressed={translit} onClick={() => setSettings({ translit: !translit })} title="Show each line in Latin letters">Transliteration</button>
       <button type="button" className="chip" aria-pressed={cases} onClick={() => setSettings({ cases: !cases })} title="Underline nouns, adjectives and participles in the colour of their case">Colour by case</button>
       {mInfo && <button type="button" className="chip" aria-pressed={metreOn} onClick={() => setSettings({ metre: !metreOn })} title="Mark long and short syllables, feet and caesura">Metre</button>}
       <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setWord(null); setEcho(null); }}>Vocabulary</button>
+      {trText && columns === "both" && <button type="button" className="chip" aria-pressed={tryFirst} onClick={() => setSettings({ tryFirst: !tryFirst })} title="Hide each translation until you tap it, so you read the Greek first">Try it first</button>}
+      {hasLines && <button type="button" className="chip" aria-pressed={fitLines} onClick={() => setSettings({ fitLines: !fitLines })} title="Make each verse line fit the width of the page instead of wrapping">Fit lines</button>}
     </div>
   );
   const setCols = (c: Columns) => setSettings({ columns: c });
+  const columnsSeg = (
+    <div className={styles.seg} role="radiogroup" aria-label="Columns">
+      {([["both", "Both"], ["greek", "Greek"], ["trans", "English"]] as [Columns, string][]).map(([c, l]) => (
+        <button key={c} type="button" role="radio" aria-checked={columns === c} onClick={() => setCols(c)} disabled={c !== "greek" && !trText}>{l}</button>
+      ))}
+    </div>
+  );
+  const sortedMarks = [...allMarks].sort((a, b) => cmp(a.start, b.start, order));
 
   return (
     <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${verses ? styles.verses : ""} ${word || echo || vocabOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""} ${floating ? styles.floating : ""}`}
@@ -873,11 +1019,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
               </select>
             </label>
             {!split && <button type="button" className="chip" onClick={onOpenSecond}>Open a second book beside this one</button>}
-            <div className={styles.seg} role="radiogroup" aria-label="Columns">
-              {([["both", "Both"], ["greek", "Greek"], ["trans", "English"]] as [Columns, string][]).map(([c, l]) => (
-                <button key={c} type="button" role="radio" aria-checked={columns === c} onClick={() => setCols(c)} disabled={c !== "greek" && !trText}>{l}</button>
-              ))}
-            </div>
+            {columnsSeg}
           </div>
           {floating && aids}
           </FloatFold>
@@ -897,7 +1039,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
 
       {load.state === "ready" && doc && chunkInfo && (
         <>
-          <div className={`wrap ${styles.bar}`} data-tools={toolsOpen ? "open" : undefined}>
+          <div className={`wrap ${styles.bar} ${contained ? "" : styles.barAway}`} data-tools={toolsOpen ? "open" : undefined}>
             <div className={styles.pager}>
               <button type="button" onClick={() => goChunk(chunk - 1)} disabled={chunk === 0} aria-label="Previous page">←</button>
               <select aria-label="Page" value={chunk} onChange={(e) => goChunk(+e.target.value)}>
@@ -919,7 +1061,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
               {marksOpen && (
                 <ul>
                   {!allMarks.length && <li className="muted">Select words in the Greek, or click a passage number, to bookmark, highlight or write a note.</li>}
-                  {[...allMarks].sort((a, b) => cmp(a.start, b.start, order)).map((m) => (
+                  {sortedMarks.map((m) => (
                     <li key={m.id}>
                       <button type="button" onClick={() => { setMarksOpen(false); nav.go(query({ at: m.start.u })); }}>
                         <span className="label">{m.kind} · {rangeLabel(m.start.u, m.end.u)}</span>
@@ -967,17 +1109,62 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
             <span className="label">{trText ? `English · ${describe(trText)}` : ""}</span>
           </div>
 
-          <article ref={textRef} className={`wrap ${styles.text} ${metre ? styles.metreOn : ""}`} onClick={onTextClick} onKeyDown={onTextKey} onMouseUp={onTextMouseUp} onDragStart={onDragStart} aria-label={`${cite}, ${chunkInfo.label}`}>
-            {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} translit={translit} metre={metre} verses={verses} />)}
+          <article ref={textRef} className={`wrap ${styles.text} ${metre ? styles.metreOn : ""} ${fitLines && hasLines ? styles.fitLines : ""}`} onClick={onTextClick} onKeyDown={onTextKey} onMouseUp={onTextMouseUp} onDragStart={onDragStart} aria-label={`${cite}, ${chunkInfo.label}`}>
+            {rows.map((r) => <RowView key={r.key} row={r} marks={marksByRow.get(r.key) ?? noMarks} openNote={openNote} onCloseNote={() => setOpenNote(null)} translit={translit} metre={metre} verses={verses}
+              tryFirst={tryFirst && !!trText && columns === "both"} />)}
           </article>
-          {sel && <PassageToolbar sel={sel} onAction={act} onClose={() => setSel(null)}
-            xref={split ? (pendingXref && pendingXref.pane !== pane ? "here" : "start") : null} />}
+          {sel && <PassageToolbar sel={sel} onAction={act} onClose={() => { setSel(null); getSelection()?.removeAllRanges(); }}
+            xref={split ? (pendingXref && pendingXref.pane !== pane ? "here" : "start") : null}
+            word={selWord} onLookUp={selWord ? () => { const s = selWord.span; setSel(null); getSelection()?.removeAllRanges(); openWord(s); } : undefined} />}
           {share && <ShareDialog data={share} onClose={() => setShare(null)} />}
 
           <div className={`wrap ${styles.bottom}`}>
             <button type="button" className="btn ghost" onClick={() => goChunk(chunk - 1)} disabled={chunk === 0}>← {chunk > 0 ? doc.chunks[chunk - 1].label : ""}</button>
             <button type="button" className="btn" onClick={() => goChunk(chunk + 1)} disabled={chunk === doc.chunks.length - 1}>{chunk < doc.chunks.length - 1 ? doc.chunks[chunk + 1].label : ""} →</button>
           </div>
+
+          {!contained && (
+            <ReadBar title={work?.title ?? ""} author={author?.name} chunks={doc.chunks} chunk={chunk} go={goChunk}
+              goto={(close) => (
+                <form className={styles.gotoPhone} role="search" onSubmit={(e) => { const ok = findRef(doc, goto) >= 0; submitGoto(e); if (ok) close(); }}>
+                  <label className="label" htmlFor="reader-goto-phone">Go to a passage</label>
+                  <div>
+                    <input id="reader-goto-phone" value={goto} onChange={(e) => setGoto(e.target.value)} enterKeyHint="go"
+                      autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
+                      placeholder={`${doc.levels.join(".")}, e.g. ${doc.units[Math.min(40, doc.units.length - 1)].ref.join(".")}`} />
+                    <button type="submit" className="btn">Go</button>
+                  </div>
+                </form>
+              )}
+              marks={(close) => (
+                <>
+                  <h3 className="label">Your marks ({allMarks.length})</h3>
+                  {!allMarks.length
+                    ? <p className="muted">Press and hold words in the Greek, or tap a passage number, to bookmark, highlight or write a note.</p>
+                    : (
+                      <ul className={styles.marksPhone}>
+                        {sortedMarks.map((m) => (
+                          <li key={m.id}>
+                            <button type="button" onClick={() => { close(); nav.go(query({ at: m.start.u })); }}>
+                              <span className="label">{m.kind} · {rangeLabel(m.start.u, m.end.u)}</span>
+                              <span>{m.kind === "note" && m.text ? m.text.slice(0, 80) : <span lang="grc">{m.quote.slice(0, 60)}</span>}</span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                </>
+              )}
+              aids={(
+                <>
+                  {aids}
+                  {columnsSeg}
+                  <button type="button" className={styles.floatBtn} onClick={() => floatAway("all")}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM12 12h6v5h-6z" /></svg> Float the reader, and keep reading anywhere on the site
+                  </button>
+                </>
+              )} />
+          )}
 
           {from && (
             <p className={`wrap ${styles.source}`}>
@@ -993,12 +1180,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           onClose={() => setVocabOpen(false)} onPick={(lemma) => setWord({ w: lemma, ctx: null, at: null })} />
       )}
       {echo && !word && <EchoesPanel q={echo} onJump={echoJump} onMarks={setEchoMarks} onClose={() => setEcho(null)} />}
-      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onEchoes={word?.at ? () => openEchoes(word.at!, word.at!) : undefined} onClose={() => {
-        // back to the word that was looked up, so the keyboard carries on from there
-        const back = root().querySelector<HTMLElement>(`.${styles.sel}`);
-        setWord(null); root().querySelectorAll(`.${styles.sel}`).forEach((x) => x.classList.remove(styles.sel));
-        back?.focus({ preventScroll: true });
-      }} />
+      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onEchoes={word?.at ? () => openEchoes(word.at!, word.at!) : undefined} onClose={closeWord}
+        onStep={word?.at ? stepWord : undefined} sheet={!floating} />
     </div>
   );
 }

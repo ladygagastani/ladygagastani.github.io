@@ -14,6 +14,31 @@ export const headerHeight = () => px("--hdr-h");
 /** How many pixels of the header are showing at the top of the window now. */
 export const headerVisible = () => px("--hdr-vis");
 
+/** Phones: the full height of what is fixed along the bottom of the screen (the bar, and the reader's bar). */
+export const bottomBarsHeight = () => px("--tabbar-h") + px("--readbar-h");
+
+/**
+ * Hide the header and the bars along the bottom (a clean page for reading), or bring them back.
+ * Header.tsx listens; with no argument it switches between the two.
+ */
+export const setBars = (hidden?: boolean) => dispatchEvent(new CustomEvent("mathesis:bars", { detail: hidden }));
+
+/**
+ * Keep the header and bars showing through the scrolling that follows a control in them (the reader's
+ * next page, a chosen chapter): the passage is placed below the header, and the scroll does not tuck
+ * them away. Anything the reader does next (scrolling, a tap, a key) ends it, as does time.
+ */
+let heldUntil = 0;
+export const barsHeld = () => performance.now() < heldUntil;
+export function holdBars(ms = 3000) {
+  heldUntil = performance.now() + ms;
+  setBars(false);
+  const USER = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+  const release = () => { heldUntil = 0; USER.forEach((e) => removeEventListener(e, release, true)); };
+  // after this click has finished: its own pointer events must not end the hold at once
+  setTimeout(() => USER.forEach((e) => addEventListener(e, release, { capture: true, passive: true, once: true })), 0);
+}
+
 /**
  * Scroll the window so `el` sits `gap` pixels below the top, clear of the header. Scrolling down
  * past the header tucks it away and scrolling up brings it back, so the place to scroll to depends
@@ -24,7 +49,8 @@ export function scrollBelowHeader(el: HTMLElement, gap: number, smooth = false) 
   const h = headerHeight();
   const hidden = scrollY + el.getBoundingClientRect().top - gap;   // the place if the header is tucked away
   const dy = hidden - scrollY;
-  const pinned = !!document.querySelector("header:focus-within");  // Header.tsx keeps it showing while it has the focus
+  // Header.tsx keeps it showing while it has the focus, or while held (holdBars)
+  const pinned = !!document.querySelector("header:focus-within") || barsHeld();
   const tucked = !pinned && hidden > h && (dy > 6 || (dy >= -6 && headerVisible() === 0));
   scrollTo({ top: Math.max(0, tucked ? hidden : hidden - h), behavior: smooth ? "smooth" : "auto" });
 }

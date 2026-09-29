@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { AREAS, NAV, SITE } from "@/config/areas";
 import { useSettings } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
+import { barsHeld } from "@/lib/header";
 import ConnectionLight from "./ConnectionLight";
 import AccountButton from "./AccountButton";
 import styles from "./Header.module.css";
@@ -47,7 +48,7 @@ export default function Header() {
         root.toggleAttribute("data-scrolled", y > 4);
         if (y <= h) set(false);                                      // near the top: always showing
         else if (y + innerHeight >= root.scrollHeight - 2) set(false); // at the very end, too: nothing more to read on to
-        else if (dy > 6 && !el.matches(":focus-within")) set(true);  // reading on: tuck it away
+        else if (dy > 6 && !el.matches(":focus-within") && !barsHeld()) set(true);  // reading on: tuck it away
         else if (dy < -6) set(false);                                // any scroll back up: bring it back
         else return;                                                 // small jitters keep the reference point
         lastY = y;
@@ -56,10 +57,13 @@ export default function Header() {
     // keyboard users tabbing into the header always see it
     const show = () => { set(false); lastY = scrollY; };
     showRef.current = show;
+    // a tap on the reader's page asks for a clean page, or for the bars back (setBars in lib/header.ts)
+    const onBars = (e: Event) => { const want = (e as CustomEvent<boolean | undefined>).detail; set(want ?? !hidden); lastY = scrollY; };
     check();
     addEventListener("scroll", check, { passive: true });
+    addEventListener("mathesis:bars", onBars);
     el.addEventListener("focusin", show);
-    return () => { ro.disconnect(); cancelAnimationFrame(frame); removeEventListener("scroll", check); el.removeEventListener("focusin", show); };
+    return () => { ro.disconnect(); cancelAnimationFrame(frame); removeEventListener("scroll", check); removeEventListener("mathesis:bars", onBars); el.removeEventListener("focusin", show); };
   }, []);
 
   // a new page starts with the header showing

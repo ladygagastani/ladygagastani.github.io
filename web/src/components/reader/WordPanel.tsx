@@ -83,9 +83,116 @@ export function LsjEntryView({ e, full, tall = false }: { e: LsjEntry; full: boo
 
 type Loaded<T> = { key: string; value: T | null; error?: string };
 
-export default function WordPanel({ word, ctx, onClose, onEchoes }: { word: string | null; ctx: WordContext | null; onClose: () => void; onEchoes?: () => void }) {
+/**
+ * A word's dictionary form and one-line meaning, for a quick look without the whole look-up (the
+ * passage toolbar on phones): GLAUx's analysis here, then the core vocabulary or LSJ's short definition.
+ */
+export function useQuickGloss(word: string | null, ctx: WordContext | null) {
+  const key = word ? `${ctx?.work}|${ctx?.unitKey}|${ctx?.occurrence}|${word}` : "";
+  const [got, setGot] = useState<{ key: string; lemma: string | null; gloss: string }>({ key: "", lemma: null, gloss: "" });
+  useEffect(() => {
+    if (!word) return;
+    let live = true;
+    (async () => {
+      const pack = ctx ? await loadWordPack(ctx.work).catch(() => null) : null;
+      const lemma = pack && ctx ? analyse(pack, word, ctx.unitKey, ctx.occurrence, ctx.keys, ctx.depth)?.lemma ?? null : null;
+      const core = await coreEntry(lemma ?? lookupForm(word)).catch(() => null);
+      let gloss = core?.def ?? "";
+      if (!gloss) {
+        for (const h of lemma ? [lemma] : candidates(word)) {
+          const r = await lsjEntries(h).catch(() => null);
+          if (r?.entries[0]?.s) { gloss = r.entries[0].s; break; }
+        }
+      }
+      if (live) setGot({ key, lemma, gloss });
+    })();
+    return () => { live = false; };
+    // ctx is identified by key
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, word]);
+  return got.key === key && word ? { lemma: got.lemma, gloss: got.gloss, done: true } : { lemma: null, gloss: "", done: false };
+}
+
+type Snap = "peek" | "half" | "full";
+const PHONE = "(max-width: 760px)";
+
+/**
+ * Phones: the look-up is a sheet with a handle and three heights. It opens at "peek" (the word, its
+ * grammar and short meaning); drag the handle up for half or all of the screen (the dictionary),
+ * down to close. Swipe sideways, on the handle or the text, for the next or previous word; the arrow
+ * buttons do the same. Returns the handlers for the head and for the body.
+ */
+function useSheetGestures(ref: React.RefObject<HTMLElement | null>, opts: { on: boolean; snap: Snap; setSnap: (s: Snap) => void; onClose: () => void; onStep?: (dir: 1 | -1) => void }) {
+  const g = useRef<{ id: number; x: number; y: number; h: number; axis: "" | "x" | "y"; lastY: number; lastT: number; v: number; head: boolean } | null>(null);
+  const o = useRef(opts);
+  useEffect(() => { o.current = opts; });
+  const heights = (el: HTMLElement) => {
+    const probe = (s: Snap) => { const was = el.dataset.snap; el.dataset.snap = s; const h = parseFloat(getComputedStyle(el).getPropertyValue("--sheet-h")) || 0; el.dataset.snap = was; return h; };
+    return { peek: probe("peek"), half: probe("half"), full: probe("full") };
+  };
+  const down = (head: boolean) => (e: React.PointerEvent) => {
+    const el = ref.current;
+    if (!o.current.on || e.button !== 0 || !el || !matchMedia(PHONE).matches) return;
+    g.current = { id: e.pointerId, x: e.clientX, y: e.clientY, h: el.offsetHeight, axis: "", lastY: e.clientY, lastT: e.timeStamp, v: 0, head };
+  };
+  const move = (e: React.PointerEvent) => {
+    const s = g.current, el = ref.current;
+    if (!s || !el || s.id !== e.pointerId) return;
+    const dx = e.clientX - s.x, dy = e.clientY - s.y;
+    if (!s.axis) {
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 10) return;
+      s.axis = Math.abs(dx) > Math.abs(dy) * 1.5 ? "x" : "y";
+      if (s.axis === "y" && !s.head) { g.current = null; return; }   // the body scrolls itself
+      e.currentTarget.setPointerCapture(e.pointerId);
+      if (s.axis === "y") el.classList.add(styles.sheetDragging);
+    }
+    if (s.axis === "y") {
+      s.v = (e.clientY - s.lastY) / Math.max(1, e.timeStamp - s.lastT); s.lastY = e.clientY; s.lastT = e.timeStamp;
+      el.style.height = `${Math.max(80, Math.min(innerHeight, s.h - dy))}px`;
+    } else el.style.translate = `${dx * 0.35}px 0`;
+  };
+  const up = (e: React.PointerEvent, cancelled = false) => {
+    const s = g.current, el = ref.current;
+    if (!s || !el || s.id !== e.pointerId) return;
+    g.current = null;
+    const dx = e.clientX - s.x;
+    el.style.translate = "";
+    if (s.axis === "x") { if (!cancelled && Math.abs(dx) > 56) o.current.onStep?.(dx < 0 ? 1 : -1); return; }
+    if (s.axis !== "y") return;
+    const h = el.offsetHeight, hs = heights(el);
+    el.classList.remove(styles.sheetDragging);
+    el.style.height = "";
+    if (cancelled) return;
+    // a flick carries on in its direction; otherwise the nearest height wins; well below "peek" closes it
+    const order: Snap[] = ["peek", "half", "full"];
+    let next: Snap | "close" = order.reduce((a, b) => (Math.abs(hs[b] - h) < Math.abs(hs[a] - h) ? b : a), "peek" as Snap);
+    if (Math.abs(s.v) > 0.6) {
+      const i = order.indexOf(o.current.snap) + (s.v < 0 ? 1 : -1);
+      next = i < 0 ? "close" : order[Math.min(order.length - 1, i)];
+    }
+    if (h < hs.peek * 0.6) next = "close";
+    if (next === "close") o.current.onClose(); else o.current.setSnap(next);
+  };
+  const common = { onPointerMove: move, onPointerUp: (e: React.PointerEvent) => up(e), onPointerCancel: (e: React.PointerEvent) => up(e, true) };
+  return { head: { onPointerDown: down(true), ...common }, body: { onPointerDown: down(false), ...common } };
+}
+
+export default function WordPanel({ word, ctx, onClose, onEchoes, onStep, sheet = false }: {
+  word: string | null; ctx: WordContext | null; onClose: () => void; onEchoes?: () => void;
+  /** the next (1) or previous (-1) word of the passage */
+  onStep?: (dir: 1 | -1) => void;
+  /** a sheet with heights on phones (not in the floating window) */
+  sheet?: boolean;
+}) {
   const toast = useUI((s) => s.showToast);
   const ref = useRef<HTMLElement>(null);
+  const [snap, setSnap] = useState<Snap>("peek");
+  // a look-up opened afresh starts at "peek"; moving word to word keeps the height chosen
+  const [wasOpen, setWasOpen] = useState(false);
+  if (!!word !== wasOpen) { setWasOpen(!!word); if (word) setSnap("peek"); }
+  const [dir, setDir] = useState<1 | -1>(1);
+  const step = onStep && ((d: 1 | -1) => { setDir(d); onStep(d); });
+  const gestures = useSheetGestures(ref, { on: sheet, snap, setSnap, onClose, onStep: step });
   const [analysis, setAnalysis] = useState<Loaded<Analysis>>({ key: "", value: null });
   const [lsj, setLsj] = useState<Loaded<{ head: string; entries: LsjEntry[] }>>({ key: "", value: null });
   const [wikt, setWikt] = useState<Loaded<WiktResult>>({ key: "", value: null });
@@ -161,14 +268,24 @@ export default function WordPanel({ word, ctx, onClose, onEchoes }: { word: stri
   const headword = lemma ?? l?.value?.head ?? w?.value?.title ?? lookupForm(word);
   const enc = encodeURIComponent;
   const parsing = a ? readTag(a.tag) : null;
+  const quick = (core.key === lsjKey && core.value?.def) || l?.value?.entries[0]?.s || "";
 
   return (
-    <aside ref={ref} className={styles.panel} aria-label={`Look-up: ${word}`} tabIndex={-1}
+    <aside ref={ref} className={`${styles.panel} ${sheet ? styles.wordSheet : ""}`} data-snap={snap} aria-label={`Look-up: ${word}`} tabIndex={-1}
       onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}>
-      <div className={styles.panelHead}>
+      <div className={styles.panelHead} {...(sheet ? gestures.head : {})}>
+        {sheet && <span className={styles.grab} aria-hidden="true" />}
+        {step && <button type="button" className={styles.stepBtn} onClick={() => step(-1)} aria-label="Previous word">‹</button>}
         <div className={styles.pw} lang="grc">{word}</div>
+        {step && <button type="button" className={styles.stepBtn} onClick={() => step(1)} aria-label="Next word">›</button>}
+        {sheet && snap !== "full" && (
+          <button type="button" className={styles.moreBtn} onClick={() => setSnap("full")} aria-label="Show all of the look-up">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+          </button>
+        )}
         <button type="button" className={styles.x} onClick={onClose} aria-label="Close look-up">×</button>
       </div>
+      <div key={word} className={styles.panelBody} data-dir={dir} {...(sheet ? gestures.body : {})}>
 
       {/* ------------------------------------------------ here */}
       {ctx && <section className={styles.sec}>
@@ -179,6 +296,8 @@ export default function WordPanel({ word, ctx, onClose, onEchoes }: { word: stri
           <div className={styles.here}>
             <p className={styles.lemmaBig} lang="grc">{a.lemma}</p>
             <p className={styles.parse}><b>{parsing.pos}</b>{parsing.detail ? ` · ${parsing.detail}` : ""}</p>
+            {/* phones: the short meaning shows at the sheet's first height too (the dictionary is further down) */}
+            {sheet && quick && <p className={styles.quick}>{quick}</p>}
             {a.where === "here" && (a.manual
               ? <span className="tag well">Checked by hand · treebank</span>
               : <span className="tag debated">Automatic analysis · about 97% accurate</span>)}
@@ -227,7 +346,7 @@ export default function WordPanel({ word, ctx, onClose, onEchoes }: { word: stri
         {!l && <p className="muted">Opening the dictionary…</p>}
         {l && !l.value && <p className="muted">{l.error ? `The dictionary could not be loaded (${l.error}).` : "No LSJ entry found under this headword."}</p>}
         {l?.value && l.value.entries.map((e, i) => <LsjEntryView key={i} e={e} full={full} />)}
-        {l?.value && <button type="button" className="chip" onClick={() => setFull(!full)}>{full ? "Short definition" : "Full entry"}</button>}
+        {l?.value && <button type="button" className="chip" onClick={() => { setFull(!full); if (!full && sheet) setSnap("full"); }}>{full ? "Short definition" : "Full entry"}</button>}
         {l?.value && full && <p className={styles.fine}>{LSJ_CREDIT}</p>}
       </section>
 
@@ -260,6 +379,7 @@ export default function WordPanel({ word, ctx, onClose, onEchoes }: { word: stri
         const added = useAcademy.getState().addCard(headword, gloss, "saved");
         toast(added ? `Saved ${headword} to your daily review.` : `${headword} is already in your daily review.`);
       }}>Save word to my review</button>
+      </div>
     </aside>
   );
 }

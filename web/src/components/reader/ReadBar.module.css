@@ -1,0 +1,99 @@
+/* The reader's bar on phones (ReadBar.tsx). Phones are up to 760 px wide (see TabBar.module.css). */
+.bar, .progress, .sheet { display: none; }
+
+@media (max-width: 760px) {
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: var(--tabbar-h); z-index: 34;
+    display: grid; grid-template-columns: var(--tap) minmax(0, 1fr) auto auto var(--tap); align-items: center; gap: 4px;
+    height: 54px; padding: 0 max(8px, env(safe-area-inset-right, 0px)) 0 max(8px, env(safe-area-inset-left, 0px));
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--rule);
+    transition: transform 0.35s var(--ease);
+  }
+  /* it tucks away with the site's bar below it: its own height, and the bar's */
+  :global(html[data-hdr="hidden"]) .bar { transform: translateY(calc(100% + var(--tabbar-h) + 2px)); }
+
+  /* a faint track across the top, filled in added red as far as you have read */
+  .progress {
+    display: block; position: fixed; z-index: 36; top: env(safe-area-inset-top, 0px); left: 0; right: 0; height: 3px;
+    background: color-mix(in srgb, var(--rule) 60%, transparent); opacity: 0; pointer-events: none; transition: opacity 0.35s;
+  }
+  .progress::before {
+    content: ""; position: absolute; inset: 0; background: var(--accent);
+    transform-origin: left; transform: scaleX(var(--p, 0)); transition: transform 0.2s linear;
+  }
+  :global(html[data-hdr="hidden"]) .progress { opacity: 1; }
+
+  .sheet {
+    display: flex; flex-direction: column; position: fixed; z-index: 45; left: 0; right: 0; bottom: 0; max-height: 70dvh;
+    background: var(--surface); border-top: 1px solid var(--rule); border-radius: 16px 16px 0 0;
+    box-shadow: 0 -24px 48px -24px var(--shadow); outline: none;
+    transform: translateY(calc(100% + 24px)); visibility: hidden;
+    transition: transform 0.35s var(--ease), visibility 0s linear 0.35s;
+  }
+  .sheet[data-open] { transform: translateY(var(--drag, 0px)); visibility: visible; transition: transform 0.35s var(--ease), visibility 0s; }
+  .sheet.dragging { transition: none; }
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: var(--tap); height: var(--tap); padding: 0 10px;
+  background: transparent; color: var(--ink); border: 1px solid transparent; border-radius: 10px; -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.2s, transform 0.2s var(--ease);
+}
+.btn:active:not(:disabled) { transform: scale(0.94); background: var(--bg-2); }
+.btn:disabled { opacity: 0.3; }
+.btn svg { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.btn[aria-expanded="true"] { background: var(--sel-bg); color: var(--sel-fg); border-color: var(--sel-edge); }
+.contents { justify-content: flex-start; min-width: 0; border-color: var(--rule); }
+.where { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--f-display); font-size: 1.05rem; }
+.word { font-family: var(--f-label); font-size: 0.95rem; letter-spacing: 0.04em; border-color: var(--rule); }
+.aa { font-family: var(--f-display); font-size: 1.2rem; line-height: 1; }
+.aa small { font-size: 0.72em; }
+
+/* ---------------------------------------------------------------- the contents drawer */
+.drawer {
+  margin: 0 auto 0 0; height: 100%; max-height: 100dvh; width: min(360px, 88vw); max-width: none; padding: 0; border: 0;
+  border-right: 1px solid var(--rule); background: var(--surface); color: var(--ink);
+  box-shadow: 30px 0 60px -30px var(--shadow); touch-action: pan-y;
+  transform: translateX(-100%);
+  transition: transform 0.4s var(--ease), overlay 0.4s allow-discrete, display 0.4s allow-discrete;
+}
+.drawer[open] { transform: translateX(var(--drag, 0px)); }
+@starting-style { .drawer[open] { transform: translateX(-100%); } }
+.drawer.dragging { transition: none; }
+.drawer::backdrop { background: rgba(10, 6, 3, 0); transition: background-color 0.4s, overlay 0.4s allow-discrete, display 0.4s allow-discrete; }
+.drawer[open]::backdrop { background: rgba(10, 6, 3, 0.4); }
+@starting-style { .drawer[open]::backdrop { background: rgba(10, 6, 3, 0); } }
+.drawerIn {
+  display: grid; gap: 14px; align-content: start;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 18px calc(28px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px));
+}
+.drawerHead { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+.drawerHead h2 { font-size: 1.6rem; }
+.drawerHead p { margin-top: 4px; }
+.x { flex: none; width: var(--tap); height: var(--tap); font-size: 26px; line-height: 1; background: transparent; color: var(--ink); border: 1px solid var(--rule); border-radius: 10px; }
+.parts { list-style: none; margin: 0; padding: 0; display: grid; }
+.parts button {
+  width: 100%; min-height: var(--tap); padding: 8px 12px; text-align: left; background: transparent; color: var(--ink);
+  border: 0; border-bottom: 1px solid color-mix(in srgb, var(--rule) 50%, transparent); font-family: var(--f-display); font-size: 1.1rem;
+}
+.parts button[aria-current="true"] { color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+
+/* ---------------------------------------------------------------- the sheets */
+.sheetHead {
+  flex: none; position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 18px max(16px, env(safe-area-inset-right, 0px)) 8px max(20px, env(safe-area-inset-left, 0px)); touch-action: none; cursor: grab;
+}
+.handle { position: absolute; top: 7px; left: 50%; width: 40px; height: 5px; margin-left: -20px; border-radius: 3px; background: var(--rule); }
+.sheetBody {
+  overflow-y: auto; overscroll-behavior: contain; display: grid; gap: 14px;
+  padding: 4px max(20px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+}
+.sizes { display: grid; gap: 12px; }
+.sizeRow { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--rule); border-radius: 10px; }
+.stepper button { width: var(--tap); height: var(--tap); background: transparent; border: 0; color: var(--ink); font-size: 1.3rem; }
+.stepper button:disabled { opacity: 0.3; }
+.stepper output { min-width: 60px; text-align: center; font-variant-numeric: tabular-nums; }
+.hint { font-size: 0.9rem; color: var(--ink-2); }

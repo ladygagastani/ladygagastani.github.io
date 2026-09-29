@@ -9,7 +9,7 @@
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MARKER_KINDS, useSettings, type MarkerKind } from "@/lib/settings";
-import { headerHeight } from "@/lib/header";
+import { bottomBarsHeight, headerHeight } from "@/lib/header";
 import styles from "./Markers.module.css";
 
 export interface MarkerItem { key: string; kind: MarkerKind; label: string; preview?: string; colour?: string }
@@ -41,7 +41,8 @@ export default function ScrollMarkers({ rootRef, contained, items, onJump, depKe
       const scroller = contained ? root : document.documentElement;
       // page mode: the track starts below the site header (which slides away on scroll; see lib/header.ts)
       const offset = contained ? 0 : headerHeight();
-      const viewH = contained ? root.clientHeight : innerHeight - offset;
+      // phones: the bars along the bottom cover the end of the screen
+      const viewH = contained ? root.clientHeight : innerHeight - offset - bottomBarsHeight();
       const total = scroller.scrollHeight - (contained ? 0 : offset);
       const base = contained ? root.getBoundingClientRect().top - root.scrollTop : -scrollY + offset;
       const out: Placed[] = [];
@@ -96,6 +97,8 @@ export function MarkersLegend({ counts }: { counts: Partial<Record<MarkerKind, n
   const shown = useSettings((s) => s.markers);
   const set = useSettings((s) => s.set);
   const [open, setOpen] = useState(false);
+  // it opens leftwards from its button, or rightwards when the button sits near the left edge
+  const [toRight, setToRight] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!open) return;
@@ -107,11 +110,12 @@ export function MarkersLegend({ counts }: { counts: Partial<Record<MarkerKind, n
   return (
     <div className={styles.legendWrap} ref={box}
       onKeyDown={(e) => { if (e.key === "Escape" && open) { e.stopPropagation(); setOpen(false); box.current?.querySelector("button")?.focus(); } }}>
-      <button type="button" className={styles.legendBtn} aria-expanded={open} onClick={() => setOpen(!open)} title="What the marks beside the scroll bar mean">
+      <button type="button" className={styles.legendBtn} aria-expanded={open} title="What the marks beside the scroll bar mean"
+        onClick={() => { setToRight((box.current?.getBoundingClientRect().right ?? 999) < 290); setOpen(!open); }}>
         <span className={styles.legendIcon} aria-hidden="true" /> Markers
       </button>
       {open && (
-        <div className={styles.legend} role="group" aria-label="Markers beside the scroll bar">
+        <div className={styles.legend} data-to-right={toRight || undefined} role="group" aria-label="Markers beside the scroll bar">
           <p className="label">Beside the scroll bar, on this page</p>
           {MARKER_KINDS.map((k) => (
             <label key={k}>
