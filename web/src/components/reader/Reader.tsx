@@ -25,6 +25,7 @@ import NoteEditor from "./NoteEditor";
 import ShareDialog, { type ShareData } from "./ShareDialog";
 import WorkPicker from "./WorkPicker";
 import VocabPanel from "./VocabPanel";
+import PanelGuard from "@/components/PanelGuard";
 import EchoesPanel, { type EchoMarks, type EchoQuery, type EchoTarget } from "./EchoesPanel";
 import MetreBar from "./MetreBar";
 import ScrollMarkers, { MarkersLegend, type MarkerItem } from "./ScrollMarkers";
@@ -35,8 +36,9 @@ import { metreIndex, publishedFor, loadLengths } from "@/lib/metre/load";
 import { renderPassages, type LineRender } from "@/lib/metre/render";
 import { lineHash, type MetreIndex } from "@/lib/metre/text";
 import { playLine as playLineRhythm } from "@/lib/metre/beat";
-import { loadWordPack, analyse as analyseWord } from "@/lib/lookup/words";
+import { loadWordPack } from "@/lib/lookup/words";
 import { caseOf } from "@/lib/lookup/postag";
+import { placeAnalyses, positionsFor } from "@/lib/lookup/placed";
 import { headerVisible, scrollBelowHeader, setBars } from "@/lib/header";
 import ReadBar, { PHONE } from "./ReadBar";
 import { buzz } from "@/lib/haptics";
@@ -602,21 +604,21 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       if (!live) return;
       clear();
       if (!pack) { toast("No word analyses exist for this text yet, so words can't be coloured by case."); return; }
+      // GLAUx's words lined up with the words on screen once for the whole book (one pass, whatever
+      // citation scheme GLAUx follows), then each word on the page read off that line-up
+      const placed = placeAnalyses(pack, doc);
+      if (placed.cover < 0.05) { toast("GLAUx's analysis of this text does not line up with this edition, so its words can't be coloured by case."); return; }
       root().querySelectorAll<HTMLElement>("[data-u]").forEach((unit) => {
-        const seen = new Map<string, number>();
-        unit.querySelectorAll<HTMLElement>("[data-w]").forEach((sp) => {
-          const f = norm(sp.dataset.w!);
-          const occ = seen.get(f) ?? 0;
-          seen.set(f, occ + 1);
-          const a = analyseWord(pack, sp.dataset.w!, unit.dataset.u!, occ, unitKeys, doc.levels.length);
-          const c = a && a.where !== "work" ? caseOf(a.tag) : null;
-          if (c) sp.dataset.case = c;
+        const spans = [...unit.querySelectorAll<HTMLElement>("[data-w]")];
+        positionsFor(placed, unit.dataset.u!, spans.map((sp) => sp.dataset.w!)).forEach((p, i) => {
+          const c = p >= 0 && placed.tag[p] >= 0 ? caseOf(pack.tags[placed.tag[p]]) : null;
+          if (c) spans[i].dataset.case = c;
         });
       });
     }).catch(() => undefined);
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cases, rows, doc, workId, unitKeys]);
+  }, [cases, rows, doc, workId]);
 
   const pointOf = (span: HTMLElement) => {
     const unit = span.closest<HTMLElement>("[data-u]")!;
@@ -1177,13 +1179,22 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
         </>
       )}
 
+      {/* each panel keeps its own failures to itself: the text stays readable */}
       {vocabOpen && doc && !word && (
-        <VocabPanel work={workId} pageKeys={pageKeys} keys={unitKeys} depth={doc.levels.length}
-          onClose={() => setVocabOpen(false)} onPick={(lemma) => setWord({ w: lemma, ctx: null, at: null })} />
+        <PanelGuard name="vocabulary list" className={styles.panel} onClose={() => setVocabOpen(false)}>
+          <VocabPanel work={workId} doc={doc} pageKeys={pageKeys}
+            onClose={() => setVocabOpen(false)} onPick={(lemma) => setWord({ w: lemma, ctx: null, at: null })} />
+        </PanelGuard>
       )}
-      {echo && !word && <EchoesPanel q={echo} onJump={echoJump} onMarks={setEchoMarks} onClose={() => setEcho(null)} />}
-      <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onEchoes={word?.at ? () => openEchoes(word.at!, word.at!) : undefined} onClose={closeWord}
-        onStep={word?.at ? stepWord : undefined} sheet={!floating} />
+      {echo && !word && (
+        <PanelGuard name="Echoes panel" className={styles.panel} onClose={() => setEcho(null)}>
+          <EchoesPanel q={echo} onJump={echoJump} onMarks={setEchoMarks} onClose={() => setEcho(null)} />
+        </PanelGuard>
+      )}
+      <PanelGuard name="word look-up" className={word ? styles.panel : undefined} onClose={closeWord}>
+        <WordPanel word={word?.w ?? null} ctx={word?.ctx ?? null} onEchoes={word?.at ? () => openEchoes(word.at!, word.at!) : undefined} onClose={closeWord}
+          onStep={word?.at ? stepWord : undefined} sheet={!floating} />
+      </PanelGuard>
     </div>
   );
 }

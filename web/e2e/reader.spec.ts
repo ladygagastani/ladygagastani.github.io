@@ -92,3 +92,16 @@ test("reading aids: transliteration, colour by case and the page's vocabulary", 
   await expect(vocab).toContainText("core #1");
   await expect(vocab).toContainText("the");
 });
+
+test("colour by case and the vocabulary list work where GLAUx cites the text by another scheme (Aristotle's Metaphysics)", async ({ page }) => {
+  // GLAUx cites the Metaphysics by Bekker page, the reader by book and section: before, colouring
+  // asked the whole book about every word on the page and froze the browser
+  await page.goto("/read?w=tlg0086.tlg025");
+  await expect(page.locator('[data-u="1.1"]').first()).toBeVisible({ timeout: 30_000 });
+  await page.getByRole("button", { name: "Colour by case" }).click();
+  await expect(page.locator('[data-u="1.1"] [data-w="πάντες"]').first()).toHaveAttribute("data-case", "nominative", { timeout: 15_000 });
+  expect(await page.locator("[data-w][data-case]").count()).toBeGreaterThan(1000);
+  await page.getByRole("button", { name: "Vocabulary" }).first().click();
+  await expect(page.getByRole("complementary", { name: "Vocabulary for this page" }).getByRole("listitem").first()).toContainText("ὁ");
+  await page.getByRole("button", { name: "Colour by case" }).click();   // leave the setting as it was
+});

@@ -89,6 +89,25 @@ export function indexFor(pack: WordPack, keys: Set<string>, depth: number): Inde
   return idx;
 }
 
+/** Every analysis of every form in the work, gathered once per word pack (one pass), so asking about many words stays quick. */
+type FormCounts = Map<string, { lemma: string; tag: string; n: number }>;
+const formIndexes = new WeakMap<WordPack, Map<string, FormCounts>>();
+function formsIndex(pack: WordPack): Map<string, FormCounts> {
+  let idx = formIndexes.get(pack);
+  if (idx) return idx;
+  idx = new Map();
+  for (const [, , forms, lem, tag] of pack.units) forms.split(" ").forEach((f, j) => {
+    let c = idx!.get(f);
+    if (!c) idx!.set(f, (c = new Map()));
+    const key = `${lem[j]}|${tag[j]}`;
+    const e = c.get(key) ?? { lemma: pack.lemmas[lem[j]], tag: pack.tags[tag[j]], n: 0 };
+    e.n++;
+    c.set(key, e);
+  });
+  formIndexes.set(pack, idx);
+  return idx;
+}
+
 /**
  * @param unitKey  reference of the passage the word is in, as the reader shows it ("1.33")
  * @param occurrence  which occurrence of this form within that passage (0 = first)
@@ -109,33 +128,8 @@ export function analyse(pack: WordPack, word: string, unitKey: string, occurrenc
     return { lemma: t.lemma, tag: t.tag, manual: t.manual, where: similar.length > occurrence ? "here" : "passage", others: [] };
   }
   // not found at this place (a different edition, say): how is this form analysed elsewhere in the work?
-  const counts = new Map<string, { lemma: string; tag: string; n: number; manual: boolean }>();
-  for (const [, manual, forms, lem, tag] of pack.units) {
-    const fs = forms.split(" ");
-    for (let j = 0; j < fs.length; j++) {
-      if (fs[j] !== w) continue;
-      const key = `${lem[j]}|${tag[j]}`;
-      const c = counts.get(key) ?? { lemma: pack.lemmas[lem[j]], tag: pack.tags[tag[j]], n: 0, manual: manual === 1 };
-      c.n++;
-      counts.set(key, c);
-    }
-  }
-  const others = [...counts.values()].sort((a, b) => b.n - a.n);
+  const counts = formsIndex(pack).get(w);
+  const others = counts ? [...counts.values()].sort((a, b) => b.n - a.n) : [];
   if (!others.length) return null;
   return { lemma: others[0].lemma, tag: others[0].tag, manual: false, where: "work", others: others.map(({ lemma, tag, n }) => ({ lemma, tag, n })) };
-}
-
-/** How often each dictionary word occurs in the given passages (punctuation left out). */
-export function lemmaCounts(pack: WordPack, pageKeys: Iterable<string>, keys: Set<string>, depth: number): Map<string, number> {
-  const { byKey } = indexFor(pack, keys, depth);
-  const counts = new Map<string, number>();
-  for (const k of pageKeys) for (const i of byKey.get(k) ?? []) {
-    const [, , , lem, tags] = pack.units[i];
-    lem.forEach((l, j) => {
-      if (pack.tags[tags[j]].startsWith("u")) return;
-      const lemma = pack.lemmas[l];
-      counts.set(lemma, (counts.get(lemma) ?? 0) + 1);
-    });
-  }
-  return counts;
 }

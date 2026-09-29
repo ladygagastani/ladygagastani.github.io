@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { loadWordPack, lemmaCounts } from "@/lib/lookup/words";
+import { loadWordPack } from "@/lib/lookup/words";
+import { placeAnalyses, placedLemmaCounts } from "@/lib/lookup/placed";
+import type { TeiDoc } from "@/lib/tei/types";
 import { lsjEntries } from "@/lib/lookup/lsj";
 import { coreEntry } from "@/lib/lookup/core";
 import styles from "./Reader.module.css";
@@ -9,8 +11,8 @@ import styles from "./Reader.module.css";
 interface Entry { lemma: string; n: number; gloss: string | null; core: number | null }
 
 /** Dictionary words used on this page, most frequent first, with a short LSJ definition. */
-export default function VocabPanel({ work, pageKeys, keys, depth, onClose, onPick }: {
-  work: string; pageKeys: Set<string>; keys: Set<string>; depth: number; onClose: () => void; onPick: (lemma: string) => void;
+export default function VocabPanel({ work, doc, pageKeys, onClose, onPick }: {
+  work: string; doc: TeiDoc; pageKeys: Set<string>; onClose: () => void; onPick: (lemma: string) => void;
 }) {
   const [list, setList] = useState<Entry[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +23,10 @@ export default function VocabPanel({ work, pageKeys, keys, depth, onClose, onPic
     loadWordPack(work).then(async (pack) => {
       if (!live) return;
       if (!pack) { setError("No word analyses exist for this text yet."); return; }
-      const counts = [...lemmaCounts(pack, pageKeys, keys, depth).entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "el")).slice(0, 120);
+      // GLAUx's words lined up with this edition's words, whatever citation scheme GLAUx follows
+      const placed = placeAnalyses(pack, doc);
+      const counts = [...placedLemmaCounts(pack, placed, pageKeys).entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "el")).slice(0, 120);
+      if (!counts.length) { setError("GLAUx's analysis of this text does not line up with the words on this page."); return; }
       const entries: Entry[] = counts.map(([lemma, n]) => ({ lemma, n, gloss: null, core: null }));
       setList([...entries]);
       // fill in the short definitions a few at a time
@@ -37,7 +42,7 @@ export default function VocabPanel({ work, pageKeys, keys, depth, onClose, onPic
       }
     }, (e: Error) => { if (live) setError(e.message); });
     return () => { live = false; };
-  }, [work, pageKeys, keys, depth]);
+  }, [work, doc, pageKeys]);
 
   useEffect(() => { ref.current?.focus({ preventScroll: true }); }, []);
 
