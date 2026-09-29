@@ -65,6 +65,18 @@ test("lessons 10 to 13: prepositions drawn, adjectives that move, the third decl
   await page.goto("/academy/lesson/third-declension");
   await expect(page.getByText("πόλεως").first()).toBeVisible();
   await page.goto("/academy/lesson/past-tenses");
+  await expect(page.getByRole("link", { name: /Next: Middle and passive/ })).toBeVisible();
+  await expect(page.locator("[data-quote]").first()).toBeVisible({ timeout: 30_000 });
+});
+
+test("lesson 14: one scene in three voices, and the middle and passive tables", async ({ page }) => {
+  await page.goto("/academy/lesson/middle-passive");
+  const scene = page.locator("figure").filter({ hasText: "The father ransoms his daughter." });
+  await expect(scene).toBeVisible();
+  for (const v of ["active", "middle", "passive"]) await expect(scene.getByText(v, { exact: true })).toBeVisible();
+  await scene.getByRole("button", { name: "Again" }).click();
+  await expect(page.getByRole("table").first()).toContainText("ἐλυόμην");
+  await expect(page.getByRole("table").nth(1)).toContainText("ἐλύθησαν");
   await expect(page.getByRole("link", { name: /Next:/ })).toHaveCount(0);
   await expect(page.locator("[data-quote]").first()).toBeVisible({ timeout: 30_000 });
 });

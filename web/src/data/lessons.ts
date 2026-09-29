@@ -16,6 +16,8 @@ export type Section =
   | { kind: "grid"; title: string; head: string[]; rows: string[][]; note?: string }   // a reference table of text (not forms)
   | { kind: "motion"; noun: { from: string; in: string; to: string }; en: string }      // out of / in / into, drawn (Motion.tsx)
   | { kind: "shift"; title: string; items: { a: string; aEn: string; b: string; bEn: string; note: string }[] }  // same words, new order (Shift.tsx)
+  | { kind: "voice"; caption: string; items: { voice: "active" | "middle" | "passive"; grc: string; verb: string; en: string; note: string;
+      left: { grc: string; role: string }; right: { grc: string; role: string } }[] }   // one scene in three voices, drawn (Voice.tsx)
   | { kind: "table"; paradigm: string; title?: string }
   | { kind: "made"; title?: string; items: { grc: string; en: string; note?: string }[] }
   | { kind: "reveal"; title: string; items: { grc: string; answer: string }[] }
@@ -376,6 +378,63 @@ export const LESSONS: Lesson[] = [
           note: "Three imperfects set the scene: «ἠσθένει» \"was ill\" (from «ἀσθενέω»: α becomes η), «ὑπώπτευε» \"suspected\" (the augment after ὑπ-) and «ἐβούλετο» \"wanted\" (ἐ-). Darius \"was ill and suspected the end of his life\"; he \"wanted\" both sons with him." },
         { work: "tlg0003.tlg001", ref: "1.1.1", quote: "Θουκυδίδης Ἀθηναῖος ξυνέγραψε τὸν πόλεμον", label: "Thucydides 1.1.1",
           note: "The opening words of Thucydides' history of the Peloponnesian War. «ξυνέγραψε» \"wrote (the history of)\" is the aorist of «ξυγγράφω», the old Attic spelling of «συγγράφω»: the augment sits after «ξυν-». In the same sentence, «ἐπολέμησαν» \"they fought\" is another aorist." },
+      ] },
+    ],
+  },
+  {
+    id: "middle-passive", title: "Middle and passive: λύομαι", greek: "μέση καὶ παθητικὴ φωνή", minutes: 25,
+    summary: "Being freed, and freeing for yourself: the two other voices of the Greek verb.",
+    words: ["πείθω", "γίγνομαι", "ἔρχομαι", "θυγάτηρ", "ὑπό"],
+    sections: [
+      { kind: "p", text: "So far every verb has been **active**: the subject does the action, «ὁ πατὴρ λύει» \"the father frees\". Greek has two more **voices**. In the **passive**, the subject has the action done to it: \"the daughter *is freed*\". In the **middle**, which English does not have, the subject acts *for itself*, *on itself* or in its own interest." },
+      { kind: "voice", caption: "Sentences made up for this lesson. «λύεται» appears twice: the same form can be middle or passive, and the rest of the sentence decides.", items: [
+        { voice: "active", grc: "ὁ πατὴρ λύει τὴν θυγατέρα.", verb: "λύει", en: "The father frees his daughter.",
+          left: { grc: "ὁ πατήρ", role: "subject" }, right: { grc: "τὴν θυγατέρα", role: "object" },
+          note: "Active: the subject does the action." },
+        { voice: "middle", grc: "ὁ πατὴρ λύεται τὴν θυγατέρα.", verb: "λύεται", en: "The father ransoms his daughter.",
+          left: { grc: "ὁ πατήρ", role: "subject" }, right: { grc: "τὴν θυγατέρα", role: "object" },
+          note: "Middle: the subject acts for itself. He has her freed for himself, by paying for her: in the middle, «λύομαι» means \"ransom\"." },
+        { voice: "passive", grc: "ἡ θυγάτηρ λύεται ὑπὸ τοῦ πατρός.", verb: "λύεται", en: "The daughter is freed by her father.",
+          left: { grc: "ὑπὸ τοῦ πατρός", role: "doer" }, right: { grc: "ἡ θυγάτηρ", role: "subject" },
+          note: "Passive: the subject has the action done to it. «ὑπό» with the genitive names who does it." },
+      ] },
+      { kind: "p", text: "**One set of forms, two voices.** In the present and the imperfect, the middle and the passive are spelled the same. So «λύεται» can mean \"he ransoms\" (middle) or \"he is freed\" (passive). Look at the rest of the sentence: a direct object points to the middle; «ὑπό» with the genitive, naming who does it (the \"by\" of lesson 10), points to the passive." },
+      { kind: "table", paradigm: "luomai" },
+      { kind: "tip", text: "Listen for the ends. In the present, \"he, she, it\" ends in «-ται» and \"they\" in «-νται»; in the imperfect (with its augment) they end in «-το» and «-ντο». Almost every middle or passive verb you meet will show one of these four." },
+      { kind: "p", text: "**The future and the aorist tell the voices apart.** The middle keeps the «σ» of the active and adds middle endings: «λύσομαι» \"I shall ransom\", «ἐλυσάμην» \"I ransomed\". The passive has its own mark, «θη»: «ἐλύθην» \"I was freed\", «ἐλύθη» \"he, she, it was freed\"." },
+      { kind: "table", paradigm: "luo-mp-aorist" },
+      { kind: "p", text: "**Middle in form, active in meaning.** Some very common verbs have no active forms at all: «βούλομαι» \"I want\", «γίγνομαι» \"I become, happen, am born\", «ἔρχομαι» \"I come, go\". Grammars call them *deponent* verbs. Dictionaries list them under the «-ομαι» form, and you translate them as ordinary active verbs: «ἐγένετο» is simply \"it happened\" or \"it came into being\"." },
+      { kind: "tip", text: "In John's Gospel you will meet «ἀπεκρίθη» \"he answered\" 56 times. It is an aorist passive in form (see the «θη») of «ἀποκρίνομαι» \"I answer\", with an active meaning." },
+      { kind: "p", text: "Some verbs change their meaning in the middle. «πείθω» is \"I persuade\", but «πείθομαι» is \"I am persuaded, I believe\", and with the dative \"I obey\"." },
+      { kind: "made", title: "Practice sentences (made up for this lesson)", items: [
+        { grc: "ὁ δοῦλος λύεται ὑπὸ τοῦ δεσπότου.", en: "The slave is freed by his master.", note: "Passive: «ὑπό» with the genitive names the doer." },
+        { grc: "οἱ στρατιῶται πείθονται τῷ στρατηγῷ.", en: "The soldiers obey the general.", note: "«πείθομαι» with the dative." },
+        { grc: "ἐλύθησαν οἱ ἵπποι.", en: "The horses were untied.", note: "Aorist passive: the «θη»." },
+      ] },
+      { kind: "reveal", title: "Name the tense and voice", items: [
+        { grc: "λύονται", answer: "present, middle or passive: \"they ransom\" or \"they are freed\"" },
+        { grc: "ἐλυόμεθα", answer: "imperfect, middle or passive: \"we were ransoming\" or \"we were being freed\"" },
+        { grc: "ἐλύθη", answer: "aorist passive: \"he, she or it was freed\" (the «θη»)" },
+        { grc: "λύσονται", answer: "future middle: \"they will ransom\" (the «σ» and a middle ending)" },
+        { grc: "ἐλύσατο", answer: "aorist middle: \"he or she ransomed\"" },
+      ] },
+      { kind: "check", items: [
+        { q: "In «ἡ θυγάτηρ λύεται ὑπὸ τοῦ πατρός», «λύεται» is…", options: ["active", "middle", "passive"], answer: 2, why: "«ὑπὸ τοῦ πατρός», \"by her father\", names who does it: passive, \"is freed\"." },
+        { q: "Which form can only be passive?", options: ["λύεται", "ἐλύετο", "ἐλύθη", "λύσεται"], answer: 2, why: "The «θη» of the aorist passive. «λύεται» and «ἐλύετο» may be middle or passive; «λύσεται» is future middle." },
+        { q: "«ἐγένετο» means…", options: ["he was freed", "it happened, came into being", "he wanted", "they came"], answer: 1, why: "«γίγνομαι» is middle in form but active in meaning: «ἐγένετο» \"it happened, came to be\"." },
+        { q: "«πείθονται τῷ στρατηγῷ» means…", options: ["they persuade the general", "they obey the general", "the general persuades them", "they are freed by the general"], answer: 1, why: "«πείθομαι» with the dative means \"obey\"." },
+      ] },
+      { kind: "real", title: "Read it yourself", items: [
+        { work: "tlg0012.tlg001", ref: "1.13", quote: "λυσόμενός τε θύγατρα", label: "Homer, Iliad 1.12–13",
+          note: "Chryses, a priest of Apollo, comes to the Greek ships «λυσόμενός τε θύγατρα», \"to ransom his daughter\": a middle form of «λύω» (a future participle, a form for a later lesson). He wants her freed for himself, and he brings \"boundless ransom\", «ἀπερείσιʼ ἄποινα»." },
+        { work: "tlg0012.tlg001", ref: "1.29", quote: "τὴν δʼ ἐγὼ οὐ λύσω", label: "Homer, Iliad 1.29",
+          note: "Agamemnon answers in the active: «τὴν δʼ ἐγὼ οὐ λύσω», \"but her I will not free\". One verb, two voices: active for the man who would set her free, middle for the father who wants her back." },
+        { work: "tlg0032.tlg006", ref: "1.1.3", quote: "ὁ δὲ πείθεται καὶ συλλαμβάνει Κῦρον", label: "Xenophon, Anabasis 1.1.3",
+          note: "Tissaphernes slanders Cyrus to his brother, the new king Artaxerxes, «ὁ δὲ πείθεται», \"and he is persuaded\" (he believes it) and arrests Cyrus. Xenophon tells the story in the present tense here, as English storytellers sometimes do." },
+        { work: "tlg0031.tlg001", ref: "4.1", quote: "ἀνήχθη εἰς τὴν ἔρημον ὑπὸ τοῦ πνεύματος", label: "Gospel of Matthew 4.1",
+          note: "«ἀνήχθη» \"was led up\" is an aorist passive of «ἀνάγω» (augment after «ἀν-»; γ becomes χ before the θ), and «ὑπὸ τοῦ πνεύματος» \"by the Spirit\" names who led. «πειρασθῆναι ὑπὸ τοῦ διαβόλου», \"to be tempted by the devil\", is passive too (an infinitive, met in a later lesson). The square brackets show a word the editors were unsure of." },
+        { work: "tlg0031.tlg004", ref: "1.3", quote: "πάντα διʼ αὐτοῦ ἐγένετο", label: "Gospel of John 1.3",
+          note: "«ἐγένετο», from «γίγνομαι», is middle in form, active in meaning: \"all things came into being through him\"." },
       ] },
     ],
   },

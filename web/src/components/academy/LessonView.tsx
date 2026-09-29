@@ -21,6 +21,7 @@ import { ParadigmTable } from "./Tables";
 import AlphabetGlance from "./AlphabetGlance";
 import Motion from "./Motion";
 import Shift from "./Shift";
+import Voice from "./Voice";
 import styles from "./Academy.module.css";
 import readerStyles from "@/components/reader/Reader.module.css";
 
@@ -156,6 +157,7 @@ function SectionView({ s, onWord }: { s: Section; onWord: (w: string, ctx: WordC
     case "alphabet": return <AlphabetGlance />;
     case "motion": return <Motion {...s} />;
     case "shift": return <Shift {...s} />;
+    case "voice": return <Voice {...s} />;
     case "grid": return (
       <div className={styles.gridBox}>
         <span className="label">{s.title}</span>

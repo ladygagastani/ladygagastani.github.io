@@ -150,6 +150,34 @@ export const PARADIGMS: Paradigm[] = [
     ],
     tags: ["1s", "2s", "3s", "1p", "2p", "3p"].map((pn) => ["p", "i", "f", "a"].map((t) => `v${pn[0]}${pn[1]}${t}ia---`)),
   },
+  {
+    id: "luomai", title: "λύομαι: middle and passive, present and imperfect", lemma: "λύω", group: "verb", lesson: "middle-passive",
+    note: "In these two tenses the middle and the passive share every form. In the 2nd person singular Attic writers spell -ει (λύει), others -ῃ (λύῃ).",
+    rows: ["I", "you (one)", "he, she, it", "we", "you (all)", "they"], cols: ["present", "imperfect"],
+    cells: [
+      ["λύομαι", "ἐλυόμην"],
+      ["λύει, λύῃ", "ἐλύου"],
+      ["λύεται", "ἐλύετο"],
+      ["λυόμεθα", "ἐλυόμεθα"],
+      ["λύεσθε", "ἐλύεσθε"],
+      ["λύονται", "ἐλύοντο"],
+    ],
+    tags: ["1s", "2s", "3s", "1p", "2p", "3p"].map((pn) => ["p", "i"].map((t) => `v${pn[0]}${pn[1]}${t}im---`)),
+  },
+  {
+    id: "luo-mp-aorist", title: "λύω: future middle, aorist middle, aorist passive", lemma: "λύω", group: "verb", lesson: "middle-passive",
+    note: "Here the voices part: the middle keeps the σ, the passive has θη. The future passive, λυθήσομαι \"I shall be freed\", is built on the same θη.",
+    rows: ["I", "you (one)", "he, she, it", "we", "you (all)", "they"], cols: ["future middle", "aorist middle", "aorist passive"],
+    cells: [
+      ["λύσομαι", "ἐλυσάμην", "ἐλύθην"],
+      ["λύσει, λύσῃ", "ἐλύσω", "ἐλύθης"],
+      ["λύσεται", "ἐλύσατο", "ἐλύθη"],
+      ["λυσόμεθα", "ἐλυσάμεθα", "ἐλύθημεν"],
+      ["λύσεσθε", "ἐλύσασθε", "ἐλύθητε"],
+      ["λύσονται", "ἐλύσαντο", "ἐλύθησαν"],
+    ],
+    tags: ["1s", "2s", "3s", "1p", "2p", "3p"].map((pn) => [["f", "m"], ["a", "m"], ["a", "p"]].map(([t, v]) => `v${pn[0]}${pn[1]}${t}i${v}---`)),
+  },
 ];
 
 /** Split a cell into its forms, expanding "(ν)" (movable nu) to both spellings. */
