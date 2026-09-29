@@ -118,7 +118,6 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
   .pathItem { grid-template-columns: 32px minmax(0, 1fr); gap: 4px 12px; align-items: start; padding: 14px 4px; }
   .pathNo { font-size: 1.6rem; line-height: 1.2; }
   .pathMin { grid-column: 2; }
-  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
 }
 .cardGr { font-family: var(--f-greek); color: var(--accent); font-size: 1.1rem; }
 .progress { display: grid; grid-template-columns: auto 1fr; gap: 20px 40px; align-items: center; padding: clamp(18px, 3vw, 28px); background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); border-radius: var(--radius); }
@@ -130,7 +129,11 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 .nextStep { display: grid; gap: 6px; }
 .nextStep a { color: inherit; font-weight: 600; text-decoration-color: var(--accent); text-underline-offset: 3px; }
 .nextStep :global(.muted) { color: color-mix(in srgb, var(--inv-fg) 70%, var(--inv-bg)); }
-@media (max-width: 760px) { .progress { grid-template-columns: minmax(0, 1fr); } }
+/* phones: the four numbers in two even columns (written after .stats, so it wins) */
+@media (max-width: 760px) {
+  .progress { grid-template-columns: minmax(0, 1fr); }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
+}
 
 /* lessons */
 .lesson { display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px; }
@@ -314,5 +317,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
 }
 
 @media (max-width: 760px) { .seg button { min-height: var(--tap); } }
+/* phones: three long choices as three even rows, not two uneven ones */
+@media (max-width: 760px) { .segStack { display: grid; grid-template-columns: minmax(0, 1fr); } }
 
 @media (max-width: 760px) { .seg button { min-width: var(--tap); } }

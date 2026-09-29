@@ -55,6 +55,15 @@
   .heroGrid, .learnGrid, .offline { grid-template-columns: minmax(0, 1fr); }
   .cards { grid-template-columns: minmax(0, 1fr); }
 }
+/* phones: the opening stands on one axis, like the vase beneath it, with two equal buttons */
+@media (max-width: 760px) {
+  .heroGrid > div:first-child { text-align: center; }
+  .kicker { justify-content: center; }
+  .title span { padding-left: 0; }
+  .sub { margin-inline: auto; }
+  .cta { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 340px; margin-inline: auto; }
+  .cta > * { justify-content: center; }
+}
 
 /* ---------------------------------------------------------------- continue where you left off */
 .resume { padding-block: clamp(28px, 4vw, 44px) 0; }

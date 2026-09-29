@@ -82,6 +82,8 @@
 .search input { flex: 1; font: inherit; padding: 8px 12px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--ink); }
 .search .chip, .sorts .chip { cursor: pointer; }
 .sorts { display: flex; flex-wrap: wrap; gap: 6px; }
+/* phones: the four orders as an even two-by-two grid */
+@media (max-width: 760px) { .sorts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex: 1 1 100%; } .sorts :global(.chip) { justify-content: center; } }
 .toolbar :global(.btn) { padding: 9px 16px; }
 .listHead { font-size: var(--step-1); margin: 0 0 8px; }
 

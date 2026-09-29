@@ -77,6 +77,13 @@
 .welcome { display: grid; gap: 14px; padding-block: 8px; }
 .examples { display: flex; flex-wrap: wrap; gap: 8px; }
 .examples .chip, .examples button { font-size: 1rem; }
+/* phones: the four kinds of search, and the four examples, as even two-by-two grids */
+@media (max-width: 760px) {
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; }
+  .tabs button { text-align: center; }
+  .examples { display: grid; grid-template-columns: 1fr 1fr; }
+  .examples .chip, .examples button { justify-content: center; }
+}
 .tips { margin: 8px 0 0; padding-left: 1.2em; display: grid; gap: 6px; color: var(--ink-2); max-width: 75ch; }
 .tips span[lang] { font-family: var(--f-greek); color: var(--ink); }
 

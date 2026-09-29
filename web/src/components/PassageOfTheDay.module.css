@@ -30,3 +30,9 @@
 
 .cite { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; font-size: 0.9rem; }
 .cite :global(a.chip) { text-decoration: none; }
+/* phones: the reference on its own line, then the two buttons as an even pair */
+@media (max-width: 760px) {
+  .cite { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cite > strong, .cite > span { grid-column: 1 / -1; }
+  .cite > :global(.chip) { justify-content: center; }
+}

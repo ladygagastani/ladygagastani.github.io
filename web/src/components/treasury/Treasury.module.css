@@ -207,6 +207,8 @@
 .keep p { max-width: 70ch; }
 .keep p + p { margin-top: 10px; }
 .keepActs { display: flex; flex-wrap: wrap; gap: 10px; }
+/* phones: the two buttons as one even pair of bars */
+@media (max-width: 760px) { .keepActs { display: grid; grid-template-columns: minmax(0, 1fr); } .keepActs > :global(.btn) { justify-content: center; } }
 .keep :global(.btn) { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 .keep :global(.btn.ghost) { background: transparent; color: var(--inv-fg); border-color: color-mix(in srgb, var(--inv-fg) 60%, transparent); }
 .keepResult { grid-column: 1 / -1; display: grid; gap: 4px; padding: 12px 16px; border-left: 3px solid var(--ok); background: color-mix(in srgb, var(--inv-fg) 8%, transparent); animation: rise 0.3s var(--ease) both; }

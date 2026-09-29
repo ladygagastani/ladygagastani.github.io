@@ -17,7 +17,7 @@ export function SystemPicker() {
   const set = useSettings((s) => s.set);
   return (
     <div className={styles.systems}>
-      <div className={styles.seg} role="radiogroup" aria-label="Pronunciation">
+      <div className={`${styles.seg} ${styles.segStack}`} role="radiogroup" aria-label="Pronunciation">
         {ORDER.map((sys) => (
           <button key={sys} type="button" role="radio" aria-checked={pron === sys} onClick={() => set({ pron: sys })}>{SYSTEMS[sys].name}</button>
         ))}

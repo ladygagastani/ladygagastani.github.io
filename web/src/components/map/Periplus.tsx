@@ -4,21 +4,26 @@
  * every place the library mentions. Dots grow with the number of mentions; click one to see what the
  * texts say of it, and where. Wheel, drag, pinch, double-click or the buttons to move about; the
  * keyboard works too (arrows to pan, + and − to zoom). ?p=<Pleiades id> opens a place.
+ *
+ * The map is painted on a canvas by an engine outside React (engine.ts, draw.ts), once per screen frame
+ * at most: the zoom glides, a flick keeps the map drifting a moment, and places fade in and out as they
+ * find room. This component feeds it gestures and choices, and draws the panel.
  */
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { fold, loadCatalog, type CatalogIndex } from "@/lib/catalog";
-import { KINDS, kindOf, loadMap, loadSavedPlaces, mapSize, project, ringsPath, typeLabel, useSavedPlaces, type Base, type Place, type PlacesMeta } from "@/lib/map";
+import { KINDS, kindOf, loadMap, loadSavedPlaces, mapSize, project, typeLabel, useSavedPlaces, type Base, type Place, type PlacesMeta } from "@/lib/map";
 import { useSettings } from "@/lib/settings";
+import { buildLods, type Pt } from "./draw";
+import { MapEngine, trailVelocity } from "./engine";
 import styles from "./Periplus.module.css";
 
 export interface EntryLink { slug: string; title: string }
-interface View { k: number; tx: number; ty: number }
 
 const fmt = (n: number) => n.toLocaleString("en-GB");
-const radius = (n: number) => Math.min(11, 2.4 + Math.sqrt(n) / 5.5);
-const TEXT_KINDS = new Set(["region", "water"]);   // drawn as names, not dots
+const radius = (n: number) => Math.min(9.5, 2.4 + Math.sqrt(n) / 6);
+const nameStyle = (type: string, kind: string): Pt["name"] => (kind === "region" ? "region" : kind === "water" ? (type === "river" ? "river" : "sea") : null);
 
 export default function Periplus({ entriesByPlace }: { entriesByPlace: Record<string, EntryLink[]> }) {
   const [data, setData] = useState<{ base: Base; places: Place[]; meta: PlacesMeta } | null>(null);
@@ -35,311 +40,230 @@ export default function Periplus({ entriesByPlace }: { entriesByPlace: Record<st
   return <MapView base={data.base} places={data.places} meta={data.meta} idx={idx} entriesByPlace={entriesByPlace} />;
 }
 
+/** the engine for this map: the coastlines at four levels of detail, and every place projected */
+function makeEngine(base: Base, places: Place[]) {
+  const [W, H] = mapSize(base);
+  const proj = (rings: number[][]) => rings.map((r) => { const o: number[] = []; for (let i = 0; i < r.length; i += 2) o.push(...project(base, r[i], r[i + 1])); return o; });
+  const pts: Pt[] = places.map((p) => {
+    const [x, y] = project(base, p.lon, p.lat), kind = kindOf(p.type);
+    return { p, x, y, kind, r: radius(p.n), name: nameStyle(p.type, kind) };
+  });
+  return new MapEngine(W, H, pts, new Map(pts.map((t) => [t.p.id, t])), buildLods(proj(base.water), proj(base.lakes)), [project(base, 13, 44.5), project(base, 36.5, 30.5)]);
+}
+
 function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; places: Place[]; meta: PlacesMeta; idx: CatalogIndex | null; entriesByPlace: Record<string, EntryLink[]> }) {
   const router = useRouter();
   const params = useSearchParams();
   const selectedId = params.get("p");
   const motion = useSettings((s) => s.motion);
-  const [W, H] = useMemo(() => mapSize(base), [base]);
-  const sea = useMemo(() => ringsPath(base, base.water), [base]);
-  const lakes = useMemo(() => ringsPath(base, base.lakes), [base]);
-  const pts = useMemo(() => places.map((p) => { const [x, y] = project(base, p.lon, p.lat); return { p, x, y, kind: kindOf(p.type) }; }), [base, places]);
-  const byId = useMemo(() => new Map(pts.map((q) => [q.p.id, q])), [pts]);
-
-  const stage = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState<[number, number]>([0, 0]);
-  const [view, setView] = useState<View>({ k: 0, tx: 0, ty: 0 });
-  const viewRef = useRef(view);
-  useLayoutEffect(() => { viewRef.current = view; }, [view]);
-  const [home, setHome] = useState<View | null>(null);
-  const homeSet = useRef(false);
-  const anim = useRef(0);
+  const reduce = motion === "reduce" || (motion === "auto" && typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [engine] = useState(() => makeEngine(base, places));
 
   const [kinds, setKinds] = useState<Set<string>>(() => new Set(KINDS.map((k) => k.id)));
   const [greekNames, setGreekNames] = useState(true);
   const [q, setQ] = useState("");
   const saved = useSavedPlaces((s) => s.saved);
   const toggleSaved = useSavedPlaces((s) => s.toggle);
-  const reduce = motion === "reduce" || (motion === "auto" && typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [hover, setHover] = useState<{ id: string; x: number; y: number } | null>(null);
+  const [hint, setHint] = useState(false);
+  const [homeReady, setHomeReady] = useState(false);
 
-  // fit the Aegean on first show; the whole map is the furthest you can zoom out
+  const stage = useRef<HTMLDivElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const ring = useRef<HTMLDivElement>(null);
+  const scaleBar = useRef<HTMLDivElement>(null);
+
+  // give the engine its canvas, follow the frame's size and the theme
   useLayoutEffect(() => {
-    const el = stage.current;
-    if (!el) return;
-    const ro = new ResizeObserver(() => {
-      const w = el.clientWidth, h = el.clientHeight;
-      setSize([w, h]);
-      if (w && h && !homeSet.current) {
-        homeSet.current = true;
-        const [x0, y0] = project(base, 13, 44.5), [x1, y1] = project(base, 36.5, 30.5);
-        const k = Math.min(w / (x1 - x0), h / (y1 - y0));
-        const v = { k, tx: w / 2 - ((x0 + x1) / 2) * k, ty: h / 2 - ((y0 + y1) / 2) * k };
-        setHome(v);
-        setView(v);
-      }
-    });
+    const el = stage.current!;
+    engine.attach({ stage: el, canvas: canvas.current!, ring: ring.current!, scale: scaleBar.current! }, () => setHomeReady(true));
+    const ro = new ResizeObserver(() => engine.resize(el.clientWidth, el.clientHeight));
     ro.observe(el);
-    return () => ro.disconnect();
-  }, [base]);
+    const restyle = () => engine.restyle();
+    const mo = new MutationObserver(restyle);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    const mq = matchMedia("(prefers-color-scheme: dark)");
+    mq.addEventListener("change", restyle);
+    const fonts = () => engine.fontsChanged();
+    document.fonts?.addEventListener?.("loadingdone", fonts);
+    return () => { ro.disconnect(); mo.disconnect(); mq.removeEventListener("change", restyle); document.fonts?.removeEventListener?.("loadingdone", fonts); engine.detach(); };
+  }, [engine]);
 
-  const minK = size[0] ? Math.min(size[0] / W, size[1] / H) : 0.01;
-  const maxK = home ? home.k * 14 : 1;
-  const clampView = useCallback((v: View): View => {
-    const k = Math.max(minK, Math.min(maxK, v.k));
-    // keep some of the map on screen
-    const [w, h] = size;
-    const tx = Math.min(w * 0.6, Math.max(w * 0.4 - W * k, v.tx));
-    const ty = Math.min(h * 0.6, Math.max(h * 0.4 - H * k, v.ty));
-    return { k, tx, ty };
-  }, [minK, maxK, size, W, H]);
+  // what is shown, and what is chosen, feed the next frame
+  useEffect(() => {
+    engine.setOptions({ kinds, greek: greekNames, selected: selectedId, saved, hover: hover?.id ?? null, reduce });
+  }, [engine, kinds, greekNames, selectedId, saved, hover, reduce]);
 
-  const animateTo = useCallback((to: View, ms = 700) => {
-    cancelAnimationFrame(anim.current);
-    const from = viewRef.current, target = clampView(to);
-    if (reduce || ms === 0) { setView(target); return; }
-    const t0 = performance.now();
-    // zoom in log space so the motion feels even
-    const step = (t: number) => {
-      const u = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - u, 3);
-      const k = Math.exp(Math.log(from.k) + (Math.log(target.k) - Math.log(from.k)) * e);
-      // keep the point between the two centres moving on a straight line
-      const cx = size[0] / 2, cy = size[1] / 2;
-      const mx0 = (cx - from.tx) / from.k, my0 = (cy - from.ty) / from.k;
-      const mx1 = (cx - target.tx) / target.k, my1 = (cy - target.ty) / target.k;
-      const mx = mx0 + (mx1 - mx0) * e, my = my0 + (my1 - my0) * e;
-      setView({ k, tx: cx - mx * k, ty: cy - my * k });
-      if (u < 1) anim.current = requestAnimationFrame(step);
-    };
-    anim.current = requestAnimationFrame(step);
-  }, [clampView, reduce, size]);
-
-  const zoomAt = useCallback((factor: number, px: number, py: number, animate = false) => {
-    const v = viewRef.current;
-    const k = Math.max(minK, Math.min(maxK, v.k * factor));
-    const next = { k, tx: px - ((px - v.tx) * k) / v.k, ty: py - ((py - v.ty) * k) / v.k };
-    if (animate) animateTo(next, 300); else setView(clampView(next));
-  }, [minK, maxK, animateTo, clampView]);
-
-  const flyTo = useCallback((id: string) => {
-    const t = byId.get(id);
-    if (!t || !home) return;
-    const k = Math.max(viewRef.current.k, home.k * (t.kind === "region" ? 1.6 : 3.2));
-    // leave room for the panel on wide screens: centre a little left of the middle
-    animateTo({ k, tx: size[0] * 0.5 - t.x * k, ty: size[1] * 0.5 - t.y * k });
-  }, [byId, animateTo, size, home]);
-
-  const select = useCallback((id: string | null) => {
+  const select = (id: string | null) => {
     const sp = new URLSearchParams(params.toString());
     if (id) sp.set("p", id); else sp.delete("p");
     router.replace(`?${sp.toString()}`, { scroll: false });
-    if (id) flyTo(id);
-  }, [params, router, flyTo]);
+    if (id) engine.flyTo(id);
+  };
 
   // opened with ?p=: go there once the map has its size
   const opened = useRef(false);
   useEffect(() => {
-    if (opened.current || !selectedId || !home) return;
+    if (opened.current || !selectedId || !homeReady) return;
     opened.current = true;
-    flyTo(selectedId);
-  }, [selectedId, flyTo, home]);
+    engine.flyTo(selectedId);
+  }, [engine, selectedId, homeReady]);
 
-  // ---- pointer handling: drag to pan, two fingers to pinch, wheel to zoom
-  const pointers = useRef(new Map<number, { x: number; y: number }>());
+  // ---- mouse and pen: drag to pan (with a glide when let go), hover to name a place
+  const drag = useRef<{ x: number; y: number; trail: { t: number; x: number; y: number }[] } | null>(null);
   const moved = useRef(0);
-  // touch screens are handled below (two fingers move the map, one scrolls the page); this is the mouse and pen
+  const lastTouch = useRef(0);
+  const local = (e: { clientX: number; clientY: number }) => { const r = stage.current!.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top] as const; };
   const onPointerDown = (e: React.PointerEvent) => {
-    if (e.pointerType === "touch") return;
+    if (e.pointerType === "touch" || e.button !== 0 || (e.target as Element).closest("button")) return;
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    drag.current = { x: e.clientX, y: e.clientY, trail: [{ t: performance.now(), x: e.clientX, y: e.clientY }] };
     moved.current = 0;
-    cancelAnimationFrame(anim.current);
+    engine.stop();
   };
   const onPointerMove = (e: React.PointerEvent) => {
     if (e.pointerType === "touch") return;
-    const prev = pointers.current.get(e.pointerId);
-    if (!prev) return;
-    const rect = stage.current!.getBoundingClientRect();
-    if (pointers.current.size === 1) {
-      const dx = e.clientX - prev.x, dy = e.clientY - prev.y;
+    const d = drag.current;
+    if (d) {
+      const dx = e.clientX - d.x, dy = e.clientY - d.y, v = engine.v;
       moved.current += Math.abs(dx) + Math.abs(dy);
-      const v = viewRef.current;
-      setView(clampView({ k: v.k, tx: v.tx + dx, ty: v.ty + dy }));
-    } else if (pointers.current.size === 2) {
-      const [a, b] = [...pointers.current.entries()].map(([id, p]) => (id === e.pointerId ? { x: e.clientX, y: e.clientY } : p));
-      const [oa, ob] = [...pointers.current.values()];
-      const d0 = Math.hypot(oa.x - ob.x, oa.y - ob.y), d1 = Math.hypot(a.x - b.x, a.y - b.y);
-      if (d0 > 0) zoomAt(d1 / d0, (a.x + b.x) / 2 - rect.left, (a.y + b.y) / 2 - rect.top);
-      moved.current += 10;
+      d.x = e.clientX; d.y = e.clientY;
+      d.trail.push({ t: performance.now(), x: e.clientX, y: e.clientY });
+      if (d.trail.length > 12) d.trail.shift();
+      engine.set({ k: v.k, tx: v.tx + dx, ty: v.ty + dy });
+      if (hover) setHover(null);
+      return;
     }
-    pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const [x, y] = local(e), id = (e.target as Element).closest("button") ? null : engine.hitAt(x, y, false);
+    if (id !== (hover?.id ?? null)) setHover(id ? { id, x, y } : null);
   };
-  const onPointerUp = (e: React.PointerEvent) => { pointers.current.delete(e.pointerId); };
+  const onPointerUp = (e: React.PointerEvent) => {
+    const d = drag.current;
+    drag.current = null;
+    if (d && moved.current > 6 && e.type === "pointerup") engine.fling(trailVelocity(d.trail));
+  };
+  const onClick = (e: React.MouseEvent) => {
+    if (moved.current > 6 || (e.target as Element).closest("button")) return;
+    const id = engine.hitAt(...local(e), performance.now() - lastTouch.current < 800);
+    if (id) select(id === selectedId ? null : id);
+  };
 
-  // Touch: two fingers move and zoom the map; one finger scrolls the page, so the page can never get stuck
-  // on the map. The first couple of times a finger drags across it alone, a hint says so.
-  const [hint, setHint] = useState(false);
+  // ---- touch: two fingers move and zoom the map; one finger scrolls the page, so the page can never get
+  // stuck on the map. The first couple of times a finger drags across it alone, a hint says so.
   useEffect(() => {
-    const el = stage.current;
-    if (!el) return;
+    const el = stage.current!;
     let last: { x: number; y: number; d: number } | null = null, one: { x: number; y: number } | null = null, hinted = false, timer = 0;
+    let trail: { t: number; x: number; y: number }[] = [];
     const mid = (t: TouchList) => ({ x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2, d: Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) });
     const start = (e: TouchEvent) => {
+      lastTouch.current = performance.now();
       moved.current = 0;
-      cancelAnimationFrame(anim.current);
-      if (e.touches.length === 2) { last = mid(e.touches); one = null; }
+      engine.stop();
+      if (e.touches.length === 2) { last = mid(e.touches); one = null; trail = []; }
       else if (e.touches.length === 1) { one = { x: e.touches[0].clientX, y: e.touches[0].clientY }; hinted = false; }
     };
     const move = (e: TouchEvent) => {
       if (e.touches.length === 2 && last) {
         e.preventDefault();
-        const m = mid(e.touches), r = el.getBoundingClientRect(), v = viewRef.current;
-        setView(clampView({ k: v.k, tx: v.tx + m.x - last.x, ty: v.ty + m.y - last.y }));
-        if (last.d > 0) zoomAt(m.d / last.d, m.x - r.left, m.y - r.top);
+        // follow both fingers: the point that was between them stays between them, their spread sets the zoom
+        const m = mid(e.touches), r = el.getBoundingClientRect(), v = engine.v;
+        const k = engine.limitK(v.k * (last.d > 0 ? m.d / last.d : 1)), wx = (last.x - r.left - v.tx) / v.k, wy = (last.y - r.top - v.ty) / v.k;
+        engine.set({ k, tx: m.x - r.left - wx * k, ty: m.y - r.top - wy * k });
         moved.current += 10;
+        trail.push({ t: performance.now(), x: m.x, y: m.y });
+        if (trail.length > 12) trail.shift();
         last = m;
       } else if (e.touches.length === 1 && one && !hinted) {
-        const dx = e.touches[0].clientX - one.x, dy = e.touches[0].clientY - one.y;
-        if (Math.hypot(dx, dy) < 24) return;
+        if (Math.hypot(e.touches[0].clientX - one.x, e.touches[0].clientY - one.y) < 24) return;
         hinted = true;
+        moved.current = 24;
         let n = 0;
         try { n = Number(localStorage.getItem("mathesis:map-hint")) || 0; localStorage.setItem("mathesis:map-hint", String(n + 1)); } catch { /* ignore */ }
         if (n < 2) { setHint(true); clearTimeout(timer); timer = window.setTimeout(() => setHint(false), 2200); }
       }
     };
-    const end = (e: TouchEvent) => { if (e.touches.length < 2) last = null; if (!e.touches.length) one = null; };
+    const end = (e: TouchEvent) => {
+      lastTouch.current = performance.now();
+      if (e.touches.length < 2 && last) { last = null; if (e.type === "touchend") engine.fling(trailVelocity(trail)); trail = []; }
+      if (!e.touches.length) one = null;
+    };
+    // the wheel (and a trackpad's pinch) zooms, gliding
+    const wheel = (e: WheelEvent) => {
+      e.preventDefault();
+      engine.wheel(Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : e.ctrlKey ? 0.01 : 0.0022)), ...local(e));
+    };
     el.addEventListener("touchstart", start, { passive: true });
     el.addEventListener("touchmove", move, { passive: false });
     el.addEventListener("touchend", end);
     el.addEventListener("touchcancel", end);
+    el.addEventListener("wheel", wheel, { passive: false });
     return () => {
       clearTimeout(timer);
       el.removeEventListener("touchstart", start); el.removeEventListener("touchmove", move);
       el.removeEventListener("touchend", end); el.removeEventListener("touchcancel", end);
+      el.removeEventListener("wheel", wheel);
     };
-  }, [clampView, zoomAt]);
-  useEffect(() => {
-    const el = stage.current;
-    if (!el) return;
-    const wheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const rect = el.getBoundingClientRect();
-      zoomAt(Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0018)), e.clientX - rect.left, e.clientY - rect.top);
-    };
-    el.addEventListener("wheel", wheel, { passive: false });
-    return () => el.removeEventListener("wheel", wheel);
-  }, [zoomAt]);
+  }, [engine]);
+
   const onKey = (e: React.KeyboardEvent) => {
-    const [w, h] = size, v = viewRef.current, step = 80;
-    if (e.key === "+" || e.key === "=") zoomAt(1.5, w / 2, h / 2, true);
-    else if (e.key === "-" || e.key === "_") zoomAt(1 / 1.5, w / 2, h / 2, true);
-    else if (e.key === "ArrowLeft") animateTo({ ...v, tx: v.tx + step }, 200);
-    else if (e.key === "ArrowRight") animateTo({ ...v, tx: v.tx - step }, 200);
-    else if (e.key === "ArrowUp") animateTo({ ...v, ty: v.ty + step }, 200);
-    else if (e.key === "ArrowDown") animateTo({ ...v, ty: v.ty - step }, 200);
+    const v = engine.v, step = 90;
+    if (e.key === "+" || e.key === "=") engine.zoomAt(1.6, engine.w / 2, engine.h / 2);
+    else if (e.key === "-" || e.key === "_") engine.zoomAt(1 / 1.6, engine.w / 2, engine.h / 2);
+    else if (e.key === "ArrowLeft") engine.go({ ...v, tx: v.tx + step }, 240);
+    else if (e.key === "ArrowRight") engine.go({ ...v, tx: v.tx - step }, 240);
+    else if (e.key === "ArrowUp") engine.go({ ...v, ty: v.ty + step }, 240);
+    else if (e.key === "ArrowDown") engine.go({ ...v, ty: v.ty - step }, 240);
     else if (e.key === "Escape") select(null);
     else return;
     e.preventDefault();
   };
 
-  // ---- what to draw at this zoom: more places as you zoom in
   const found = useMemo(() => {
     const n = fold(q).trim();
     if (n.length < 2) return [];
     return places.filter((p) => fold(p.grc).includes(n) || p.en.toLowerCase().includes(q.trim().toLowerCase()) || (p.also ?? []).some((a) => fold(a).includes(n))).slice(0, 8);
   }, [q, places]);
-  const { k, tx, ty } = view;
-  const zoom = home ? k / home.k : 1;
-  const [w, h] = size;
-  const shown = useMemo(() => {
-    const limit = Math.round(90 * zoom * zoom);
-    const out: typeof pts = [];
-    let rank = 0;
-    for (const t of pts) {
-      if (!kinds.has(t.kind) && t.kind !== "other") continue;
-      rank++;
-      const sx = t.x * k + tx, sy = t.y * k + ty;
-      if (sx < -40 || sy < -20 || sx > w + 40 || sy > h + 20) continue;
-      if (rank > limit && t.p.id !== selectedId && !saved[t.p.id]) continue;
-      out.push(t);
-    }
-    return out;
-  }, [pts, kinds, k, tx, ty, w, h, zoom, selectedId, saved]);
 
-  // labels: the most-mentioned first, skipping any that would overlap one already placed
-  const labels = useMemo(() => {
-    const boxes: [number, number, number, number][] = [];
-    const out: { t: (typeof pts)[number]; x: number; y: number; text: string; big: boolean }[] = [];
-    const max = Math.min(140, 26 + Math.round(24 * zoom));
-    const order = [...shown].sort((a, b) => (b.p.id === selectedId ? 1 : 0) - (a.p.id === selectedId ? 1 : 0) || b.p.n - a.p.n);
-    for (const t of order) {
-      if (out.length >= max) break;
-      const text = greekNames ? t.p.grc : t.p.en.split("/")[0].replace(/ \(.*\)$/, "");
-      const big = TEXT_KINDS.has(t.kind);
-      const fs = big ? 12 : 12.5;
-      const tw = text.length * fs * (big ? 0.72 : 0.56), th = fs * 1.2;
-      const sx = t.x * k + tx, sy = t.y * k + ty;
-      const x = big ? sx - tw / 2 : sx + radius(t.p.n) + 3, y = big ? sy : sy + fs * 0.35;
-      const box: [number, number, number, number] = [x - 2, y - th, x + tw + 2, y + 3];
-      if (boxes.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) continue;
-      boxes.push(box);
-      out.push({ t, x, y, text, big });
-    }
-    return out;
-  }, [shown, k, tx, ty, zoom, greekNames, selectedId]);
-
-  const sel = selectedId ? byId.get(selectedId)?.p ?? null : null;
-  const onDotClick = (id: string) => { if (moved.current < 6) select(id === selectedId ? null : id); };
+  const byId = useMemo(() => new Map(places.map((p) => [p.id, p])), [places]);
+  const sel = selectedId ? byId.get(selectedId) ?? null : null;
+  const hovered = hover ? byId.get(hover.id) : null;
 
   return (
     <div className={`wrap ${styles.layout}`}>
       <div className={styles.mapCol}>
         <div ref={stage} className={styles.stage} tabIndex={0} role="application" aria-label="Map of the Greek world. Use the arrow keys to move and plus or minus to zoom; places are listed in the panel."
+          data-hover={hover ? "" : undefined}
           onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}
-          onDoubleClick={(e) => { const r = stage.current!.getBoundingClientRect(); zoomAt(2, e.clientX - r.left, e.clientY - r.top, true); }}
+          onPointerLeave={() => setHover(null)} onClick={onClick}
+          onDoubleClick={(e) => { if (!(e.target as Element).closest("button")) engine.zoomAt(2, ...local(e)); }}
           onKeyDown={onKey}>
-          {hint && <p className={styles.touchHint} role="status">Use two fingers to move the map</p>}
-          {w > 0 && (
-            <svg width={w} height={h} className={styles.svg} aria-hidden="true">
-              <defs>
-                <pattern id="waves" width="14" height="8" patternUnits="userSpaceOnUse">
-                  <path d="M0 5 Q3.5 2 7 5 T14 5" className={styles.wave} />
-                </pattern>
-              </defs>
-              <rect width={w} height={h} className={styles.land} />
-              <g transform={`translate(${tx} ${ty}) scale(${k})`}>
-                <path d={sea} className={styles.sea} />
-                <path d={sea} className={styles.waves} style={{ fill: "url(#waves)" }} />
-                <path d={lakes} className={styles.lake} />
-                <path d={sea} className={styles.coast} />
-              </g>
-              <g>
-                {shown.filter((t) => !TEXT_KINDS.has(t.kind)).map((t, i) => (
-                  <circle key={t.p.id} cx={t.x * k + tx} cy={t.y * k + ty} r={radius(t.p.n)}
-                    className={`${styles.dot} ${t.p.checked ? styles.checked : styles.auto} ${saved[t.p.id] ? styles.saved : ""}`}
-                    style={{ "--i": Math.min(i, 60) } as React.CSSProperties}
-                    onClick={() => onDotClick(t.p.id)}><title>{`${t.p.grc} · ${t.p.en}`}</title></circle>
-                ))}
-              </g>
-              <g>
-                {labels.map(({ t, x, y, text, big }) => (
-                  <text key={t.p.id} x={x} y={y} className={`${big ? (t.kind === "water" ? styles.waterName : styles.regionName) : styles.name} ${t.p.id === selectedId ? styles.selName : ""} ${big && !t.p.checked ? styles.autoName : ""}`}
-                    lang={greekNames ? "grc" : undefined} onClick={() => onDotClick(t.p.id)}>{text}</text>
-                ))}
-              </g>
-              {sel && (() => { const t = byId.get(sel.id)!; return <circle cx={t.x * k + tx} cy={t.y * k + ty} r={radius(sel.n) + 7} className={styles.ring} />; })()}
-            </svg>
+          <canvas ref={canvas} className={styles.canvas} aria-hidden="true" />
+          <div ref={ring} className={styles.ring} hidden aria-hidden="true" />
+          {hovered && hover && (
+            <p className={styles.tip} style={{ transform: `translate(${Math.round(hover.x)}px, ${Math.round(hover.y)}px)` }} aria-hidden="true">
+              <b lang="grc">{hovered.grc}</b> {hovered.en.split("/")[0]} <small>{fmt(hovered.n)}</small>
+            </p>
           )}
-          <div className={styles.controls}>
-            <button type="button" onClick={() => zoomAt(1.6, w / 2, h / 2, true)} aria-label="Zoom in">+</button>
-            <button type="button" onClick={() => zoomAt(1 / 1.6, w / 2, h / 2, true)} aria-label="Zoom out">−</button>
-            <button type="button" onClick={() => home && animateTo(home)} aria-label="Back to the Aegean" title="Back to the Aegean">⌂</button>
+          {hint && <p className={styles.touchHint} role="status">Use two fingers to move the map</p>}
+          <div className={styles.controls} data-avoid="">
+            <div className={styles.zoomPair}>
+              <button type="button" onClick={() => engine.zoomAt(1.6, engine.w / 2, engine.h / 2)} aria-label="Zoom in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
+              <button type="button" onClick={() => engine.zoomAt(1 / 1.6, engine.w / 2, engine.h / 2)} aria-label="Zoom out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg></button>
+            </div>
+            <button type="button" className={styles.homeBtn} onClick={() => engine.home && engine.go(engine.home)} aria-label="Back to the Aegean" title="Back to the Aegean">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7M6.5 9.5V20h11V9.5" /></svg>
+            </button>
           </div>
-          <div className={styles.compass} aria-hidden="true">N</div>
+          <div className={styles.compass} aria-hidden="true" data-avoid="">
+            <svg viewBox="0 0 24 34"><path d="M12 2 17 17 12 14 7 17Z" className={styles.north} /><path d="M12 32 7 17 12 20 17 17Z" /></svg>
+            <span>N</span>
+          </div>
+          <div ref={scaleBar} className={styles.scale} aria-hidden="true" data-avoid=""><i /><span /></div>
         </div>
         <div className={styles.filters} role="group" aria-label="What to show">
           {KINDS.map((kd) => (
             <button key={kd.id} type="button" className="chip" aria-pressed={kinds.has(kd.id)}
-              onClick={() => setKinds((s) => { const n = new Set(s); if (n.has(kd.id)) n.delete(kd.id); else n.add(kd.id); return n; })}>{kd.label}</button>
+              onClick={() => setKinds((ks) => { const n = new Set(ks); if (n.has(kd.id)) n.delete(kd.id); else n.add(kd.id); return n; })}>{kd.label}</button>
           ))}
           <button type="button" className="chip" aria-pressed={greekNames} onClick={() => setGreekNames(!greekNames)}>{greekNames ? "Names in Greek" : "Names in English"}</button>
         </div>
@@ -417,7 +341,7 @@ function Intro({ places, meta, onPick }: { places: Place[]; meta: PlacesMeta; on
       </ol>
       <div className={styles.key} aria-label="Key">
         <span><i className={`${styles.keyDot} ${styles.checked}`} /> checked by hand</span>
-        <span><i className={`${styles.keyDot} ${styles.auto}`} /> matched automatically (rivers and regions in paler letters)</span>
+        <span><i className={styles.keyDot} /> matched automatically (rivers and regions in paler letters)</span>
       </div>
       <details className={styles.method}>
         <summary>How the places were found</summary>

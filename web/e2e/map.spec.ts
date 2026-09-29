@@ -38,3 +38,25 @@ test("looking up a place name in the reader offers it on the map", async ({ page
   await panel.getByRole("link", { name: /On the map · Τένεδος/ }).click();
   await expect(page).toHaveURL(/\/stoa\/periplus\?p=550912/);
 });
+
+test("the painted map: a place is chosen by clicking its dot, and the zoom buttons glide", async ({ page }) => {
+  await page.goto("/stoa/periplus?p=570685");
+  const stage = page.getByRole("application", { name: /Map of the Greek world/ });
+  await expect(page.getByRole("heading", { level: 2, name: /Σπάρτη/ })).toBeVisible();
+  await stage.scrollIntoViewIfNeeded();
+  await expect(stage).toHaveAttribute("data-view", /\d/);
+  await page.waitForTimeout(1800);   // the flight to Sparta has landed
+  const k = async () => Number((await stage.getAttribute("data-view"))!.split(" ")[0]);
+  // clicking the chosen place's dot (inside its ring) lets it go
+  const ring = (await stage.locator("[class*='ring']").boundingBox())!;
+  await page.mouse.click(ring.x + ring.width / 2, ring.y + ring.height / 2);
+  await expect(page).not.toHaveURL(/p=570685/);
+  // and clicking it again chooses it
+  await page.mouse.click(ring.x + ring.width / 2, ring.y + ring.height / 2);
+  await expect(page).toHaveURL(/p=570685/);
+  const before = await k();
+  await stage.getByRole("button", { name: "Zoom in" }).click();
+  await expect.poll(k).toBeCloseTo(before * 1.6, 2);
+  await stage.getByRole("button", { name: "Zoom out" }).click();
+  await expect.poll(k).toBeCloseTo(before, 2);
+});

@@ -73,9 +73,9 @@ test("pull down to refresh the Town Hall", async ({ page }) => {
 test("the map: two fingers move it, one finger leaves it be and shows a hint", async ({ page }) => {
   await page.goto("/stoa/periplus");
   const stage = page.getByRole("application", { name: /Map of the Greek world/ });
-  await expect(stage.locator("svg")).toBeVisible();
-  await page.waitForTimeout(1200);
-  const view = () => stage.locator("svg > g").first().getAttribute("transform");
+  await expect(stage).toHaveAttribute("data-view", /\d/);   // painted, and at rest
+  await page.waitForTimeout(600);
+  const view = () => stage.getAttribute("data-view");
   const before = await view();
   const b = (await stage.boundingBox())!;
   const cx = b.x + b.width / 2, cy = b.y + b.height / 2;
