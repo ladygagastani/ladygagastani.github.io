@@ -13,6 +13,9 @@ export type Section =
   | { kind: "p"; text: string }
   | { kind: "tip"; text: string }
   | { kind: "alphabet" }                       // the 24 letters, tap to hear (components/academy/AlphabetGlance)
+  | { kind: "grid"; title: string; head: string[]; rows: string[][]; note?: string }   // a reference table of text (not forms)
+  | { kind: "motion"; noun: { from: string; in: string; to: string }; en: string }      // out of / in / into, drawn (Motion.tsx)
+  | { kind: "shift"; title: string; items: { a: string; aEn: string; b: string; bEn: string; note: string }[] }  // same words, new order (Shift.tsx)
   | { kind: "table"; paradigm: string; title?: string }
   | { kind: "made"; title?: string; items: { grc: string; en: string; note?: string }[] }
   | { kind: "reveal"; title: string; items: { grc: string; answer: string }[] }
@@ -230,6 +233,149 @@ export const LESSONS: Lesson[] = [
           note: "Here «μοι» is shortened before «ἔννεπε» (correption), so the first foot is a dactyl: «ἄν-δρα-μοι»." },
         { work: "tlg0016.tlg001", ref: "1.47.3", quote: "οἶδα δʼ ἐγὼ ψάμμου", label: "Herodotus 1.47.3: an oracle in hexameters", metre: "hexameter",
           note: "Herodotus writes prose, but he says the Pythia at Delphi gave this answer «ἐν ἑξαμέτρῳ τόνῳ», \"in hexameter verse\" (1.47.2). The lines scan just like Homer's." },
+      ] },
+    ],
+  },
+  {
+    id: "prepositions", title: "Prepositions: from, in, to", greek: "προθέσεις", minutes: 20,
+    summary: "Small words of place and direction, and the case each one takes.",
+    words: ["ἐν", "εἰς", "ἐκ", "ἀπό", "πρός", "παρά"],
+    sections: [
+      { kind: "p", text: "English shows place and direction with small words: *in* the house, *into* the house, *out of* the house. Greek has these words too, called **prepositions**, and each one is followed by a noun in a particular case: genitive, dative or accusative. We say the preposition *takes* that case." },
+      { kind: "p", text: "Behind many of them is one simple pattern. The **genitive** goes with movement *away from* a place, the **dative** with being *at rest in* it, and the **accusative** with movement *towards* or *into* it." },
+      { kind: "motion", noun: { from: "ἐκ τῆς οἰκίας", in: "ἐν τῇ οἰκίᾳ", to: "εἰς τὴν οἰκίαν" }, en: "the house" },
+      { kind: "tip", text: "«ἐκ», «ἐν» and «εἰς» are the clearest case: each always takes the same case. Learn them as a set: «ἐκ» + genitive \"out of\", «ἐν» + dative \"in\", «εἰς» + accusative \"into\"." },
+      { kind: "grid", title: "The commonest prepositions", head: ["", "with the genitive", "with the dative", "with the accusative"], rows: [
+        ["«ἐκ» (before a vowel «ἐξ»)", "out of, from", "", ""],
+        ["«ἀπό»", "away from", "", ""],
+        ["«ἐν»", "", "in, on, among", ""],
+        ["«εἰς» (also spelled «ἐς»)", "", "", "into, to"],
+        ["«διά»", "through", "", "because of"],
+        ["«μετά»", "with", "", "after"],
+        ["«ὑπό»", "by (the person who does it); under", "under", "under (with movement)"],
+        ["«πρός»", "from the side of (rare)", "at, near", "to, towards; against"],
+        ["«παρά»", "from (a person)", "beside, at the house of", "to (a person); along, beside"],
+        ["«ἐπί»", "on, upon", "on, at; for", "onto, to, against"],
+      ], note: "Many prepositions take more than one case, and the case changes the meaning. The pattern still helps: with «παρά», the genitive is \"from\" a person, the dative \"beside\" them, the accusative \"to\" them." },
+      { kind: "p", text: "Two changes of spelling to expect. A preposition ending in a vowel usually drops it before a word beginning with a vowel: «διά» becomes «διʼ», «ἀπό» becomes «ἀπʼ». And before a rough breathing, «π», «τ» and «κ» turn into «φ», «θ» and «χ»: «ἀφʼ», «καθʼ», «ὑφʼ»." },
+      { kind: "made", title: "Practice sentences (made up for this lesson)", items: [
+        { grc: "ὁ ἄνθρωπος μένει ἐν τῇ οἰκίᾳ.", en: "The person stays in the house." },
+        { grc: "οἱ ἄνθρωποι φεύγουσιν ἐκ τῆς χώρας.", en: "The people flee out of the land." },
+        { grc: "ὁ υἱὸς λέγει πρὸς τὸν πατέρα.", en: "The son speaks to his father.", note: "Greek often uses the article where English says \"his\" or \"her\"." },
+        { grc: "ἔχω δῶρον παρὰ τοῦ πατρός.", en: "I have a gift from my father." },
+      ] },
+      { kind: "check", items: [
+        { q: "In «ἐν ἀρχῇ», why is «ἀρχῇ» in the dative?", options: ["Because «ἐν» always takes the dative", "Because it is the subject", "Because it is plural", "Because it follows a verb"], answer: 0, why: "«ἐν» \"in\" always takes the dative: «ἐν ἀρχῇ», \"in the beginning\"." },
+        { q: "«εἰς τὸν κόσμον» means…", options: ["out of the world", "in the world", "into the world", "of the world"], answer: 2, why: "«εἰς» + accusative: movement into." },
+        { q: "«παρὰ θεοῦ», with the genitive, means…", options: ["from God", "beside God", "to God", "against God"], answer: 0, why: "«παρά» with the genitive is \"from\" (a person)." },
+        { q: "Which case follows «ἐκ»?", options: ["genitive", "dative", "accusative", "nominative"], answer: 0, why: "«ἐκ» \"out of\" always takes the genitive: movement away." },
+      ] },
+      { kind: "real", title: "Read it yourself", items: [
+        { work: "tlg0031.tlg001", ref: "2.1", quote: "ἀπὸ ἀνατολῶν παρεγένοντο εἰς Ἰεροσόλυμα", label: "Gospel of Matthew 2.1",
+          note: "All three directions in one verse: «ἐν Βηθλεὲμ» \"in Bethlehem\" (where), «ἀπὸ ἀνατολῶν» \"from the east\" (genitive: where from) and «εἰς Ἰεροσόλυμα» \"to Jerusalem\" (accusative: where to). «ἐν ἡμέραις» is \"in the days\"." },
+        { work: "tlg0031.tlg004", ref: "1.6", quote: "ἀπεσταλμένος παρὰ θεοῦ", label: "Gospel of John 1.6",
+          note: "«παρὰ θεοῦ» with the genitive: \"sent from God\"." },
+        { work: "tlg0032.tlg006", ref: "1.1.2", quote: "μεταπέμπεται ἀπὸ τῆς ἀρχῆς", label: "Xenophon, Anabasis 1.1.2",
+          note: "Classical prose: King Darius \"sends for\" his son Cyrus «ἀπὸ τῆς ἀρχῆς», \"from the province\" he governed. Later in the sentence the edition prints «ἐς», the other spelling of «εἰς»: «ἐς Καστωλοῦ πεδίον», \"to the plain of Castolus\"." },
+      ] },
+    ],
+  },
+  {
+    id: "adjectives", title: "Adjectives: agreement and position", greek: "τὰ ἐπίθετα", minutes: 20,
+    summary: "ἀγαθός, ἀγαθή, ἀγαθόν, and why \"the good man\" and \"the man is good\" differ only in word order.",
+    words: ["ἀγαθός", "καλός", "κακός", "δίκαιος", "ἀληθινός"],
+    sections: [
+      { kind: "p", text: "An adjective describes a noun, and it **agrees** with it: it takes the same gender, number and case. So an adjective has a full set of forms for each gender." },
+      { kind: "p", text: "Good news: you know these endings already. The commonest adjectives use the second declension for the masculine and neuter (like «λόγος» and «δῶρον») and the first declension for the feminine (like «ψυχή»). Dictionaries list all three: «ἀγαθός, ἀγαθή, ἀγαθόν»." },
+      { kind: "table", paradigm: "agathos" },
+      { kind: "tip", text: "After ε, ι or ρ the feminine keeps α, just as «χώρα» does: «δίκαιος, δικαία, δίκαιον» \"just\"." },
+      { kind: "p", text: "**Position.** With the article, *where* the adjective stands matters. Inside the article's phrase (between the article and the noun, or after the noun with the article repeated) it simply describes: this is the **attributive** position, \"the good man\". Outside it, the adjective makes a statement: this is the **predicate** position, \"the man is good\". Greek can leave out «ἐστί» \"is\" in a statement like this." },
+      { kind: "shift", title: "Move the adjective and watch the meaning change", items: [
+        { a: "ὁ ἀγαθὸς ἄνθρωπος", aEn: "the good person", b: "ἀγαθὸς ὁ ἄνθρωπος", bEn: "the person is good", note: "Before the article, the adjective is outside the phrase: a statement." },
+        { a: "ὁ ἄνθρωπος ὁ ἀγαθός", aEn: "the good person", b: "ὁ ἄνθρωπος ἀγαθός", bEn: "the person is good", note: "After the noun, the repeated article keeps the adjective inside the phrase; without it, it becomes a statement." },
+        { a: "ἡ καλὴ χώρα", aEn: "the beautiful land", b: "καλὴ ἡ χώρα", bEn: "the land is beautiful", note: "Feminine: the adjective agrees with «χώρα»." },
+      ] },
+      { kind: "tip", text: "Without an article there is no position to read: «καλὸν δῶρον ἔχω» is \"I have a beautiful gift\". Context decides." },
+      { kind: "check", items: [
+        { q: "«ὁ ποιμὴν ὁ καλός» means…", options: ["the good shepherd", "the shepherd is good"], answer: 0, why: "The article is repeated before the adjective, so it is attributive: \"the good shepherd\"." },
+        { q: "«ἀγαθὸς ὁ πατήρ» means…", options: ["the good father", "the father is good"], answer: 1, why: "The adjective stands outside the article's phrase: predicate, \"the father is good\"." },
+        { q: "Which form agrees with «τὴν ψυχήν»?", options: ["ἀγαθόν", "ἀγαθήν", "ἀγαθῆς", "ἀγαθούς"], answer: 1, why: "«ψυχήν» is feminine accusative singular, so «ἀγαθήν»." },
+      ] },
+      { kind: "real", title: "Read it yourself", items: [
+        { work: "tlg0031.tlg004", ref: "10.11", quote: "ὁ ποιμὴν ὁ καλός", label: "Gospel of John 10.11",
+          note: "Noun, then the article repeated with the adjective: attributive, \"the good shepherd\". «καλός» means \"beautiful\" and also \"good, noble\". In «τὴν ψυχὴν αὐτοῦ», «ψυχή» means \"life\"." },
+        { work: "tlg0032.tlg006", ref: "1.1.1", quote: "πρεσβύτερος μὲν Ἀρταξέρξης, νεώτερος δὲ Κῦρος", label: "Xenophon, Anabasis 1.1.1",
+          note: "The opening of the Anabasis. Darius and Parysatis have two sons: \"the elder (was) Artaxerxes, the younger Cyrus\". There is no article and no verb: the context shows that the adjectives «πρεσβύτερος» \"older\" and «νεώτερος» \"younger\" say something about each son. «μέν… δέ…» sets them side by side: \"on the one hand… on the other…\"." },
+      ] },
+    ],
+  },
+  {
+    id: "third-declension", title: "Third declension: φύλαξ, σῶμα, πόλις", greek: "ἡ τρίτη κλίσις", minutes: 25,
+    summary: "The biggest family of nouns: find the stem in the genitive.",
+    words: ["σάρξ", "πνεῦμα", "ὄνομα", "πόλις", "χάρις"],
+    sections: [
+      { kind: "p", text: "The third declension holds nouns of every gender and many shapes. Its secret is that the nominative often hides the **stem**. The genitive singular shows it: take off «-ος» and what is left is the stem. «φύλαξ» \"guard\" has the genitive «φύλακος», so its stem is «φυλακ-»." },
+      { kind: "p", text: "That is why dictionaries give two forms and the article: «φύλαξ, φύλακος, ὁ». Always learn a third-declension noun with its genitive." },
+      { kind: "table", paradigm: "phylax" },
+      { kind: "tip", text: "The endings, added to the stem: singular «-ος», «-ι», «-α» (genitive, dative, accusative); plural «-ες», «-ων», «-σι(ν)», «-ας». In the dative plural the stem meets «σ»: «κ» + «σ» is written «ξ» (φύλαξι), and «τ» drops out (σώμασι)." },
+      { kind: "table", paradigm: "soma" },
+      { kind: "p", text: "Every neuter in «-μα» declines like «σῶμα» \"body\", with a stem in «-ματ-»: «ὄνομα» \"name\", «πνεῦμα» \"breath, spirit\", «πρᾶγμα» \"thing, affair\"." },
+      { kind: "table", paradigm: "polis" },
+      { kind: "p", text: "«πόλις» \"city, city-state\" is a different type, with a stem that ends in ι or ε. It is one of the words you will meet most often in Classical prose, so learn it as it stands." },
+      { kind: "reveal", title: "Find the stem from the genitive", items: [
+        { grc: "σάρξ, σαρκός", answer: "σαρκ-: \"flesh\" (κ + ς is written ξ)" },
+        { grc: "ὄνομα, ὀνόματος", answer: "ὀνοματ-: \"name\", like σῶμα" },
+        { grc: "χάρις, χάριτος", answer: "χαριτ-: \"grace, favour\" (the τ drops before ς)" },
+        { grc: "ἐλπίς, ἐλπίδος", answer: "ἐλπιδ-: \"hope\" (the δ drops before ς)" },
+      ] },
+      { kind: "check", items: [
+        { q: "«σώματι» is…", options: ["dative singular", "genitive singular", "nominative plural", "accusative singular"], answer: 0, why: "«-ι» on the stem σωματ- is the dative singular." },
+        { q: "Where do you find a third-declension noun's stem?", options: ["In the genitive singular", "In the nominative singular", "In the dative plural", "In the article"], answer: 0, why: "Take «-ος» off the genitive singular: φύλακ-ος." },
+        { q: "The genitive plural of «πόλις» is…", options: ["πόλεως", "πόλεων", "πόλεσι", "πόλεις"], answer: 1, why: "«-ων» is the genitive plural in every declension." },
+      ] },
+      { kind: "real", title: "Read it yourself", items: [
+        { work: "tlg0031.tlg004", ref: "3.6", quote: "ἐκ τῆς σαρκὸς σάρξ ἐστιν", label: "Gospel of John 3.6",
+          note: "«σαρκός» (genitive, after «ἐκ») and «σάρξ» (nominative) side by side: the genitive shows the stem σαρκ-. In the second half, «πνεύματος» and «πνεῦμα» decline like «σῶμα»." },
+        { work: "tlg0031.tlg001", ref: "5.14", quote: "οὐ δύναται πόλις κρυβῆναι ἐπάνω ὄρους κειμένη", label: "Gospel of Matthew 5.14",
+          note: "«πόλις» is nominative: \"a city cannot be hidden\". «ὄρους» is the genitive of «ὄρος» \"mountain\", a third-declension neuter of yet another type, after «ἐπάνω» \"on top of\"." },
+      ] },
+    ],
+  },
+  {
+    id: "past-tenses", title: "The past: imperfect and aorist", greek: "παρατατικὸς καὶ ἀόριστος", minutes: 25,
+    summary: "The augment ἐ- marks the past; the imperfect paints a scene, the aorist tells what happened.",
+    words: ["γίγνομαι", "βούλομαι", "ἄγω", "γράφω", "πέμπω"],
+    sections: [
+      { kind: "p", text: "Greek has two common past tenses. The **imperfect** shows an action going on, or repeated, in the past: \"I was loosening\", \"I used to loosen\". The **aorist** tells the action simply as an event: \"I loosened\". Stories are told in the aorist; scenes and circumstances in the imperfect." },
+      { kind: "p", text: "Both mark past time the same way: with the **augment**, an addition at the front of the verb. Look at the imperfect and aorist columns." },
+      { kind: "table", paradigm: "luo" },
+      { kind: "p", text: "**Two kinds of augment.** A verb that begins with a consonant adds «ἐ-»: «λύω», «ἔλυον»; «γράφω» \"write\", «ἔγραψα». A verb that begins with a vowel lengthens it instead: «α» and «ε» become «η», «ο» becomes «ω». So «ἄγω» \"lead\" has the imperfect «ἦγον», and «ὀνομάζω» \"name\" has «ὠνόμαζον»." },
+      { kind: "tip", text: "Verbs with a preposition in front (compound verbs) put the augment *after* the preposition: «ὑποπτεύω» \"suspect\" has the imperfect «ὑπώπτευον», and «συγγράφω» \"write down\" has the aorist «συνέγραψα»." },
+      { kind: "p", text: "**The aorist.** Most verbs form it with «σ» and the endings «-σα, -σας, -σε(ν), -σαμεν, -σατε, -σαν»; the «σ» combines with a consonant before it, as «φ» + «σ» makes «ψ» in «ἔγραψα». Many common verbs have a different stem in the aorist instead, which has to be learned with the verb: «λέγω» \"say\", aorist «εἶπον»; «ἔρχομαι» \"come, go\", aorist «ἦλθον»." },
+      { kind: "made", title: "Practice sentences (made up for this lesson)", items: [
+        { grc: "ἐλέγομεν.", en: "We were speaking.", note: "Imperfect: an action going on." },
+        { grc: "ἔγραψα τὸν λόγον.", en: "I wrote the speech.", note: "Aorist: an event." },
+        { grc: "ὁ πατὴρ ἔπεμψε δῶρον.", en: "The father sent a gift.", note: "«ἔπεμψε», aorist of «πέμπω»: π + σ makes ψ." },
+      ] },
+      { kind: "reveal", title: "Take off the augment: which verb is it?", items: [
+        { grc: "ἔλυσαν", answer: "λύω: \"they loosened\" (aorist)" },
+        { grc: "ἦγον", answer: "ἄγω: \"I was leading\" or \"they were leading\" (imperfect; α lengthened to η)" },
+        { grc: "ἐβούλετο", answer: "βούλομαι \"want\": \"he wanted\" (imperfect)" },
+        { grc: "ὑπώπτευε", answer: "ὑποπτεύω \"suspect\": \"he suspected\" (imperfect; the augment follows ὑπ-)" },
+      ] },
+      { kind: "check", items: [
+        { q: "What marks a past tense at the front of the verb?", options: ["The augment", "The article", "A breathing", "The accent"], answer: 0, why: "The augment: «ἐ-», or a lengthened first vowel." },
+        { q: "The imperfect of «ἄγω» (I) is…", options: ["ἔαγον", "ἦγον", "ἄγον", "ἤγαγον"], answer: 1, why: "A first vowel «α» lengthens to «η»: «ἦγον»." },
+        { q: "Where does a compound verb take its augment?", options: ["After the preposition", "Before the preposition", "At the end", "It takes none"], answer: 0, why: "«ὑπο-πτεύω», «ὑπ-ώπτευον»: after the preposition." },
+        { q: "\"They loosened\" (aorist) is…", options: ["ἔλυον", "λύσουσι", "ἔλυσαν", "λύουσι"], answer: 2, why: "Augment, «σ» and «-αν»: «ἔλυσαν». «ἔλυον» is the imperfect." },
+      ] },
+      { kind: "real", title: "Read it yourself", items: [
+        { work: "tlg0031.tlg004", ref: "11.35", quote: "ἐδάκρυσεν ὁ Ἰησοῦς", label: "Gospel of John 11.35",
+          note: "A whole verse in three words: «ἐδάκρυσεν» \"wept\", the aorist of «δακρύω»: augment «ἐ-», the «σ», and the ending «-σε(ν)»." },
+        { work: "tlg0032.tlg006", ref: "1.1.1", quote: "ἠσθένει Δαρεῖος καὶ ὑπώπτευε τελευτὴν τοῦ βίου, ἐβούλετο", label: "Xenophon, Anabasis 1.1.1",
+          note: "Three imperfects set the scene: «ἠσθένει» \"was ill\" (from «ἀσθενέω»: α becomes η), «ὑπώπτευε» \"suspected\" (the augment after ὑπ-) and «ἐβούλετο» \"wanted\" (ἐ-). Darius \"was ill and suspected the end of his life\"; he \"wanted\" both sons with him." },
+        { work: "tlg0003.tlg001", ref: "1.1.1", quote: "Θουκυδίδης Ἀθηναῖος ξυνέγραψε τὸν πόλεμον", label: "Thucydides 1.1.1",
+          note: "The opening words of Thucydides' history of the Peloponnesian War. «ξυνέγραψε» \"wrote (the history of)\" is the aorist of «ξυγγράφω», the old Attic spelling of «συγγράφω»: the augment sits after «ξυν-». In the same sentence, «ἐπολέμησαν» \"they fought\" is another aorist." },
       ] },
     ],
   },

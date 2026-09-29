@@ -19,6 +19,8 @@ import { playLine } from "@/lib/metre/beat";
 import WordPanel, { type WordContext } from "@/components/reader/WordPanel";
 import { ParadigmTable } from "./Tables";
 import AlphabetGlance from "./AlphabetGlance";
+import Motion from "./Motion";
+import Shift from "./Shift";
 import styles from "./Academy.module.css";
 import readerStyles from "@/components/reader/Reader.module.css";
 
@@ -152,6 +154,28 @@ function SectionView({ s, onWord }: { s: Section; onWord: (w: string, ctx: WordC
   switch (s.kind) {
     case "p": return <p className={styles.lp}><Rich text={s.text} /></p>;
     case "alphabet": return <AlphabetGlance />;
+    case "motion": return <Motion {...s} />;
+    case "shift": return <Shift {...s} />;
+    case "grid": return (
+      <div className={styles.gridBox}>
+        <span className="label">{s.title}</span>
+        <div className={styles.gridScroll}>
+          <table className={styles.gridTable}>
+            <thead><tr>{s.head.map((h, i) => <th key={i} scope="col">{h}</th>)}</tr></thead>
+            <tbody>
+              {s.rows.map((r, i) => (
+                <tr key={i}>
+                  {r.map((c, j) => j === 0
+                    ? <th key={j} scope="row"><Rich text={c} /></th>
+                    : <td key={j} data-label={s.head[j]} className={c ? undefined : styles.gridNone}>{c ? <Rich text={c} /> : <span className={styles.gridEmpty} aria-label="not used">·</span>}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {s.note && <p className={styles.small}><Rich text={s.note} /></p>}
+      </div>
+    );
     case "tip": return <aside className={styles.tipBox}><span className="label">Tip</span><p><Rich text={s.text} /></p></aside>;
     case "table": { const p = PARADIGMS.find((x) => x.id === s.paradigm); return p ? <ParadigmTable p={p} /> : null; }
     case "made": return (

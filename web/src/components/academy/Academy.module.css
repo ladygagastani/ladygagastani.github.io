@@ -350,3 +350,69 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -24px var(--
   .glanceBig { font-size: 2.4rem; }
   .glanceIn { gap: 12px; }
 }
+
+/* ------------------------------------------------ a reference table of text (lessons' "grid") */
+.gridBox { display: grid; gap: 10px; }
+.gridScroll { overflow-x: auto; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); }
+.gridTable { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+.gridTable th, .gridTable td { padding: 9px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+.gridTable thead th { font-family: var(--f-label); font-weight: 400; letter-spacing: 0.05em; font-size: 0.82rem; color: var(--ink-2); white-space: nowrap; }
+.gridTable tbody th { font-weight: 400; white-space: nowrap; }
+.gridTable tr:last-child > * { border-bottom: 0; }
+.gridEmpty { color: var(--rule); }
+/* on a phone each row becomes a small block: the first cell as its heading, then only the cells in use, each labelled */
+@media (max-width: 620px) {
+  .gridScroll { overflow: visible; }
+  .gridTable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .gridTable, .gridTable tbody, .gridTable tr, .gridTable th, .gridTable td { display: block; }
+  .gridTable tr { padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+  .gridTable tr:last-child { border-bottom: 0; }
+  .gridTable th, .gridTable td { padding: 2px 0; border: 0; }
+  .gridTable tbody th { font-size: 1.08rem; margin-bottom: 2px; white-space: normal; }
+  .gridTable td::before { content: attr(data-label) ": "; font-family: var(--f-label); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--ink-2); }
+  .gridTable td.gridNone { display: none; }
+}
+
+/* ------------------------------------------------ out of / in / into (Motion.tsx) */
+.motion { margin: 0; display: grid; gap: 10px; padding: 18px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); }
+.motRow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.motPanel { display: grid; justify-items: center; gap: 4px; text-align: center; }
+.motPanel p { margin: 0; }
+.motSvg { width: 100%; max-width: 220px; height: auto; overflow: visible; }
+.motGround { stroke: var(--ink-2); stroke-width: 1.5; }
+.motWall, .motDoor { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; }
+.motRoof { fill: var(--ink); stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+.motArrow { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.8; }
+.motWho circle { fill: var(--accent); }
+.motWho { transform-box: view-box; }
+/* at rest (and with reduced motion): where each traveller ends up */
+.motFrom { transform: translateX(66px); }
+.motion[data-go] .motFrom { animation: motOut 1.6s var(--ease) 0.2s both; }
+.motion[data-go] .motIn { animation: motStay 1.2s var(--ease) 0.5s both; }
+.motion[data-go] .motTo { animation: motEnter 1.6s var(--ease) 0.8s both; }
+@keyframes motOut { 0%, 15% { transform: none; } 100% { transform: translateX(66px); } }
+@keyframes motStay { 0% { transform: translateY(-34px); opacity: 0; } 55% { transform: translateY(2px); opacity: 1; } 75% { transform: translateY(-3px); } 100% { transform: none; } }
+@keyframes motEnter { 0% { transform: translateX(-66px); } 100% { transform: none; } }
+.motGr { font-family: var(--f-greek); font-size: 1.25rem; }
+.motCase { font-size: 0.88rem; color: var(--ink-2); }
+.motCase b { font-family: var(--f-label); font-weight: 400; letter-spacing: 0.05em; color: var(--accent); }
+.motCap { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; font-size: 0.9rem; color: var(--ink-2); }
+@media (max-width: 620px) {
+  .motRow { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .motPanel { grid-template-columns: 120px minmax(0, 1fr); justify-items: start; text-align: left; align-items: center; column-gap: 14px; }
+  .motPanel .motSvg { grid-row: span 2; }
+}
+
+/* ------------------------------------------------ same words, new order (Shift.tsx) */
+.shift { display: grid; gap: 14px; padding: 18px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); }
+.shiftItem { display: grid; gap: 6px; justify-items: start; padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
+.shiftItem:last-child { padding-bottom: 0; border-bottom: 0; }
+.shiftItem p { margin: 0; }
+.shiftGr { font-family: var(--f-greek); font-size: 1.6rem; line-height: 1.3; }
+.shiftGr > span { display: inline-flex; flex-wrap: wrap; gap: 0 0.32em; }
+.shiftGr [data-k] { display: inline-block; }
+.shiftAdj { color: var(--accent); }
+.shiftEn { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.shiftTag { font-family: var(--f-label); font-size: 0.78rem; letter-spacing: 0.06em; padding: 1px 8px; border: 1px solid var(--accent); border-radius: 999px; color: var(--accent); }
+.shiftSay { font-size: 1.08rem; animation: shiftSay 0.4s var(--ease) both; }
+@keyframes shiftSay { from { opacity: 0; transform: translateY(4px); } }

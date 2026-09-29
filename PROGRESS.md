@@ -357,6 +357,17 @@ From the owner's review of the old site (Handoff.md §11): the forum had a bug-r
 - **The database script was run on 2026-09-29** (the owner signed in; the editor's text matched the file's SHA-256 before Run; "Success"). Checked afterwards from outside: both boards are listed, the status column answers, and a visitor calling `set_thread_status` is refused. Nothing was posted in the real forum.
 - **Published 2026-09-29** (commit a211348, together with the unpublished home-page finder, wiki reference pages and search-engine pages). Before: production build (2,292 pages) and all 301 browser tests passed. After: `live-check.mjs` passed, and on the live site the two boards, the Open/Closed filter, the footer's Report a bug (carrying the page), Back to top, `/work/…` pages and the sitemap all work, with no console errors.
 
+## The alphabet in lesson 1, and lessons 10–13 (2026-09-29)
+The owner asked for more Academy lessons (learning first), and for the alphabet in lesson 1 and on the Academy's front page.
+- **The alphabet at a glance** (`components/academy/AlphabetGlance.tsx`): the 24 letters as tiles that settle in one after another (8 x 3 wide, 6 x 4 on a tablet, 4 x 6 on a phone: no ragged row); tap one for its name, Greek name and sound in the chosen pronunciation (Classical Attic / Erasmian / Modern, the same setting as the alphabet page), with the recording where one exists. On a phone the card glides into view. On the Academy's front page (under the progress) and in lesson 1 (a new section kind, `alphabet`).
+- **Four new lessons** (`data/lessons.ts`), after the metre lesson:
+  10. *Prepositions: from, in, to*: the genitive/dative/accusative pattern, drawn (`Motion.tsx`: a traveller leaves, stays in or enters a house when the drawing scrolls into view; "Again" replays), a table of the ten commonest prepositions by case (`grid`, which becomes a labelled list on phones), elision and aspiration, Matthew 2.1, John 1.6, Xenophon Anabasis 1.1.2.
+  11. *Adjectives: agreement and position*: ἀγαθός, δίκαιος (α after ι), attributive and predicate position shown by moving words (`Shift.tsx`: the adjective glides to its new place, the English and the name of the position change), John 10.11, Anabasis 1.1.1.
+  12. *Third declension*: find the stem in the genitive; φύλαξ, σῶμα and the new **πόλις** table; John 3.6, Matthew 5.14.
+  13. *The past: imperfect and aorist*: syllabic and temporal augment, compound verbs, the σ-aorist and second aorists; John 11.35, Anabasis 1.1.1 (ἠσθένει, ὑπώπτευε, ἐβούλετο), Thucydides 1.1.1 (ξυνέγραψε).
+- **Checked:** every quotation read from the source files (`NETWORK=1 npx vitest run src/data/lessons.test.ts`: passes for all 13 lessons); the πόλις table against GLAUx (`pipeline/check_paradigms.py`: all 11 forms attested; `PARADIGM-REVIEW.md` updated). Made-up practice sentences are labelled as such. Grammar follows the standard Attic descriptions (as in Smyth's *Greek Grammar*).
+- Tests: `e2e/academy.spec.ts` (+2: the alphabet on both pages; lessons 10–13). Pictures checked wide (light) and phone (dark): no sideways overflow, no console errors. Not yet published.
+
 ## Decisions log
 | Date | Decision | Reason |
 |---|---|---|
@@ -446,7 +457,7 @@ From the owner's review of the old site (Handoff.md §11): the forum had a bug-r
 
 ## Known problems
 - **Phase 3 follow-ups**:
-  - More lessons are needed beyond lessons 1–8 and 9 (metre). Planned: genitive and dative with prepositions, adjectives, third declension, imperfect, aorist, middle and passive, participles, infinitives, contract verbs, -μι verbs.
+  - More lessons: 13 so far (10–13 added on 2026-09-29: prepositions, adjectives, the third declension, imperfect and aorist). Still planned: middle and passive, participles, infinitives, contract verbs, -μι verbs, and more of the third declension (πατήρ, ἀνήρ, βασιλεύς).
   - More tables: contract verbs, the middle and passive, participles, more of the third declension.
   - The owner is recording the audio (letters, diphthongs, top 100 words) in `/academy/studio`.
   - Studio recordings are WebM/Opus. Older Safari may not play WebM, so convert them to AAC/M4A in the pipeline before launch (for example with ffmpeg).

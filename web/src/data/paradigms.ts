@@ -74,20 +74,27 @@ export const PARADIGMS: Paradigm[] = [
     tags: nounTags("n", "m"),
   },
   {
-    id: "phylax", title: "Third declension: φύλαξ", lemma: "φύλαξ", group: "noun",
+    id: "phylax", title: "Third declension: φύλαξ", lemma: "φύλαξ", group: "noun", lesson: "third-declension",
     note: "The stem (φυλακ-) shows in the genitive; the nominative hides it (κ + ς = ξ).",
     rows: CASES, cols: ["singular", "plural"],
     cells: [["φύλαξ", "φύλακες"], ["φύλακος", "φυλάκων"], ["φύλακι", "φύλαξι(ν)"], ["φύλακα", "φύλακας"], ["φύλαξ", "φύλακες"]],
     tags: nounTags("n", "m"),
   },
   {
-    id: "soma", title: "Third declension, neuter: σῶμα", lemma: "σῶμα", group: "noun",
+    id: "soma", title: "Third declension, neuter: σῶμα", lemma: "σῶμα", group: "noun", lesson: "third-declension",
     rows: CASES, cols: ["singular", "plural"],
     cells: [["σῶμα", "σώματα"], ["σώματος", "σωμάτων"], ["σώματι", "σώμασι(ν)"], ["σῶμα", "σώματα"], ["σῶμα", "σώματα"]],
     tags: nounTags("n", "n"),
   },
   {
-    id: "agathos", title: "Adjective: ἀγαθός, ἀγαθή, ἀγαθόν", lemma: "ἀγαθός", group: "adjective",
+    id: "polis", title: "Third declension, stems in ι/ε: πόλις", lemma: "πόλις", group: "noun", lesson: "third-declension",
+    note: "The genitive πόλεως comes from an older πόληος: the two vowels exchanged their lengths, and the accent stayed where it was.",
+    rows: CASES, cols: ["singular", "plural"],
+    cells: [["πόλις", "πόλεις"], ["πόλεως", "πόλεων"], ["πόλει", "πόλεσι(ν)"], ["πόλιν", "πόλεις"], ["πόλι", "πόλεις"]],
+    tags: nounTags("n", "f"),
+  },
+  {
+    id: "agathos", title: "Adjective: ἀγαθός, ἀγαθή, ἀγαθόν", lemma: "ἀγαθός", group: "adjective", lesson: "adjectives",
     rows: CASES, cols: ["masc. sg", "fem. sg", "neut. sg", "masc. pl", "fem. pl", "neut. pl"],
     cells: [
       ["ἀγαθός", "ἀγαθή", "ἀγαθόν", "ἀγαθοί", "ἀγαθαί", "ἀγαθά"],

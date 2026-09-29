@@ -52,3 +52,19 @@ test("the alphabet is on the Academy's front page and in lesson 1: tap a letter 
     await page.getByRole("radio", { name: "Classical Attic" }).first().click();
   }
 });
+
+test("lessons 10 to 13: prepositions drawn, adjectives that move, the third declension and the past", async ({ page }) => {
+  await page.goto("/academy/lesson/prepositions");
+  await expect(page.getByText("ἐκ τῆς οἰκίας")).toBeVisible();
+  await expect(page.getByRole("table")).toContainText("because of");
+  await page.goto("/academy/lesson/adjectives");
+  const first = page.getByRole("button", { name: "Move the adjective" }).first();
+  await expect(page.getByText("“the good person”").first()).toBeVisible();
+  await first.click();
+  await expect(page.getByText("“the person is good”").first()).toBeVisible();
+  await page.goto("/academy/lesson/third-declension");
+  await expect(page.getByText("πόλεως").first()).toBeVisible();
+  await page.goto("/academy/lesson/past-tenses");
+  await expect(page.getByRole("link", { name: /Next:/ })).toHaveCount(0);
+  await expect(page.locator("[data-quote]").first()).toBeVisible({ timeout: 30_000 });
+});
