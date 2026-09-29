@@ -63,7 +63,7 @@ export default function Library() {
   const params = useSearchParams();
   const [idx, setIdx] = useState<CatalogIndex | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(params.get("q") ?? "");
   const [sort, setSort] = useState<Sort>("author");
   const [tr, setTr] = useState<Tr>("all");
   const [family, setFamily] = useState("");

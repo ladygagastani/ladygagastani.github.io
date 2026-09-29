@@ -14,8 +14,10 @@ import { inline, plain } from "@/wiki/markup";
 import { IMAGES, srcSet } from "@/wiki/images";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { hasTranslation, type Catalog } from "@/lib/catalog";
+import { greekEditions, hasTranslation, type Catalog } from "@/lib/catalog";
 import { PATHS } from "@/data/paths";
+import { STARTS } from "@/data/starts";
+import HomeFinder, { type Start } from "@/components/HomeFinder";
 import styles from "./home.module.css";
 
 // From the Painted Stoa: each entry reduced to what a home-page card shows (its first sentences).
@@ -39,6 +41,12 @@ const STATS: [number, string][] = [
 
 // Each reading path's works, named from the catalogue ("Plato, Apology").
 const WORK_NAME = new Map(CATALOG.authors.flatMap((a) => a.works.map((w) => [w.id, `${a.name}, ${w.title}`] as const)));
+
+const START_CARDS: Start[] = STARTS.map((id) => {
+  const a = CATALOG.authors.find((x) => x.works.some((w) => w.id === id))!;
+  const w = a.works.find((x) => x.id === id)!;
+  return { id, title: w.title, author: a.name, grc: greekEditions(w)[0]?.label ?? null };
+});
 
 export default function Home() {
   return (
@@ -113,6 +121,18 @@ export default function Home() {
             <p className="muted" data-fold-hide="">A different famous passage each day, read live from the original files. Every word can be looked up.</p>
           </div>
           <div className="rv" data-fold-hide=""><PassageOfTheDay /></div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- find something to read */}
+      <section className={styles.block} aria-labelledby="find-title">
+        <div className="wrap">
+          <div className={`${styles.secHead} rv`}>
+            <div><span className="label">{AREAS.library.name} · {AREAS.library.english}</span>
+              <h2 id="find-title" className={styles.h2}>Find something to read</h2></div>
+            <p className="muted">Search by title, author or Greek name. Where a work has an English translation, it sits beside the Greek.</p>
+          </div>
+          <div className="rv"><HomeFinder starts={START_CARDS} total={WORKS.length} /></div>
         </div>
       </section>
 

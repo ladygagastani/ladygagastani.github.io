@@ -1,0 +1,37 @@
+/* "Find something to read" on the home page */
+.finder { display: grid; gap: 18px; }
+.bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.box { position: relative; flex: 1 1 340px; }
+.box svg { position: absolute; left: 16px; top: 50%; translate: 0 -50%; width: 20px; height: 20px; fill: none; stroke: var(--ink-2); stroke-width: 2; stroke-linecap: round; pointer-events: none; }
+.box input {
+  width: 100%; font: inherit; font-size: 1.1rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--rule); border-radius: var(--radius); padding: 15px 16px 15px 48px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.box input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+.heading { font-family: var(--f-label); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); font-weight: 400; }
+.cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.cards li { display: flex; }
+.cards a {
+  position: relative; display: grid; align-content: start; gap: 2px; width: 100%; padding: 16px 18px; text-decoration: none; color: inherit;
+  background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius);
+  transition: transform 0.3s var(--ease), border-color 0.2s, box-shadow 0.3s;
+}
+.cards a:hover, .cards a:focus-visible { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 28px -20px var(--shadow); }
+.grc { font-family: var(--f-greek); font-size: 1.35rem; line-height: 1.25; color: var(--accent); }
+.en { font-weight: 600; }
+.by { color: var(--ink-2); font-size: 0.95rem; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 8px; font-size: 0.82rem; color: var(--ink-2); }
+.badge { font-family: var(--f-label); letter-spacing: 0.05em; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--blue); color: var(--blue); white-space: nowrap; }
+.badge.off { border-color: var(--rule); color: var(--ink-2); }
+.none { color: var(--ink-2); }
+.more { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 0; }
+.more a { display: inline-flex; align-items: center; min-height: var(--tap); }
+@media (max-width: 1080px) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .cards a { padding: 14px; }
+  .bar :global(.segmented) { width: 100%; }
+  .bar :global(.segmented) > button { flex: 1; padding-inline: 6px; }
+  .box input { font-size: 16px; }
+}
