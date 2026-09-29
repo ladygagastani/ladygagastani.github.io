@@ -19,6 +19,7 @@ export default function Header() {
   const theme = useSettings((s) => s.theme);
   const setSettings = useSettings((s) => s.set);
   const openSettings = useUI((s) => s.openSettings);
+  const setSearchOpen = useUI((s) => s.setSearchOpen);
   const ref = useRef<HTMLElement>(null);
   const showRef = useRef<() => void>(null);
 
@@ -45,6 +46,7 @@ export default function Header() {
         const y = scrollY, dy = y - lastY;
         root.toggleAttribute("data-scrolled", y > 4);
         if (y <= h) set(false);                                      // near the top: always showing
+        else if (y + innerHeight >= root.scrollHeight - 2) set(false); // at the very end, too: nothing more to read on to
         else if (dy > 6 && !el.matches(":focus-within")) set(true);  // reading on: tuck it away
         else if (dy < -6) set(false);                                // any scroll back up: bring it back
         else return;                                                 // small jitters keep the reference point
@@ -121,10 +123,11 @@ export default function Header() {
 
         <div className={styles.tools}>
           <ConnectionLight />
-          <Link className={styles.tbtn} href={AREAS.search.href} transitionTypes={["page-turn"]} aria-label={`${AREAS.search.name}: ${AREAS.search.english}`} title="Search (or press / on any page)">
+          <button className={styles.tbtn} type="button" onClick={() => setSearchOpen(true)} aria-haspopup="dialog"
+            aria-label={`${AREAS.search.name}: ${AREAS.search.english}`} title="Search (or press / on any page)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
             <span className={styles.txt}>{AREAS.search.name}</span>
-          </Link>
+          </button>
           <AccountButton />
           <button className={`${styles.tbtn} ${styles.theme}`} type="button" onClick={toggleTheme} aria-label="Switch between light and dark">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" /></svg>

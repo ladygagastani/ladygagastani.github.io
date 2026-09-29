@@ -1,0 +1,54 @@
+/* The phone bar (TabBar.tsx). Phones are up to 760 px wide, the same width at which globals.css
+   reserves --tabbar-h at the bottom of the page and the header drops its menu. */
+.bar { display: none; }
+
+@media (max-width: 760px) {
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 35; display: block;
+    padding: 0 max(4px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(4px, env(safe-area-inset-left, 0px));
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--rule);
+    box-shadow: 0 -12px 28px -22px var(--shadow);
+    transition: transform 0.35s var(--ease);
+  }
+  /* reading on: it tucks away with the header, and comes back on any scroll up */
+  :global(html[data-hdr="hidden"]) .bar { transform: translateY(calc(100% + 2px)); }
+}
+
+.tabs { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+.tab {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  min-height: 58px; padding: 6px 2px 5px; text-decoration: none; color: var(--ink-2);
+  -webkit-tap-highlight-color: transparent; transition: color 0.25s;
+}
+.tab svg {
+  width: 25px; height: 25px; overflow: visible;
+  fill: currentColor; fill-opacity: 0; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform 0.3s var(--ease), fill-opacity 0.3s, color 0.25s;
+}
+.label { font-family: var(--f-label); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.03em; line-height: 1.1; white-space: nowrap; }
+.tab:active svg { transform: scale(0.86); }
+.tab:focus-visible { outline-offset: -4px; border-radius: 10px; }
+
+/* the place you are in: ink label, and the icon filled like a black-figure silhouette in added red */
+.tab[aria-current="page"] { color: var(--ink); }
+.tab[aria-current="page"] svg { color: var(--accent); fill-opacity: 0.22; animation: arrive 0.5s var(--ease); }
+@keyframes arrive { 0% { transform: translateY(3px) scale(0.9); } 55% { transform: translateY(-2px) scale(1.06); } 100% { transform: none; } }
+
+/* the pendant tongue that slides along the top edge to the current place */
+.ind {
+  position: absolute; top: -1px; left: 0; width: 20%; height: 7px; pointer-events: none;
+  transform: translateX(calc(var(--i, 0) * 100%)); transition: transform 0.5s var(--ease), opacity 0.25s;
+}
+.ind::before {
+  content: ""; display: block; width: 22px; height: 7px; margin: 0 auto;
+  background: var(--accent); border-radius: 0 0 11px 11px;
+}
+.tabs[data-none] .ind { opacity: 0; }
+
+/* the smallest phones: the labels need every pixel of their fifth of the width */
+@media (max-width: 359px) {
+  .label { font-size: 0.72rem; letter-spacing: 0; }
+}

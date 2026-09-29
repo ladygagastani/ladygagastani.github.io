@@ -24,10 +24,12 @@
 
 .learnGrid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(24px, 4vw, 56px); align-items: start; }
 .path { list-style: none; margin: 26px 0 0; padding: 0; counter-reset: step; }
-.path li { counter-increment: step; display: grid; grid-template-columns: 44px 1fr; column-gap: 14px; padding: 16px 0; border-top: 1px solid var(--rule); }
+.path li { position: relative; counter-increment: step; display: grid; grid-template-columns: 44px 1fr; column-gap: 14px; padding: 16px 0; border-top: 1px solid var(--rule); }
 .path li::before { content: counter(step); grid-row: span 2; font-family: var(--f-display); font-size: 1.9rem; line-height: 1; color: var(--accent); }
 .path b { font-size: 1.12rem; }
 .path a { text-decoration: none; }
+/* the whole row is the link's target, not just its title (a finger finds it anywhere in the row) */
+.path a::after { content: ""; position: absolute; inset: 0; }
 .path a:hover b { color: var(--accent); }
 .path span { color: var(--ink-2); font-size: 0.97rem; }
 .note { font-size: 0.88rem; color: var(--ink-2); margin-top: 14px; }

@@ -38,3 +38,30 @@
 .stepper output { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
 
 .reset { align-self: flex-start; background: transparent; border: 0; padding: 0; text-decoration: underline; color: var(--ink-2); font-size: 0.9rem; }
+
+.handle { display: none; }
+
+/* Phones: a sheet that rises from the bottom, in reach of the thumb. Drag its top edge down to put it away
+   (SettingsPanel.tsx), or use the Close button; every control is finger-sized. */
+@media (max-width: 760px) {
+  .sheet {
+    margin: auto 0 0; width: 100%; max-width: none; height: auto; max-height: 90dvh;
+    border-left: 0; border-top: 1px solid var(--rule); border-radius: 16px 16px 0 0;
+    box-shadow: 0 -30px 60px -30px var(--shadow);
+    transform: translateY(100%);
+  }
+  .sheet[open] { transform: translateY(var(--drag, 0px)); }
+  @starting-style { .sheet[open] { transform: translateY(100%); } }
+  .dragging { transition: none; }
+  .handle {
+    display: block; position: sticky; top: 0; z-index: 1; height: 28px; margin-bottom: -28px;
+    touch-action: none; cursor: grab; background: linear-gradient(var(--surface) 60%, transparent);
+  }
+  .handle::before { content: ""; display: block; width: 40px; height: 5px; margin: 10px auto 0; border-radius: 3px; background: var(--rule); }
+  .inner { gap: 24px; padding: 30px max(20px, env(safe-area-inset-right, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px)); }
+  .head { touch-action: none; }
+  .x { width: var(--tap); height: var(--tap); border-radius: 10px; }
+  .seg button { min-height: var(--tap); }
+  .stepper button { width: var(--tap); height: var(--tap); }
+  .reset { min-height: var(--tap); }
+}

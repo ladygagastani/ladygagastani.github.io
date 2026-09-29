@@ -91,6 +91,18 @@ export const AREAS: Record<AreaId, Area> = {
 /** The main navigation, in order. */
 export const NAV: AreaId[] = ["home", "library", "study", "wiki", "forum", "treasury"];
 
+/**
+ * The bar along the bottom of the screen on phones, left to right (owner's choice, 2026-09-29).
+ * Home is the site's name in the header. `also` lists other paths that belong to a place.
+ */
+export const TABS: { id: AreaId; also?: string[] }[] = [
+  { id: "library", also: [AREAS.reader.href] },
+  { id: "study" },
+  { id: "wiki" },
+  { id: "forum" },
+  { id: "treasury" },
+];
+
 export const SITE = {
   greek: "Μάθησις Στοιχείων",
   latin: "Mathesis Stoicheion",

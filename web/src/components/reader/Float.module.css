@@ -61,9 +61,9 @@
 
 /* minimised: a tab with the book and passage */
 .tab {
-  position: fixed; z-index: 48; right: 16px; bottom: 16px; display: flex; align-items: center; gap: 2px; max-width: min(420px, calc(100vw - 32px));
+  position: fixed; z-index: 48; right: 16px; bottom: calc(16px + max(var(--tabbar-vis), env(safe-area-inset-bottom, 0px))); display: flex; align-items: center; gap: 2px; max-width: min(420px, calc(100vw - 32px));
   padding: 4px; background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); border-radius: 999px; box-shadow: 0 18px 40px -18px var(--shadow);
-  animation: tabIn 0.35s var(--ease) both;
+  animation: tabIn 0.35s var(--ease) both; transition: bottom 0.35s var(--ease);
 }
 .tab[data-snap="left"], .tab[data-snap="tl"], .tab[data-snap="bl"] { right: auto; left: 16px; }
 @keyframes tabIn { from { transform: translateY(20px) scale(0.9); opacity: 0; } }
@@ -79,7 +79,7 @@
 .tabBtn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; }
 
 @media (max-width: 640px) {
-  /* on a phone the window becomes a sheet across the bottom of the screen */
-  .win { transform: none !important; left: 0; right: 0; top: auto; bottom: 0; width: 100% !important; height: min(62vh, 560px) !important; border-radius: 14px 14px 0 0; }
+  /* on a phone the window becomes a sheet across the bottom of the screen, above the phone bar */
+  .win { transform: none !important; left: 0; right: 0; top: auto; bottom: var(--tabbar-vis); transition: bottom 0.35s var(--ease); width: 100% !important; height: min(62vh, 560px) !important; border-radius: 14px 14px 0 0; }
   .edge { display: none; }
 }

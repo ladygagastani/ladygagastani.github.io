@@ -12,9 +12,10 @@ const NAMES: Record<string, string> = {
   υ: "upsilon", φ: "phi", χ: "chi", ψ: "psi", ω: "omega",
 };
 
-export default function GreekKeyboard({ onKey }: { onKey: (k: string) => void }) {
+/** `docked`: fixed along the bottom of a sheet (Quick search), edge to edge like a phone's own keyboard. */
+export default function GreekKeyboard({ onKey, docked }: { onKey: (k: string) => void; docked?: boolean }) {
   return (
-    <div className={styles.kbd} role="group" aria-label="Greek letters">
+    <div className={`${styles.kbd}${docked ? ` ${styles.kbdDocked}` : ""}`} role="group" aria-label="Greek letters">
       {ROWS.map((row, i) => (
         <div key={i} className={styles.kbdRow}>
           {row.map((k) => (

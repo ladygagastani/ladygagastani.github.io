@@ -1,6 +1,7 @@
 "use client";
 /**
- * Quick search, from any page: press "/" or Ctrl+K (⌘K on a Mac). Suggests passages (from a typed
+ * Quick search, from any page: press "/" or Ctrl+K (⌘K on a Mac), or the search button in the header.
+ * On phones it is a full-screen sheet, with Greek letters that can sit just above the phone's keyboard. Suggests passages (from a typed
  * reference), works and authors by name, Painted Stoa entries, and the full searches of the Oracle.
  */
 import { useRouter } from "next/navigation";
@@ -9,6 +10,8 @@ import { fold, loadCatalog, type CatalogIndex } from "@/lib/catalog";
 import { detectScript, queryWords, toPattern } from "@/lib/search/input";
 import { loadAbbrevs, readReference, type Abbrevs } from "@/lib/search/refs";
 import { useUI } from "@/lib/ui";
+import { AREAS } from "@/config/areas";
+import GreekKeyboard from "./GreekKeyboard";
 import styles from "./QuickSearch.module.css";
 
 /** What Quick search needs of each wiki entry; loaded only when the box opens. */
@@ -42,7 +45,20 @@ function Box({ onClose }: { onClose: () => void }) {
   const [idx, setIdx] = useState<CatalogIndex | null>(null);
   const [abbrevs, setAbbrevs] = useState<Abbrevs | null>(null);
   const [stoa, setStoa] = useState<StoaItem[]>([]);
+  const [kbd, setKbd] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
+  const input = useRef<HTMLInputElement>(null);
+
+  // phones: the sheet covers only what the on-screen keyboard leaves visible, so nothing hides behind it
+  useEffect(() => {
+    const vv = window.visualViewport, d = dialog.current;
+    if (!vv || !d) return;
+    const fit = () => { d.style.setProperty("--vv-h", `${vv.height}px`); d.style.setProperty("--vv-top", `${vv.offsetTop}px`); };
+    fit();
+    vv.addEventListener("resize", fit);
+    vv.addEventListener("scroll", fit);
+    return () => { vv.removeEventListener("resize", fit); vv.removeEventListener("scroll", fit); };
+  }, []);
 
   useEffect(() => {
     dialog.current?.showModal();
@@ -103,19 +119,37 @@ function Box({ onClose }: { onClose: () => void }) {
   };
   const cur = Math.min(sel, Math.max(0, options.length - 1));
 
+  // the on-screen Greek letters type at the caret, as on the Oracle's page
+  const key = (k: string) => {
+    const el = input.current;
+    if (!el) return;
+    const a = el.selectionStart ?? q.length, b = el.selectionEnd ?? q.length;
+    const next = k === "Backspace" ? (a === b ? q.slice(0, Math.max(0, a - 1)) + q.slice(b) : q.slice(0, a) + q.slice(b)) : q.slice(0, a) + k + q.slice(b);
+    const caret = k === "Backspace" ? (a === b ? Math.max(0, a - 1) : a) : a + k.length;
+    setQ(next);
+    setSel(0);
+    requestAnimationFrame(() => { el.focus(); el.setSelectionRange(caret, caret); });
+  };
+
   return (
     <dialog ref={dialog} className={styles.dialog} aria-label="Quick search" onClose={onClose}
       onClick={(e) => { if (e.target === dialog.current) onClose(); }}>
       <div className={styles.inner}>
-        <input className={styles.input} autoFocus value={q} placeholder="λόγος, logos, Il. 1.1, Sophocles…" aria-label="Search"
+        <div className={styles.head}>
+        <input ref={input} className={styles.input} autoFocus value={q} placeholder="λόγος, logos, Il. 1.1, Sophocles…" aria-label="Search"
           role="combobox" aria-expanded={options.length > 0} aria-controls="qs-list" aria-activedescendant={options[cur] ? `qs-${cur}` : undefined}
-          autoComplete="off" spellCheck={false}
+          type="search" enterKeyHint="search" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
           onChange={(e) => { setQ(e.target.value); setSel(0); }}
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") { e.preventDefault(); setSel((cur + 1) % Math.max(1, options.length)); }
             else if (e.key === "ArrowUp") { e.preventDefault(); setSel((cur - 1 + options.length) % Math.max(1, options.length)); }
             else if (e.key === "Enter") { e.preventDefault(); choose(options[cur]); }
           }} />
+        <button type="button" className={styles.kbdBtn} lang="grc" aria-pressed={kbd} onClick={() => setKbd(!kbd)}
+          onMouseDown={(e) => e.preventDefault()} aria-label="Greek letters on screen" title="Greek letters on screen">αβγ</button>
+        <button type="button" className={styles.close} onClick={onClose}>Close</button>
+        </div>
+        <div className={styles.body}>
         {options.length > 0 ? (
           <ul id="qs-list" role="listbox" className={styles.list}>
             {options.map((o, i) => (
@@ -125,8 +159,13 @@ function Box({ onClose }: { onClose: () => void }) {
             ))}
           </ul>
         ) : (
-          <p className={styles.help}>Type Greek, Latin letters or Beta Code, a reference such as <i>Il. 1.1</i>, the name of an author or work, or a subject in the Painted Stoa. <kbd>↑</kbd> <kbd>↓</kbd> to choose, <kbd>Enter</kbd> to go, <kbd>Esc</kbd> to close.</p>
+          <p className={styles.help}>Type Greek, Latin letters or Beta Code, a reference such as <i>Il. 1.1</i>, the name of an author or work, or a subject in the Painted Stoa.<span className={styles.keys}> <kbd>↑</kbd> <kbd>↓</kbd> to choose, <kbd>Enter</kbd> to go, <kbd>Esc</kbd> to close.</span></p>
         )}
+        <a className={styles.full} href={AREAS.search.href} onClick={(e) => { e.preventDefault(); onClose(); router.push(AREAS.search.href); }}>
+          {AREAS.search.name}: the full search, with grammar and filters <span aria-hidden="true">→</span>
+        </a>
+        </div>
+        {kbd && <GreekKeyboard onKey={key} docked />}
       </div>
     </dialog>
   );

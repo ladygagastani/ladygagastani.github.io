@@ -46,6 +46,13 @@
 .kbd button:active { transform: translateY(1px) scale(0.97); }
 .kbd .kbdSpace { min-width: 240px; font-family: var(--f-label); font-size: 0.9rem; }
 @keyframes rise { from { opacity: 0; transform: translateY(-6px); } }
+.kbdDocked { justify-items: stretch; gap: 7px; padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px)); border: 0; border-top: 1px solid var(--rule); border-radius: 0; background: var(--bg-2); animation: none; }
+/* phones: a row of letters spans the width in equal keys, as on the phone's own keyboard, instead of wrapping */
+@media (max-width: 760px) {
+  .kbdRow { flex-wrap: nowrap; width: 100%; gap: 5px; }
+  .kbd button { flex: 1 1 0; min-width: 0; height: var(--tap); padding: 0; }
+  .kbd .kbdSpace { flex: 0 1 60%; min-width: 0; }
+}
 
 /* ------------------------------------------------------------ references */
 .refs { display: grid; gap: 8px; padding: 16px 20px; background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); border-radius: var(--radius); animation: rise 0.35s var(--ease); }

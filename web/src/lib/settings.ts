@@ -63,10 +63,23 @@ export const useSettings = create<SettingsStore>()(
   ),
 );
 
+/**
+ * The colour of the browser's own bar on phones (and of an installed app's title bar): the page colour of each theme.
+ * layout.tsx gives one per system theme; a theme chosen in Settings adds a first <meta> that wins over both.
+ */
+export const THEME_COLOURS = { light: "#E6C39B", dark: "#16110E" } as const;
+const THEME_META = "theme-colour";
+
 /** Writes the settings onto <html>. Kept in one place so the no-flash boot script matches it. */
 export function applySettings(s: Settings) {
   const el = document.documentElement;
   if (s.theme === "auto") el.removeAttribute("data-theme"); else el.setAttribute("data-theme", s.theme);
+  let meta = document.getElementById(THEME_META) as HTMLMetaElement | null;
+  if (s.theme === "auto") meta?.remove();
+  else {
+    if (!meta) { meta = document.createElement("meta"); meta.id = THEME_META; meta.name = "theme-color"; document.head.prepend(meta); }
+    meta.content = THEME_COLOURS[s.theme];
+  }
   if (s.motion === "auto") el.removeAttribute("data-motion"); else el.setAttribute("data-motion", s.motion);
   el.style.setProperty("--greek-size", `${s.greekSize}rem`);
   el.style.setProperty("--reading-leading", String(s.leading));
@@ -84,7 +97,7 @@ export function prefersReducedMotion(motion: MotionPref): boolean {
  * Must mirror applySettings().
  */
 export const BOOT_SCRIPT = `(function(){try{var s=JSON.parse(localStorage.getItem(${JSON.stringify(STORAGE_KEY)})||"{}").state||{};var e=document.documentElement;
-if(s.theme==="light"||s.theme==="dark")e.setAttribute("data-theme",s.theme);
+if(s.theme==="light"||s.theme==="dark"){e.setAttribute("data-theme",s.theme);var m=document.createElement("meta");m.id=${JSON.stringify(THEME_META)};m.name="theme-color";m.content=${JSON.stringify(THEME_COLOURS)}[s.theme];document.head.prepend(m);}
 if(s.motion==="reduce"||s.motion==="full")e.setAttribute("data-motion",s.motion);
 if(s.greekSize)e.style.setProperty("--greek-size",s.greekSize+"rem");
 if(s.leading)e.style.setProperty("--reading-leading",String(s.leading));}catch(_){}})();`;

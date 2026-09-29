@@ -3,6 +3,8 @@
  * Header.tsx keeps two CSS variables on <html> up to date, and anything sticky sits below them:
  *   --hdr-h    the header's full height (it is taller on phones, where the menu wraps);
  *   --hdr-vis  how much of it is showing now: --hdr-h, or 0 while it is tucked away.
+ * It also sets data-hdr="hidden" on <html> while tucked away; the phone bar (TabBar) tucks away with it,
+ * and globals.css turns that into --tabbar-vis for anything fixed along the bottom of the screen.
  */
 const px = (name: string) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name)) || 0;
 

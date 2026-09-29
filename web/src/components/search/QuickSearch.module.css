@@ -6,11 +6,20 @@
 .dialog::backdrop { background: color-mix(in srgb, var(--ink) 45%, transparent); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
 @keyframes drop { from { opacity: 0; transform: translateY(-10px) scale(0.98); } }
 .inner { display: grid; }
+.head { display: flex; align-items: stretch; border-bottom: 3px solid var(--accent); }
 .input {
-  font-family: var(--f-greek); font-size: 1.4rem; padding: 16px 18px; color: var(--ink); background: transparent;
-  border: 0; border-bottom: 3px solid var(--accent);
+  flex: 1; min-width: 0; font-family: var(--f-greek); font-size: 1.4rem; padding: 16px 18px; color: var(--ink); background: transparent;
+  border: 0; -webkit-appearance: none; appearance: none;
 }
 .input:focus { outline: none; }
+.input::-webkit-search-cancel-button { display: none; }
+.kbdBtn {
+  flex: none; align-self: center; min-width: var(--tap); height: 36px; margin-right: 10px; padding: 0 10px;
+  font-family: var(--f-greek); font-size: 1rem; color: var(--ink); background: transparent; border: 1.5px solid var(--rule); border-radius: 8px;
+}
+.kbdBtn[aria-pressed="true"] { background: var(--sel-bg); color: var(--sel-fg); border-color: var(--sel-edge); }
+.close { display: none; }
+.body { display: grid; align-content: start; }
 .list { list-style: none; margin: 0; padding: 6px; max-height: 50vh; overflow: auto; }
 .list li { display: flex; gap: 12px; align-items: baseline; padding: 9px 12px; border-radius: var(--radius); cursor: pointer; }
 .list li[aria-selected="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); }
@@ -19,5 +28,34 @@
 .kind { flex: none; min-width: 10.5em; font-family: var(--f-label); font-size: 0.8rem; letter-spacing: 0.05em; color: var(--ink-2); }
 .muted { opacity: 0.7; }
 .help { padding: 14px 18px; font-size: 0.92rem; color: var(--ink-2); }
+.full {
+  display: flex; align-items: center; gap: 8px; min-height: var(--tap); padding: 8px 18px; border-top: 1px solid var(--rule);
+  font-family: var(--f-label); font-size: 0.85rem; letter-spacing: 0.04em; color: var(--ink-2); text-decoration: none;
+}
+.full:hover, .full:focus-visible { color: var(--accent); }
 @media (max-width: 560px) { .kind { min-width: 0; } .list li { flex-direction: column; gap: 2px; } }
+
+/* Phones: a full-screen sheet that rises from the bottom. Its height follows the part of the screen the
+   on-screen keyboard leaves visible (--vv-h, --vv-top: set from visualViewport in QuickSearch.tsx), so the
+   results scroll between the search box and the Greek letters, which sit just above the phone's keyboard. */
+@media (max-width: 760px) {
+  .dialog {
+    position: fixed; top: var(--vv-top, 0px); left: 0; right: auto; bottom: auto; margin: 0;
+    width: 100%; max-width: none; height: var(--vv-h, 100dvh); max-height: none; border-radius: 0; box-shadow: none;
+    animation: rise 0.32s var(--ease);
+  }
+  .inner { display: flex; flex-direction: column; height: 100%; }
+  .head { flex: none; padding-top: env(safe-area-inset-top, 0px); padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px); background: var(--bg); }
+  .input { padding: 14px 12px 14px 16px; }
+  .kbdBtn { margin-right: 4px; height: var(--tap); }
+  .close {
+    display: block; flex: none; align-self: center; min-height: var(--tap); padding: 0 16px 0 10px;
+    border: 0; background: transparent; color: var(--accent); font-family: var(--f-label); font-size: 1rem; letter-spacing: 0.04em;
+  }
+  .body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; align-content: start; }
+  .list { max-height: none; overflow: visible; padding: 4px 6px; }
+  .list li { padding: 11px 12px; min-height: var(--tap); }
+  .keys { display: none; }
+}
+@keyframes rise { from { opacity: 0.4; transform: translateY(32px); } }
 @media (prefers-reduced-motion: reduce) { .dialog { animation: none; } }

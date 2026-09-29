@@ -9,6 +9,12 @@
   /* the site header: its height, and how much of it shows now (it slides away on scroll; lib/header.ts) */
   --hdr-h: 68px;
   --hdr-vis: var(--hdr-h);
+  /* phones: the bar along the bottom (TabBar.tsx), its height including the home-bar area, and how much of it
+     shows now (it tucks away with the header). 0 on wider screens, which have no such bar. */
+  --tabbar-h: 0px;
+  --tabbar-vis: var(--tabbar-h);
+  /* the smallest comfortable touch target (Phase 10) */
+  --tap: 44px;
   /* colour */
   --bg: #E6C39B;          /* pale fired clay */
   --bg-2: #DDB186;        /* deeper clay, hover and bands */
@@ -58,6 +64,19 @@
   color-scheme: light;
 }
 
+/* ------------------------------------------------------------- phones */
+/* Phones are up to 760 px wide: the bottom bar replaces the header's menu, and headings take less of the first screen. */
+@media (max-width: 760px) {
+  :root {
+    --tabbar-h: calc(58px + env(safe-area-inset-bottom, 0px));
+    --step-1: 1.2rem;
+    --step-2: 1.4rem;
+    --step-3: clamp(1.6rem, 7vw, 1.95rem);
+    --step-4: clamp(2.6rem, 13vw, 3.4rem);
+  }
+}
+html[data-hdr="hidden"] { --tabbar-vis: 0px; }
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #16110E; --bg-2: #1F1712; --surface: #241A14;
@@ -88,11 +107,18 @@ html { -webkit-text-size-adjust: 100%; }
 body { overflow-x: clip; }
 body {
   margin: 0;
+  padding-bottom: var(--tabbar-h);  /* the end of every page clears the phone bar */
   background: var(--bg);
   color: var(--ink);
   font: 400 var(--step-0) / 1.6 var(--f-body);
   transition: background-color 0.5s ease, color 0.5s ease;
   overflow-x: hidden;
+}
+/* with the page drawn under a notch (viewport-fit=cover), a strip in the page colour keeps text from showing
+   through the status bar while the header is tucked away */
+body::before {
+  content: ""; position: fixed; z-index: 31; top: 0; left: 0; right: 0; height: env(safe-area-inset-top, 0px);
+  background: var(--bg); pointer-events: none;
 }
 h1, h2, h3, h4 { font-family: var(--f-display); font-weight: 400; line-height: 1.08; margin: 0; text-wrap: balance; }
 h2 { font-size: var(--step-3); }
@@ -111,10 +137,14 @@ input { text-overflow: ellipsis; }
 ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
 [lang="grc"] { font-family: var(--f-greek); }
 
-.wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gutter); }
+.wrap {
+  max-width: var(--maxw); margin: 0 auto;
+  /* a phone on its side puts the notch at one edge: keep text clear of it */
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px)); padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+}
 .label { font-family: var(--f-label); font-size: var(--step--1); letter-spacing: 0.08em; color: var(--ink-2); }
 .muted { color: var(--ink-2); }
-.skip { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); padding: 8px 14px; }
+.skip { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); padding: 12px 16px; }
 .skip:focus { left: 8px; }
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
@@ -163,6 +193,11 @@ input { text-overflow: ellipsis; }
   border: 1px solid var(--rule); border-radius: 999px; font-size: var(--step--1); background: transparent;
 }
 .chip[aria-pressed="true"] { background: var(--sel-bg); --accent: var(--accent-on-sel); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--sel-fg); border-color: var(--sel-edge); }
+/* touch screens: a chip is drawn at least 36 px tall, and a finger may land up to 4 px beyond it (a 44 px target) */
+@media (pointer: coarse) {
+  .chip { position: relative; min-height: 36px; }
+  .chip::after { content: ""; position: absolute; inset: -4px 0; }
+}
 .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.5; }
 .chip[aria-pressed="true"] .dot { opacity: 1; }
 
@@ -207,6 +242,9 @@ html[data-motion="reduce"] ::view-transition-new(*) { animation: none !important
 ::view-transition-group(site-header) { animation: none; z-index: 100; }
 ::view-transition-old(site-header) { display: none; }
 ::view-transition-new(site-header) { animation: none; }
+::view-transition-group(site-tabbar) { animation: none; z-index: 100; }
+::view-transition-old(site-tabbar) { display: none; }
+::view-transition-new(site-tabbar) { animation: none; }
 
 /* ------------------------------------------------------------- shell */
 /* at least a screen tall: content drawn in the browser arrives a moment after the page, and the
@@ -214,7 +252,7 @@ html[data-motion="reduce"] ::view-transition-new(*) { animation: none !important
 main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(100svh - var(--hdr-h)); outline: none; }
 
 .toast {
-  position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 70;
+  position: fixed; left: 50%; bottom: calc(20px + max(var(--tabbar-vis), env(safe-area-inset-bottom, 0px))); z-index: 70;
   transform: translate(-50%, 20px); opacity: 0; pointer-events: none; max-width: calc(100vw - 32px);
   background: var(--inv-bg); --accent: var(--accent-on-ink); --accent-ink: var(--accent-ink-on-ink); --ink-2: var(--ink-2-on-ink); color: var(--inv-fg); padding: 10px 18px; border-radius: 6px; font-size: 0.95rem;
   transition: opacity 0.25s, transform 0.25s var(--ease);
@@ -230,7 +268,7 @@ main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(
 @media (max-width: 680px) {
   .site-footer-in { grid-template-columns: minmax(0, 1fr); }
   .site-footer-links { align-items: flex-start; gap: 0; }
-  .site-footer-links a { padding-block: 7px; }  /* a finger-sized target */
+  .site-footer-links a { display: inline-flex; align-items: center; min-height: var(--tap); }  /* a finger-sized target */
 }
 
 /* area header, shared by every area page */
@@ -241,6 +279,14 @@ main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(
 .area-greek { display: block; font-size: 0.42em; color: var(--accent); margin-top: 10px; letter-spacing: 0.02em; }
 .area-origin { max-width: 60ch; margin-top: 18px; font-size: 1.15rem; color: var(--ink-2); }
 .area-head .meander { margin-top: clamp(32px, 5vw, 56px); }
+/* phones: an area's title and its story take a third of the first screen, not half */
+@media (max-width: 760px) {
+  .area-head { padding-top: 28px; }
+  .area-head h1 { font-size: clamp(2.2rem, 10.5vw, 2.75rem); margin-top: 12px; }
+  .area-greek { margin-top: 6px; }
+  .area-origin { font-size: 1.02rem; line-height: 1.5; margin-top: 12px; }
+  .area-head .meander { margin-top: 24px; }
+}
 
 .soon { padding-block: clamp(32px, 5vw, 56px); }
 .soon-card { max-width: 720px; display: grid; gap: 16px; justify-items: start; }
