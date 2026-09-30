@@ -24,8 +24,28 @@ test("footnote jumps to its source, and a Scroll link opens the passage", async 
   await expect(page).toHaveURL(/\/read\?w=tlg0016\.tlg001&at=7\.137\.1/);
 });
 test("the published site carries only checked articles (no draft text)", async ({ page }) => {
+  // Achilles Tatius has only an unchecked draft, which development shows and the built site does not
   await page.goto("/author/tlg0532");
   await expect(page.locator("[data-article]")).toHaveCount(0);
   await page.goto("/author/tlg0012");
-  await expect(page.locator("[data-article]")).toHaveCount(0);
+  await expect(page.locator("[data-article]")).toHaveCount(1);
+  await expect(page.getByText("Design preview")).toHaveCount(0);
+  await expect(page.getByText("Checked against sources")).toBeVisible();
 });
+
+/** Every published article renders its road of marks and its numbered sources (the counts come from the data). */
+for (const [id, marks, sources] of [["tlg0012", 11, 33], ["tlg0003", 12, 21], ["tlg0059", 13, 22]] as const) {
+  test(`${id}: the article shows ${marks} marks and ${sources} sources, with no accessibility problems`, async ({ page }) => {
+    await page.addInitScript(() => { localStorage.setItem("mathesis:settings", JSON.stringify({ state: { theme: "dark", motion: "reduced" }, version: 0 })); });
+    await page.goto(`/author/${id}`);
+    await expect(page.getByRole("heading", { name: "Life and work" })).toBeVisible();
+    await expect(page.locator("ol[aria-label=Timeline] li")).toHaveCount(marks);
+    await expect(page.locator("ol li[id^=src-]")).toHaveCount(sources);
+    // no stray markup: footnote markers and asterisks must all have been turned into links and italics
+    const text = await page.locator("[data-article]").first().locator("xpath=ancestor::*[contains(@class,'page')][1]").innerText();
+    expect(text).not.toMatch(/\[\^\d/);
+    expect(text).not.toMatch(/\*[A-Za-z]/);
+    const res = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+    expect(res.violations.filter((v) => v.impact === "serious" || v.impact === "critical")).toEqual([]);
+  });
+}

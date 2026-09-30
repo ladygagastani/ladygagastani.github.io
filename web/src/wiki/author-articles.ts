@@ -10,6 +10,9 @@
  */
 import type { Certainty } from "./types";
 import { herodotus } from "./authors/tlg0016";
+import { homer } from "./authors/tlg0012";
+import { thucydides } from "./authors/tlg0003";
+import { plato } from "./authors/tlg0059";
 
 /** What a timeline mark stands for: the author's own time, a copy of the text, a printing or
  *  modern edition, or later reception. Shown as a shape and a word, never by colour alone. */
@@ -39,12 +42,16 @@ export interface AuthorArticle {
   /** numbered 1, 2, 3… in this order; the markers in the prose point here. Each is a web page (`url`) or a
    *  passage of the texts in the reader (`cite`), which is how ancient sources are cited. */
   sources: ({ label: string; note?: string } & ({ url: string; cite?: undefined } | { cite: { work: string; ref: string; to?: string }; url?: undefined }))[];
+  /** Quotations (or parts of one) that are not in the library's own texts: our own translation of a Greek
+   *  or Latin line, or words from a web source. Every quotation in the prose must be found in a cited text
+   *  (CORPUS=1 test) or be listed here, so none can be misquoted unnoticed. */
+  outsideQuotes?: string[];
   /** YYYY-MM-DD: when every claim was last compared with its source; empty for a preview draft */
   checked: string;
 }
 
 /** Only source-checked articles: each lives in authors/<id>.ts. */
-export const ARTICLES: Record<string, AuthorArticle> = { [herodotus.id]: herodotus };
+export const ARTICLES: Record<string, AuthorArticle> = { [herodotus.id]: herodotus, [homer.id]: homer, [thucydides.id]: thucydides, [plato.id]: plato };
 
 /**
  * The unchecked drafts used to look at the design, read only by `npm run dev`. The test is a build-time

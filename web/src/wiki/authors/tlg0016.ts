@@ -103,5 +103,11 @@ When N. G. Wilson made the new Oxford text (2015), he collated two neglected man
     { label: "The Classical Review on Rosén's Teubner edition, vol. 1 (Leipzig 1987, lxxxviii + 458 pp.)", url: "https://www.cambridge.org/core/journals/classical-review/article/abs/new-teubner-of-herodotus-haiim-b-rosen-herodoti-historiae-i-libros-iiv-continens-bibl-teubneriana-pp-lxxxviii-458-leipzig-teubner-1987-148-m/2C94DB60F0DE5FD46FCC96E52AE27D7F" },
     { label: "Bryn Mawr Classical Review 2008.07.35 on Asheri, Lloyd and Corcella, A Commentary on Herodotus Books I–IV (Oxford University Press, 2007)", url: "https://bmcr.brynmawr.edu/2008/2008.07.35/" },
   ],
+  outsideQuotes: [
+    "Herodotus of Thurii",
+    "the father of history",
+    "versions of Herodotus circulated that had both (East) Ionic forms",
+    "and koine forms",
+  ],
   checked: "2026-09-30",
 };

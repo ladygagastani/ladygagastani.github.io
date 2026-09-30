@@ -104,7 +104,7 @@ export default function AuthorArticleView({ name, article: a, draft = false }: {
             {a.editions.map((e, i) => (
               <li key={i}>
                 <span><Inline xs={inline(e.text)} /></span>
-                {e.note && <span className="muted"> {e.note}</span>}
+                {e.note && <span className="muted"> <Inline xs={inline(e.note)} /></span>}
               </li>
             ))}
           </ul>
