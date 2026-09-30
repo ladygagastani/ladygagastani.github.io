@@ -410,4 +410,20 @@ export const BIB: Record<string, Secondary> = {
     author: "Michael Gagarin", title: "The Torture of Slaves in Athenian Law", year: 1996,
     publisher: "Classical Philology 91, 1–18", checked: "https://doi.org/10.1086/367489",
   },
+  "schaps-names": {
+    author: "David Schaps", title: "The Woman Least Mentioned: Etiquette and Women's Names", year: 1977,
+    publisher: "Classical Quarterly 27, 323–330", checked: "https://doi.org/10.1017/s0009838800035606",
+  },
+  "blundell-women": {
+    author: "Sue Blundell", title: "Women in Ancient Greece", year: 1995,
+    publisher: "London: British Museum Press; Cambridge, MA: Harvard University Press", checked: "https://openlibrary.org/works/OL838149W",
+  },
+  "connelly-priestess": {
+    author: "Joan Breton Connelly", title: "Portrait of a Priestess: Women and Ritual in Ancient Greece", year: 2007,
+    publisher: "Princeton: Princeton University Press", checked: "https://bmcr.brynmawr.edu/2007/2007.08.43/",
+  },
+  "pomeroy-goddesses": {
+    author: "Sarah B. Pomeroy", title: "Goddesses, Whores, Wives, and Slaves: Women in Classical Antiquity", year: 1975,
+    publisher: "New York: Schocken Books", checked: "https://openlibrary.org/works/OL3029407W",
+  },
 };
