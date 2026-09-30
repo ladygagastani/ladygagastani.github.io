@@ -1,7 +1,7 @@
 # PROGRESS.md — project memory
 
 ## START HERE: handoff to a new account (2026-09-30)
-The owner is moving the project to another account. A new session should read `CLAUDE.md`, the brief, this section, then `PLAN.md`.
+The owner is moving the project to another account. A new session should read `CLAUDE.md`, the brief, this section, then `PLAN.md`. The notes the old account kept in its private memory are copied below, so nothing depends on them.
 
 **State of the code.** Everything up to the phone edition and the Town Hall bug boards is live at https://mathesisstoicheion.github.io/. Five commits on `main` are **saved but not published** (not pushed): the alphabet tiles, lessons 10–13, lesson 14 (middle and passive) and lesson 15 (participles); see "The alphabet in lesson 1, and lessons 10–13" and "Lessons 14 and 15" below. Check with `git status -sb` ("ahead 5"). **Push only when the owner says so**: a push to `main` republishes the live site. The owner was asked on 2026-09-30 whether to publish them and has not answered yet. All tests passed on 2026-09-29/30 (285 unit; the Academy, accessibility and phone checks in the browser). The new lessons have not had a fresh-session review yet.
 
@@ -18,6 +18,11 @@ The owner is moving the project to another account. A new session should read `C
 
 **Waiting for the owner's go-ahead**
 8. **Publish** the five saved commits (above). After a push: `node scripts/live-check.mjs` in `web/`.
+
+**Working agreements carried over from the old account's private notes**
+- The owner allows local git commits at the end of each piece of work (clear messages); **pushing** needs their say-so.
+- The brief's "fresh-session review before a phase counts as done" is the owner's own optional habit: mention that a review could be run, but do not wait for one.
+- **Pull requests:** the GitHub command-line tool (`gh`) is not installed. Push a branch other than `main` (only `main` publishes), then open `https://github.com/mathesisstoicheion/mathesisstoicheion.github.io/compare/main...<branch>?quick_pull=1` in the built-in browser; the owner signs in to GitHub and clicks "Create pull request" themselves. If local `main` holds unpublished commits, say in the pull request that they are included.
 
 **Traps for the next session**: local builds need webpack (`npx next build --webpack`, `next dev --webpack`) because Windows Smart App Control blocks Next.js's fast compiler; another session's dev server may already be on port 3000 (use it, or `preview_start` picks another port); write regexes with the Edit/Write tools, not Bash heredocs (see Known problems); on Windows, Python needs `PYTHONIOENCODING=utf-8` to print Greek.
 
