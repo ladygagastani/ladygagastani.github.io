@@ -2,9 +2,12 @@ import { test, expect, type Page } from "@playwright/test";
 
 // The universal search (Quick search), its recent searches, and the typeface choice in Settings.
 const open = async (page: Page) => {
-  await page.keyboard.press("/");
   const box = page.getByRole("dialog", { name: "Quick search" });
-  await expect(box).toBeVisible();
+  // the key does nothing until the page has started up, so press it until the box opens
+  await expect(async () => {
+    if (!(await box.isVisible())) await page.keyboard.press("/");
+    await expect(box).toBeVisible({ timeout: 1000 });
+  }).toPass({ timeout: 20_000 });
   return box;
 };
 
@@ -76,4 +79,20 @@ test("the Greek and English typefaces can be chosen, and are remembered", async 
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-greek-face", "gentium");
   expect((await faces())[0]).toMatch(/gentium/i);
+});
+
+test("an unknown address shows the not-found page, with a way into the search", async ({ page }) => {
+  const res = await page.goto("/no-such-page");
+  expect(res?.status()).toBe(404);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("This page has not survived");
+  await expect(page.getByRole("img", { name: /υδʹ/ })).toBeVisible();
+  await page.getByRole("button", { name: "Search for what you were looking for" }).click();
+  await expect(page.getByRole("dialog", { name: "Quick search" })).toBeVisible();
+});
+
+test("the reader names the book in the browser tab, and shows a Latin title beside its English one", async ({ page }) => {
+  await page.goto("/read?w=tlg0085.tlg001&at=1");
+  await expect(page).toHaveTitle("Suppliant Maidens · Aeschylus · Mathesis Stoicheion", { timeout: 30_000 });
+  await expect(page.getByText("English title from the library's translation")).toBeVisible();
+  await expect(page.locator("i[lang='la']", { hasText: "Supplices" }).first()).toBeVisible();
 });

@@ -142,7 +142,7 @@ export function worksNamed(idx: CatalogIndex, text: string): Set<string> {
   const out = new Set<string>();
   for (const a of idx.catalog.authors) {
     const an = fold(a.name);
-    for (const w of a.works) if (an.includes(n) || fold(w.title).includes(n) || w.id === text || a.id === text) out.add(w.id);
+    for (const w of a.works) if (an.includes(n) || fold(w.title).includes(n) || (!!w.orig && fold(w.orig).includes(n)) || w.id === text || a.id === text) out.add(w.id);
   }
   return out;
 }

@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "εἵλωτες",
   category: "dark",
   kicker: "The people who fed Sparta, and how Sparta kept them down",
+  image: "taygetus-from-sparta",
   hook: `Sparta's citizens could spend their lives training for war because someone else grew their food. That someone was the helots: a whole conquered population, bound to the land, handing over half of every harvest. They far outnumbered their masters, and the Spartans never forgot it. Each year, according to Aristotle, Sparta's magistrates formally declared war on them, so that killing a helot would not stain a Spartan with blood-guilt.`,
   body: `## Half of every harvest
 

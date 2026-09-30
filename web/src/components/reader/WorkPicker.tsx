@@ -18,7 +18,7 @@ export default function WorkPicker({ onPick, onClose }: { onPick: (work: string)
     const out: { id: string; label: string; gr: string | null; en: boolean }[] = [];
     for (const a of idx.catalog.authors) for (const w of a.works) {
       const gr = greekEditions(w)[0]?.label ?? null;
-      if (f && !fold(`${a.name} ${w.title} ${gr ?? ""}`).includes(f)) continue;
+      if (f && !fold(`${a.name} ${w.title} ${w.orig ?? ""} ${gr ?? ""}`).includes(f)) continue;
       out.push({ id: w.id, label: `${a.name}, ${w.title}`, gr, en: hasTranslation(w) });
       if (out.length >= 60) return out;
     }

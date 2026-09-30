@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "Μυτιληναῖοι",
   category: "democracy",
   kicker: "427 BC: the Assembly votes to kill a city, then changes its mind",
+  image: "mytilene-theatre",
   hook: `In 427 BC the Athenian Assembly voted, in anger, to put to death every grown man of Mytilene and enslave the women and children. A ship left that day with the order. Overnight the Athenians began to feel what they had done. The next morning they argued it all again, voted by the narrowest of margins to spare the city, and sent a second ship after the first. Its crew rowed without stopping for a day and a night, eating as they rowed.`,
   body: `## A rebellious ally
 

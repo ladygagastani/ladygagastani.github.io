@@ -14,7 +14,7 @@ import { findRef, chunkOf } from "@/lib/tei/refs";
 import { getPosition, savePosition } from "@/lib/position";
 import { useSettings, LIMITS, type Columns } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
-import { AREAS } from "@/config/areas";
+import { AREAS, SITE } from "@/config/areas";
 import { Blocks } from "./Blocks";
 import WordPanel, { type WordContext } from "./WordPanel";
 import { norm } from "@/lib/lookup/words";
@@ -26,6 +26,7 @@ import ShareDialog, { type ShareData } from "./ShareDialog";
 import WorkPicker from "./WorkPicker";
 import VocabPanel from "./VocabPanel";
 import PlacesPanel from "./PlacesPanel";
+import OrigTitle from "@/components/library/OrigTitle";
 import ManuscriptPanel from "./ManuscriptPanel";
 import { greekKey } from "@/lib/search/codec";
 import PanelGuard from "@/components/PanelGuard";
@@ -193,6 +194,18 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
 
   const work = idx?.work.get(workId);
   const author = idx?.authorOf.get(workId);
+  // the browser tab names the book being read ("Iliad · Homer"), on the reader's own page (not the floating window)
+  const tabTitle = work && !floating && pane === 1 ? `${work.title}${author ? ` · ${author.name}` : ""} · ${SITE.latin}` : null;
+  useEffect(() => {
+    if (!tabTitle) return;
+    const before = document.title;
+    const set = () => { if (document.title !== tabTitle) document.title = tabTitle; };
+    set();
+    // Next.js writes the page's own <title> when its metadata arrives, which can be after this: put the book back
+    const watch = new MutationObserver(set);
+    watch.observe(document.head, { childList: true, subtree: true, characterData: true });
+    return () => { watch.disconnect(); if (document.title === tabTitle) document.title = before; };
+  }, [tabTitle]);
   const grcText = work ? pickEdition(work, P("ed"), remembered?.ed ?? null) : undefined;
   const trText = work ? pickTranslation(work, P("tr"), remembered ? remembered.tr : undefined) : null;
   const cite = `${author?.name ?? ""}, ${work?.title ?? ""}`;
@@ -1039,6 +1052,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
             <h1 className={styles.title}>{work?.title ?? " "}
               {grcText?.label && grcText.label !== work?.title && <span className={styles.titleGr} lang="grc">{grcText.label}</span>}
             </h1>
+            {work?.orig && work.orig !== grcText?.label && <p className={styles.titleOrig}><OrigTitle work={work} full /></p>}
           </>
         )}
         {floating && split && <p className={styles.floatTitle}>{work?.title}</p>}

@@ -194,7 +194,7 @@ function Box({ onClose }: { onClose: () => void }) {
           // the best-matching author's own works come right after their name
           if (k === 0) for (const w of a.works.slice(0, 4)) { work(w, a); shownWorks.add(w.id); }
         });
-        const works = rank(idx.catalog.authors.flatMap((a) => a.works.filter((w) => !shownWorks.has(w.id)).map((w) => ({ w, a }))), t, ({ w, a }) => ({ main: [w.title], more: [`${a.name} ${w.title}`] }), 6 - Math.min(shownWorks.size, 4));
+        const works = rank(idx.catalog.authors.flatMap((a) => a.works.filter((w) => !shownWorks.has(w.id)).map((w) => ({ w, a }))), t, ({ w, a }) => ({ main: [w.title, w.orig ?? ""], more: [`${a.name} ${w.title}`] }), 6 - Math.min(shownWorks.size, 4));
         for (const { w, a } of works) work(w, a);
       }
       // lessons and guides, then the Painted Stoa

@@ -220,5 +220,32 @@
   "date": "Excavated 1870s",
   "place": "Hisarlik, Çanakkale province, Turkey",
   "creator": "Photograph by Dosseman"
+ },
+ {
+  "id": "melian-relief",
+  "src": "met:251812",
+  "alt": "A broken clay relief plaque, pieced together: a bearded man sits on the left, a young man stands in the middle, and a woman in a long dress sits beside a column on the right.",
+  "title": "Terracotta relief plaque made on Melos, with a scene of Odysseus' homecoming",
+  "date": "c. 450 BC"
+ },
+ {
+  "id": "sweerts-plague",
+  "src": "commons:Plague in an Ancient City LACMA AC1997.10.1 (1 of 2).jpg",
+  "alt": "A crowded painting of a city square with classical buildings: dead and dying people lie in the foreground, while others mourn, cover their faces or turn away.",
+  "title": "Michiel Sweerts, Plague in an Ancient City",
+  "date": "c. 1652–54",
+  "place": "Los Angeles County Museum of Art"
+ },
+ {
+  "id": "mytilene-theatre",
+  "src": "commons:Overzicht theater Mytilini.jpg",
+  "alt": "The grassy hollow of an ancient theatre cut into a hillside, with pine trees along the top and a low stone wall at the bottom.",
+  "title": "The ancient theatre of Mytilene, on Lesbos"
+ },
+ {
+  "id": "taygetus-from-sparta",
+  "src": "commons:View of Mount Taygetus from the ruins of the ancient theatre of Sparta on 15 May 2019.jpg",
+  "alt": "Fallen column drums lie in long grass under olive trees, with the snow-capped peaks of Mount Taygetus in the distance.",
+  "title": "Mount Taygetus, seen from the ruins of the ancient theatre of Sparta"
  }
 ]

@@ -5,7 +5,7 @@ const meta = (page: import("@playwright/test").Page, sel: string) => page.locato
 test("an author has a page of its own that search engines and link previews can read", async ({ page }) => {
   await page.goto("/author/tlg0011");
   await expect(page.getByRole("heading", { level: 1, name: "Sophocles" })).toBeVisible();
-  await expect(page.getByRole("link", { name: /^Oedipus Tyrannus/ }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /^Oedipus the King/ }).first()).toBeVisible();
   await expect(page).toHaveTitle(/^Sophocles: works in Greek and English · Mathesis Stoicheion$/);
   expect(await meta(page, "meta[name=description]")).toMatch(/^Sophocles: Ancient Greek playwright \(5th c\. BC\)\. 8 works/);
   await expect(page.locator("link[rel=canonical]")).toHaveAttribute("href", "https://mathesisstoicheion.com/author/tlg0011");

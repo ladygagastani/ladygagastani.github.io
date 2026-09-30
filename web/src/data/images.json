@@ -362,5 +362,61 @@
   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
   "source": "https://commons.wikimedia.org/wiki/File:Troy_Schliemann_trench_2658.jpg",
   "sourceName": "Wikimedia Commons"
+ },
+ "melian-relief": {
+  "file": "melian-relief.jpg",
+  "width": 1600,
+  "height": 1835,
+  "alt": "A broken clay relief plaque, pieced together: a bearded man sits on the left, a young man stands in the middle, and a woman in a long dress sits beside a column on the right.",
+  "title": "Terracotta relief plaque made on Melos, with a scene of Odysseus' homecoming",
+  "date": "c. 450 BC",
+  "place": "The Metropolitan Museum of Art, New York (25.78.26)",
+  "creator": "Unknown",
+  "licence": "CC0",
+  "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "source": "https://www.metmuseum.org/art/collection/search/251812",
+  "sourceName": "The Metropolitan Museum of Art"
+ },
+ "sweerts-plague": {
+  "file": "sweerts-plague.jpg",
+  "width": 1600,
+  "height": 1112,
+  "alt": "A crowded painting of a city square with classical buildings: dead and dying people lie in the foreground, while others mourn, cover their faces or turn away.",
+  "title": "Michiel Sweerts, Plague in an Ancient City",
+  "date": "c. 1652–54",
+  "place": "Los Angeles County Museum of Art",
+  "creator": "Michiel Sweerts",
+  "licence": "Public domain",
+  "licenceUrl": "https://commons.wikimedia.org/wiki/File:Plague_in_an_Ancient_City_LACMA_AC1997.10.1_(1_of_2).jpg",
+  "source": "https://commons.wikimedia.org/wiki/File:Plague_in_an_Ancient_City_LACMA_AC1997.10.1_(1_of_2).jpg",
+  "sourceName": "Wikimedia Commons"
+ },
+ "mytilene-theatre": {
+  "file": "mytilene-theatre.jpg",
+  "width": 1600,
+  "height": 1200,
+  "alt": "The grassy hollow of an ancient theatre cut into a hillside, with pine trees along the top and a low stone wall at the bottom.",
+  "title": "The ancient theatre of Mytilene, on Lesbos",
+  "date": "2009-10-01",
+  "place": "",
+  "creator": "rutger2",
+  "licence": "CC BY 2.0",
+  "licenceUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Overzicht_theater_Mytilini.jpg",
+  "sourceName": "Wikimedia Commons"
+ },
+ "taygetus-from-sparta": {
+  "file": "taygetus-from-sparta.jpg",
+  "width": 1600,
+  "height": 1067,
+  "alt": "Fallen column drums lie in long grass under olive trees, with the snow-capped peaks of Mount Taygetus in the distance.",
+  "title": "Mount Taygetus, seen from the ruins of the ancient theatre of Sparta",
+  "date": "2019-05-15 10:03:07",
+  "place": "",
+  "creator": "George E. Koronaios",
+  "licence": "CC BY-SA 4.0",
+  "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:View_of_Mount_Taygetus_from_the_ruins_of_the_ancient_theatre_of_Sparta_on_15_May_2019.jpg",
+  "sourceName": "Wikimedia Commons"
  }
 }

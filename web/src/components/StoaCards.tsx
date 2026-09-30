@@ -4,7 +4,8 @@
  * chosen by date, not at random). As the brief asks, one is always from "The dark side" and one from
  * archaeology; the third comes from any other category. The entries are passed in already reduced
  * to what a card shows, so the home page does not carry the whole wiki. Each card shows the entry's
- * own picture, or its category's sign when the entry has none.
+ * own picture, filling the top of the card the same way on all three (every entry has one: entries.test.ts);
+ * its category's sign is only a fallback.
  */
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
@@ -30,7 +31,7 @@ export default function StoaCards({ cards, styles }: { cards: StoaCard[]; styles
         <Link key={c.slug} href={`/stoa/${c.slug}`} className={`${styles.card} ${styles.cardLink} rv`} transitionTypes={["page-turn"]}>
           <span className={styles.cardPic}>
             {/* eslint-disable-next-line @next/next/no-img-element -- self-hosted, sized files; no image service */}
-            {c.pic ? <img data-whole={c.pic.height > c.pic.width * 0.9 ? "" : undefined} src={c.pic.src} srcSet={c.pic.srcSet} sizes="(max-width: 760px) 85vw, 400px" alt={c.pic.alt} title={c.pic.credit} width={c.pic.width} height={c.pic.height} loading="lazy" decoding="async" />
+            {c.pic ? <img src={c.pic.src} srcSet={c.pic.srcSet} sizes="(max-width: 760px) 85vw, 400px" alt={c.pic.alt} title={c.pic.credit} width={c.pic.width} height={c.pic.height} loading="lazy" decoding="async" />
               : <span className={styles.cardIcon}><CategoryIcon id={c.catId} /></span>}
           </span>
           <span className="label">{c.cat}</span>

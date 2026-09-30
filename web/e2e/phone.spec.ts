@@ -50,8 +50,11 @@ test.describe("on a phone", () => {
   test("the bar tucks away while reading on and comes back on a scroll up", async ({ page }) => {
     await page.goto("/academy");
     const bottom = () => tabBar(page).evaluate((e) => Math.round(e.getBoundingClientRect().top));
-    await page.mouse.wheel(0, 700);
-    await expect(page.locator("html")).toHaveAttribute("data-hdr", "hidden");
+    // the page listens for scrolling once it has started up: scroll on until the bars tuck away
+    await expect(async () => {
+      await page.mouse.wheel(0, 350);
+      await expect(page.locator("html")).toHaveAttribute("data-hdr", "hidden", { timeout: 800 });
+    }).toPass({ timeout: 15_000 });
     await expect.poll(bottom).toBeGreaterThanOrEqual(812);
     await page.mouse.wheel(0, -200);
     await expect(page.locator("html")).toHaveAttribute("data-hdr", "shown");

@@ -533,3 +533,6 @@ p.translit { margin: -0.3em 0 0.8em; }
   .ref button[data-row] { min-height: var(--tap); min-width: var(--tap); text-align: left; }
   .crumbs a { display: inline-flex; align-items: center; min-height: var(--tap); min-width: var(--tap); padding-block: 0; }
 }
+
+/* the collection's own Latin or Greek title under an English one */
+.titleOrig { margin: 4px 0 0; font-size: 0.9rem; color: var(--ink-2); }

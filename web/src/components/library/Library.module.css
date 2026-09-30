@@ -163,3 +163,6 @@
 .aboutLink { text-decoration: underline; text-underline-offset: 3px; color: var(--ink-2); }
 .aboutLink:hover { color: var(--accent); }
 @media (pointer: coarse) { .aboutLink { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap); } }
+
+/* the collection's own Latin or Greek title, under an English one (OrigTitle.tsx) */
+.orig { font-size: 0.85em; color: var(--ink-2); }

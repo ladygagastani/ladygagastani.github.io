@@ -41,8 +41,13 @@ export function readReference(q: string, idx: CatalogIndex, abbrevs: Abbrevs): R
     for (const au of idx.catalog.authors) {
       const an = fold(au.name).toLowerCase();
       for (const w of au.works) {
-        const t = fold(w.title).toLowerCase();
-        if (t === n || `${an} ${t}` === n || (t.startsWith(n) && n.length >= 4) || (n.startsWith(`${an} `) && t.startsWith(n.slice(an.length + 1)))) {
+        // the English title, or the collection's own Latin title ("De anima 1.1")
+        const hit = [w.title, w.orig].some((title) => {
+          if (!title) return false;
+          const t = fold(title).toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+          return t === n || `${an} ${t}` === n || (t.startsWith(n) && n.length >= 4) || (n.startsWith(`${an} `) && t.startsWith(n.slice(an.length + 1)));
+        });
+        if (hit) {
           add({ work: w.id, at, label: titleOf(idx, w.id), how: "title" });
         }
       }

@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "ὁ λοιμός",
   category: "dark",
   kicker: "430 BC: a city under siege meets a disease no one could name",
+  image: "sweerts-plague",
   hook: `In the summer of 430 BC, with the Spartan army burning the fields of Attica and the whole population crowded inside the city walls, a disease broke out in the port of Piraeus. Within weeks bodies lay in the streets and in the temples. Thucydides caught it himself and survived, and he wrote down its symptoms so that anyone could recognise it if it ever came again. Twenty-four centuries later, no one is sure what it was.`,
   body: `## Into a crowded city
 

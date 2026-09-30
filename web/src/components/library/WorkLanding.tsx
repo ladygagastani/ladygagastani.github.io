@@ -4,6 +4,7 @@
  * describe it), and where to read it. Only facts from the catalogue, GLAUx and Wikidata; no blurbs.
  * Drawn while the site is built; it needs no scripts.
  */
+import OrigTitle from "./OrigTitle";
 import Link from "next/link";
 import { greekEditions, translations, versionOf, type CatAuthor, type CatText, type CatWork } from "@/lib/catalog";
 import { centuries, DATE_NOTE, type WorkMeta } from "@/lib/works-meta";
@@ -49,6 +50,7 @@ export default function WorkLanding({ work, author, meta, diff, related, sibling
         <div className="area-kicker"><span className="tongues draw" aria-hidden="true" /><span className="label">Work</span></div>
         <h1 className={`page-title ${styles.name}`}>{work.title}</h1>
         {label && label !== work.title && <p lang="grc" className={styles.note} style={{ fontFamily: "var(--f-greek)", fontSize: "1.4rem" }}>{label}</p>}
+        {work.orig && <p className={styles.note}><OrigTitle work={work} full /></p>}
         <p className={styles.note}>By <Link href={`/author/${author.id}`} transitionTypes={["page-turn"]}>{author.name}</Link>.</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
           <Link className="btn" href={`/read?w=${work.id}`} transitionTypes={["page-turn"]}>

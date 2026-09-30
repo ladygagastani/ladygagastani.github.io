@@ -40,7 +40,7 @@ export default function HomeFinder({ starts, total }: { starts: Start[]; total: 
         if ((tr === "with" && !has) || (tr === "greek" && has)) continue;
         const grc = greekEditions(w)[0]?.label ?? null;
         const title = fold(w.title);
-        const hay = `${author} ${title} ${grc ? fold(grc) : ""} ${fold(w.id)}`;
+        const hay = `${author} ${title} ${w.orig ? fold(w.orig) : ""} ${grc ? fold(grc) : ""} ${fold(w.id)}`;
         let rank = 9;
         // someone typing a name wants that author's works first; the well-known ones lead each group
         if (!query) rank = 5;

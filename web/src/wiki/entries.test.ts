@@ -43,6 +43,8 @@ describe.each(ENTRIES.map((e) => [e.slug, e] as const))("entry %s", (slug, e) =>
     expect(e.primary.length).toBeGreaterThan(0);
     expect(e.secondary.length).toBeGreaterThan(0);
     expect(e.written).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    // the home page's cards and the wiki's front show every entry with a lead picture (owner's decision, 2026-09-30)
+    expect(e.image, `${slug} has no lead picture`).toBeTruthy();
   });
   it("uses every quotation it defines, and defines every one it uses", () => {
     const used = body.flatMap((b) => ("quote" in b ? [b.quote] : []));

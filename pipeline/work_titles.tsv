@@ -1,0 +1,1274 @@
+# English titles for works the collections name only in Latin or Greek (pipeline/apply_work_titles.py puts them into catalog.json).
+# id <TAB> English title <TAB> source: "tr" = the title of the library's own English translation of the work; "site" = the collection's
+# Latin or Greek title translated plainly by this site. The collection's own title is always kept beside it, and stays searchable.
+# [Sp.] in a title is rendered "(spurious)", [Dub.] "(doubtful)", as the collections mark them.
+tlg2949.tlg001	Acts of Barnabas	site
+tlg0317.tlg001	Acts of John	tr
+tlg0317.tlg002	Acts of John (another recension)	site
+tlg2948.tlg001	Acts of Philip	tr
+tlg2038.tlg001	Acts of Thomas	tr
+tlg0731.tlg001	Physiognomy	site
+tlg0731.tlg003	Physiognomy (the Madrid epitome)	site
+tlg0666.tlg001	Declamation	site
+tlg0545.tlg001	On the Nature of Animals	site
+tlg0545.tlg002	Historical Miscellany	site
+tlg0545.tlg003	Letters of Farmers	site
+tlg0545.tlg004	Fragments	site
+tlg0087.tlg001	On General Prosody	site
+tlg0087.tlg004	On Vowels That Can Be Long or Short	site
+tlg0087.tlg005	On Breathings	site
+tlg0087.tlg006	On Attic Prosody	site
+tlg0087.tlg007	On the Prosody of the Iliad	site
+tlg0087.tlg008	On the Prosody of the Odyssey	site
+tlg0087.tlg009	On the Modifications of Words	site
+tlg0087.tlg009a	From Herodian's Notes on Didymus' Modifications of Words	site
+tlg0087.tlg010	On the Combination of Letters	site
+tlg0087.tlg011	On Spelling	site
+tlg0087.tlg012	On Nouns	site
+tlg0087.tlg013	On the Declension of Nouns	site
+tlg0087.tlg014	Commentary on Apollonius' On Genders	site
+tlg0087.tlg015	On the Word ὕδωρ	site
+tlg0087.tlg016	On the Word ζώς	site
+tlg0087.tlg017	On Conjugations	site
+tlg0087.tlg018	That Not All Verbs Are Conjugated in All Tenses	site
+tlg0087.tlg019	On Participles	site
+tlg0087.tlg020	On the Word ἦν	site
+tlg0087.tlg021	On Verbs	site
+tlg0087.tlg022	On Verbs in -μι	site
+tlg0087.tlg023	On Pronouns	site
+tlg0087.tlg024	On Adverbs	site
+tlg0087.tlg025	On Figures of Speech	site
+tlg0087.tlg026	On Derived Words	site
+tlg0087.tlg027	On Nouns Formed from Verbs	site
+tlg0087.tlg028	On Words of One Syllable	site
+tlg0087.tlg029	On Marriage and Living Together	site
+tlg0087.tlg030	Symposium	site
+tlg0087.tlg031	Propositions	site
+tlg0087.tlg032	On Apollonius' Introduction	site
+tlg0087.tlg033	On Words Without a Parallel	site
+tlg0087.tlg035	On Figures of Speech	site
+tlg0607.tlg001	Preliminary Exercises	site
+tlg0058.tlg001	On Siegecraft	site
+tlg0026.tlg004	Letters	site
+tlg0085.tlg001	Suppliant Maidens	tr
+tlg0096.tlg002	Fables	site
+tlg0067.tlg001	On the Red Sea	site
+tlg0090.tlg001	Outline of Geography	site
+tlg4024.tlg001	Histories	site
+tlg4024.tlg002	Epigrams	site
+tlg0610.perseus002	On the Sophists	site
+tlg0640.tlg001	Letters	site
+tlg0594.tlg002	On Figures of Speech	site
+tlg0732.tlg001	On Mixture	site
+tlg0732.tlg003	On Fevers (spurious)	site
+tlg0732.tlg004	Commentary on Aristotle's Metaphysics	site
+tlg0732.tlg005	Commentary on Book 1 of Aristotle's Prior Analytics	site
+tlg0732.tlg006	Commentary on the Eight Books of Aristotle's Topics	site
+tlg0732.tlg007	Commentary on the Book On Sense Perception	site
+tlg0732.tlg008	Commentary on Aristotle's Meteorology	site
+tlg0732.tlg010	On the Soul	site
+tlg0732.tlg011	Supplement to the Book On the Soul	site
+tlg0732.tlg012	Questions	site
+tlg0732.tlg013	Ethical Problems (spurious)	site
+tlg0732.tlg014	On Fate	site
+tlg2135.tlg001	Introduction to Music	site
+tlg4016.tlg001	Commentary on Porphyry's Introduction, or the Five Terms	site
+tlg4016.tlg002	Commentary on Aristotle's Categories	site
+tlg4016.tlg003	Commentary on Aristotle's On Interpretation	site
+tlg4016.tlg004	Commentary on Book 1 of Aristotle's Prior Analytics	site
+tlg4016.tlg005	On Aristotle's Prior Analytics (spurious)	site
+tlg0708.tlg001	On Similar and Different Words	site
+tlg0037.tlg001	Letters	site
+tlg2703.tlg001	The Alexiad	site
+tlg1129.tlg001	On Barbarism and Solecism	site
+tlg2972.tlg001	An Anonymous Treatise on Earthquakes	site
+tlg3156.tlg001	Commentary on Hesiod's Theogony	site
+tlg0092.tlg001	A Short Account of Geography	site
+tlg4026.tlg001	Commentary on Aristotle's Rhetoric	site
+tlg4026.tlg002	Fragment of a Commentary on Aristotle's Rhetoric	site
+tlg4026.tlg003	Fragment of a Paraphrase of Aristotle's Rhetoric	site
+tlg4027.tlg001	Paraphrase of the Categories	site
+tlg4033.tlg003	Paraphrase of the Nicomachean Ethics (falsely attributed)	site
+tlg9004.tlg001	Anonymous Commentary on Book 2 of the Posterior Analytics	site
+tlg4193.tlg012	Paraphrase of Aristotle's Sophistical Refutations	site
+tlg4037.tlg001	On Incredible Things (the Vatican excerpts)	site
+tlg2029.tlg001	A Short Account of Geography on the Sphere	site
+ggm0001.ggm001	Measurement of the Black Sea	site
+tlg1134.tlg001	Fragments	site
+tlg1131.tlg001	To Avircius Marcellus, against the Cataphrygians	site
+tlg0643.opp001	Preface to the Anonymus Londinensis: Extracts from Aristotle's Medical Writings, Menon and Other Physicians	site
+tlg0643.opp002	Appendix to the Anonymus Londinensis: Extracts from Aristotle's Medical Writings, Menon and Other Physicians	site
+tlg0643.opp003	Remaining Medical Fragments	site
+tlg0643.tlg001	Medical Writings	site
+tlg0643.tlg002	Fragments	site
+tlg0618.tlg001	Letter	site
+tlg0044.tlg001	Letters	site
+tlg1146.tlg001	Testimonia and Fragments	site
+tlg1147.tlg003	Fragments	site
+tlg1126.tlg003	Fragments	site
+tlg0082.tlg001	On Pronouns	site
+tlg0082.tlg002	On Adverbs	site
+tlg0082.tlg003	On Conjunctions	site
+tlg0082.tlg004	On Syntax	site
+tlg0550.tlg001	Conics	site
+tlg9007.tlg001	Appendix of Proverbs	site
+tlg0551.tlg001	The Roman History: Author's Preface	tr
+tlg0653.tlg001	Phenomena	site
+tlg0552.tlg001	On the Sphere and Cylinder	site
+tlg0552.tlg002	Measurement of a Circle	site
+tlg0552.tlg003	On Conoids and Spheroids	site
+tlg0552.tlg004	On Spirals	site
+tlg0552.tlg005	On the Equilibrium of Planes	site
+tlg0552.tlg006	The Sand Reckoner	site
+tlg0552.tlg007	Quadrature of the Parabola	site
+tlg0552.tlg008	On Floating Bodies	site
+tlg0552.tlg010	The Method, to Eratosthenes	site
+tlg0552.tlg011	Book of Lemmas	site
+tlg0552.tlg012	The Cattle Problem	site
+tlg0552.tlg013	Fragments	site
+tlg0620.tlg002	Fragments	site
+tlg0719.tlg001	On the Causes and Symptoms of Acute Diseases	tr
+tlg0719.tlg002	On the Causes and Symptoms of Chronic Diseases	tr
+tlg0719.tlg003	On the Therapeutics of Acute Diseases	tr
+tlg0719.tlg004	On the Cure of Chronic Diseases	tr
+tlg1181.tlg001	On the Sizes and Distances of the Sun and Moon	site
+tlg0284.tlg056	Art of Rhetoric	site
+tlg1188.tlg002	Fragments	site
+tlg1193.tlg001	Testimonia and Fragments	site
+tlg1194.tlg001	On the Signs in the Odyssey	site
+tlg0644.tlg001	Epitome of the History of Animals	site
+tlg0086.tlg001	Prior Analytics	site
+tlg0086.tlg002	On the Soul	site
+tlg0086.tlg004	On Things Heard	site
+tlg0086.tlg005	On the Heavens	site
+tlg0086.tlg006	Categories	site
+tlg0086.tlg007	On Colours	site
+tlg0086.tlg008	On Divination in Sleep	site
+tlg0086.tlg011	Letters	site
+tlg0086.tlg012	On the Generation of Animals	site
+tlg0086.tlg013	On Generation and Corruption	site
+tlg0086.tlg014	History of Animals	site
+tlg0086.tlg015	On the Progression of Animals	site
+tlg0086.tlg016	On Dreams	site
+tlg0086.tlg017	On Interpretation	site
+tlg0086.tlg018	On Youth and Old Age, On Life and Death	site
+tlg0086.tlg019	On Indivisible Lines	site
+tlg0086.tlg020	On Length and Shortness of Life	site
+tlg0086.tlg021	On the Motion of Animals	site
+tlg0086.tlg022	Great Ethics	site
+tlg0086.tlg023	Mechanics	site
+tlg0086.tlg024	On Memory and Recollection	site
+tlg0086.tlg026	Meteorology	site
+tlg0086.tlg027	On Marvellous Things Heard	site
+tlg0086.tlg030	On the Parts of Animals	site
+tlg0086.tlg031	Physics	site
+tlg0086.tlg032	Physiognomy	site
+tlg0086.tlg036	Problems	site
+tlg0086.tlg037	On Breathing	site
+tlg0086.tlg039	On Plants	site
+tlg0086.tlg040	Sophistical Refutations	site
+tlg0086.tlg041	On Sense and the Sensible	site
+tlg0086.tlg042	On Sleep and Waking	site
+tlg0086.tlg043	On Breath	site
+tlg0086.tlg044	Topics	site
+tlg0086.tlg046	On the Positions and Names of the Winds	site
+tlg0086.tlg047	On Xenophanes, Zeno and Gorgias	site
+tlg0086.tlg048	Aristotelian Divisions	site
+tlg0086.tlg052	On the Soul (fragments of a version different from the usual one, from manuscript E)	site
+tlg0086.tlg054	Physics (the other version)	site
+tlg0088.tlg001	Elements of Harmonics	site
+tlg0529.tlg002	Book on the Schools of Philosophy (the epitome in Stobaeus)	site
+tlg0074.tlg001	The Anabasis of Alexander	site
+tlg0074.tlg002	On India	site
+tlg0074.tlg003	On Hunting	site
+tlg0074.tlg004	Voyage around the Black Sea	site
+tlg0074.tlg005	Tactics	site
+tlg0074.tlg006	Battle Order against the Alans	site
+tlg0074.tlg008	Letter to Lucius Gellius	site
+tlg0045.tlg001	Letters	site
+tlg0553.tlg001	The Interpretation of Dreams	site
+tlg0556.tlg001	Tactics	site
+tlg4018.tlg001	Commentary on Books A–Z of Aristotle's Metaphysics	site
+tlg0615.tlg001	Commentary on the Nicomachean Ethics	site
+tlg2035.tlg002	On the Incarnation of the Word	site
+tlg2035.tlg003	On the Decrees of the Council of Nicaea	site
+tlg2035.tlg117	Fourth Oration against the Arians (spurious)	site
+tlg2035.tlg130	First Oration against the Arians	site
+tlg2035.tlg131	Second Oration against the Arians	site
+tlg2035.tlg132	Third Oration against the Arians	site
+tlg0008.tlg001	The Deipnosophists	tr
+tlg1205.tlg001	Embassy, or Plea for the Christians	site
+tlg1205.tlg002	On the Resurrection	site
+tlg1210.tlg001	On the Moving Sphere	site
+tlg1210.tlg002	On Risings and Settings	site
+tlg0614.tlg001	Aesopic Fables	site
+tlg2136.tlg001	Introduction to the Art of Music	site
+tlg2040.tlg002	On Reading the Books of the Pagans	site
+tlg2040.tlg004	Letters	site
+tlg1220.tlg001	The Battle of Frogs and Mice	site
+tlg0036.tlg001	Lament for Adonis	site
+tlg0036.tlg002	Wedding Song for Achilles and Deidamia	site
+tlg0036.tlg003	Fragments	site
+tlg1803.tlg001	Letters	site
+tlg0533.tlg006	Causes	site
+tlg0533.tlg007	Iambics	site
+tlg0533.tlg009	Hecale	site
+tlg2189.tlg003	Fragments	site
+tlg4091.tlg001	Descriptions	site
+tlg2138.tlg001	From the First Stasimon of the Orestes	site
+tlg0362.tlg001	Songs Found at Delphi	site
+tlg0385.tlg001	Roman History	site
+tlg0733.tlg001	Medical Questions and Natural Problems	site
+tlg2178.tlg001	Art of Rhetoric	site
+tlg2178.tlg002	Excerpts	site
+tlg2178.tlg004	Fragments	site
+tlg4102.tlg001	Catena on Matthew (the complete catena, from Paris, Coislin 23)	site
+tlg4102.tlg002	Catena on Mark (second recension, from Oxford, Bodleian Laud 33, Paris, Coislin 23 and Paris gr. 178)	site
+tlg4102.tlg003	Supplement and Variant Readings to Chrysostom's Commentary on Matthew (from Oxford, Bodleian Auct. T.1.4)	site
+tlg4102.tlg004	Catena on Luke (type B, from Paris, Coislin 23 and Oxford, Bodleian Misc. 182)	site
+tlg4102.tlg005	Catena on John (the complete catena, from Paris, Coislin 23 and Oxford, Bodleian Auct. T.1.4)	site
+tlg4102.tlg006	Supplement and Variant Readings to the Catena on Luke (from Oxford, Bodleian Laud 33)	site
+tlg4102.tlg007	Supplement and Variant Readings to the Catena on John (from Bodleian codex B)	site
+tlg4102.tlg008	Catena on Acts (Andrew's catena, from Oxford, New College 58)	site
+tlg4102.tlg010	Catena on Romans (Vatican type, from Oxford, Bodleian Auct. E.2.20)	site
+tlg4102.tlg011	Catena on Romans (Munich type, from Munich gr. 412)	site
+tlg4102.tlg012	Catena on 1 Corinthians (Vatican type, from Paris gr. 227)	site
+tlg4102.tlg013	Catena on 2 Corinthians (the Pseudo-Oecumenius catena)	site
+tlg4102.tlg019	Catena on Galatians (Paris type, from Coislin 204)	site
+tlg4102.tlg020	Catena on Ephesians (Paris type, from Coislin 204)	site
+tlg4102.tlg021	Catena on Philippians (Paris type, from Coislin 204)	site
+tlg4102.tlg022	Catena on Colossians (Paris type, from Coislin 204)	site
+tlg4102.tlg023	Catena on 1 Thessalonians (Paris type)	site
+tlg4102.tlg024	Catena on 2 Thessalonians (Paris type)	site
+tlg4102.tlg034	Catena on 1 Timothy (from Paris, Coislin 204)	site
+tlg4102.tlg035	Catena on 2 Timothy (from Paris, Coislin 204)	site
+tlg4102.tlg036	Catena on Titus (from Paris, Coislin 204)	site
+tlg4102.tlg037	Catena on Philemon (from Paris, Coislin 204)	site
+tlg4102.tlg038	Catena on Hebrews (from Paris, Coislin 204)	site
+tlg4102.tlg040	Catena on James (Andrew's catena)	site
+tlg4102.tlg041	Catena on 1 Peter (Andrew's catena, from Oxford, New College 58)	site
+tlg4102.tlg042	Catena on 2 Peter (Andrew's catena, from Oxford, New College 58)	site
+tlg4102.tlg043	Catena on 1 John (Andrew's catena, from Oxford, New College 58)	site
+tlg4102.tlg044	Catena on 2 John (Andrew's catena, from Oxford, New College 58)	site
+tlg4102.tlg045	Catena on 3 John (Andrew's catena, from Oxford, New College 58)	site
+tlg4102.tlg046	Catena on Jude (Andrew's catena, from Oxford, New College 58)	site
+tlg4102.tlgX01	Preface to the Pseudo-Oecumenius Commentary on the Apocalypse	site
+tlg4102.tlgX02	Commentary on the Apocalypse	site
+tlg4102.tlgX03	Commentary on the Apocalypse (Pseudo-Oecumenius, from a Coislin codex)	site
+tlg1247.tlg001	The Tablet of Cebes	site
+tlg1252.tlg002	The Contest of Homer and Hesiod	site
+tlg0554.tlg001	Chaereas and Callirhoe	site
+tlg0041.tlg001	Letters	site
+tlg2371.tlg001	The Paschal Chronicle	site
+tlg1264.tlg001	Fragments on Logic and Physics	site
+tlg1264.tlg002	Fragments on Ethics	site
+tlg1264.tlg003	Fragments on the Interpretation of Homer's Poems	site
+tlg1264.tlg004	Fragments Assigned to Particular Books	site
+tlg0363.tlg001	Mathematical Treatise	site
+tlg0363.tlg007	Four Books (Tetrabiblos)	site
+tlg0363.tlg011	On Music	site
+tlg1269.tlg002	Testimonia and Fragments	site
+tlg1271.tlg003	Letter of Peter to James (spurious)	site
+tlg1271.tlg004	The Solemn Charge (spurious)	site
+tlg1271.tlg005	Letter of Clement to James (spurious)	site
+tlg1271.tlg006	Homilies (spurious)	site
+tlg1271.tlg010	Letters on Virginity (spurious)	site
+tlg1271.tlg011	Pseudo-Clementines (the second epitome, by Symeon Metaphrastes) (spurious)	site
+tlg1271.tlg012	Pseudo-Clementines (the epitome of the deeds of Peter before Metaphrastes) (spurious)	site
+tlg0555.tlg001	Exhortation	site
+tlg0555.tlg002	The Tutor	site
+tlg0555.tlg004	Miscellanies	site
+tlg0555.tlg005	Prophetic Extracts	site
+tlg0555.tlg006	Which Rich Man Is Saved?	site
+tlg0555.tlg007	Extracts from Theodotus	site
+tlg1272.tlg001	On the Circular Motion of the Heavenly Bodies	site
+tlg0361.tlg001	Introduction to Harmonics	site
+tlg2632.tlg001	On the Philosophers' Stone	site
+tlg1287.tlg001	Fragments	site
+tlg0623.tlg001	Letters	site
+tlg0657.tlg001	Fragments	site
+tlg0319.tlg004	Fragments	site
+tlg4090.tlg001	Commentary on the Twelve Prophets	site
+tlg2655.tlg002	On Stones	site
+tlg4021.tlg001	Introduction to Philosophy	site
+tlg4021.tlg002	Commentary on Porphyry's Introduction	site
+tlg0613.tlg001	On Style	site
+tlg1304.tlg002	Fragments	site
+tlg2036.tlg001	Commentary on Aristotle's Categories	site
+tlg1309.tlg001	Fragments	site
+tlg1311.tlg001	The Teaching (Didache)	site
+tlg0357.tlg001	Measures of Marble and Timber	site
+tlg0612.tlg001	Discourses	site
+tlg1320.tlg001	Testimonia and Fragments	site
+tlg0004.tlg001	Lives of Eminent Philosophers	tr
+tlg1319.tlg002	Fragments	site
+tlg1325.tlg001	Letters	site
+tlg0097.tlg001	Proverbs (epitome of the work under Diogenianus' name, from the Mazarine codex)	site
+tlg1329.tlg001	Fragments	site
+tlg0083.tlg003	On the Voyage up the Bosporus	site
+tlg0081.tlg001	Roman Antiquities	site
+tlg0081.tlg002	On the Ancient Orators	site
+tlg0081.tlg003	On Lysias	site
+tlg0081.tlg004	On Isocrates	site
+tlg0081.tlg005	On Isaeus	site
+tlg0081.tlg006	On Demosthenes	site
+tlg0081.tlg007	Remains of the Second Book On the Ancient Orators	site
+tlg0081.tlg008	Letter to Ammaeus	site
+tlg0081.tlg009	On Dinarchus	site
+tlg0081.tlg010	On Thucydides	site
+tlg0081.tlg011	On the Peculiarities of Thucydides	site
+tlg0081.tlg012	On the Arrangement of Words	site
+tlg0081.tlg013	On the Arrangement of Words (epitome)	site
+tlg0081.tlg014	On Imitation (fragments)	site
+tlg0081.tlg015	Letter to Pompeius Geminus	site
+tlg0081.tlg016	Art of Rhetoric	site
+tlg0084.tlg001	Description of the Known World	site
+tlg0069.tlg001	Description of Greece	site
+tlg2039.tlg003	Fragment (spurious) (from Paris, suppl. gr. 387, fol. 181r)	site
+tlg2039.tlg004	Fragment (spurious) (from Paris gr. 453)	site
+tlg2039.tlg005	Fragment (spurious) (from Paris gr. 2448)	site
+tlg0656.tlg001	On Medical Materials	site
+tlg0656.tlg002	Remedies Easily Obtained, or On Simple Medicines	site
+tlg1337.tlg003	Other Ancient Fragments	site
+tlg4020.tlg001	Commentary on Porphyry's Introduction	site
+tlg4020.tlg002	Commentary on Aristotle's Categories (formerly ascribed to David)	site
+tlg0521.tlg008	Fragments	site
+tlg0537.tlg010	Letter to Herodotus	site
+tlg0537.tlg011	Letter to Pythocles	site
+tlg0537.tlg012	Letter to Menoeceus	site
+tlg0537.tlg013	Principal Doctrines	site
+tlg0537.tlg014	The Vatican Sayings of Epicurus	site
+tlg1347.tlg004	Fragments	site
+tlg2021.tlg001	The Well-Anchored One	site
+tlg2021.tlg002	Medicine Chest (Panarion), or Against Heresies	site
+tlg2021.tlg003	Recapitulation (spurious)	site
+tlg2139.tlg001	The Epitaph of Seikilos	site
+tlg1799.tlg001	Elements	site
+tlg1799.tlg007	Data	site
+tlg1799.tlg008	Data (alternative proofs)	site
+tlg1799.tlg009	Optics	site
+tlg1799.tlg010	Optics (Theon's recension)	site
+tlg1799.tlg011	Catoptrics (Theon's recension?)	site
+tlg1799.tlg012	Phenomena	site
+tlg1799.tlg013	Phenomena (recension b)	site
+tlg1799.tlg014	Phenomena (alternative proofs of recension b)	site
+tlg1799.tlg015	Division of the Canon (spurious)	site
+tlg1799.tlg016	Fragments	site
+tlg1799.tlg017	Epigram	site
+tlg2050.tlg001	Lives of the Sophists	site
+tlg0006.tlg004	The Children of Heracles	site
+tlg0006.tlg020	Fragments	site
+tlg1367.tlg001	Letters	site
+tlg2640.tlg001	Fragments	site
+tlg2018.tlg001	Preparation for the Gospel	site
+tlg2018.tlg003	On the Martyrs of Palestine (shorter recension)	site
+tlg2018.tlg005	Demonstration of the Gospel	site
+tlg2018.tlg007	Against Marcellus	site
+tlg2018.tlg008	Letter to Flacillus	site
+tlg2018.tlg009	On Ecclesiastical Theology	site
+tlg2018.tlg010	On the Theophany (fragments)	site
+tlg2018.tlg020	Life of Constantine	site
+tlg2018.tlg021	Oration of the Emperor Constantine to the Assembly of the Saints	site
+tlg2018.tlg022	In Praise of Constantine	site
+tlg2018.tlg023	General Elementary Introduction (= Prophetic Extracts)	site
+tlg4031.tlg002	Commentary on Book 1 of Aristotle's Nicomachean Ethics	site
+tlg4072.tlg001	Commentary on the Books On the Sphere and Cylinder	site
+tlg4072.tlg002	Commentary on the Measurement of a Circle	site
+tlg4072.tlg003	Commentary on the Books On the Equilibrium of Planes	site
+stoa0121.stoa001	Abridgement of Roman History	site
+tlg2733.tlg001	Ecclesiastical History	site
+tlg0572.tlg001	Fragments	site
+tlg0057.tlg001	Exhortation to Learn the Arts	site
+tlg0057.tlg002	On the Best Teaching	site
+tlg0057.tlg003	That the Best Physician Is Also a Philosopher	site
+tlg0057.tlg004	On Sects, for Beginners	site
+tlg0057.tlg006	On the Constitution of the Art of Medicine, to Patrophilus	site
+tlg0057.tlg007	The Art of Medicine	site
+tlg0057.tlg008	On the Elements according to Hippocrates	site
+tlg0057.tlg009	On Mixtures	site
+tlg0057.tlg010	On the Natural Faculties	site
+tlg0057.tlg011	On Anatomical Procedures	site
+tlg0057.tlg012	On Bones, for Beginners	site
+tlg0057.tlg013	On the Dissection of Veins and Arteries	site
+tlg0057.tlg014	On the Dissection of Nerves	site
+tlg0057.tlg015	On the Organ of Smell	site
+tlg0057.tlg016	On the Dissection of the Uterus	site
+tlg0057.tlg017	On the Usefulness of the Parts of the Human Body, Books 1–11	site
+tlg0057.tlg018	On the Motion of Muscles	site
+tlg0057.tlg019	On the Thinning Diet	site
+tlg0057.tlg020	On the Usefulness of Breathing	site
+tlg0057.tlg021	On Semen	site
+tlg0057.tlg022	On the Formation of the Foetus	site
+tlg0057.tlg023	Whether Blood Is Contained in the Arteries	site
+tlg0057.tlg024	On the Best Constitution of Our Body	site
+tlg0057.tlg025	On Good Condition	site
+tlg0057.tlg027	That the Character of the Soul Follows the Mixtures of the Body	site
+tlg0057.tlg028	On the Diagnosis and Cure of the Passions of Each Person's Soul	site
+tlg0057.tlg029	On the Diagnosis and Cure of the Errors of Each Person's Soul	site
+tlg0057.tlg030	On Black Bile	site
+tlg0057.tlg031	On the Use of the Pulse	site
+tlg0057.tlg032	On the Doctrines of Hippocrates and Plato	site
+tlg0057.tlg033	Thrasybulus, or Whether Health Belongs to Medicine or to Gymnastics	site
+tlg0057.tlg034	On Exercise with the Small Ball	site
+tlg0057.tlg035	On Sexual Intercourse	site
+tlg0057.tlg036	On Keeping Healthy	site
+tlg0057.tlg037	On the Powers of Foods	site
+tlg0057.tlg038	On Good and Bad Juices	site
+tlg0057.tlg039	On Barley Gruel	site
+tlg0057.tlg040	On Diagnosis from Dreams	site
+tlg0057.tlg041	On the Differences of Diseases	site
+tlg0057.tlg042	On the Causes of Diseases	site
+tlg0057.tlg043	On the Differences of Symptoms	site
+tlg0057.tlg044	On the Causes of Symptoms	site
+tlg0057.tlg045	On the Differences of Fevers	site
+tlg0057.tlg046	On the Times of Diseases	site
+tlg0057.tlg047	On the Times of the Whole Disease	site
+tlg0057.tlg048	On Types	site
+tlg0057.tlg049	Against Those Who Have Written on Types or Periods	site
+tlg0057.tlg050	On Fullness	site
+tlg0057.tlg051	On Tremor, Palpitation, Convulsion and Shivering	site
+tlg0057.tlg052	On Coma according to Hippocrates	site
+tlg0057.tlg053	On Wasting	site
+tlg0057.tlg054	On Swellings Contrary to Nature	site
+tlg0057.tlg055	On Uneven Bad Mixture	site
+tlg0057.tlg056	On Difficulty in Breathing	site
+tlg0057.tlg057	On the Affected Places	site
+tlg0057.tlg058	On the Pulse, for Beginners	site
+tlg0057.tlg059	On the Differences of Pulses	site
+tlg0057.tlg060	On Recognising Pulses	site
+tlg0057.tlg061	On the Causes of Pulses	site
+tlg0057.tlg062	On Prognosis from the Pulse	site
+tlg0057.tlg063	Synopsis of His Books on the Pulse	site
+tlg0057.tlg064	On Crises	site
+tlg0057.tlg065	On Critical Days	site
+tlg0057.tlg066	On the Method of Healing	site
+tlg0057.tlg067	On the Method of Healing, to Glaucon	site
+tlg0057.tlg068	On Bloodletting, against Erasistratus	site
+tlg0057.tlg069	On Bloodletting, against the Followers of Erasistratus in Rome	site
+tlg0057.tlg070	On Treatment by Bloodletting	site
+tlg0057.tlg071	On Leeches, Revulsion, Cupping, Incision and Scarification	site
+tlg0057.tlg072	On the Power of Purgative Drugs	site
+tlg0057.tlg073	Whom to Purge, with Which Purgatives, and When	site
+tlg0057.tlg074	Advice for an Epileptic Boy	site
+tlg0057.tlg075	On the Mixtures and Powers of Simple Drugs, Books 1–6	site
+tlg0057.tlg076	On the Composition of Drugs according to Places, in Ten Books	site
+tlg0057.tlg077	On the Composition of Drugs according to Kinds	site
+tlg0057.tlg078	On Antidotes	site
+tlg0057.tlg079	On Theriac, to Piso	site
+tlg0057.tlg081	Introduction to Logic	site
+tlg0057.tlg082	On Fallacies Due to Language	site
+tlg0057.tlg083	On Prognosis, to Epigenes	site
+tlg0057.tlg084	Fragment on the Substance of the Natural Faculties	site
+tlg0057.tlg085	On Hippocrates' Nature of Man	site
+tlg0057.tlg086	Commentary on the Healthy Regimen of Private Persons, by Hippocrates or Polybus	site
+tlg0057.tlg087	On Hippocrates' Regimen in Acute Diseases	site
+tlg0057.tlg089	On Hippocrates' Epidemics 1	site
+tlg0057.tlg092	Commentaries on Hippocrates' Aphorisms, in Seven Books	site
+tlg0057.tlg093	Against Lycus	site
+tlg0057.tlg094	Against What Julian Said about Hippocrates' Aphorisms	site
+tlg0057.tlg095	On Hippocrates' On Joints	site
+tlg0057.tlg096	On Dislocations of the Upper Arm Which Hippocrates Did Not See	site
+tlg0057.tlg099	On Hippocrates' Prognostic	site
+tlg0057.tlg100	On Hippocrates' On Fractures	site
+tlg0057.tlg101	On Hippocrates' In the Surgery	site
+tlg0057.tlg102	On the Dissection of Muscles, for Beginners	site
+tlg0057.tlg103	On Habits	site
+tlg0057.tlg107	On Medical Experience	site
+tlg0057.tlg114	On the Causes of Breathing	site
+tlg2137.tlg001	Introduction to Harmonics	site
+tlg2768.tlg001	Ecclesiastical History	site
+tlg1383.tlg001	Elements of Astronomy	site
+tlg9006.tlg001	Proverbs	site
+tlg9006.tlg016	Declamation in Defence of the Athenians (a reply to Libanius' declamation)	site
+tlg2022.tlg003	Christ Suffering (doubtful; perhaps by Constantine Manasses)	site
+tlg2022.tlg007	Against the Eunomians (Oration 27)	site
+tlg2022.tlg008	On Theology (Oration 28)	site
+tlg2022.tlg009	On the Son (Oration 29)	site
+tlg2022.tlg010	On the Son (Oration 30)	site
+tlg2022.tlg011	On the Holy Spirit (Oration 31)	site
+tlg2022.tlg060	Moral Poems	site
+tlg0064.tlg001	The Voyage of Hanno	site
+tlg1389.tlg001	Lexicon of the Ten Attic Orators	site
+heb0001.heb010	Isaiah	site
+tlg1390.tlg004	Fragments	site
+stoa0146d.stoa001	Acts of Archelaus	site
+tlg0658.tlg001	An Ethiopian Story	site
+tlg1402.tlg001	Handbook on Metres	site
+tlg1402.tlg004	On Signs	site
+tlg1409.opp003	Epitome of the Constitution of the Athenians	site
+tlg0066.tlg001	Description of Greece	site
+tlg1414.tlg001	Homeric Allegories (= Homeric Questions)	site
+tlg0626.tlg002	Fragments	site
+tlg1286.tlg002	Dialogue (untitled)	site
+tlg1286.tlg003	Sacred Discourse	site
+tlg1286.tlg004	To Tat: The Mixing Bowl, or the One	site
+tlg1286.tlg005	To Tat, His Son: That God Is Unseen and Most Manifest	site
+tlg1286.tlg006	That the Good Is in God Alone and Nowhere Else	site
+tlg1286.tlg007	That the Greatest Evil among Men Is Not Knowing God	site
+tlg1286.tlg008	That Nothing That Exists Perishes, but Men Mistakenly Call Changes Destructions and Deaths	site
+tlg1286.tlg009	On Understanding and Perception	site
+tlg1286.tlg010	The Key	site
+tlg1286.tlg011	Mind to Hermes	site
+tlg1286.tlg012	On the Common Mind, to Tat	site
+tlg1286.tlg013	Secret Discourse on the Mountain, to His Son Tat, on Rebirth and the Promise of Silence	site
+tlg1286.tlg014	To Asclepius, Be of Sound Mind	site
+tlg1286.tlg016	Definitions of Asclepius to King Ammon	site
+tlg1286.tlg017	Dialogue (untitled)	site
+tlg1286.tlg018	On the Soul Hindered by the Sufferings of the Body	site
+tlg1286.tlg019	Asclepius (the Greek words only)	site
+tlg1286.tlg020	Fragments	site
+tlg0592.tlg001	Preliminary Exercises (doubtful)	site
+tlg0592.tlg002	On Issues	site
+tlg0592.tlg003	On Invention (spurious)	site
+tlg0592.tlg004	On Types of Style	site
+tlg0592.tlg005	On the Method of Forcefulness (spurious)	site
+tlg0559.tlg001	Pneumatics	site
+tlg0559.tlg002	On Automata	site
+tlg0559.tlg004	Fragments of the Mechanics	site
+tlg0559.tlg005	Catoptrics	site
+tlg0559.tlg006	Measurements	site
+tlg0559.tlg007	The Dioptra	site
+tlg0559.tlg010	Measurement of Solids	site
+tlg0559.tlg011	On Measures	site
+tlg0559.tlg012	On Making Missile Engines	site
+tlg0559.tlg014	Heronian Fragments	site
+tlg0559.tlg015	Land Measurement (spurious)	site
+tlg0015.tlg001	History of the Empire after the Death of Marcus	site
+tlg1431.tlg003	Commentary on the Phenomena of Aratus and Eudoxus, in Three Books	site
+tlg1434.tlg004	Fragments	site
+tlg0627.tlg001	On Ancient Medicine	site
+tlg0627.tlg002	Airs, Waters, Places	site
+tlg0627.tlg003	Prognostic	site
+tlg0627.tlg004	On Regimen in Acute Diseases	site
+tlg0627.tlg005	On the Regimen of the Acute	site
+tlg0627.tlg006	Epidemics	site
+tlg0627.tlg007	On Head Wounds	site
+tlg0627.tlg008	In the Surgery	site
+tlg0627.tlg009	On Fractures	site
+tlg0627.tlg010	On Joints	site
+tlg0627.tlg011	Instruments of Reduction	site
+tlg0627.tlg012	Aphorisms	site
+tlg0627.tlg013	The Oath	site
+tlg0627.tlg014	Law	site
+tlg0627.tlg015	Humours	site
+tlg0627.tlg016	Predictions 1	site
+tlg0627.tlg017	Coan Prognoses	site
+tlg0627.tlg018	The Art	site
+tlg0627.tlg019	Nature of Man	site
+tlg0627.tlg020	Regimen in Health	site
+tlg0627.tlg021	Breaths	site
+tlg0627.tlg022	On the Use of Liquids	site
+tlg0627.tlg023	Diseases 1–3	site
+tlg0627.tlg024a	On Generation	site
+tlg0627.tlg024b	On the Nature of the Child	site
+tlg0627.tlg025	Affections	site
+tlg0627.tlg026	Places in Man	site
+tlg0627.tlg027	The Sacred Disease	site
+tlg0627.tlg028	Ulcers	site
+tlg0627.tlg029	Haemorrhoids	site
+tlg0627.tlg030	Fistulas	site
+tlg0627.tlg031	Regimen	site
+tlg0627.tlg032	Internal Affections	site
+tlg0627.tlg033	Nature of Women	site
+tlg0627.tlg035	On the Eight-Month Child	site
+tlg0627.tlg036	Diseases of Women	site
+tlg0627.tlg037	Diseases of Young Women	site
+tlg0627.tlg038	Superfetation	site
+tlg0627.tlg039	Excision of the Foetus	site
+tlg0627.tlg040	Anatomy	site
+tlg0627.tlg041	Dentition	site
+tlg0627.tlg042	Glands	site
+tlg0627.tlg043	Fleshes	site
+tlg0627.tlg045	The Heart	site
+tlg0627.tlg046	Nutriment	site
+tlg0627.tlg047	Sight	site
+tlg0627.tlg048	Nature of Bones	site
+tlg0627.tlg049	The Physician	site
+tlg0627.tlg050	Decorum	site
+tlg0627.tlg051	Precepts	site
+tlg0627.tlg052	Crises	site
+tlg0627.tlg053	Critical Days	site
+tlg0627.tlg055	Letters, Decree, Speeches	site
+tlg2115.tlg060	Refutation of All Heresies (= Philosophumena)	site
+tlg0233.tlg001	Fragment (128)	site
+tlg2023.tlg001	On the Pythagorean Life	site
+tlg2023.tlg002	Exhortation	site
+tlg2023.tlg003	On General Mathematical Science	site
+tlg2023.tlg004	On Nicomachus' Introduction to Arithmetic	site
+tlg2023.tlg006	On the Mysteries	site
+tlg1441.tlg001	Babylonian Tales	site
+tlg2140.tlg001	Alchemical Fragment	site
+tlg1443.tlg002	Interpolated and Forged Letters (the longer recension) (spurious)	site
+tlg1447.tlg001	Against Heresies, in Five Books	site
+tlg1447.tlg009	Fragments of a Synodal Letter	site
+tlg0070.tlg001	Parthian Stations	site
+tlg2934.tlg066	Life of Barlaam and Joasaph	site
+tlg4015.tlg001	Commentary on Aristotle's Categories	site
+tlg4015.tlg002	Commentary on Aristotle's Prior Analytics	site
+tlg4015.tlg004	Commentary on Aristotle's Posterior Analytics	site
+tlg4015.tlg005	Commentary on Book 1 of Aristotle's Meteorology	site
+tlg4015.tlg006	Commentary on Aristotle's On Generation and Corruption	site
+tlg4015.tlg007	Commentary on the Books On the Generation of Animals	site
+tlg4015.tlg008	Commentary on Aristotle's On the Soul	site
+tlg4015.tlg009	Commentary on Aristotle's Physics	site
+tlg2003.tlg013	Letters	site
+tlg2003.tlg017	Against the Galileans	site
+tlg0645.tlg001	First Apology	site
+tlg0645.tlg002	Second Apology	site
+tlg0649.tlg002	Exhortation A	site
+tlg0649.tlg003	Exhortation B	site
+tlg2200.tlg001	Letters	site
+tlg2200.tlg008	Epistolary Styles (spurious)	site
+tlg1463.tlg001	Apocalypse of Enoch	site
+tlg0062.tlg003	Dionysus: an Introduction	tr
+tlg0062.tlg005	Amber, or the Swan	tr
+tlg0062.tlg006	The Fly	tr
+tlg0062.tlg009	The Hall	tr
+tlg0062.tlg010	My Native Land	tr
+tlg0062.tlg011	The Long-Lived	site
+tlg0062.tlg012	A True Story	tr
+tlg0062.tlg013	Slander, a Warning	tr
+tlg0062.tlg014	Trial in the Court of Vowels	tr
+tlg0062.tlg015	The Carousal, or the Lapiths	tr
+tlg0062.tlg016	The Downward Journey, or the Tyrant	tr
+tlg0062.tlg017	Zeus Catechized	tr
+tlg0062.tlg018	Zeus Rants	tr
+tlg0062.tlg019	The Dream, or the Cock	tr
+tlg0062.tlg021	Icaromenippus, or the Sky-man	tr
+tlg0062.tlg022	Timon, or the Misanthrope	tr
+tlg0062.tlg023	Charon, or the Inspectors	tr
+tlg0062.tlg024	Philosophies for Sale	tr
+tlg0062.tlg025	The Dead Come to Life, or the Fisherman	tr
+tlg0062.tlg026	The Double Indictment	tr
+tlg0062.tlg027	On Sacrifices	tr
+tlg0062.tlg028	The Ignorant Book Collector	tr
+tlg0062.tlg029	The Dream, or Lucian's Career	tr
+tlg0062.tlg030	The Parasite	site
+tlg0062.tlg031	The Lover of Lies, or the Doubter	site
+tlg0062.tlg032	The Judgement of the Goddesses	tr
+tlg0062.tlg033	On Salaried Posts in Great Houses	tr
+tlg0062.tlg034	Anacharsis, or Athletics	tr
+tlg0062.tlg035	Menippus, or the Descent into Hades	tr
+tlg0062.tlg036	On Funerals	tr
+tlg0062.tlg037	A Professor of Public Speaking	tr
+tlg0062.tlg039	Essays in Portraiture	tr
+tlg0062.tlg040	Essays in Portraiture Defended	tr
+tlg0062.tlg041	The Syrian Goddess	site
+tlg0062.tlg042	The Passing of Peregrinus	tr
+tlg0062.tlg043	The Runaways	tr
+tlg0062.tlg044	Toxaris, or Friendship	tr
+tlg0062.tlg045	The Dance	tr
+tlg0062.tlg047	The Eunuch	tr
+tlg0062.tlg048	Astrology	tr
+tlg0062.tlg049	The Mistaken Critic	site
+tlg0062.tlg050	The Parliament of the Gods	tr
+tlg0062.tlg051	The Tyrannicide	tr
+tlg0062.tlg052	Disowned	tr
+tlg0062.tlg053	How to Write History	tr
+tlg0062.tlg054	The Dipsads	tr
+tlg0062.tlg056	Herodotus, or Aëtion	tr
+tlg0062.tlg057	Zeuxis, or Antiochus	tr
+tlg0062.tlg058	A Slip of the Tongue in Greeting	tr
+tlg0062.tlg059	Apology for “The Dependent Scholar”	tr
+tlg0062.tlg061	A Conversation with Hesiod	tr
+tlg0062.tlg062	The Scythian	tr
+tlg0062.tlg063	Hermotimus, or the Rival Philosophies	tr
+tlg0062.tlg064	A Literary Prometheus	tr
+tlg0062.tlg065	The Ship, or the Wishes	tr
+tlg0062.tlg066	Dialogues of the Dead	tr
+tlg0062.tlg067	Dialogues of the Sea-Gods	tr
+tlg0062.tlg068	Dialogues of the Gods	tr
+tlg0062.tlg069	Dialogues of the Courtesans	tr
+tlg0062.tlg070	The Purist Purized	tr
+tlg0062.tlg071	Gout	site
+tlg0633.tlg001	Letter to Hipparchus	site
+tlg2583.tlg001	On the Effects of the Stars	site
+tlg2041.tlg001	Fragments	site
+tlg4003.tlg001	Voyage around the Outer Sea	site
+tlg4003.tlg002	Menippus' Voyage around the Inner Sea (Marcian's epitome)	site
+tlg4003.tlg003	Artemidorus' Geography (Marcian's epitome)	site
+tlg1617.tlg001	Declamations	site
+tlg0562.tlg001	To Himself (Meditations)	site
+tlg2806.tlg001	Life of Porphyry, Bishop of Gaza	site
+tlg4075.tlg002	Commentary on Euclid's Data	site
+tlg1486.tlg001	The Attic Dinner Party	site
+tlg1486.tlg002	Fragments	site
+tlg0563.tlg001	Discourses	site
+tlg1487.tlg001	On Beginnings	site
+tlg1487.tlg002	On Beginnings (epitome)	site
+tlg2586.tlg001	Division of Epideictic Speeches	site
+tlg2586.tlg002	On Epideictic Speeches	site
+tlg0639.tlg001	Letter	site
+tlg2959.tlg001	Symposium, or the Banquet of the Ten Virgins	site
+tlg2959.tlg002	On Free Will	site
+tlg2959.tlg003	On the Resurrection	site
+tlg2959.tlg004	On Leprosy, to Sistelius	site
+tlg2959.tlg005	On Created Things (fragments in Photius, Library, codex 235)	site
+tlg2959.tlg006	Against Porphyry (fragments)	site
+tlg2959.tlg007	Fragments on Job (in the catenae)	site
+tlg2959.tlg008	On the Martyrs (fragments)	site
+tlg2959.tlg010	Fragments of Uncertain Place (spurious)	site
+tlg2959.tlg011	On Genesis (in the catenae)	site
+tlg2959.tlg012	Sermon on Simeon and Anna (spurious)	site
+tlg4034.tlg002	Commentary on the Parva Naturalia	site
+tlg4034.tlg003	Commentary on the Books On the Parts of Animals	site
+tlg4034.tlg004	Commentary on the Books On the Motion of Animals	site
+tlg4034.tlg005	Commentary on the Book On the Progression of Animals	site
+tlg4034.tlg006	Commentary on Book 5 of the Nicomachean Ethics	site
+tlg0039.tlg001	Letter	site
+tlg0575.tlg001	Maxims	site
+tlg0575.tlg002	Precepts	site
+tlg0035.tlg001	Eros the Runaway	site
+tlg0035.tlg005	Fragments	site
+tlg2691.tlg002	Fragments	site
+tlg0628.tlg001	Remains of the Discourses Arranged by Lucius	site
+tlg0509.tlg001	Letter to Phyllis	site
+tlg0022.tlg001	On Venomous Creatures	site
+tlg0022.tlg002	Antidotes to Poisons	site
+tlg0046.tlg001	Letter	site
+tlg0358.tlg001	Introduction to Arithmetic	site
+tlg0358.tlg002	Handbook of Harmonics	site
+tlg0358.tlg004	Excerpts	site
+tlg0358.tlg005	Arithmetical Problems	site
+tlg1542.tlg001	Fragments	site
+tlg1548.tlg001	Fragments	site
+tlg0527.tlg017	1 Esdras (apocryphal book)	site
+tlg0527.tlg021	Tobit (codex Vaticanus and codex Alexandrinus)	site
+tlg0527.tlg023	1 Maccabees	site
+tlg0527.tlg024	2 Maccabees	site
+tlg0527.tlg025	3 Maccabees	site
+tlg0527.tlg026	4 Maccabees	site
+tlg0527.tlg028	Odes	site
+tlg0527.tlg031	Song of Songs	site
+tlg0527.tlg033	Wisdom of Solomon	site
+tlg0527.tlg034	Ecclesiasticus, or Sirach (the Wisdom of Jesus Son of Sirach)	site
+tlg0527.tlg035	Psalms of Solomon	site
+tlg0527.tlg052	Letter of Jeremiah	site
+tlg0527.tlg054	Susanna (Greek translation)	site
+tlg0527.tlg055	Susanna (Theodotion's version)	site
+tlg0527.tlg057	Daniel (Theodotion's version)	site
+tlg0527.tlg058	Bel and the Dragon (Greek translation)	site
+tlg0527.tlg059	Bel and the Dragon (Theodotion's version)	site
+tlg4019.tlg001	Introduction	site
+tlg4019.tlg002	Commentary on the Categories	site
+tlg4019.tlg003	Commentary on Aristotle's Meteorology	site
+tlg0648.tlg001	The General	site
+tlg0023.tlg001	On Fishing	site
+tlg0024.tlg001	On Hunting	site
+tlg1551.tlg001	Sibylline Oracles	site
+tlg1551.tlg002	Fragments	site
+tlg2042.tlg001	Against Celsus	site
+tlg2042.tlg005	Commentary on the Gospel of John	site
+tlg2042.tlg006	Fragments on the Gospel of John (in the catenae)	site
+tlg2042.tlg007	Exhortation to Martyrdom	site
+tlg2042.tlg008	On Prayer	site
+tlg2042.tlg009	On Jeremiah (Homilies 1–11)	site
+tlg2042.tlg010	Fragments on Jeremiah (in the catenae)	site
+tlg2042.tlg011	Fragments on Lamentations (in the catenae on the Prophets)	site
+tlg2042.tlg012	Fragment on Lamentations (in the catenae on the Octateuch)	site
+tlg2042.tlg013	On the Medium (Homily on 1 Samuel 28.3–25)	site
+tlg2042.tlg014	Fragments on 1 Samuel (in the catenae on Samuel and Kings)	site
+tlg2042.tlg015	Fragment on 1 Samuel (in the catenae on the Song of Songs)	site
+tlg2042.tlg016	Homilies on Luke	site
+tlg2042.tlg017	Fragments on Luke (in the catenae)	site
+tlg2042.tlg021	On Jeremiah (Homilies 12–20)	site
+tlg2042.tlg028	Series of Commentaries on the Gospel of Matthew (Matthew 22.34–27.63)	site
+tlg2042.tlg029	Commentary on the Gospel of Matthew (Books 10–11)	site
+tlg2042.tlg030	Commentary on the Gospel of Matthew (Books 12–17)	site
+tlg2042.tlg044	Fragments on Psalms 1–150 (doubtful)	site
+tlg2042.tlg045	Letter to Africanus	site
+tlg2042.tlg048	Selections on Genesis	site
+tlg2042.tlg050	Selections on Exodus	site
+tlg2042.tlg051	Selections on Leviticus	site
+tlg2042.tlg052	Selections on Numbers	site
+tlg2042.tlg053	Selections on Deuteronomy	site
+tlg2042.tlg054	Selections on Joshua	site
+tlg2042.tlg055	Selections on Judges	site
+tlg2042.tlg057	Selections on Job	site
+tlg2042.tlg058	Selections on the Psalms (doubtful)	site
+tlg2042.tlg061	Fragments from the Commentaries on Ezekiel	site
+tlg2042.tlg066	Notes on Genesis	site
+tlg2042.tlg067	Notes on Exodus	site
+tlg2042.tlg068	Notes on Leviticus (fragments from the catenae)	site
+tlg2042.tlg069	Notes on Numbers	site
+tlg2042.tlg070	Notes on Deuteronomy (fragments from the catenae)	site
+tlg2042.tlg071	Notes on Joshua (fragments from the catenae)	site
+tlg2042.tlg072	Notes on Judges	site
+tlg2042.tlg073	Homilies on Job (fragments in the catenae, type II)	site
+tlg2042.tlg074	Extracts on the Psalms (doubtful)	site
+tlg2042.tlg075	Exposition of Proverbs (fragments from the catenae)	site
+tlg2042.tlg076	Scholia on the Song of Songs	site
+tlg2042.tlg077	Scholia on Matthew	site
+tlg2042.tlg078	Scholia on Luke (fragments from Venice codex 28)	site
+tlg2042.tlg079	Commentary on the Gospel of John (Books 19, 20, 28, 32)	site
+tlg2042.tlg084	Fragments on Jeremiah (from the Philocalia)	site
+tlg2042.tlg086	Homilies on Job (fragments in the catenae, types I and II, from Vatican codices)	site
+tlg0579.tlg010	Fragments	site
+tlg1553.tlg001	On Unbelievable Stories	tr
+tlg2032.tlg001	The Collection	site
+tlg0580.tlg001	Marvels of Waters	site
+tlg4174.tlg001	Paraphrases of Dionysius Periegetes	site
+tlg1562.tlg002	Fragments	site
+tlg1801.tlg001	Fragments of Uncertain Authors	site
+tlg0655.tlg001	Love Stories	site
+tlg0629.tlg001	Letters	site
+tlg0053.tlg001	Letters	site
+tlg0048.tlg001	Letters	site
+tlg0018.tlg001	On the Creation of the World	tr
+tlg0018.tlg002	On the Allegories of the Sacred Laws	tr
+tlg0018.tlg003	On the Cherubim	site
+tlg0018.tlg004	On the Sacrifice of Abel and Cain	tr
+tlg0018.tlg005	That the Worse Is Wont to Attack the Better	site
+tlg0018.tlg006	On the Posterity of Cain	tr
+tlg0018.tlg007	On the Giants	tr
+tlg0018.tlg008	On the Unchangeableness of God	tr
+tlg0018.tlg009	On the Tilling of the Earth by Noah	tr
+tlg0018.tlg010	On Planting	site
+tlg0018.tlg011	On Drunkenness	tr
+tlg0018.tlg012	On Sobriety	tr
+tlg0018.tlg013	On the Confusion of Languages	tr
+tlg0018.tlg014	On the Migration of Abraham	tr
+tlg0018.tlg015	Who Is the Heir of Divine Things?	site
+tlg0018.tlg016	On the Meeting for the Sake of Seeking Instruction	tr
+tlg0018.tlg017	On Flight and Finding	site
+tlg0018.tlg018	On the Change of Names	site
+tlg0018.tlg019	On Dreams (Books 1–2)	site
+tlg0018.tlg020	On Abraham	site
+tlg0018.tlg021	On Joseph	site
+tlg0018.tlg022	On the Life of Moses (Books 1–2)	site
+tlg0018.tlg023	On the Decalogue	site
+tlg0018.tlg024	On the Special Laws (Books 1–4)	site
+tlg0018.tlg025	On the Virtues	site
+tlg0018.tlg026	On Rewards and Punishments, and on Curses	site
+tlg0018.tlg027	That Every Good Man Is Free	site
+tlg0018.tlg028	On the Contemplative Life	site
+tlg0018.tlg029	On the Eternity of the World	site
+tlg0018.tlg030	Against Flaccus	tr
+tlg0018.tlg031	Embassy to Gaius	site
+tlg1416.tlg007	On the Different Meanings of Words (epitome of Herennius Philo's work)	site
+tlg1595.tlg221	On Music (the surviving books)	site
+tlg1595.tlg370	Rhetorical Writings	site
+tlg1596.tlg002	Fragments	site
+tlg2058.tlg001	Ecclesiastical History (fragments in Photius)	site
+tlg0652.tlg001	Pictures	site
+tlg1600.tlg001	Pictures	site
+tlg0638.tlg006	Letters and Discourses	site
+tlg0638.tlg007	On Gymnastics	site
+tlg1602.tlg001	Fragments	site
+tlg0671.tlg001	On Venomous Animals and Their Remedies	site
+ogl0001.ogl001	On the Letter of Pinytus to Dionysius	site
+tlg0059.tlg037	Definitions	site
+tlg2000.tlg001	Enneads	site
+tlg0007.tlg067	The Education of Children	tr
+tlg0007.tlg068	How the Young Man Should Study Poetry	tr
+tlg0007.tlg069	On Listening to Lectures	tr
+tlg0007.tlg070	How to Tell a Flatterer from a Friend	tr
+tlg0007.tlg071	How a Man May Become Aware of His Progress in Virtue	tr
+tlg0007.tlg072	How to Profit by One's Enemies	tr
+tlg0007.tlg073	On Having Many Friends	tr
+tlg0007.tlg074	Chance	tr
+tlg0007.tlg075	Virtue and Vice	tr
+tlg0007.tlg076	A Letter of Condolence to Apollonius	tr
+tlg0007.tlg077	Advice about Keeping Well	tr
+tlg0007.tlg078	Advice to Bride and Groom	tr
+tlg0007.tlg079	The Dinner of the Seven Wise Men	tr
+tlg0007.tlg080	Superstition	tr
+tlg0007.tlg081	Sayings of Kings and Commanders	tr
+tlg0007.tlg082	Sayings of Spartans	tr
+tlg0007.tlg082a	The Ancient Customs of the Spartans	tr
+tlg0007.tlg082b	Sayings of Spartan Women	tr
+tlg0007.tlg083	Bravery of Women	tr
+tlg0007.tlg084a	The Roman Questions	tr
+tlg0007.tlg084b	The Greek Questions	tr
+tlg0007.tlg085	Greek and Roman Parallel Stories	tr
+tlg0007.tlg086	On the Fortunes of the Romans	tr
+tlg0007.tlg087	On the Fortune or the Virtue of Alexander	tr
+tlg0007.tlg088	Were the Athenians More Famous in War or in Wisdom?	tr
+tlg0007.tlg089	Isis and Osiris	tr
+tlg0007.tlg090	The E at Delphi	tr
+tlg0007.tlg091	The Oracle at Delphi No Longer Given in Verse	tr
+tlg0007.tlg092	The Obsolescence of Oracles	site
+tlg0007.tlg093	Can Virtue Be Taught?	tr
+tlg0007.tlg094	On Moral Virtue	tr
+tlg0007.tlg095	On the Control of Anger	tr
+tlg0007.tlg096	On Tranquillity of Mind	tr
+tlg0007.tlg097	On Brotherly Love	tr
+tlg0007.tlg098	On Affection for Offspring	tr
+tlg0007.tlg099	Whether Vice Be Sufficient to Cause Unhappiness	tr
+tlg0007.tlg100	Whether the Affections of the Soul Are Worse than Those of the Body	tr
+tlg0007.tlg101	Concerning Talkativeness	tr
+tlg0007.tlg102	On Being a Busybody	tr
+tlg0007.tlg103	On the Love of Wealth	site
+tlg0007.tlg104	On Bashfulness	site
+tlg0007.tlg105	On Envy and Hatred	site
+tlg0007.tlg106	On Praising Oneself Inoffensively	site
+tlg0007.tlg107	On the Delays of Divine Vengeance	site
+tlg0007.tlg108	On Fate	site
+tlg0007.tlg109	On the Sign of Socrates	site
+tlg0007.tlg110	On Exile	site
+tlg0007.tlg111	Consolation to His Wife	site
+tlg0007.tlg112	Table Talk	site
+tlg0007.tlg113	Dialogue on Love	site
+tlg0007.tlg114	Love Stories	tr
+tlg0007.tlg115	That a Philosopher Ought to Converse Especially with Men in Power	tr
+tlg0007.tlg116	To an Uneducated Ruler	tr
+tlg0007.tlg117	Whether an Old Man Should Engage in Public Affairs	tr
+tlg0007.tlg118	Precepts of Statecraft	tr
+tlg0007.tlg119	On Monarchy, Democracy and Oligarchy	site
+tlg0007.tlg120	That We Ought Not to Borrow	tr
+tlg0007.tlg121	The Lives of the Ten Orators	tr
+tlg0007.tlg122	Summary of a Comparison between Aristophanes and Menander	tr
+tlg0007.tlg123	On the Malice of Herodotus	site
+tlg0007.tlg125	Natural Questions	site
+tlg0007.tlg126	Concerning the Face Which Appears in the Orb of the Moon	tr
+tlg0007.tlg127	On the Principle of Cold	tr
+tlg0007.tlg128	Whether Water or Fire Is More Useful	site
+tlg0007.tlg129	Whether Land or Sea Animals Are Cleverer	tr
+tlg0007.tlg130	Beasts Are Rational	tr
+tlg0007.tlg131	On the Eating of Flesh 1	tr
+tlg0007.tlg132	On the Eating of Flesh 2	tr
+tlg0007.tlg133	Platonic Questions	site
+tlg0007.tlg134	On the Generation of the Soul in the Timaeus	site
+tlg0007.tlg135	Epitome of On the Generation of the Soul in the Timaeus	site
+tlg0007.tlg136	The Contradictions of the Stoics	tr
+tlg0007.tlg137	Summary of the Argument That the Stoics Say More Absurd Things than the Poets	site
+tlg0007.tlg138	On Common Conceptions, against the Stoics	site
+tlg0007.tlg139	That One Cannot Live Pleasantly according to Epicurus	site
+tlg0007.tlg140	Against Colotes	site
+tlg0007.tlg141	Whether It Was Rightly Said, “Live Unnoticed”	site
+tlg0007.tlg146	Proverbs Used by the Alexandrians	site
+tlg0007.tlg147	Selection on Impossibilities	site
+tlg0616.tlg001	Stratagems	site
+tlg0616.tlg002	Excerpts from Polyaenus	site
+tlg1622.tlg001	Letter to the Philippians	site
+tlg1626.tlg001	Fragment of a Synodal Letter	site
+tlg2034.tlg002	Life of Pythagoras	site
+tlg2034.tlg003	On Abstinence	site
+tlg2034.tlg005	To Marcella	site
+tlg2034.tlg006	Introduction, or the Five Terms	site
+tlg2034.tlg007	Exposition of Aristotle's Categories by Question and Answer	site
+tlg2034.tlg014	Remains of the Homeric Questions on the Iliad	site
+tlg2034.tlg015	Enquiries in the Vatican Codex	site
+tlg2034.tlg027	History of Philosophy (fragments)	site
+tlg4036.tlg001	Commentary on Plato's Republic	site
+tlg4029.tlg001	The Wars	site
+tlg4029.tlg002	The Secret History	site
+tlg1634.tlg002	Fragments	site
+stoa0033a.tlg028	On the Cosmos	site
+stoa0033a.tlg043	On Breath	site
+tlg0071.tlg001	Voyage around the Erythraean Sea (anonymous; said to be by Arrian)	site
+tlg0075.tlg001	Voyage around the Black Sea (anonymous; said to be by Arrian)	site
+tlg1118.tlg003	On Stones	site
+tlg0530.tlg005	On Bandages	site
+tlg0530.tlg006	To Gaurus, on How the Foetus Receives a Soul	site
+tlg0530.tlg012	Introduction, or the Physician	site
+tlg0530.tlg029	On Easily Obtained Remedies	site
+tlg0530.tlg032	On Theriac, to Pamphilianus	site
+tlg0530.tlg043	On the Best Sect, to Thrasybulus	site
+tlg0751.tlg005	On the Powers of Stones	site
+tlg0646.tlg004	The Epistle to Diognetus	site
+tlg0061.tlg001	The Ass	site
+tlg0061.tlg002	Loves	site
+tlg0061.tlg003	In Praise of Demosthenes	site
+tlg0061.tlg004	The Halcyon	site
+tlg0061.tlg006	The Cynic	site
+tlg0094.tlg001	On Rivers	site
+tlg0094.tlg002	On Music	site
+tlg0094.tlg003	Opinions of the Philosophers	site
+tlg2233.tlg001	Physiognomy (Adamantius' epitome)	site
+tlg2233.tlg002	Physiognomy	site
+tlg0068.tlg001	To King Nicomedes, lines 1–980	site
+tlg0632.tlg002	Letters	site
+tlg0564.tlg001	On Diseases of the Kidneys and Bladder	site
+tlg0606.tlg001	Art of Rhetoric	site
+tlg2049.tlg001	On the Gods and the World	site
+tlg5019.tlg001	Scholia on Dionysius of Byzantium's Voyage up the Bosporus (old scholia)	site
+tlg5019.tlg002	Scholia on Dionysius Periegetes' Description of the World (old scholia)	site
+tlg5022.tlg002	Scholia on Euclid's Data	site
+tlg5022.tlg003	Scholia on Euclid's Optics (old scholia)	site
+tlg5022.tlg004	Scholia on Theon's Recension of the Optics (old scholia)	site
+tlg5022.tlg005	Scholia on Euclid's Catoptrics (old scholia)	site
+tlg5022.tlg006	Scholia on Euclid's Phenomena	site
+tlg5022.tlg007	Scholia on Euclid's Data and Catoptrics	site
+tlg5023.tlg001	Scholia on Euripides (old scholia)	site
+tlg5023.tlg010	Lives of Euripides	site
+tlg5023.tlg011	Scholia on Euripides' Rhesus	site
+tlg5023.tlg012	Scholia on Euripides' Trojan Women	site
+tlg5023.tlg013	Scholia on Euripides' Hippolytus	site
+tlg5023.tlg014	Scholia on Euripides' Hecuba (old scholia, and the later scholia of Thomas Magister, Triclinius, Moschopulus and others)	site
+tlg5023.tlg015	Scholia on Euripides' Orestes (old scholia, and the later scholia of Thomas Magister, Triclinius, Moschopulus and others)	site
+tlg5023.tlg016	Scholia on Euripides' Phoenician Women (old scholia, and the later scholia of Thomas Magister, Triclinius, Moschopulus and others)	site
+tlg5026.tlg001	Scholia on the Iliad	site
+tlg5026.tlg007	Scholia on the Odyssey	site
+tlg5028.tlg001	Scholia on Isocrates (old scholia)	site
+tlg5029.tlg001	Scholia on Lucian	site
+tlg5031.tlg001	Scholia and Glosses on Nicander's Venomous Creatures (old and later scholia)	site
+tlg5031.tlg002	Scholia and Glosses on Nicander's Antidotes to Poisons (old and later scholia)	site
+tlg5034.tlg001a	Scholia on Pindar's Olympian Odes	site
+tlg5034.tlg001b	Scholia on Pindar's Pythian Odes	site
+tlg5034.tlg001c	Scholia on Pindar's Nemean Odes	site
+tlg5034.tlg001d	Scholia on Pindar's Isthmian Odes	site
+tlg5037.tlg004	Scholia on Sophocles (old scholia)	site
+tlg0065.tlg001	The Voyage of Scylax	site
+tlg1664.tlg001	Fragments	site
+tlg1665.tlg001	Remains of Several Anonymous Writers	site
+tlg1669.tlg004	Fragments	site
+tlg2970.tlg001	On the Soul (fragment)	site
+tlg0544.tlg001	Outlines of Pyrrhonism	tr
+tlg0544.tlg002	Against the Professors	site
+tlg4013.tlg001	Commentary on Aristotle's Four Books On the Heavens	site
+tlg4013.tlg003	Commentary on Aristotle's Categories	site
+tlg4013.tlg004	Commentary on Aristotle's Physics	site
+tlg4013.tlg005	Commentary on Aristotle's On the Soul (spurious? perhaps by Priscian of Lydia)	site
+tlg0636.tlg001	Letters	site
+tlg0637.tlg001	Letters	site
+tlg1681.tlg001	Letters	site
+tlg0011.tlg001	Women of Trachis	site
+tlg0011.tlg004	Oedipus the King	site
+tlg0011.tlg008	Tracking Satyrs	tr
+tlg4030.tlg001	Paraphrase of Aristotle's On the Soul	site
+tlg0565.tlg001	Gynaecology, in Four Books	site
+tlg0565.tlg002	On the Signs of Fractures	site
+tlg0565.tlg003	On Bandages	site
+tlg0565.tlg004	Life of Hippocrates	site
+tlg2048.tlg001	Ecclesiastical History	site
+tlg1692.tlg005	Fragments	site
+tlg0077.tlg001	Distances around the Great Sea	site
+tlg9019.tlg001	Commentary on Aristotle's On Interpretation	site
+tlg0099.tlg004	Selections from the Geography	site
+tlg9010.tlg001	The Suda (Lexicon)	site
+tlg3118.tlg001	The Most Delightful Story of Syntipas the Philosopher	site
+tlg3118.tlg002	Tales of Syntipas	site
+tlg4017.tlg001	Commentary on Aristotle's Metaphysics	site
+tlg1766.tlg001	Address to the Greeks	site
+tlg1699.tlg001	On Seeming and Being	site
+tlg1699.tlg002	On Self-Sufficiency	site
+tlg1699.tlg003	On Exile	site
+tlg1699.tlg004	On Comparing Poverty and Wealth	site
+tlg1699.tlg005	On Comparing Poverty and Wealth	site
+tlg1699.tlg006	That Pleasure Is Not the Goal	site
+tlg1699.tlg007	On Circumstances	site
+tlg1699.tlg008	On Freedom from Passion	site
+tlg1701.tlg001	Testament of Abraham (recension A)	site
+tlg1701.tlg002	Testament of Abraham (recension B)	site
+tlg1705.tlg001	Letters	site
+tlg2001.tlg038	Paraphrase of the Posterior Analytics	site
+tlg2001.tlg039	Paraphrase of Aristotle's Physics	site
+tlg2001.tlg040	Paraphrase of Aristotle's On the Soul	site
+tlg2001.tlg041	(Sophonias) Commentary on the Parva Naturalia	site
+tlg2001.tlg042	Commentary Ascribed to Him on Book 1 of Aristotle's Prior Analytics	site
+tlg2001.tlg043	Paraphrase of Aristotle's On the Heavens	site
+tlg2001.tlg044	On Aristotle's Metaphysics	site
+tlg0055.tlg001	Letters	site
+tlg0005.tlg001	Idylls	site
+tlg0005.tlg002	Epigrams	site
+tlg4089.tlg003	Ecclesiastical History	site
+tlg4089.tlg004	Religious History	site
+tlg1719.tlg001	Spherics	site
+tlg1724.tlg001	On the Usefulness of Mathematics	site
+tlg1725.tlg001	To Autolycus	site
+tlg0093.ogl001	On Odours	site
+tlg0093.ogl002	On Weather Signs	site
+tlg0093.tlg003	On Sense and the Sensible	site
+tlg0093.tlg004	On Stones	site
+tlg0093.tlg010x01	On Odours	site
+tlg0093.tlg010x02	On Winds	site
+tlg0093.tlg010x03	On Weather Signs	site
+tlg0093.tlg010x04	On Weariness	site
+tlg0093.tlg010x05	On Dizziness	site
+tlg0093.tlg010x06	On Sweat	site
+tlg0093.tlg010x07	On Fainting	site
+tlg0093.tlg010x08	On Paralysis	site
+tlg0093.tlg010x09	Miscellaneous Fragments	site
+tlg2601.tlg001	On Demosthenes' Figures of Speech	site
+tlg0609.tlg001	On Tropes	site
+tlg1763.tlg001	On Tropes (formerly ascribed to Gregory of Corinth)	site
+tlg2027.tlg001	Art of Rhetoric	site
+tlg2027.tlg002	On Figured Problems	site
+tlg1802.tlg001	Heroic Verses	site
+tlg1764.tlg001	Anthologies	site
+tlg1765.tlg003	Life of Aesop (the Accursiana version, ascribed to Maximus Planudes) (recension 1)	site
+tlg1765.tlg004	Life of Aesop (perhaps by Aphthonius)	site
+tlg1765.tlg005	Book of Aesop's Fables	site
+tlg1749.tlg001	Part of a Life of Hesiod	site
+tlg1805.tlg001	The Herodotean Life	site
+tlg1805.tlg002	The Life by Plutarch	site
+tlg1805.tlg003	The Life by Proclus (from the Chrestomathy)	site
+tlg1805.tlg004	The Fourth Life	site
+tlg1805.tlg005	The Fifth Life	site
+tlg1805.tlg006	The Fifth Life	site
+tlg1805.tlg007	The Seventh Life	site
+tlg1805.tlg008	The Life by Tzetzes	site
+tlg1805.tlg009	The Life by Eustathius	site
+tlg1805.tlg010	The Life in the Suda	site
+tlg4170.tlg001a	The Ambrosian Life	site
+tlg4170.tlg001b	The Thoman Life, and the Introduction to the Olympians	site
+tlg4170.tlg001c	The Life in Verse	site
+tlg4170.tlg001d	The Pentathlon, and On the Nine Lyric Poets	site
+tlg1750.tlg001	On the Lives and Deaths of the Prophets (Dorotheus' recension)	site
+tlg1750.tlg002	On the Lives and Deaths of the Prophets (anonymous recension)	site
+tlg1750.tlg003	On the Lives and Deaths of the Prophets (the recension added to the scholia of Hesychius and other Fathers on the Prophets)	site
+tlg1750.tlg004	List of the Apostles and Disciples of the Lord	site
+tlg0634.tlg001	Fragments	site
+tlg0641.tlg001	An Ephesian Tale	site
+tlg0098.tlg001	Epitome of the Collections of Lucillus of Tarrha and Didymus	site
+tlg3135.tlg001	Epitome of Histories (volume 1)	site
+tlg3135.tlg011	Summaries	site
+tlg3135.tlg012	Chronology	site
+tlg4084.tlg001	New History	site
+tlg0284.tlg001	Oration 1	site
+tlg0284.tlg002	Oration 2	site
+tlg0284.tlg003	Oration 3	site
+tlg0284.tlg004	Oration 4	site
+tlg0284.tlg005	Oration 5	site
+tlg0284.tlg006	Oration 6	site
+tlg0284.tlg007	Oration 7	site
+tlg0284.tlg008	Oration 8	site
+tlg0284.tlg009	Oration 9	site
+tlg0284.tlg010	Oration 10	site
+tlg0284.tlg011	Oration 11	site
+tlg0284.tlg012	Oration 12	site
+tlg0284.tlg013	Oration 13	site
+tlg0284.tlg014	Oration 14	site
+tlg0284.tlg015	Oration 15	site
+tlg0284.tlg016	Oration 16	site
+tlg0284.tlg017	Oration 17	site
+tlg0284.tlg018	Oration 18	site
+tlg0284.tlg019	Oration 19	site
+tlg0284.tlg020	Oration 20	site
+tlg0284.tlg021	Oration 21	site
+tlg0284.tlg022	Oration 22	site
+tlg0284.tlg023	Oration 23	site
+tlg0284.tlg024	Oration 24	site
+tlg0284.tlg025	Oration 25	site
+tlg0284.tlg026	Oration 26	site
+tlg0284.tlg027	Oration 27	site
+tlg0284.tlg028	Oration 28	site
+tlg0284.tlg029	Oration 29	site
+tlg0284.tlg030	Oration 30	site
+tlg0284.tlg031	Oration 31	site
+tlg0284.tlg032	Oration 32	site
+tlg0284.tlg033	Oration 33	site
+tlg0284.tlg034	Oration 34	site
+tlg0284.tlg035	Oration 35	site
+tlg0284.tlg036	Oration 36	site
+tlg0284.tlg037	Oration 37	site
+tlg0284.tlg038	Oration 38	site
+tlg0284.tlg039	Oration 39	site
+tlg0284.tlg040	Oration 40	site
+tlg0284.tlg041	Oration 41	site
+tlg0284.tlg042	Oration 42	site
+tlg0284.tlg043	Oration 43	site
+tlg0284.tlg044	Oration 44	site
+tlg0284.tlg045	Oration 45	site
+tlg0284.tlg046	Oration 46	site
+tlg0284.tlg047	Oration 47	site
+tlg0284.tlg048	Oration 48	site
+tlg0284.tlg049	Oration 49	site
+tlg0284.tlg050	Oration 50	site
+tlg0284.tlg051	Oration 51	site
+tlg0284.tlg052	Oration 52	site
+tlg0284.tlg053	Oration 53	site
+tlg0284.tlg054	Oration 54	site
+tlg0284.tlg055	Oration 55	site
+tlg2200.tlg00401	Oration 1	site
+tlg2200.tlg00402	Oration 2	site
+tlg2200.tlg00403	Oration 3	site
+tlg2200.tlg00404	Oration 4	site
+tlg2200.tlg00405	Oration 5	site
+tlg2200.tlg00406	Oration 6	site
+tlg2200.tlg00407	Oration 7	site
+tlg2200.tlg00408	Oration 8	site
+tlg2200.tlg00409	Oration 9	site
+tlg2200.tlg00410	Oration 10	site
+tlg2200.tlg00411	Oration 11	site
+tlg2200.tlg00426	Oration 26	site
+tlg2200.tlg00427	Oration 27	site
+tlg2200.tlg00428	Oration 28	site
+tlg2200.tlg00429	Oration 29	site
+tlg2200.tlg00430	Oration 30	site
+tlg2200.tlg00431	Oration 31	site
+tlg2200.tlg00432	Oration 32	site
+tlg2200.tlg00433	Oration 33	site
+tlg2200.tlg00434	Oration 34	site
+tlg2200.tlg00435	Oration 35	site
+tlg2200.tlg00436	Oration 36	site
+tlg2200.tlg00437	Oration 37	site
+tlg2200.tlg00438	Oration 38	site
+tlg2200.tlg00439	Oration 39	site
+tlg2200.tlg00440	Oration 40	site
+tlg2200.tlg00441	Oration 41	site
+tlg2200.tlg00442	Oration 42	site
+tlg2200.tlg00443	Oration 43	site
+tlg2200.tlg00444	Oration 44	site
+tlg2200.tlg00445	Oration 45	site
+tlg2200.tlg00446	Oration 46	site
+tlg2200.tlg00447	Oration 47	site
+tlg2200.tlg00448	Oration 48	site
+tlg2200.tlg00449	Oration 49	site
+tlg2200.tlg00450	Oration 50	site
+tlg2200.tlg00451	Oration 51	site
+tlg2200.tlg00452	Oration 52	site
+tlg2200.tlg00453	Oration 53	site
+tlg2200.tlg00454	Oration 54	site
+tlg2200.tlg00455	Oration 55	site
+tlg2200.tlg00456	Oration 56	site
+tlg2200.tlg00457	Oration 57	site
+tlg2200.tlg00458	Oration 58	site
+tlg2200.tlg00459	Oration 59	site
+tlg2200.tlg00460	Oration 60	site
+tlg2200.tlg00461	Oration 61	site
+tlg2200.tlg00462	Oration 62	site
+tlg2200.tlg00463	Oration 63	site
+tlg2200.tlg00464	Oration 64	site
+tlg2200.tlg00501	Declamation 1	site
+tlg2200.tlg00502	Declamation 2	site
+tlg2200.tlg00503	Declamation 3	site
+tlg2200.tlg00504	Declamation 4	site
+tlg2200.tlg00505	Declamation 5	site
+tlg2200.tlg00506	Declamation 6	site
+tlg2200.tlg00507	Declamation 7	site
+tlg2200.tlg00508	Declamation 8	site
+tlg2200.tlg00509	Declamation 9	site
+tlg2200.tlg00510	Declamation 10	site
+tlg2200.tlg00511	Declamation 11	site
+tlg2200.tlg00512	Declamation 12	site
+tlg2200.tlg00513	Declamation 13	site
+tlg2200.tlg00514	Declamation 14	site
+tlg2200.tlg00515	Declamation 15	site
+tlg2200.tlg00516	Declamation 16	site
+tlg2200.tlg00517	Declamation 17	site
+tlg2200.tlg00518	Declamation 18	site
+tlg2200.tlg00519	Declamation 19	site
+tlg2200.tlg00520	Declamation 20	site
+tlg2200.tlg00521	Declamation 21	site
+tlg2200.tlg00522	Declamation 22	site
+tlg2200.tlg00523	Declamation 23	site
+tlg2200.tlg00524	Declamation 24	site
+tlg2200.tlg00525	Declamation 25	site
+tlg2200.tlg00526	Declamation 26	site
+tlg2200.tlg00527	Declamation 27	site
+tlg2200.tlg00528	Declamation 28	site
+tlg2200.tlg00529	Declamation 29	site
+tlg2200.tlg00530	Declamation 30	site
+tlg2200.tlg00531	Declamation 31	site
+tlg2200.tlg00532	Declamation 32	site
+tlg2200.tlg00533	Declamation 33	site
+tlg2200.tlg00534	Declamation 34	site
+tlg2200.tlg00535	Declamation 35	site
+tlg2200.tlg00536	Declamation 36	site
+tlg2200.tlg00537	Declamation 37	site
+tlg2200.tlg00538	Declamation 38	site
+tlg2200.tlg00539	Declamation 39	site
+tlg2200.tlg00540	Declamation 40	site
+tlg2200.tlg00541	Declamation 41	site
+tlg2200.tlg00542	Declamation 42	site
+tlg2200.tlg00543	Declamation 43	site
+tlg2200.tlg00544	Declamation 44	site
+tlg2200.tlg00545	Declamation 45	site
+tlg2200.tlg00546	Declamation 46	site
+tlg2200.tlg00547	Declamation 47	site
+tlg2200.tlg00548	Declamation 48	site
+tlg2200.tlg00549	Declamation 49	site
+tlg2200.tlg00550	Declamation 50	site
+tlg2200.tlg00551	Declamation 51	site

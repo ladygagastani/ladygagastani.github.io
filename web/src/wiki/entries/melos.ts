@@ -6,6 +6,7 @@ const entry: Entry = {
   greek: "Μήλιοι",
   category: "dark",
   kicker: "416 BC: an island asks for justice, and an empire answers",
+  image: "melian-relief",
   hook: `In the summer of 416 BC an Athenian fleet of thirty-eight ships anchored off Melos, a small island that wanted no part in the war between Athens and Sparta. Before a spear was thrown, Athenian envoys sat down with the island's leaders and argued. Thucydides wrote the conversation down as a play-script, the only dialogue in his whole *History*, and it has been read ever since as the purest statement of what power says when it stops pretending.`,
   body: `## An island that wanted to stay out
 

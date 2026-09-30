@@ -8,7 +8,9 @@ export interface CatText {
   label: string | null; desc: string | null;
   col: CollectionId; path: string; size: number; sha: string;
 }
-export interface CatWork { id: string; title: string; lang: string | null; texts: CatText[] }
+/** `title` is English. Where the collection names a work only in Latin or Greek, its own title is `orig`, and
+ *  `titleFrom` says where the English comes from: the library's English translation ("tr") or this site ("site"). */
+export interface CatWork { id: string; title: string; orig?: string; titleFrom?: "tr" | "site"; lang: string | null; texts: CatText[] }
 export interface CatAuthor { id: string; name: string; works: CatWork[] }
 export interface Catalog {
   built: string;

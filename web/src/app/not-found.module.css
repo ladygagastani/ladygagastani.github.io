@@ -1,0 +1,34 @@
+/* Not found: a sherd pieced together, beside the ways on. */
+.page {
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 64px); align-items: center;
+  padding-block: clamp(40px, 8vw, 96px);
+}
+@media (max-width: 760px) { .page { grid-template-columns: minmax(0, 1fr); } .sherd { max-width: 320px; justify-self: center; } }
+
+.sherd { margin: 0; display: grid; gap: 10px; }
+.sherd svg { width: 100%; height: auto; overflow: visible; }
+.sherd path { stroke-linejoin: round; }
+.pieceA path, .pieceB path, .pieceC path { fill: #CF7F45; stroke: #1B120D; stroke-width: 2.5; }
+.pieceA { animation: piece-a 1.1s var(--ease) both; }
+.pieceB { animation: piece-b 1.1s var(--ease) 0.12s both; }
+.pieceC { animation: piece-c 1.1s var(--ease) 0.24s both; }
+@keyframes piece-a { from { transform: translate(-26px, -18px) rotate(-7deg); opacity: 0; } }
+@keyframes piece-b { from { transform: translate(24px, -26px) rotate(6deg); opacity: 0; } }
+@keyframes piece-c { from { transform: translate(10px, 30px) rotate(-4deg); opacity: 0; } }
+.pieceA, .pieceB, .pieceC { transform-box: fill-box; transform-origin: center; }
+.cracks { fill: none; stroke: #1B120D; stroke-width: 1.5; opacity: 0.55; animation: fade-in 0.6s ease 1.1s both; }
+.num { font-family: var(--f-greek); font-size: 76px; fill: #1B120D; animation: fade-in 0.7s ease 1s both; }
+.band { fill: none; stroke: #1B120D; stroke-width: 7; stroke-dasharray: 3 9; animation: fade-in 0.7s ease 1.2s both; }
+@keyframes fade-in { from { opacity: 0; } }
+.caption { font-size: 0.88rem; color: var(--ink-2); text-align: center; }
+
+.text { display: grid; gap: 16px; justify-items: start; max-width: 60ch; }
+.lead { font-size: 1.12rem; margin: 0; }
+.ways { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: 100%; }
+.ways a {
+  display: grid; gap: 2px; padding: 12px 14px; border: 1px solid var(--rule); border-radius: var(--radius);
+  background: var(--surface); text-decoration: none; color: var(--ink); transition: border-color 0.2s, transform 0.25s var(--ease);
+}
+.ways a:hover { border-color: var(--accent); transform: translateY(-2px); }
+.ways b { font-weight: 600; }
+.ways .muted { font-size: 0.88rem; }

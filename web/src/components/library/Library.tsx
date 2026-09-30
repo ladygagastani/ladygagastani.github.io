@@ -1,5 +1,6 @@
 "use client";
 
+import OrigTitle from "./OrigTitle";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
@@ -44,6 +45,7 @@ export function WorkItem({ w, author, meta, common, about = false }: { w: CatWor
       <Link href={readHref(w)} transitionTypes={["page-turn"]} className={styles.workLink}>
         <span className={styles.workTitle}>{author && <span className={styles.byline}>{author.name}, </span>}{w.title}</span>
         {grc?.label && grc.label !== w.title && <span className={styles.workGr} lang="grc">{grc.label}</span>}
+        {w.orig && w.orig !== grc?.label && <OrigTitle work={w} className={styles.orig} />}
       </Link>
       <span className={styles.meta}>
         {meta?.genre && <span className={styles.genre}>{meta.genre}{meta.from !== null ? ` · ${centuries(meta.from, meta.to)}` : ""}</span>}
@@ -107,7 +109,7 @@ export default function Library() {
     const out: { a: CatAuthor; works: CatWork[] }[] = [];
     for (const a of authors) {
       const whole = f.length > 0 && fold(a.name).includes(f);
-      const works = a.works.filter((w) => keepBut(w) && (!f || whole || fold(`${w.title} ${greekEditions(w)[0]?.label ?? ""} ${w.id}`).includes(f)));
+      const works = a.works.filter((w) => keepBut(w) && (!f || whole || fold(`${w.title} ${w.orig ?? ""} ${greekEditions(w)[0]?.label ?? ""} ${w.id}`).includes(f)));
       if (works.length) out.push({ a, works });
     }
     return out;
@@ -300,6 +302,7 @@ function Title({ w, by, meta, common }: { w: CatWork; by?: CatAuthor; meta?: Wor
         <span className={styles.rowTitle}>
           <span className={styles.t}>{w.title}</span>
           {grc?.label && grc.label !== w.title && <span className={styles.gr} lang="grc">{grc.label}</span>}
+          {w.orig && w.orig !== grc?.label && <OrigTitle work={w} className={styles.orig} />}
           {by && <span className={styles.by}>{by.name}</span>}
         </span>
         <span className={styles.rowMeta}>
