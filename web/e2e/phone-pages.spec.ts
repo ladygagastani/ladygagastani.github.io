@@ -91,12 +91,12 @@ test("the map: two fingers move it, one finger leaves it be and shows a hint", a
 test("a sideways swipe moves between the Oracle's kinds of search, and the Census's lists", async ({ page }) => {
   await page.goto("/search?q=λόγος");
   await expect(page.getByRole("tab", { name: /Greek/ }).first()).toHaveAttribute("aria-selected", "true");
-  await touch(page, "[class*='Search_results']", [[[300, 600]], [[240, 603]], [[160, 606]], [[90, 608]]]);
+  await touch(page, "[class*='Search'][class*='results']", [[[300, 600]], [[240, 603]], [[160, 606]], [[90, 608]]]);
   await expect(page).toHaveURL(/m=lemma/);
 
   await page.goto("/stoa/census?c=god");
   await expect(page.getByRole("button", { name: /Gods and heroes/ })).toHaveAttribute("aria-pressed", "true");
-  await touch(page, "[class*='Census_census']", [[[300, 600]], [[240, 603]], [[160, 606]], [[90, 608]]]);
+  await touch(page, "[class*='Census'][class*='census']", [[[300, 600]], [[240, 603]], [[160, 606]], [[90, 608]]]);
   await expect(page).not.toHaveURL(/c=god/);
 });
 

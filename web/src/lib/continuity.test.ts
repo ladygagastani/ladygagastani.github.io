@@ -3,6 +3,7 @@ import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { STATIC_PAGES, DEV_PAGES, offlinePages } from "@/config/pages";
 import { LESSONS } from "@/data/lessons";
+import { GUIDES } from "@/data/guides";
 import { ENTRIES } from "@/wiki/index";
 import { snapRect, clampRect, snapFor, expandHref } from "./float";
 import { pageKey, recordVisit, trail, lastOtherPage, saveScroll, savedScroll } from "./resume";
@@ -22,6 +23,7 @@ describe("the offline copy", () => {
     for (const p of pages) {
       if (DEV_PAGES.includes(p)) continue;
       if (p === "/academy/lesson/[id]") { for (const l of LESSONS) expect(kept.has(`/academy/lesson/${l.id}`), l.id).toBe(true); continue; }
+      if (p === "/academy/guide/[id]") { for (const g of GUIDES) expect(kept.has(`/academy/guide/${g.id}`), g.id).toBe(true); continue; }
       if (p === "/stoa/[slug]") { for (const e of ENTRIES) expect(kept.has(`/stoa/${e.slug}`), e.slug).toBe(true); continue; }
       // a page for every author and every work, for search engines and link previews: made at build time, kept offline once visited, not in advance
       if (p === "/author/[id]" || p === "/work/[id]") { expect(kept.has(p), p).toBe(false); continue; }

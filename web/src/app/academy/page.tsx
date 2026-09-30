@@ -6,6 +6,7 @@ import AcademyProgress from "@/components/academy/AcademyProgress";
 import AlphabetGlance from "@/components/academy/AlphabetGlance";
 import { AREAS } from "@/config/areas";
 import { LESSONS } from "@/data/lessons";
+import { GUIDES } from "@/data/guides";
 import styles from "@/components/academy/Academy.module.css";
 import { PAGE_DESCRIPTIONS } from "@/lib/seo";
 
@@ -50,6 +51,23 @@ export default function AcademyPage() {
               </li>
             ))}
           </ol>
+        </section>
+
+        <section style={{ display: "grid", gap: 18 }} aria-labelledby="guides-title">
+          <div>
+            <span className="label">Finding your way</span>
+            <h2 id="guides-title" style={{ marginTop: 8 }}>Practical guides</h2>
+          </div>
+          <div className={`${styles.hub} snap-row`}>
+            {GUIDES.map((g, i) => (
+              <Link key={g.id} href={`/academy/guide/${g.id}`} transitionTypes={["page-turn"]} className={styles.card}>
+                <span className={styles.guideNo}>Guide {i + 1}</span>
+                <span className={styles.cardGr} lang="grc">{g.greek}</span>
+                <h3>{g.title}</h3>
+                <p className="muted">{g.summary}</p>
+              </Link>
+            ))}
+          </div>
         </section>
 
         <section style={{ display: "grid", gap: 18 }} aria-labelledby="tools-title">

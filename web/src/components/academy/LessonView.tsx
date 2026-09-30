@@ -152,7 +152,7 @@ function RealPassage({ item, onWord }: { item: Extract<Section, { kind: "real" }
   );
 }
 
-function SectionView({ s, onWord }: { s: Section; onWord: (w: string, ctx: WordContext | null) => void }) {
+export function SectionView({ s, onWord }: { s: Section; onWord: (w: string, ctx: WordContext | null) => void }) {
   switch (s.kind) {
     case "p": return <p className={styles.lp}><Rich text={s.text} /></p>;
     case "alphabet": return <AlphabetGlance />;
@@ -191,6 +191,15 @@ function SectionView({ s, onWord }: { s: Section; onWord: (w: string, ctx: WordC
       </div>
     );
     case "reveal": return <Reveal {...s} />;
+    case "links": return (
+      <nav className={styles.guideLinks} aria-label="Go further">
+        {s.items.map((l) => (
+          <Link key={l.href} href={l.href} transitionTypes={["page-turn"]} className={styles.guideLink}>
+            <b><Rich text={l.label} /></b>{l.note && <span className="muted"><Rich text={l.note} /></span>}<span aria-hidden="true" className={styles.guideArrow}>→</span>
+          </Link>
+        ))}
+      </nav>
+    );
     case "check": return <Check items={s.items} />;
     case "real": return (
       <div className={styles.realList}>

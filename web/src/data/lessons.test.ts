@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { LESSONS } from "./lessons";
+import { GUIDES } from "./guides";
 import { PARADIGMS } from "./paradigms";
 import { indexCatalog, greekEditions, rawUrl, fold, type Catalog } from "@/lib/catalog";
 import { parseTei } from "@/lib/tei/parse";
@@ -28,7 +29,7 @@ describe("lessons", () => {
 
   // Fetches the real files from GitHub; run with NETWORK=1.
   it.skipIf(!process.env.NETWORK)("quote real passages that are really there", async () => {
-    for (const l of LESSONS) for (const s of l.sections) {
+    for (const l of [...LESSONS, ...GUIDES]) for (const s of l.sections) {
       if (s.kind !== "real" && s.kind !== "timeline") continue;
       for (const r of s.items.map((x) => ({ ...x, quote: "quote" in x ? x.quote : x.grc }))) {
         const w = idx.work.get(r.work)!;

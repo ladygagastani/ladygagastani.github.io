@@ -24,6 +24,7 @@ export type Section =
   | { kind: "made"; title?: string; items: { grc: string; en: string; note?: string }[] }
   | { kind: "reveal"; title: string; items: { grc: string; answer: string }[] }
   | { kind: "check"; items: { q: string; options: string[]; answer: number; why: string }[] }
+  | { kind: "links"; items: { href: string; label: string; note?: string }[] }   // other pages of the site (guides)
   | { kind: "real"; title?: string; items: { work: string; ref: string; quote: string; label: string; note: string; metre?: TextKind }[] };
 
 export interface Lesson { id: string; title: string; greek: string; summary: string; minutes: number; words: string[]; sections: Section[] }
