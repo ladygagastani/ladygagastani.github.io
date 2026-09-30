@@ -382,4 +382,16 @@ export const BIB: Record<string, Secondary> = {
     author: "Edward M. Harris", title: "Did the Athenians Regard Seduction as a Worse Crime than Rape?", year: 1990,
     publisher: "Classical Quarterly 40, 370–377", checked: "https://www.cambridge.org/core/journals/classical-quarterly/article/abs/did-the-athenians-regard-seduction-as-a-worse-crime-than-rape/5196DCE5F454FF0A07D6443B365FF566",
   },
+  "cahill-olynthus": {
+    author: "Nicholas Cahill", title: "Household and City Organization at Olynthus", year: 2002,
+    publisher: "New Haven: Yale University Press", checked: "https://bmcr.brynmawr.edu/2002/2002.10.26",
+  },
+  "nevett-house-society": {
+    author: "Lisa C. Nevett", title: "House and Society in the Ancient Greek World", year: 1999,
+    publisher: "Cambridge: Cambridge University Press", checked: "https://bmcr.brynmawr.edu/2000/2000.08.25/",
+  },
+  "pomeroy-oeconomicus": {
+    author: "Sarah B. Pomeroy", title: "Xenophon, Oeconomicus: A Social and Historical Commentary", year: 1994,
+    publisher: "Oxford: Clarendon Press", checked: "https://bmcr.brynmawr.edu/1995/1995.03.32",
+  },
 };

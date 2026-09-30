@@ -446,5 +446,19 @@
   "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
   "source": "https://www.metmuseum.org/art/collection/search/254843",
   "sourceName": "The Metropolitan Museum of Art"
+ },
+ "olynthos-houses": {
+  "file": "olynthos-houses.jpg",
+  "width": 960,
+  "height": 1280,
+  "alt": "A narrow lane runs between two long rows of low stone wall footings, the outlines of house after house laid out on a grid, under a clear sky.",
+  "title": "A lane between two blocks of houses at Olynthos",
+  "date": "2006-11-03",
+  "place": "",
+  "creator": "User:Christaras A",
+  "licence": "CC BY-SA 2.5",
+  "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.5",
+  "source": "https://commons.wikimedia.org/wiki/File:Ancient_Olynthos_Chalkidiki_-_Greece_-_042.jpg",
+  "sourceName": "Wikimedia Commons"
  }
 }
