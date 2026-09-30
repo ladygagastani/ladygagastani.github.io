@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   loadCatalog, greekEditions, translations, describe, versionOf,
   type CatalogIndex, type CatText, type CatWork,
@@ -25,6 +25,8 @@ import NoteEditor from "./NoteEditor";
 import ShareDialog, { type ShareData } from "./ShareDialog";
 import WorkPicker from "./WorkPicker";
 import VocabPanel from "./VocabPanel";
+import PlacesPanel from "./PlacesPanel";
+import { greekKey } from "@/lib/search/codec";
 import PanelGuard from "@/components/PanelGuard";
 import EchoesPanel, { type EchoMarks, type EchoQuery, type EchoTarget } from "./EchoesPanel";
 import MetreBar from "./MetreBar";
@@ -155,6 +157,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const tryFirst = useSettings((s) => s.tryFirst);
   const fitLines = useSettings((s) => s.fitLines);
   const [vocabOpen, setVocabOpen] = useState(false);
+  const [placesOpen, setPlacesOpen] = useState(false);
+  const [placeMarks, setPlaceMarks] = useState<Map<string, Set<string>> | null>(null);
 
   const workId = P("w") ?? "";
   const at = P("at");
@@ -841,7 +845,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   function openEchoes(start: Point, end: Point) {
     if (!doc || !grcText || !work) return;
     setEcho({ work: workId, urn: grcText.urn, doc, title: work.title, start, end });
-    setWord(null); setVocabOpen(false);
+    setWord(null); setVocabOpen(false); setPlacesOpen(false);
   }
   const echoJump = (t: EchoTarget) => {
     const q = new URLSearchParams(params.toString());
@@ -875,6 +879,30 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     return () => { for (const n of names) reg.delete(n); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [echoMarks, rows, grcText?.urn, pane]);
+
+  // the words that name places, marked while the Places panel is open
+  useEffect(() => {
+    const reg = typeof CSS !== "undefined" ? (CSS as unknown as { highlights?: Map<string, unknown> }).highlights : undefined;
+    const H = (globalThis as unknown as { Highlight?: new (...r: Range[]) => unknown }).Highlight;
+    const name = `place-${pane}`;
+    if (!reg || !H || !placeMarks || !placesOpen || !rows.length) return;
+    const ranges: Range[] = [];
+    root().querySelectorAll<HTMLElement>("[data-u]").forEach((unit) => {
+      const ks = placeMarks.get(unit.dataset.u!);
+      if (!ks) return;
+      unit.querySelectorAll<HTMLElement>("[data-w]").forEach((sp) => {
+        if (!ks.has(greekKey(sp.dataset.w!))) return;
+        const r = new Range(); r.selectNodeContents(sp); ranges.push(r);
+      });
+    });
+    reg.set(name, new H(...ranges));
+    return () => { reg.delete(name); };
+  }, [placeMarks, placesOpen, rows, pane]);
+  const jumpToRef = useCallback((ref: string) => {
+    const row = rows.find((r) => r.greek.some((u) => u.ref.join(".") === ref));
+    if (row) jumpToRow(row.key);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows]);
 
   /** Show a passage in the given pane (opening the second pane if needed). */
   const openInPane = (target: 1 | 2, w: string, ed: string, u: string) => {
@@ -968,7 +996,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       <button type="button" className="chip" aria-pressed={translit} onClick={() => setSettings({ translit: !translit })} title="Show each line in Latin letters">Transliteration</button>
       <button type="button" className="chip" aria-pressed={cases} onClick={() => setSettings({ cases: !cases })} title="Underline nouns, adjectives and participles in the colour of their case">Colour by case</button>
       {mInfo && <button type="button" className="chip" aria-pressed={metreOn} onClick={() => setSettings({ metre: !metreOn })} title="Mark long and short syllables, feet and caesura">Metre</button>}
-      <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setWord(null); setEcho(null); }}>Vocabulary</button>
+      <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setPlacesOpen(false); setWord(null); setEcho(null); }}>Vocabulary</button>
+      <button type="button" className="chip" aria-pressed={placesOpen} onClick={() => { setPlacesOpen(!placesOpen); setVocabOpen(false); setWord(null); setEcho(null); }} title="The places this page names, on a map">Places</button>
       {trText && columns === "both" && <button type="button" className="chip" aria-pressed={tryFirst} onClick={() => setSettings({ tryFirst: !tryFirst })} title="Hide each translation until you tap it, so you read the Greek first">Try it first</button>}
       {hasLines && <button type="button" className="chip" aria-pressed={fitLines} onClick={() => setSettings({ fitLines: !fitLines })} title="Make each verse line fit the width of the page instead of wrapping">Fit lines</button>}
     </div>
@@ -984,7 +1013,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const sortedMarks = [...allMarks].sort((a, b) => cmp(a.start, b.start, order));
 
   return (
-    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${verses ? styles.verses : ""} ${word || echo || vocabOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""} ${floating ? styles.floating : ""}`}
+    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${verses ? styles.verses : ""} ${word || echo || vocabOpen || placesOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""} ${floating ? styles.floating : ""}`}
       onPointerDown={() => useUI.getState().setActivePane(pane)} onFocusCapture={() => useUI.getState().setActivePane(pane)}>
       {load.state === "ready" && <ScrollMarkers rootRef={rootRef} contained={contained} items={markerItems} onJump={jumpToRow} depKey={`${chunk}|${rows.length}|${columns}|${translit}|${!!metre}|${word ? 1 : 0}`} />}
       {split && (
@@ -1188,6 +1217,11 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
         <PanelGuard name="vocabulary list" className={styles.panel} onClose={() => setVocabOpen(false)}>
           <VocabPanel work={workId} doc={doc} pageKeys={pageKeys}
             onClose={() => setVocabOpen(false)} onPick={(lemma) => setWord({ w: lemma, ctx: null, at: null })} />
+        </PanelGuard>
+      )}
+      {placesOpen && doc && !word && !echo && (
+        <PanelGuard name="places panel" className={styles.panel} onClose={() => setPlacesOpen(false)}>
+          <PlacesPanel work={workId} doc={doc} pageKeys={pageKeys} onJump={jumpToRef} onMarks={setPlaceMarks} onClose={() => setPlacesOpen(false)} />
         </PanelGuard>
       )}
       {echo && !word && (

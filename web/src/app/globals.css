@@ -370,6 +370,12 @@ main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(
   text-decoration: underline 2px var(--ochre);
   text-underline-offset: 4px;
 }
+/* words that name a place, marked while the reader's Places panel is open */
+::highlight(place-1), ::highlight(place-2) {
+  background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+  text-decoration: underline dotted 2px var(--accent);
+  text-underline-offset: 4px;
+}
 ::highlight(echo-self-1), ::highlight(echo-self-2) {
   background-color: color-mix(in srgb, var(--accent) 22%, transparent);
   text-decoration: underline 2px var(--accent);

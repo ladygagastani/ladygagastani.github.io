@@ -11,7 +11,7 @@ export interface Pt { p: Place; x: number; y: number; kind: string; r: number; n
 // ---------------------------------------------------------------- coastlines
 
 /** Douglas–Peucker on a flat, projected ring [x, y, x, y…]; tiny rings (islets, pools) are dropped. */
-function simplifyRing(r: number[], tol: number): number[] | null {
+export function simplifyRing(r: number[], tol: number): number[] | null {
   const n = r.length / 2;
   if (!tol) return r;
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;

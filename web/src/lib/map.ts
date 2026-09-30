@@ -70,14 +70,20 @@ export function loadMap() {
 }
 
 let byName: Promise<Map<string, Place>> | null = null;
-/** The place a dictionary word names, if it is on the map (Σπάρτη → Sparta). */
-export function placeNamed(lemma: string): Promise<Place | null> {
+/** Every place on the map by the dictionary words that name it (Σπάρτη → Sparta). */
+export function placesByName(): Promise<Map<string, Place>> {
   byName ??= loadPlaces().then(({ places }) => {
     const m = new Map<string, Place>();
     for (const p of places) for (const n of [p.grc, ...(p.also ?? [])]) if (!m.has(n)) m.set(n, p);
     return m;
-  });
-  return byName.then((m) => m.get(lemma.normalize("NFC")) ?? null, () => null);
+  }).catch((e) => { byName = null; throw e; });
+  return byName;
+}
+/** A place's English name as the map letters it: the first of Pleiades' names, without its note ("Tyrus/Col. …" → "Tyrus"). */
+export const shortName = (p: Place) => p.en.split("/")[0].replace(/ \(.*\)$/, "").replace(/\?$/, "");
+/** The place a dictionary word names, if it is on the map (Σπάρτη → Sparta). */
+export function placeNamed(lemma: string): Promise<Place | null> {
+  return placesByName().then((m) => m.get(lemma.normalize("NFC")) ?? null, () => null);
 }
 
 export const TYPE_LABEL: Record<string, string> = {
