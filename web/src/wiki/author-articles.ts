@@ -13,6 +13,9 @@ import { herodotus } from "./authors/tlg0016";
 import { homer } from "./authors/tlg0012";
 import { thucydides } from "./authors/tlg0003";
 import { plato } from "./authors/tlg0059";
+import { sophocles } from "./authors/tlg0011";
+import { aristotle } from "./authors/tlg0086";
+import { euripides } from "./authors/tlg0006";
 
 /** What a timeline mark stands for: the author's own time, a copy of the text, a printing or
  *  modern edition, or later reception. Shown as a shape and a word, never by colour alone. */
@@ -51,7 +54,7 @@ export interface AuthorArticle {
 }
 
 /** Only source-checked articles: each lives in authors/<id>.ts. */
-export const ARTICLES: Record<string, AuthorArticle> = { [herodotus.id]: herodotus, [homer.id]: homer, [thucydides.id]: thucydides, [plato.id]: plato };
+export const ARTICLES: Record<string, AuthorArticle> = { [herodotus.id]: herodotus, [homer.id]: homer, [thucydides.id]: thucydides, [plato.id]: plato, [sophocles.id]: sophocles, [aristotle.id]: aristotle, [euripides.id]: euripides };
 
 /**
  * The unchecked drafts used to look at the design, read only by `npm run dev`. The test is a build-time
