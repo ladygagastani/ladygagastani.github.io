@@ -1,5 +1,26 @@
 # PROGRESS.md — project memory
 
+## START HERE: handoff to a new account (2026-09-30)
+The owner is moving the project to another account. A new session should read `CLAUDE.md`, the brief, this section, then `PLAN.md`.
+
+**State of the code.** Everything up to the phone edition and the Town Hall bug boards is live at https://mathesisstoicheion.github.io/. Five commits on `main` are **saved but not published** (not pushed): the alphabet tiles, lessons 10–13, lesson 14 (middle and passive) and lesson 15 (participles); see "The alphabet in lesson 1, and lessons 10–13" and "Lessons 14 and 15" below. Check with `git status -sb` ("ahead 5"). **Push only when the owner says so**: a push to `main` republishes the live site. The owner was asked on 2026-09-30 whether to publish them and has not answered yet. All tests passed on 2026-09-29/30 (285 unit; the Academy, accessibility and phone checks in the browser). The new lessons have not had a fresh-session review yet.
+
+**Things the owner has asked for that are not finished**
+1. **More Academy lessons** (the owner's first priority: learning). 15 so far. Next on the list: infinitives, contract verbs (ποιέω), -μι verbs (δίδωμι), more of the third declension (πατήρ, ἀνήρ, βασιλεύς). Method: see how lessons 14–15 were done (quotations copied from `npx tsx scripts/passage.ts`, `NETWORK=1 npx vitest run src/data/lessons.test.ts`, new tables checked with `python pipeline/check_paradigms.py`, and any form not attested for the model verb checked on other verbs and written into `pipeline/PARADIGM-REVIEW.md`). Each recent lesson has one purposeful animated drawing (`Motion`, `Shift`, `Voice`, `Timeline` in `components/academy/`).
+2. **"Manuscripts & transmission" and "Textual variants" in the Painted Stoa**, as on the owner's other site (mathesis-zeta.vercel.app, where 85 authors have one). These need written, researched articles with real, checked sources (never from memory). **Waiting for the owner to decide how many**, and whether a page on each period's language is wanted too.
+3. **Audio**: the owner is recording letters, diphthongs and the 100 commonest words in `/academy/studio` (development only). Play buttons appear only where a recording exists. Before launch, convert the WebM recordings to AAC/M4A so older iPhones can play them.
+
+**Things only the owner can do** (they sign in themselves; never type or read their passwords)
+4. **Try the forum drafts with their own account**: open a reply box, type, reload, and check the text comes back (tested only with pretend accounts).
+5. **Sign-up and reset emails may go to spam** (the owner's reset email did). Decision so far: wait and see whether real members are hit before paying for a transactional sender (see Next steps, item 1).
+6. **Tell Google about the site**: add it to Google Search Console, verify it, and submit https://mathesisstoicheion.github.io/sitemap.xml (Bing Webmaster Tools too). A session can walk the owner through it.
+7. **Try the site on an iPhone** if one is to hand (tilting the vase asks permission there; iPhones cannot vibrate).
+
+**Waiting for the owner's go-ahead**
+8. **Publish** the five saved commits (above). After a push: `node scripts/live-check.mjs` in `web/`.
+
+**Traps for the next session**: local builds need webpack (`npx next build --webpack`, `next dev --webpack`) because Windows Smart App Control blocks Next.js's fast compiler; another session's dev server may already be on port 3000 (use it, or `preview_start` picks another port); write regexes with the Edit/Write tools, not Bash heredocs (see Known problems); on Windows, Python needs `PYTHONIOENCODING=utf-8` to print Greek.
+
 ## Current status
 - **Phase 0 (look & feel): done.** The owner chose direction A, with B's layout for the reader. The prototype stays in `design-study/` for reference only.
 - **Phase 1 (design system, site shell, home page): done.** The code is in `web/` (see `README.md`). Built so far:
@@ -529,7 +550,7 @@ The owner asked for more Academy lessons (learning first), and for the alphabet 
    - Useful tools: `A11Y_REPORT=1 npx playwright test e2e/a11y.spec.ts` (accessibility findings to `test-results/`); `node scripts/shots.mjs` and `node scripts/phone-audit.mjs` (polish checks, need `node scripts/serve-out.mjs 3100` running); `npx playwright test -c playwright.nows.config.ts <file>` runs browser tests against that already-running site (no rebuild).
    - **The gaps the review found are ranked in Phase 9, "4. Review against the brief".** The biggest are the wiki's breadth and the Academy's nine lessons: both are the next work, and both are best done in the owner's order: learning first.
 4. **Phase 10, the phone edition, is under way** (PLAN.md section 7, 2026-09-29). The owner chose: a bottom bar with Library, Learn Greek, Wiki, Forum and My Library (left to right); the reader stays scrolling (no swipe to turn pages); short vibrations yes; every other idea in section 7 approved. Steps 1 (foundations), 2 (the reader), 3 (the Academy) and 4 (every other page, and installing as an app) are done (see "Phase 10" above). Step 5 (the owner's test on a real phone) is done too, and the fixes it asked for (the map; even layouts) are in. **Phase 10 is complete.** Still worth a try on an iPhone if the owner has one to hand (tilting the vase asks permission there; iPhones cannot vibrate).
-5. Later, when the owner wants: **More Academy lessons** (learning is the owner's first priority): genitive and dative with prepositions, adjectives, third declension, imperfect, aorist, middle and passive, participles, infinitives, contract verbs, -μι verbs (see Known problems, Phase 3 follow-ups).
+5. **More Academy lessons** (learning is the owner's first priority): 15 done; next infinitives, contract verbs, -μι verbs, more third declension (see the handoff at the top, and Known problems, Phase 3 follow-ups).
    - and **more wiki entries**: archaeology (looting and the antiquities trade, Akrotiri, Olympia, Vergina); pictures for melos, plague-of-athens, mytilene-debate and helots; more entries that `NAME_ENTRIES` (`lib/census.ts`) can link the Census's names to.
 
 **How to change the database**: write a new file in `supabase/migrations/` (never edit one that has been run), then run it in the Supabase SQL editor (https://supabase.com/dashboard/project/kxwppdhbvlamcmgckqpg/sql/new). The built-in browser cannot paste from the clipboard, and the page cannot fetch files from this computer. What worked: put the script into the editor with the browser's JavaScript tool (a String.raw template set as the value of the editor's Monaco model), in chunks of about 4,000 characters; then compare a SHA-256 fingerprint of the editor's text with the file's (both with lines trimmed and blank lines dropped) before pressing Run. Scripts are wrapped in begin/commit so a failure changes nothing.
