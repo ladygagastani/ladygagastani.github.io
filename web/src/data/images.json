@@ -432,5 +432,19 @@
   "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
   "source": "https://www.metmuseum.org/art/collection/search/436105",
   "sourceName": "The Metropolitan Museum of Art"
+ },
+ "amasis-wedding-lekythos": {
+  "file": "amasis-wedding-lekythos.jpg",
+  "width": 1600,
+  "height": 2497,
+  "alt": "A small black-figure oil flask: on its body a bride and groom sit in a cart drawn by two donkeys, part of a wedding procession by night; on the shoulder, women dance between musicians.",
+  "title": "Oil flask with a wedding procession, attributed to the Amasis Painter",
+  "date": "c. 550–530 BC",
+  "place": "The Metropolitan Museum of Art, New York (56.11.1)",
+  "creator": "Amasis Painter",
+  "licence": "CC0",
+  "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "source": "https://www.metmuseum.org/art/collection/search/254843",
+  "sourceName": "The Metropolitan Museum of Art"
  }
 }

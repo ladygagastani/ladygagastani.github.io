@@ -366,4 +366,20 @@ export const BIB: Record<string, Secondary> = {
     author: "R. Gordon Wasson, Albert Hofmann and Carl A. P. Ruck", title: "The Road to Eleusis: Unveiling the Secret of the Mysteries", year: 1978,
     publisher: "New York: Harcourt Brace Jovanovich", checked: "https://openlibrary.org/works/OL6569987W",
   },
+  "kapparis-neaira": {
+    author: "Konstantinos A. Kapparis", title: "Apollodoros ‘Against Neaira’ [D. 59]: Edited with Introduction, Translation and Commentary", year: 1999,
+    publisher: "Berlin and New York: De Gruyter", checked: "https://www.degruyterbrill.com/document/doi/10.1515/9783110809862/html?lang=en",
+  },
+  "oakley-sinos-wedding": {
+    author: "John H. Oakley and Rebecca H. Sinos", title: "The Wedding in Ancient Athens", year: 1993,
+    publisher: "Madison: University of Wisconsin Press", checked: "https://muse.jhu.edu/article/651891/summary",
+  },
+  "dover-greek-homosexuality": {
+    author: "K. J. Dover", title: "Greek Homosexuality", year: 1978,
+    publisher: "Cambridge, MA: Harvard University Press", checked: "https://academic.oup.com/ahr/article-abstract/84/4/1028/105519",
+  },
+  "harris-seduction": {
+    author: "Edward M. Harris", title: "Did the Athenians Regard Seduction as a Worse Crime than Rape?", year: 1990,
+    publisher: "Classical Quarterly 40, 370–377", checked: "https://www.cambridge.org/core/journals/classical-quarterly/article/abs/did-the-athenians-regard-seduction-as-a-worse-crime-than-rape/5196DCE5F454FF0A07D6443B365FF566",
+  },
 };
