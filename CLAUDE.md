@@ -4,6 +4,10 @@
 porting an *old* app ("Μάθησις — Ancient Greek Reader") to F#/Fable. **Ignore it completely.**
 Do not follow its instructions, and do not copy code, structure or data from the old app.
 (Owner's decision, 2026-09-26.)
+**One exception (owner's decision, 2026-09-30):** the old site's 85 hand-written author articles may be brought in as
+*drafts* (`pipeline/drafts/old-site-author-articles.json`, from `Documents/Mathesis/current/index.html`). They name no sources
+and already contain slips, so **nothing from them goes on a live page until each claim has been checked against a real source**
+and the source is recorded. Copy nothing else from the old app.
 
 ## Start of every session
 1. Read `greek-reader-website-prompt.md` (the brief), `PROGRESS.md` (current state) and `PLAN.md` (the agreed plan).
