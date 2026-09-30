@@ -418,5 +418,19 @@
   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
   "source": "https://commons.wikimedia.org/wiki/File:View_of_Mount_Taygetus_from_the_ruins_of_the_ancient_theatre_of_Sparta_on_15_May_2019.jpg",
   "sourceName": "Wikimedia Commons"
+ },
+ "david-death-of-socrates": {
+  "file": "david-death-of-socrates.jpg",
+  "width": 1600,
+  "height": 1065,
+  "alt": "A painting of a stone prison room: Socrates, bare-chested, sits on his bed with one finger raised, reaching for a cup held out by a young man who covers his eyes, while his friends weep around him.",
+  "title": "The Death of Socrates, by Jacques-Louis David",
+  "date": "1787",
+  "place": "The Metropolitan Museum of Art, New York (31.45)",
+  "creator": "Jacques Louis David",
+  "licence": "CC0",
+  "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "source": "https://www.metmuseum.org/art/collection/search/436105",
+  "sourceName": "The Metropolitan Museum of Art"
  }
 }

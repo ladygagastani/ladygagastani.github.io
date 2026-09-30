@@ -338,4 +338,32 @@ export const BIB: Record<string, Secondary> = {
     author: "Marcelle Robinson", title: "Schliemann's Silent Partner, Frank Calvert (1828–1908): Pioneer, Scholar and Survivor", year: 2006,
     publisher: "Philadelphia: Xlibris", checked: "https://bmcr.brynmawr.edu/2009/2009.01.41/",
   },
+  "rinella-pharmakon": {
+    author: "Michael A. Rinella", title: "Pharmakon: Plato, Drug Culture, and Identity in Ancient Athens", year: 2010,
+    publisher: "Lanham, MD: Lexington Books", checked: "https://searchworks.stanford.edu/view/12942772",
+  },
+  "hort-theophrastus-2": {
+    author: "Theophrastus, translated by Arthur F. Hort", title: "Enquiry into Plants, Volume II: Books 6–9 (Loeb Classical Library 79)", year: 1916,
+    publisher: "Cambridge, MA: Harvard University Press", checked: "https://www.hup.harvard.edu/books/9780674990883",
+  },
+  "bloch-hemlock": {
+    author: "Enid Bloch", title: "Hemlock Poisoning and the Death of Socrates: Did Plato Tell the Truth?, in T. C. Brickhouse and N. D. Smith (eds.), The Trial and Execution of Socrates: Sources and Controversies", year: 2002,
+    publisher: "Oxford: Oxford University Press", checked: "https://philpapers.org/rec/BRITTA-2",
+  },
+  "rudenko-frozen-tombs": {
+    author: "Sergei I. Rudenko, translated by M. W. Thompson", title: "Frozen Tombs of Siberia: The Pazyryk Burials of Iron Age Horsemen", year: 1970,
+    publisher: "Berkeley and Los Angeles: University of California Press", checked: "https://www.cambridge.org/core/journals/slavic-review/article/abs/frozen-tombs-of-siberia-the-pazyryk-burials-of-iron-age-horsemen-by-sergei-i-rudenko-translated-with-a-preface-by-m-w-thompson-berkeley-and-los-angeles-university-of-california-press-1970-xxxvi-340-pp-33-color-147-black-and-white-plates-3000/20A8A62D2C058A00F8FDDEE94AC3D9FB",
+  },
+  "ren-cannabis": {
+    author: "Meng Ren, Zihua Tang, Xinhua Wu, Robert Spengler, Hongen Jiang, Yimin Yang and Nicole Boivin", title: "The origins of cannabis smoking: Chemical residue evidence from the first millennium BCE in the Pamirs", year: 2019,
+    publisher: "Science Advances 5, eaaw1391", checked: "https://www.science.org/doi/10.1126/sciadv.aaw1391",
+  },
+  "jansen-grayanotoxin": {
+    author: "S. A. Jansen, I. Kleerekooper, Z. L. M. Hofman, I. F. P. M. Kappen, A. Stary-Weinzinger and M. A. G. van der Heyden", title: "Grayanotoxin Poisoning: ‘Mad Honey Disease’ and Beyond", year: 2012,
+    publisher: "Cardiovascular Toxicology 12, 208–215", checked: "https://pmc.ncbi.nlm.nih.gov/articles/PMC3404272/",
+  },
+  "wasson-road-to-eleusis": {
+    author: "R. Gordon Wasson, Albert Hofmann and Carl A. P. Ruck", title: "The Road to Eleusis: Unveiling the Secret of the Mysteries", year: 1978,
+    publisher: "New York: Harcourt Brace Jovanovich", checked: "https://openlibrary.org/works/OL6569987W",
+  },
 };
