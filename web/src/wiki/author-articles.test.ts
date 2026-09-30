@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { ARTICLES, PIN_KINDS } from "./author-articles";
 import { blocks, inline, linksIn } from "./markup";
-import { yearLabel, yearsBetween } from "../components/library/AuthorRoad";
+import { gapText, yearLabel, yearsBetween } from "../components/library/AuthorRoad";
 import catalog from "../../public/data/catalog.json";
 
-const authorIds = new Set((catalog as { authors: { id: string }[] }).authors.map((a) => a.id));
+const cat = (catalog as { authors: { id: string; works: { id: string }[] }[] }).authors;
+const authorIds = new Set(cat.map((a) => a.id));
+const works = new Set(cat.flatMap((a) => a.works.map((w) => w.id)));
 
 describe("numbered sources in markup", () => {
   it("reads [^2] and [^1,3]", () => {
@@ -20,6 +22,11 @@ describe("timeline years", () => {
     expect(yearLabel(-490)).toBe("490 BC");
     expect(yearLabel(175)).toBe("AD 175");
     expect(yearLabel(1554)).toBe("1554");
+  });
+  it("says rough dates are 'about'", () => {
+    expect(gapText(25)).toBe("25 years later");
+    expect(gapText(80, true)).toBe("about 80 years later");
+    expect(gapText(674)).toBe("about 670 years later");
   });
   it("counts across the turn of the era without a year 0", () => {
     expect(yearsBetween(-1, 1)).toBe(1);
@@ -41,7 +48,12 @@ describe("published author articles", () => {
     for (const a of all) {
       expect(a.checked, a.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(a.sources.length, a.id).toBeGreaterThan(0);
-      for (const s of a.sources) { expect(s.url, a.id).toMatch(/^https:\/\//); expect(s.label.length, a.id).toBeGreaterThan(3); }
+      for (const s of a.sources) {
+        expect(s.label.length, a.id).toBeGreaterThan(3);
+        // a web page, or a passage of the texts in the reader (how ancient sources are cited)
+        if (s.cite) expect(works.has(s.cite.work), `${a.id}: ${s.cite.work}`).toBe(true);
+        else expect(s.url, a.id).toMatch(/^https?:\/\//);
+      }
     }
   });
   it("points every marker at a source, and uses every source", () => {
@@ -54,13 +66,19 @@ describe("published author articles", () => {
       for (let n = 1; n <= a.sources.length; n++) expect(used.has(n), `${a.id}: source ${n} is never cited`).toBe(true);
     }
   });
+  it("has a timeline in which a mark's sources exist and kinds are known", () => {
+    for (const a of all) for (const t of a.timeline) {
+      expect(PIN_KINDS[t.kind], a.id).toBeDefined();
+      expect(Number.isInteger(t.year), a.id).toBe(true);
+    }
+  });
   it("parses, with known kinds of mark and links that exist", () => {
     for (const a of all) {
       for (const src of [a.summary, a.transmission, a.variants]) expect(() => blocks(src), a.id).not.toThrow();
       expect(a.summary.trim().length, a.id).toBeGreaterThan(200);
       for (const t of a.timeline) expect(PIN_KINDS[t.kind], a.id).toBeDefined();
       const { cites } = linksIn([...blocks(a.summary), ...blocks(a.transmission), ...blocks(a.variants)]);
-      for (const c of cites) expect(c.work, a.id).toMatch(/^tlg\d{4}\.tlg\d{3}/);
+      for (const c of cites) expect(works.has(c.work), `${a.id}: ${c.work}`).toBe(true);
     }
   });
 });

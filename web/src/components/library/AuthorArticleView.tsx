@@ -8,7 +8,8 @@
 import { blocks, inline } from "@/wiki/markup";
 import { CERTAINTY, type Certainty } from "@/wiki/types";
 import type { AuthorArticle } from "@/wiki/author-articles";
-import { CertTag, Inline, greekAware } from "../stoa/Markup";
+import Link from "next/link";
+import { CertTag, Inline, readHref } from "../stoa/Markup";
 import AuthorRoad from "./AuthorRoad";
 import styles from "./AuthorArticle.module.css";
 
@@ -51,13 +52,13 @@ export default function AuthorArticleView({ name, article: a, draft = false }: {
         )}
         <div className={styles.head}>
           <h2 id="life-title">Life and work</h2>
-          {!draft && a.checked && <span className={styles.stamp} title="Every claim on this page was compared with the sources listed at the bottom">Source-checked · {longDate(a.checked)}</span>}
+          {!draft && a.checked && <span className={styles.stamp} title="Every claim on this page was compared with the sources listed at the bottom">Checked against sources · {longDate(a.checked)}</span>}
         </div>
         <div className={styles.lifeGrid}>
           <div className={styles.lead}><Prose src={a.summary} /></div>
           <aside className={styles.key} aria-label="How to read this article">
-            <h3 className="label">How to read this</h3>
-            <p>Small numbers like <sup className={styles.fakeMark}>1</sup> point to the sources at the bottom of the page.</p>
+            <h3 className="label">Before you read</h3>
+            <p>Little numbers like <sup className={styles.fakeMark}>1</sup> are footnotes. Tap one and it jumps to the source at the bottom of the page, so you can check us.</p>
             {used.size > 0 && (
               <ul>
                 {[...used].map((c) => (
@@ -65,7 +66,7 @@ export default function AuthorArticleView({ name, article: a, draft = false }: {
                 ))}
               </ul>
             )}
-            <p className="muted">Anything unmarked is stated by the sources as plain fact.</p>
+            <p className="muted">No label? Then the sources simply state it as fact.</p>
           </aside>
         </div>
       </section>
@@ -73,24 +74,24 @@ export default function AuthorArticleView({ name, article: a, draft = false }: {
       {a.timeline.length > 0 && (
         <section className={styles.sec} aria-labelledby="road-title">
           <h2 id="road-title">The road of the text</h2>
-          <p className="muted">From {name}&apos;s own time to the books we read now. The gaps show how long the text travelled between one mark and the next.</p>
+          <p className="muted">Follow the text from {name}&apos;s own day to the book in your hands. The gaps are the long silences between one mark and the next.</p>
           <AuthorRoad items={a.timeline} />
         </section>
       )}
 
       <section className={styles.sec} aria-labelledby="survive-title">
-        <h2 id="survive-title">How the text survived</h2>
+        <h2 id="survive-title">How the words reached us</h2>
         <div className={styles.panels}>
           <article className={`${styles.panel} rv`}>
             <PanelIcon kind="scroll" />
             <span className="label">Manuscripts &amp; transmission</span>
-            <h3>How it was handed down</h3>
+            <h3>Passed from hand to hand</h3>
             <Prose src={a.transmission} />
           </article>
           <article className={`${styles.panel} rv`}>
             <PanelIcon kind="fork" />
             <span className="label">Textual variants</span>
-            <h3>Where editors disagree</h3>
+            <h3>Where the copies disagree</h3>
             <Prose src={a.variants} />
           </article>
         </div>
@@ -98,11 +99,11 @@ export default function AuthorArticleView({ name, article: a, draft = false }: {
 
       {a.editions.length > 0 && (
         <section className={styles.sec} aria-labelledby="eds-title">
-          <h2 id="eds-title">Editions and translations to read</h2>
+          <h2 id="eds-title">Books to read it in</h2>
           <ul className={styles.eds}>
             {a.editions.map((e, i) => (
               <li key={i}>
-                <span>{greekAware(e.text, i)}</span>
+                <span><Inline xs={inline(e.text)} /></span>
                 {e.note && <span className="muted"> {e.note}</span>}
               </li>
             ))}
@@ -111,12 +112,14 @@ export default function AuthorArticleView({ name, article: a, draft = false }: {
       )}
 
       <section className={styles.sec} aria-labelledby="sources-title">
-        <h2 id="sources-title">Sources</h2>
+        <h2 id="sources-title">Where this comes from</h2>
         {a.sources.length > 0 ? (
           <ol className={styles.sources}>
             {a.sources.map((s, i) => (
               <li key={i} id={`src-${i + 1}`}>
-                <a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
+                {s.cite
+                  ? <Link href={readHref(s.cite)} transitionTypes={["page-turn"]} title="Read this passage in the Scroll">{s.label}</Link>
+                  : <a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>}
                 {s.note && <span className="muted"> {s.note}</span>}
               </li>
             ))}
@@ -127,7 +130,7 @@ export default function AuthorArticleView({ name, article: a, draft = false }: {
         <p className={styles.checked}>
           {draft || !a.checked
             ? "Not yet compared with its sources."
-            : <>Each statement above was compared with these sources on {longDate(a.checked)}. Where sources disagree, the article says so; what no source supports is left out.</>}
+            : <>We checked every statement above against these sources on {longDate(a.checked)}. Where they disagree, we say so. What we could not confirm, we left out.</>}
         </p>
       </section>
     </>

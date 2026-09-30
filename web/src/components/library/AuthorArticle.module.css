@@ -87,3 +87,7 @@
 @media (min-width: 900px) {
   .stop:first-child { padding-left: 0; }
 }
+
+/* a subheading inside the summary */
+.lead h4 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.3rem, 2vw, 1.6rem); margin: 1.6em 0 0.6em; padding-top: 0.6em; border-top: 1px solid var(--rule); }
+.lead p b { font-family: var(--f-label); letter-spacing: 0.03em; color: var(--accent); font-weight: 700; }

@@ -18,10 +18,10 @@ export const yearLabel = (y: number) => (y < 0 ? `${-y} BC` : y < 1000 ? `AD ${y
 /** Whole years from one mark to the next (there is no year 0). */
 export const yearsBetween = (from: number, to: number) => to - from - (from < 0 && to > 0 ? 1 : 0);
 
-function gapText(n: number): string {
+/** The stretch between two marks. Dates that are round or rough (`approx`) make the gap "about" that long. */
+export function gapText(n: number, approx = false): string {
   if (n < 1) return "";
-  // dates in the timeline are often round or approximate, so long gaps are rounded and said to be "about"
-  if (n >= 100) return `about ${(Math.round(n / 10) * 10).toLocaleString("en-GB")} years later`;
+  if (n >= 100 || approx) return `about ${n >= 20 ? (Math.round(n / 10) * 10).toLocaleString("en-GB") : n} years later`;
   return `${n} year${n === 1 ? "" : "s"} later`;
 }
 
@@ -55,12 +55,12 @@ export default function AuthorRoad({ items }: { items: AuthorArticle["timeline"]
     <div className={styles.roadWrap}>
       <ol ref={ref} className={styles.road} aria-label="Timeline" tabIndex={0}>
         {rows.map((t, i) => {
-          const gap = i ? gapText(yearsBetween(rows[i - 1].year, t.year)) : "";
+          const gap = i ? gapText(yearsBetween(rows[i - 1].year, t.year), !!(rows[i - 1].approx || t.approx)) : "";
           return (
             <li key={`${t.year}-${i}`} className={styles.stop} data-kind={t.kind} style={{ "--i": i } as React.CSSProperties}>
               {gap && <span className={styles.gap}>{gap}</span>}
               <span className={styles.pin}><PinIcon kind={t.kind} /></span>
-              <span className={styles.when}>{yearLabel(t.year)}</span>
+              <span className={styles.when}>{t.approx ? "c. " : ""}{yearLabel(t.year)}</span>
               <span className={styles.kindName}>{PIN_KINDS[t.kind].label}</span>
               <span className={styles.what}>
                 <Inline xs={inline(t.what)} />{t.src && t.src.length > 0 && <Inline xs={[{ src: t.src }]} />}
