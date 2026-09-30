@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { PATHS } from "./paths";
 import { STARTS } from "./starts";
+import { BEST_KNOWN } from "./best-known";
 import { indexCatalog, greekEditions, hasTranslation, type Catalog } from "@/lib/catalog";
 
 const idx = indexCatalog(JSON.parse(readFileSync("public/data/catalog.json", "utf8")) as Catalog);
@@ -25,5 +26,14 @@ describe("suggested starting points", () => {
   it("are distinct works with a Greek edition and a translation", () => {
     expect(new Set(STARTS).size).toBe(STARTS.length);
     for (const w of STARTS) expectReadable(w, "starts");
+  });
+});
+
+describe("best-known works", () => {
+  it("belong to their author and can be read with a translation", () => {
+    for (const [author, w] of Object.entries(BEST_KNOWN)) {
+      expect(w.startsWith(author + "."), w).toBe(true);
+      expectReadable(w, "best-known");
+    }
   });
 });

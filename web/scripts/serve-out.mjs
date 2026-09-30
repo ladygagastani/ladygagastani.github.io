@@ -31,7 +31,10 @@ createServer((req, res) => {
   const path = normalize(decodeURIComponent(new URL(req.url, "http://x").pathname)).replace(/^([/\\])+/, "");
   if (path.startsWith("..")) { res.writeHead(400).end(); return; }
   const base = join(ROOT, path);
-  const file = [base, `${base}.html`, join(base, "index.html")].find(isFile);
+  // a page's prefetch files: a build made on Windows writes __next.stoa.__PAGE__.txt as __next.stoa/__PAGE__.txt
+  const name = path.split(/[/\\]/).pop() ?? "";
+  const nested = /^__next\..+\.txt$/.test(name) ? join(base, "..", name.slice(0, -4).split(".").slice(1).reduce((a, x, i) => (i ? `${a}/${x}` : `__next.${x}`), "") + ".txt") : null;
+  const file = [base, `${base}.html`, join(base, "index.html"), ...(nested ? [nested] : [])].find(isFile);
   const found = file ?? join(ROOT, "404.html");
   // extensionless files are the app's icons (PNG)
   const type = TYPES[extname(found)] ?? (found.includes(`${join("out", "icons")}`) ? "image/png" : "application/octet-stream");

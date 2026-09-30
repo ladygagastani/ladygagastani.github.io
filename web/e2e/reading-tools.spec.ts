@@ -33,7 +33,7 @@ test("Places lists the places the page names, marks their words, and goes to a p
 });
 
 test("Manuscript takes the passage back to capitals without spaces, and opens the Venetus A at the line", async ({ page }) => {
-  await page.addInitScript(() => { localStorage.setItem("mathesis:settings", JSON.stringify({ state: { motion: "reduced" }, version: 0 })); });
+  await page.addInitScript(() => { localStorage.setItem("mathesis:settings", JSON.stringify({ state: { motion: "reduce" }, version: 0 })); });
   await open(page, "w=tlg0012.tlg001&at=1.1", "1.1");
   await page.getByRole("button", { name: "Manuscript", exact: true }).click();
   const panel = page.getByRole("complementary", { name: "The manuscript" });
@@ -60,4 +60,21 @@ test("Manuscript opens a play in the Medicean manuscript at the leaf the catalog
   const panel = page.getByRole("complementary", { name: "The manuscript" });
   await expect(panel.getByText("f. 119r")).toBeVisible({ timeout: 30_000 });
   await expect(panel).toContainText("Plut. 32.9");
+});
+
+test("opening and closing a side panel keeps the passage being read at the top (wide screens)", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 860 });
+  await page.goto("/read?w=tlg0012.tlg001&tr=perseus-eng3&at=1.200");
+  const row = page.locator('article [data-key="1.200"]').first();
+  await expect(row).toBeInViewport({ timeout: 30_000 });
+  await page.waitForTimeout(1500);
+  const top = () => row.evaluate((e) => Math.round(e.getBoundingClientRect().top));
+  const before = await top();
+  await page.getByRole("button", { name: "Manuscript", exact: true }).click();
+  const panel = page.getByRole("complementary", { name: "The manuscript" });
+  await expect(panel).toContainText("Iliad 1.200");
+  expect(Math.abs((await top()) - before)).toBeLessThan(4);
+  await page.getByRole("button", { name: "Manuscript", exact: true }).click();
+  await expect(panel).toBeHidden();
+  expect(Math.abs((await top()) - before)).toBeLessThan(4);
 });

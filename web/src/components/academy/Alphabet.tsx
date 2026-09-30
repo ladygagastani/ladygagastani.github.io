@@ -5,7 +5,7 @@ import { LETTERS, DIPHTHONGS, SYSTEMS, ALLEN, type System } from "@/data/alphabe
 import { coreWords, type CoreEntry } from "@/lib/lookup/core";
 import { fold } from "@/lib/catalog";
 import { audioKey } from "@/lib/audio";
-import { useSettings } from "@/lib/settings";
+import { useSettings, scrollBehavior } from "@/lib/settings";
 import StrokeLetter from "./StrokeLetter";
 import Say from "./Say";
 import styles from "./Academy.module.css";
@@ -50,7 +50,7 @@ export default function Alphabet() {
   const pick = (i: number) => {
     setSel(i);
     const d = detailRef.current;
-    if (d && d.getBoundingClientRect().top > innerHeight * 0.6) d.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (d && d.getBoundingClientRect().top > innerHeight * 0.6) d.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
   };
 
   const L = LETTERS[sel];

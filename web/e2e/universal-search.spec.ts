@@ -96,3 +96,12 @@ test("the reader names the book in the browser tab, and shows a Latin title besi
   await expect(page.getByText("English title from the library's translation")).toBeVisible();
   await expect(page.locator("i[lang='la']", { hasText: "Supplices" }).first()).toBeVisible();
 });
+
+test("searching the Painted Stoa from its own front page fills in its search box", async ({ page }) => {
+  await page.goto("/stoa");
+  const box = await open(page);
+  await box.getByRole("combobox").fill("sparta");
+  await box.getByRole("option", { name: /Search the Painted Stoa/ }).click();
+  await expect(page).toHaveURL(/\/stoa\?q=sparta/);
+  await expect(page.getByRole("searchbox", { name: "Search the Painted Stoa" })).toHaveValue("sparta");
+});

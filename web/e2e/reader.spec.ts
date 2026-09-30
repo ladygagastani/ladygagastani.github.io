@@ -105,3 +105,11 @@ test("colour by case and the vocabulary list work where GLAUx cites the text by 
   await expect(page.getByRole("complementary", { name: "Vocabulary for this page" }).getByRole("listitem").first()).toContainText("ὁ");
   await page.getByRole("button", { name: "Colour by case" }).click();   // leave the setting as it was
 });
+
+test("a link to a work that is not in the library, or to a passage the text does not have, says so", async ({ page }) => {
+  await page.goto("/read?w=nonsense");
+  await expect(page.getByRole("heading", { name: "This work is not in the library" })).toBeVisible();
+  await page.goto("/read?w=tlg0012.tlg001&tr=perseus-eng3&at=99.99");
+  await expect(page.locator('[data-key="1.1"]').first()).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText(/No passage "99\.99" in this text/)).toBeVisible();
+});

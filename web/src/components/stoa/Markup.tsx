@@ -30,7 +30,7 @@ export function CertTag({ c }: { c: Certainty }) {
 export function SourceMark({ n }: { n: number[] }) {
   return (
     <sup className={styles.srcMark}>
-      {n.map((k, j) => <a key={k} href={`#src-${k}`} aria-label={`Source ${k}`}>{j ? "," : ""}{k}</a>)}
+      {[...n].sort((a, b) => a - b).map((k, j) => <Fragment key={k}>{j ? <span className={styles.srcSep}>,</span> : null}<a href={`#src-${k}`} aria-label={`Source ${k}`}>{k}</a></Fragment>)}
     </sup>
   );
 }

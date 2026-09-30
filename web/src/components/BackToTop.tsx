@@ -9,6 +9,7 @@
  */
 import { useEffect, useState, type RefObject } from "react";
 import styles from "./BackToTop.module.css";
+import { prefersReducedMotion, useSettings } from "@/lib/settings";
 
 const SHOW_AFTER = 700;   // px scrolled before it appears
 
@@ -33,7 +34,7 @@ export default function BackToTop({ paneRef, page = true }: { paneRef?: RefObjec
   const inPane = !!paneRef && scrolls(paneRef.current);
   if (!inPane && !page) return null;
   const up = () => {
-    const behavior = matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    const behavior = prefersReducedMotion(useSettings.getState().motion) ? "auto" : "smooth";
     const el = paneRef?.current;
     if (scrolls(el)) el.scrollTo({ top: 0, behavior }); else window.scrollTo({ top: 0, behavior });
     // the next Tab starts from the top of the page, not from where you were

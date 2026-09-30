@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import type { Colour } from "@/lib/annotations";
 import { useQuickGloss, type WordContext } from "./WordPanel";
 import styles from "./Reader.module.css";
+import { scrollBehavior } from "@/lib/settings";
 
 const PHONE = "(max-width: 760px)";
 
@@ -40,7 +41,7 @@ export default function PassageToolbar({ sel, onAction, onClose, xref = null, wo
       // placed along the bottom by the CSS: move the page if the words would be hidden behind it
       el.style.opacity = "1";
       const cover = el.getBoundingClientRect().top - 16;
-      if (sel.rect.bottom > cover) scrollBy({ top: sel.rect.bottom - cover, behavior: "smooth" });
+      if (sel.rect.bottom > cover) scrollBy({ top: sel.rect.bottom - cover, behavior: scrollBehavior() });
       return;
     }
     const w = el.offsetWidth, h = el.offsetHeight;

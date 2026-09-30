@@ -41,3 +41,8 @@ test("Ask in the forum carries the passage from the reader to a new thread", asy
   await expect(page.getByRole("link", { name: /1\.1/ }).first()).toHaveAttribute("href", /\/read\?w=tlg0012\.tlg001/);
   await expect(page.getByText(/to start a thread/)).toBeVisible();
 });
+
+test("a member page with no member named says so instead of waiting", async ({ page }) => {
+  await page.goto("/town-hall/member");
+  await expect(page.getByText("No member was named.")).toBeVisible();
+});

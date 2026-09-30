@@ -4,7 +4,8 @@
  * entries, with a search across every entry and a featured entry that changes each day.
  */
 import Link from "next/link";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { Suspense, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useSearchParams } from "next/navigation";
 import { fold } from "@/lib/catalog";
 import { ENTRIES, entriesIn } from "@/wiki/index";
 import { inline, plain } from "@/wiki/markup";
@@ -21,12 +22,17 @@ const HAYSTACK = ENTRIES.map((e) => ({ e, hay: fold(`${e.title} ${e.greek ?? ""}
 /** A reference page the Wiki offers besides its entries (Authors, Eras, Editions). */
 export interface RefCard { href: string; title: string; greek: string; blurb: string }
 
+/** A search handed over from Quick search (/stoa?q=…), also when this page is already open. */
+function QueryFromUrl({ onQuery }: { onQuery: (q: string) => void }) {
+  const v = useSearchParams().get("q");
+  useEffect(() => { if (v) onQuery(v); }, [v, onQuery]);
+  return null;
+}
+
 export default function StoaIndex({ reference = [] }: { reference?: RefCard[] }) {
   const [q, setQ] = useState("");
   const n = fold(q).trim();
   const found = useMemo(() => (n ? HAYSTACK.filter((h) => h.hay.includes(n)).map((h) => h.e) : []), [n]);
-  // a search handed over from Quick search (/stoa?q=…)
-  useEffect(() => { const v = new URLSearchParams(location.search).get("q"); if (v) setQ(v); }, []);
   // one entry featured each day, the same for everyone (by date, not at random); the built page shows the first
   const day = useSyncExternalStore(noSubscribe, () => Math.floor(Date.now() / 864e5), () => 0);
   const featured = ENTRIES.length ? [...ENTRIES].sort((a, b) => a.slug.localeCompare(b.slug))[day % ENTRIES.length] : null;
@@ -34,6 +40,7 @@ export default function StoaIndex({ reference = [] }: { reference?: RefCard[] })
 
   return (
     <div className={`wrap ${styles.index}`}>
+      <Suspense fallback={null}><QueryFromUrl onQuery={setQ} /></Suspense>
       <div className={styles.searchRow} role="search">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L21 21" /></svg>
         <input enterKeyHint="search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search all ${ENTRIES.length} entries: Melos, plague…`} aria-label="Search the Painted Stoa" />

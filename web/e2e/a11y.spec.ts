@@ -16,7 +16,7 @@ const PAGES = [...[...new Set(offlinePages())].filter((p) => !["/town-hall/threa
 
 async function audit(page: Page, path: string, theme: "light" | "dark") {
   await page.addInitScript((t) => {
-    localStorage.setItem("mathesis:settings", JSON.stringify({ state: { theme: t, motion: "reduced" }, version: 0 }));
+    localStorage.setItem("mathesis:settings", JSON.stringify({ state: { theme: t, motion: "reduce" }, version: 0 }));
   }, theme);
   await page.goto(path);
   await expect(page.locator("h1").first()).toBeVisible();
@@ -79,7 +79,7 @@ for (const theme of ["light", "dark"] as const) {
       test(`${name} (${theme})`, async ({ page }) => {
         test.setTimeout(90_000);
         await page.addInitScript((t) => {
-          localStorage.setItem("mathesis:settings", JSON.stringify({ state: { theme: t, motion: "reduced" }, version: 0 }));
+          localStorage.setItem("mathesis:settings", JSON.stringify({ state: { theme: t, motion: "reduce" }, version: 0 }));
         }, theme);
         await page.goto(path);
         await expect(page.locator("h1").first()).toBeVisible();

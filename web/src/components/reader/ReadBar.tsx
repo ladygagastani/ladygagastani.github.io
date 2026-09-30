@@ -169,7 +169,8 @@ function Sheet({ id, label, open, onClose, children }: { id: string; label: stri
         <h2 className="label">{label}</h2>
         <button type="button" className={styles.x} onClick={onClose} aria-label={`Close ${label.toLowerCase()}`}>×</button>
       </div>
-      <div className={styles.sheetBody}>{children}</div>
+      {/* a button that opens a panel (data-closes-sheet) puts the sheet away, so the panel is not hidden under it */}
+      <div className={styles.sheetBody} onClick={(e) => { if ((e.target as Element).closest?.("[data-closes-sheet]")) onClose(); }}>{children}</div>
     </div>
   );
 }

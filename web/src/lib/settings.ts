@@ -102,6 +102,9 @@ export function prefersReducedMotion(motion: MotionPref): boolean {
   return typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+/** "smooth" unless animation is reduced (the site's setting, then the device's): for scrollTo, scrollBy and scrollIntoView. */
+export const scrollBehavior = (): ScrollBehavior => (prefersReducedMotion(useSettings.getState().motion) ? "auto" : "smooth");
+
 /**
  * Runs before first paint (inlined in <head>) so the saved theme never flashes.
  * Must mirror applySettings().

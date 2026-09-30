@@ -10,6 +10,7 @@ import { commonShare, loadDifficulty, VOCAB_BANDS } from "@/lib/difficulty";
 import { scrollBelowHeader } from "@/lib/header";
 import { workPath } from "@/lib/seo";
 import styles from "./Library.module.css";
+import { prefersReducedMotion, useSettings } from "@/lib/settings";
 
 /**
  * Where to begin. The site's own guidance, following the brief; the reasons are the ones
@@ -161,7 +162,7 @@ export default function Library() {
   const barRef = useRef<HTMLElement>(null);
   const jump = (key: string) => {
     const el = document.getElementById(`lib-${key}`);
-    if (el) scrollBelowHeader(el, (barRef.current?.offsetHeight ?? 0) + 12, !matchMedia("(prefers-reduced-motion: reduce)").matches);
+    if (el) scrollBelowHeader(el, (barRef.current?.offsetHeight ?? 0) + 12, !prefersReducedMotion(useSettings.getState().motion));
   };
 
   // arriving with ?a=tlg0012 (from the reader or an author page): bring that author into view and mark them

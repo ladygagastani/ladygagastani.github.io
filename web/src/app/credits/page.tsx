@@ -44,6 +44,12 @@ export default function CreditsPage() {
           CC BY-SA 4.0 means anyone may share and adapt this material, as long as they credit the source and share
           what they make under the same licence.
         </p>
+        <p>
+          <b>What this site adds to the collections&apos; catalogue information:</b> an English title for works the
+          collections name only in Latin or Greek. Some are taken from the collections&apos; own English translations; the
+          rest are this site&apos;s translations of the Latin or Greek title, and are labelled as such. The library, the reader and
+          each work&apos;s page show the original title under the English one. The texts themselves are unchanged.
+        </p>
 
         <h2>Words and dictionaries</h2>
         <ul>

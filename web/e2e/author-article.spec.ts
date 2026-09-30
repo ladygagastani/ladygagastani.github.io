@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 for (const theme of ["light", "dark"] as const) {
   test(`herodotus article ${theme}`, async ({ page }) => {
-    await page.addInitScript((t) => { localStorage.setItem("mathesis:settings", JSON.stringify({ state: { theme: t, motion: "reduced" }, version: 0 })); }, theme);
+    await page.addInitScript((t) => { localStorage.setItem("mathesis:settings", JSON.stringify({ state: { theme: t, motion: "reduce" }, version: 0 })); }, theme);
     await page.goto("/author/tlg0016");
     await expect(page.locator("h1").first()).toBeVisible();
     await expect(page.getByRole("heading", { name: "Life and work" })).toBeVisible();
@@ -36,7 +36,7 @@ test("the published site carries only checked articles (no draft text)", async (
 /** Every published article renders its road of marks and its numbered sources (the counts come from the data). */
 for (const [id, marks, sources] of [["tlg0012", 11, 33], ["tlg0003", 12, 21], ["tlg0059", 13, 22], ["tlg0011", 14, 16], ["tlg0086", 11, 20], ["tlg0006", 15, 10], ["tlg0085", 18, 31]] as const) {
   test(`${id}: the article shows ${marks} marks and ${sources} sources, with no accessibility problems`, async ({ page }) => {
-    await page.addInitScript(() => { localStorage.setItem("mathesis:settings", JSON.stringify({ state: { theme: "dark", motion: "reduced" }, version: 0 })); });
+    await page.addInitScript(() => { localStorage.setItem("mathesis:settings", JSON.stringify({ state: { theme: "dark", motion: "reduce" }, version: 0 })); });
     await page.goto(`/author/${id}`);
     await expect(page.getByRole("heading", { name: "Life and work" })).toBeVisible();
     await expect(page.locator("ol[aria-label=Timeline] li")).toHaveCount(marks);

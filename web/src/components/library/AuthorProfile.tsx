@@ -18,6 +18,7 @@ import { articleFor } from "@/wiki/author-articles";
 import { WorkItem } from "./Library";
 import AuthorArticleView from "./AuthorArticleView";
 import lib from "./Library.module.css";
+import { BEST_KNOWN } from "@/data/best-known";
 import styles from "./AuthorProfile.module.css";
 
 export type { RelatedEntry } from "@/wiki/related";
@@ -75,11 +76,13 @@ export function AuthorView({ author, meta, diff, who: wd, related: entries, land
     };
   }, [author, meta]);
 
-  // where to begin: the works with an English translation whose words are the most familiar
+  // where to begin: a famous author's best-known work first, then the works with an English translation
+  // whose words are the most familiar
+  const famous = author.works.find((w) => w.id === BEST_KNOWN[author.id] && hasTranslation(w));
   const begin = useMemo(() => author.works
     .map((w) => ({ w, p: commonShare(diff[w.id]) }))
-    .filter((x): x is { w: typeof x.w; p: number } => x.p !== null && hasTranslation(x.w))
-    .sort((a, b) => b.p - a.p).slice(0, 3), [author, diff]);
+    .filter((x): x is { w: typeof x.w; p: number } => x.p !== null && hasTranslation(x.w) && x.w !== famous)
+    .sort((a, b) => b.p - a.p).slice(0, famous ? 2 : 3), [author, diff, famous]);
 
   const lived = lifeSpan(wd);
   const written = articleFor(author.id);
@@ -103,11 +106,12 @@ export function AuthorView({ author, meta, diff, who: wd, related: entries, land
 
       {written && <AuthorArticleView name={author.name} article={written.article} draft={written.draft} />}
 
-      {begin.length > 0 && author.works.length > 3 && (
+      {(begin.length > 0 || famous) && author.works.length > 3 && (
         <section className={styles.sec} aria-labelledby="begin-title">
           <h2 id="begin-title">Where to begin</h2>
-          <p className="muted">The works here with a translation and the most familiar vocabulary: the fewest rare words to look up. That is vocabulary only; grammar, dialect and ideas may still be demanding.</p>
+          <p className="muted">{famous ? `First the work ${author.name} is best known for; then the` : "The"} works here with a translation and the most familiar vocabulary: the fewest rare words to look up. That is vocabulary only; grammar, dialect and ideas may still be demanding.</p>
           <ul className={lib.works}>
+            {famous && <WorkItem key={famous.id} w={famous} meta={meta[famous.id]} common={commonShare(diff[famous.id])} about={landing} />}
             {begin.map(({ w, p }) => <WorkItem key={w.id} w={w} meta={meta[w.id]} common={p} about={landing} />)}
           </ul>
         </section>

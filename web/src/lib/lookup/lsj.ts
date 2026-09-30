@@ -33,6 +33,8 @@ function loadShard(shard: string) {
 /** Entries for a headword: exact spelling first, else the same letters ignoring accents. */
 export async function lsjEntries(headword: string): Promise<{ head: string; entries: LsjEntry[] } | null> {
   const h = headword.normalize("NFC");
+  // no Greek letters to file it under (a word typed in Latin letters): no entry, without asking for a file that does not exist
+  if (shardOf(h) === "_") return null;
   const data = await loadShard(shardOf(h));
   if (!data) return null;
   if (data[h]) return { head: h, entries: data[h] };

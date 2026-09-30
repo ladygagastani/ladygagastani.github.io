@@ -17,7 +17,7 @@ import {
 } from "@/lib/census";
 import { loadPlaces, type Place } from "@/lib/map";
 import { transliterate } from "@/lib/translit";
-import { prefersReducedMotion, useSettings } from "@/lib/settings";
+import { prefersReducedMotion, useSettings, scrollBehavior } from "@/lib/settings";
 import ItemPanel from "./ItemPanel";
 import Facts from "./Facts";
 import Method from "./Method";
@@ -138,7 +138,7 @@ function CensusView({ meta, links }: { meta: CensusMeta; links: Links }) {
         </aside>
       </div>
 
-      <Facts meta={meta} cats={cats} onOpen={(c, s) => { go([["c", c], ["i", null], ...scopeParams(s)]); window.scrollTo({ top: 0, behavior: "smooth" }); }} />
+      <Facts meta={meta} cats={cats} onOpen={(c, s) => { go([["c", c], ["i", null], ...scopeParams(s)]); window.scrollTo({ top: 0, behavior: scrollBehavior() }); }} />
       <Method meta={meta} />
     </div>
   );

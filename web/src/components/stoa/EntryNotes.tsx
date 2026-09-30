@@ -11,6 +11,7 @@ import { savedScroll } from "@/lib/resume";
 import { PageNoteEditor } from "@/components/treasury/AuthorsSection";
 import ScrollMarkers, { MarkersLegend, type MarkerItem } from "@/components/reader/ScrollMarkers";
 import styles from "./Stoa.module.css";
+import { scrollBehavior } from "@/lib/settings";
 
 const useNotesLoaded = () => {
   const loaded = usePageNotes((s) => s.loaded);
@@ -68,7 +69,7 @@ export function EntryMarkers({ slug, heads }: { slug: string; heads: { id: strin
     return out;
   }, [notes, slug, heads, left]);
 
-  const jump = (key: string) => document.querySelector(`[data-key="${CSS.escape(key)}"]`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const jump = (key: string) => document.querySelector(`[data-key="${CSS.escape(key)}"]`)?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
   return (
     <>
       <span ref={setAnchor} hidden />

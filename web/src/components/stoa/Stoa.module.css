@@ -213,4 +213,5 @@
 /* a numbered source pointer, in running text */
 .srcMark { font-family: var(--f-label); font-size: 0.72em; line-height: 0; margin-left: 1px; }
 .srcMark a { text-decoration: none; color: var(--accent); padding: 0 1px; }
+.srcSep { color: var(--accent); margin-right: 1px; }
 .srcMark a:hover, .srcMark a:focus-visible { text-decoration: underline; }

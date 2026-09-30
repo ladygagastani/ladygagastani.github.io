@@ -261,3 +261,19 @@ test("Try it first hides each translation until it is tapped; Fit lines keeps ev
   // remembered
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem("mathesis:settings")!).state.fitLines)).toBe(true);
 });
+
+test("a reading aid that opens a panel puts the aids sheet away, so the panel is not hidden under it", async ({ page }) => {
+  await openIliad(page);
+  const bar = readBar(page);
+  const aids = page.getByRole("dialog", { name: "Reading aids" });
+  for (const [aid, panel] of [["Vocabulary", /vocabulary/i], ["Places", "Places on this page"], ["Manuscript", "The manuscript"]] as const) {
+    await bar.getByRole("button", { name: "Aids" }).click();
+    await expect(aids).toBeVisible();
+    await aids.getByRole("button", { name: aid, exact: true }).click();
+    await expect(aids).toBeHidden();
+    const shown = page.getByRole("complementary", { name: panel }).first();
+    await expect(shown).toBeVisible();
+    await shown.getByRole("button", { name: /^Close/ }).first().click();
+    await expect(shown).toBeHidden();
+  }
+});

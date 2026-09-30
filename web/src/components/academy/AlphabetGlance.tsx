@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { LETTERS, SYSTEMS, type System } from "@/data/alphabet";
 import { audioKey } from "@/lib/audio";
-import { useSettings } from "@/lib/settings";
+import { useSettings, prefersReducedMotion } from "@/lib/settings";
 import Say from "./Say";
 import styles from "./Academy.module.css";
 
@@ -25,7 +25,7 @@ export default function AlphabetGlance({ headingLevel = 3 }: { headingLevel?: 2 
     setSel(i === sel ? null : i);
     const c = cardRef.current;
     if (c && c.getBoundingClientRect().bottom > innerHeight - 90) {
-      c.scrollIntoView({ block: "end", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      c.scrollIntoView({ block: "end", behavior: prefersReducedMotion(useSettings.getState().motion) ? "auto" : "smooth" });
     }
   };
   const L = sel === null ? null : LETTERS[sel];

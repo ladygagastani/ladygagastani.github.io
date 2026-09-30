@@ -27,6 +27,7 @@ export default function Member() {
   const p = got.data?.p;
   const ts = got.data?.ts ?? [];
 
+  if (!id) return <p className={`wrap ${styles.status}`}>No member was named. <Link href="/town-hall">Back to the Town Hall</Link></p>;
   if (got.error && !got.data) return <p className={`wrap ${styles.error}`}>{problem(got.error)}</p>;
   if (p === undefined) return <div className={`wrap ${styles.status}`} aria-busy="true"><span className={styles.spinner} aria-hidden="true" /> One moment…</div>;
   if (!p) return <p className={`wrap ${styles.status}`}>No such member. <Link href="/town-hall">Back to the Town Hall</Link></p>;

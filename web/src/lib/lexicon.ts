@@ -48,6 +48,7 @@ export const loadLexMeta = () => (metaP ??= json<LexMeta>(`${BASE}/_meta.json`).
 export async function lexEntry(lemma: string): Promise<{ lemma: string; entry: LexEntry; alike: string[] } | null> {
   const c = canonLemma(lemma);
   const s = shardOf(greekKey(c));
+  if (s === "_") return null;   // no Greek letters: no dictionary word
   if (!shards.has(s)) shards.set(s, json<Record<string, LexEntry>>(`${BASE}/${encodeURIComponent(s)}.json`).catch((e) => { shards.delete(s); throw e; }));
   const data = await shards.get(s)!;
   if (!data) return null;

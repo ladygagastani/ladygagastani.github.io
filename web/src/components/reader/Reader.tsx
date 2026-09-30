@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createContext, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, memo, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   loadCatalog, greekEditions, translations, describe, versionOf,
   type CatalogIndex, type CatText, type CatWork,
@@ -12,7 +12,7 @@ import { parseInWorker, type Parsed } from "@/lib/tei/client";
 import { alignChunk, coverage, type Row } from "@/lib/tei/align";
 import { findRef, chunkOf } from "@/lib/tei/refs";
 import { getPosition, savePosition } from "@/lib/position";
-import { useSettings, LIMITS, type Columns } from "@/lib/settings";
+import { useSettings, LIMITS, type Columns, scrollBehavior } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
 import { AREAS, SITE } from "@/config/areas";
 import { Blocks } from "./Blocks";
@@ -256,6 +256,11 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   }, [tu, placed]);
   const startUnit = tuAt !== undefined ? tuAt : doc && target ? Math.max(0, findRef(doc, target)) : 0;
   const chunk = doc ? chunkOf(doc, startUnit) : 0;
+  // a link to a passage this text does not have opens at the start: say so, rather than silently
+  const missingAt = doc && at && tuAt === undefined && findRef(doc, at) < 0 ? at : null;
+  useEffect(() => {
+    if (missingAt && doc) toast(`No passage "${missingAt}" in this text, so it opens at the start. Try a reference like ${doc.units[Math.min(40, doc.units.length - 1)].ref.join(".")}.`);
+  }, [missingAt, doc, toast]);
   const unitKeys = useMemo(() => new Set(doc?.units.map((u) => u.ref.join(".")) ?? []), [doc]);
   const pageKeys = useMemo(() => new Set(doc && doc.chunks[chunk] ? doc.units.slice(doc.chunks[chunk].first, doc.chunks[chunk].last + 1).map((u) => u.ref.join(".")) : []), [doc, chunk]);
   const rows = useMemo(() => (doc && doc.chunks[chunk] ? alignChunk(doc, doc.chunks[chunk], placed) : []), [doc, chunk, placed]);
@@ -399,6 +404,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const key = topKey();
+        const el = key ? root().querySelector<HTMLElement>(`article [data-key="${CSS.escape(key)}"]`) : null;
+        topAnchor.current = key && el ? { key, top: el.getBoundingClientRect().top } : null;
         if (!key || key === last) return;
         last = key;
         setTopRow(key);
@@ -414,6 +421,20 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     // topKey reads the page as it is
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rows, workId, edV, trV, contained, pane, floating]);
+
+  // Opening or closing a side panel narrows or widens the text, and its lines re-flow: keep the passage that
+  // was at the top where it was, instead of letting the page slide back or ahead by many lines.
+  const topAnchor = useRef<{ key: string; top: number } | null>(null);
+  const panelOpen = !!(word || echo || vocabOpen || placesOpen || msOpen);
+  useLayoutEffect(() => {
+    const a = topAnchor.current;
+    const el = a ? root().querySelector<HTMLElement>(`article [data-key="${CSS.escape(a.key)}"]`) : null;
+    if (!a || !el) return;
+    const d = el.getBoundingClientRect().top - a.top;
+    if (Math.abs(d) > 1) (contained ? rootRef.current! : window).scrollBy({ top: d, behavior: "instant" });
+    // only when a panel opens or closes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [panelOpen]);
 
   // the sticky bar's height, so a passage brought into view is not hidden under it
   const hasRows = rows.length > 0;
@@ -783,7 +804,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
     // phones and tablets: the look-up rises from the bottom over up to 62% of the screen, so the word moves up above it
     if (!floating && matchMedia("(max-width: 900px)").matches) {
       const r = w.getBoundingClientRect();
-      if (r.bottom > innerHeight * 0.38 - 12) scrollBy({ top: r.top - innerHeight * 0.2, behavior: "smooth" });
+      if (r.bottom > innerHeight * 0.38 - 12) scrollBy({ top: r.top - innerHeight * 0.2, behavior: scrollBehavior() });
     }
   };
 
@@ -984,8 +1005,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   if (!workId || (idx && !work)) {
     return (
       <div className={`wrap ${styles.message}`}>
-        <h1>No work chosen</h1>
-        <p className="muted">Choose something to read in {AREAS.library.name}.</p>
+        <h1>{workId ? "This work is not in the library" : "No work chosen"}</h1>
+        <p className="muted">{workId ? <>There is no work <code>{workId}</code> in the catalogue: the link may be mistyped. </> : null}Choose something to read in {AREAS.library.name}.</p>
         <Link className="btn" href={AREAS.library.href} transitionTypes={["page-turn"]}>Open {AREAS.library.name}</Link>
       </div>
     );
@@ -1013,9 +1034,9 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       <button type="button" className="chip" aria-pressed={translit} onClick={() => setSettings({ translit: !translit })} title="Show each line in Latin letters">Transliteration</button>
       <button type="button" className="chip" aria-pressed={cases} onClick={() => setSettings({ cases: !cases })} title="Underline nouns, adjectives and participles in the colour of their case">Colour by case</button>
       {mInfo && <button type="button" className="chip" aria-pressed={metreOn} onClick={() => setSettings({ metre: !metreOn })} title="Mark long and short syllables, feet and caesura">Metre</button>}
-      <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setPlacesOpen(false); setMsOpen(false); setWord(null); setEcho(null); }}>Vocabulary</button>
-      <button type="button" className="chip" aria-pressed={placesOpen} onClick={() => { setPlacesOpen(!placesOpen); setVocabOpen(false); setMsOpen(false); setWord(null); setEcho(null); }} title="The places this page names, on a map">Places</button>
-      <button type="button" className="chip" aria-pressed={msOpen} onClick={() => { setMsOpen(!msOpen); setVocabOpen(false); setPlacesOpen(false); setWord(null); setEcho(null); }} title="The passage as a scribe wrote it, and the page of a real manuscript">Manuscript</button>
+      <button type="button" className="chip" data-closes-sheet="" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setPlacesOpen(false); setMsOpen(false); setWord(null); setEcho(null); }}>Vocabulary</button>
+      <button type="button" className="chip" data-closes-sheet="" aria-pressed={placesOpen} onClick={() => { setPlacesOpen(!placesOpen); setVocabOpen(false); setMsOpen(false); setWord(null); setEcho(null); }} title="The places this page names, on a map">Places</button>
+      <button type="button" className="chip" data-closes-sheet="" aria-pressed={msOpen} onClick={() => { setMsOpen(!msOpen); setVocabOpen(false); setPlacesOpen(false); setWord(null); setEcho(null); }} title="The passage as a scribe wrote it, and the page of a real manuscript">Manuscript</button>
       {trText && columns === "both" && <button type="button" className="chip" aria-pressed={tryFirst} onClick={() => setSettings({ tryFirst: !tryFirst })} title="Hide each translation until you tap it, so you read the Greek first">Try it first</button>}
       {hasLines && <button type="button" className="chip" aria-pressed={fitLines} onClick={() => setSettings({ fitLines: !fitLines })} title="Make each verse line fit the width of the page instead of wrapping">Fit lines</button>}
     </div>

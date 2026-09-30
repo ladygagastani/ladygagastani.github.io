@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { AREAS, NAV, SITE } from "@/config/areas";
-import { useSettings } from "@/lib/settings";
+import { useSettings, scrollBehavior } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
 import { barsHeld } from "@/lib/header";
 import ConnectionLight from "./ConnectionLight";
@@ -91,7 +91,7 @@ export default function Header() {
     const x = a.getBoundingClientRect().left - n.getBoundingClientRect().left + n.scrollLeft;
     n.scrollTo({ left: x - (n.clientWidth - a.offsetWidth) / 2 });
   }, [pathname]);
-  const scrollMenu = () => navRef.current?.scrollBy({ left: navRef.current.clientWidth * 0.6, behavior: "smooth" });
+  const scrollMenu = () => navRef.current?.scrollBy({ left: navRef.current.clientWidth * 0.6, behavior: scrollBehavior() });
 
   const toggleTheme = () => {
     const dark = theme === "dark" || (theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
