@@ -1,6 +1,6 @@
 """
 Publish the large generated data packs to their own GitHub Pages site, so the live site can use them:
-  https://mathesisstoicheion.github.io/packs/words/…   word analyses   (pipeline/build_words.py)
+  https://mathesisstoicheion.com/packs/words/…   word analyses   (pipeline/build_words.py)
                                      /lsj/…     LSJ              (pipeline/build_lsj.py)
                                      /lexicon/… Word Study index (web/scripts/build-lexicon.ts)
                                      /search/…  Oracle index     (web/scripts/build-search.ts)
@@ -32,7 +32,7 @@ FILE_LIMIT = 100_000_000
 
 README = """# Data packs for Mathesis Stoicheion
 
-Generated files used by https://mathesisstoicheion.github.io/ (the Greek reader): word analyses (`words/`),
+Generated files used by https://mathesisstoicheion.com/ (the Greek reader): word analyses (`words/`),
 the Liddell–Scott–Jones dictionary (`lsj/`), the Word Study index (`lexicon/`) and the search index
 (`search/`). They are rebuilt by the site's pipeline and replaced here as a whole; do not edit them by hand.
 
@@ -44,7 +44,7 @@ Sources and licences:
 - Search index: built from the Perseus Digital Library (canonical-greekLit) and First1KGreek texts,
   CC BY-SA 4.0, and from GLAUx.
 
-These derived files are shared under CC BY-SA 4.0. Full credits: https://mathesisstoicheion.github.io/credits
+These derived files are shared under CC BY-SA 4.0. Full credits: https://mathesisstoicheion.com/credits
 """
 
 
@@ -86,7 +86,7 @@ def main() -> None:
         return
     print(f"pushing to {REMOTE} (replaces what is there)...", flush=True)
     subprocess.run(["git", "push", "--force", REMOTE, "main"], cwd=STAGE, check=True)
-    print("done. GitHub Pages publishes it in a few minutes: https://mathesisstoicheion.github.io/packs/lsj/_meta.json")
+    print("done. GitHub Pages publishes it in a few minutes: https://mathesisstoicheion.com/packs/lsj/_meta.json")
 
 
 if __name__ == "__main__":

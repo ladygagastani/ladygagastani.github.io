@@ -22,7 +22,8 @@ The owner is moving the project to another account. A new session should read `C
 **Things only the owner can do** (they sign in themselves; never type or read their passwords)
 4. **Try the forum drafts with their own account**: open a reply box, type, reload, and check the text comes back (tested only with pretend accounts).
 5. **Sign-up and reset emails may go to spam** (the owner's reset email did). Decision so far: wait and see whether real members are hit before paying for a transactional sender (see Next steps, item 1).
-6. **Tell Google about the site**: add it to Google Search Console, verify it, and submit https://mathesisstoicheion.github.io/sitemap.xml (Bing Webmaster Tools too). A session can walk the owner through it.
+3. **Switch the new domain on (bought 2026-09-30: `mathesisstoicheion.com`)**: (a) at the registrar add the DNS records listed in DEPLOYMENT.md, "The custom domain"; (b) GitHub → repository Settings → Pages → Custom domain → `mathesisstoicheion.com`, then tick Enforce HTTPS when it appears; (c) Supabase → Authentication → URL Configuration: add `https://mathesisstoicheion.com` (Site URL and redirect URLs; keep the github.io one). Only then push: the code already says `SITE_URL = https://mathesisstoicheion.com` (committed, unpushed).
+6. **Tell Google about the site**: add it to Google Search Console, verify it, and submit https://mathesisstoicheion.com/sitemap.xml (Bing Webmaster Tools too). Do this after the domain is switched on. A session can walk the owner through it.
 7. **Try the site on an iPhone** if one is to hand (tilting the vase asks permission there; iPhones cannot vibrate).
 
 **Waiting for the owner's go-ahead**

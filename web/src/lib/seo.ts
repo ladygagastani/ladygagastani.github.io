@@ -5,7 +5,7 @@
  */
 import { SITE } from "@/config/areas";
 
-export const SITE_URL = "https://mathesisstoicheion.github.io";
+export const SITE_URL = "https://mathesisstoicheion.com";
 export const absolute = (path: string) => new URL(path, SITE_URL).toString();
 /**
  * A work's page address. The catalogue's id has a dot ("tlg0012.tlg001"); in the address it is a dash

@@ -24,7 +24,7 @@ Write every progress message in plain English. Explain any unavoidable technical
 
 ## Git and the live site
 Commit a snapshot at the end of each piece of work. **Do not push unless the owner asks**: every push to `main`
-republishes the live site, https://mathesisstoicheion.github.io/ (see `DEPLOYMENT.md`).
+republishes the live site, https://mathesisstoicheion.com/ (see `DEPLOYMENT.md`).
 
 ## Accounts and the forum (Supabase)
 Accounts, the Town Hall and the Pnyx run on Supabase (see PROGRESS.md, Phase 8). The owner signs in to Supabase, GitHub and the

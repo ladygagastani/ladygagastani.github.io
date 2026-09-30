@@ -18,9 +18,9 @@ A free website for learning to read Ancient Greek and exploring the Greek world.
 
 ## The live site
 
-https://mathesisstoicheion.github.io/ is published by GitHub Pages from this repository: every push to `main` builds a
+https://mathesisstoicheion.com/ is published by GitHub Pages from this repository: every push to `main` builds a
 static copy (`output: "export"`) and publishes it (`.github/workflows/deploy.yml`). The large generated data
-(below) is not in this repository: it is published separately to https://mathesisstoicheion.github.io/packs/ by
+(below) is not in this repository: it is published separately to https://mathesisstoicheion.com/packs/ by
 `python pipeline/publish_packs.py --push`, and the live site reads it from there. See `DEPLOYMENT.md`.
 
 ## Running the site
@@ -62,7 +62,7 @@ To rebuild everything, in this order (Python commands from the top folder, `npx`
 | 4 | `python pipeline/build_pack_index.py` | Sizes and checksums of steps 2, 3 and 6, for offline downloads (run it again after step 6). |
 | 5 | `npx tsx scripts/build-search.ts grc`, then `eng`, then `lem` | The search index, `web/public/data/search/` (about 320 MB). |
 | 6 | `npx tsx scripts/build-lexicon.ts` | The Word Study index, `web/public/data/lexicon/` (about 40 MB): every form of every dictionary word, and its count in each work (needs step 2). |
-| 7 | `python pipeline/publish_packs.py --push` | Publishes steps 2, 3, 5 and 6 to https://mathesisstoicheion.github.io/packs/ for the live site (see `DEPLOYMENT.md`). Without `--push` it only checks and prepares. |
+| 7 | `python pipeline/publish_packs.py --push` | Publishes steps 2, 3, 5 and 6 to https://mathesisstoicheion.com/packs/ for the live site (see `DEPLOYMENT.md`). Without `--push` it only checks and prepares. |
 
 Rebuilding the committed data, only when its sources change:
 
