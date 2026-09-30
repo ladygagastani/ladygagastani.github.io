@@ -16,6 +16,7 @@
  *   [Thuc. 5.89](cts:tlg0003.tlg001:5.89)       a citation into the library (a range: 5.84-5.116)
  *   [Ostracism](wiki:ostracism)                  another entry
  *   [text](https://…)                            an outside page
+ *   [^2]  [^1,3]                                 a numbered source (author articles: the list under the article)
  */
 import type { Certainty } from "./types";
 
@@ -26,7 +27,8 @@ export type Inl =
   | { cite: { work: string; ref: string; to?: string }; text: string }
   | { wiki: string; text: string }
   | { ext: string; text: string }
-  | { cert: Certainty };
+  | { cert: Certainty }
+  | { src: number[] };
 
 export type Blk =
   | { h2: string; id: string }
@@ -50,15 +52,16 @@ export function parseCts(target: string): { work: string; ref: string; to?: stri
 /** Inline markup to a list of pieces. Unknown link kinds are an error, so a typo cannot slip through. */
 export function inline(src: string): Inl[] {
   const out: Inl[] = [];
-  const re = /\*\*(.+?)\*\*|\*(.+?)\*|\{(well|debated|legend)\}|\[([^\]]+)\]\(([^)\s]+)\)/g;
+  const re = /\*\*(.+?)\*\*|\*(.+?)\*|\{(well|debated|legend)\}|\[\^(\d+(?:,\d+)*)\]|\[([^\]]+)\]\(([^)\s]+)\)/g;
   let last = 0, m: RegExpExecArray | null;
   while ((m = re.exec(src))) {
     if (m.index > last) out.push(src.slice(last, m.index));
     if (m[1] !== undefined) out.push({ b: inline(m[1]) });
     else if (m[2] !== undefined) out.push({ i: inline(m[2]) });
     else if (m[3] !== undefined) out.push({ cert: m[3] as Certainty });
+    else if (m[4] !== undefined) out.push({ src: m[4].split(",").map(Number) });
     else {
-      const text = m[4], target = m[5];
+      const text = m[5], target = m[6];
       if (target.startsWith("cts:")) {
         const c = parseCts(target);
         if (!c) throw new Error(`Bad citation link: ${target}`);

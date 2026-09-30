@@ -1,0 +1,203 @@
+{
+ "tlg0532": {
+  "id": "tlg0532",
+  "summary": "Achilles Tatius (Ἀχιλλεὺς Τάτιος, Achilleus Tatios, 2nd century CE) was, according to the Byzantine Suda, from Alexandria. The Suda's further claims, that he became a Christian and a bishop and wrote on astronomy, are probably later confusions. Papyri show that his novel was being read in Egypt by the late second century CE.\n\nLeucippe and Clitophon (Τὰ κατὰ Λευκίππην καὶ Κλειτοφῶντα, Ta kata Leukippēn kai Kleitophōnta), in eight books, is told in the first person by Clitophon, whom the author meets at Sidon in front of a painting of Europa and the bull. Clitophon falls in love with his cousin Leucippe, elopes with her, and suffers shipwreck, bandits, apparent deaths (Leucippe 'dies' three times), a rival marriage and a trial before the lovers are reunited at Ephesus. The tone is often knowing and comic. The narrator is no model of fidelity, and the novel plays with the conventions that Chariton and Xenophon took seriously.\n\nAchilles Tatius is a writer of the Second Sophistic, and his Greek is polished Attic. He fills the story with learned digressions on love, animals, painting and natural wonders, and with ecphrases (ἔκφρασις, ekphrasis, \"description\") of works of art. His prose, full of balanced antitheses and short rhythmic clauses, was much admired in Byzantium, although Photius disapproved of its indecency.",
+  "timeline": [
+   {
+    "year": 175,
+    "what": "Leucippe and Clitophon written (2nd century CE)",
+    "kind": "writing"
+   },
+   {
+    "year": 200,
+    "what": "Papyri show the novel circulating in Egypt (late 2nd century)",
+    "kind": "copy"
+   },
+   {
+    "year": 870,
+    "what": "Photius praises the style but condemns the morals of the novel (9th century)",
+    "kind": "reception"
+   },
+   {
+    "year": 1000,
+    "what": "The Suda makes him a Christian and a bishop, probably a later confusion (10th century)",
+    "kind": "reception"
+   },
+   {
+    "year": 1554,
+    "what": "Annibale della Croce's Latin translation of the whole novel",
+    "kind": "print"
+   },
+   {
+    "year": 1601,
+    "what": "Editio princeps of the Greek text (Heidelberg, Commelinus)",
+    "kind": "print"
+   }
+  ],
+  "transmission": "Leucippe and Clitophon survives in some twenty manuscripts, far more than Chariton or Xenophon, a sign of its popularity in Byzantium. They fall into two main families. Several papyri of the second to fourth centuries, including one that arranges the text in a different order, show that the ancient text was already somewhat fluid.",
+  "variants": "Editors must choose between the two manuscript families, which differ in many small details. One papyrus places a passage from Book 2 earlier in the story, and scholars debate whether this reflects an earlier version or an error. The date of the novel was once put much later, until the papyri fixed it in the second century.",
+  "editions": [
+   {
+    "text": "R. Hercher, Erotici Scriptores Graeci, vol. 1 (Teubner, 1858) — the Greek text used here"
+   },
+   {
+    "text": "E. Vilborg, Achilles Tatius: Leucippe and Clitophon (Stockholm, 1955–62), with commentary"
+   },
+   {
+    "text": "J.-P. Garnaud, Achille Tatius: Le Roman de Leucippé et Clitophon (Budé, 1991)"
+   },
+   {
+    "text": "S. Gaselee, Achilles Tatius (Loeb Classical Library, 1917; revised 1969)"
+   },
+   {
+    "text": "T. Whitmarsh, Achilles Tatius: Leucippe and Clitophon (Oxford World's Classics, 2001)"
+   }
+  ],
+  "sources": [],
+  "checked": ""
+ },
+ "tlg0012": {
+  "id": "tlg0012",
+  "summary": "The Iliad (Ἰλιάς, Ilias) and the Odyssey (Ὀδύσσεια, Odysseia) stand at the head of Greek literature. Nothing reliable is known about Homer (Ὅμηρος, Homēros) himself. Several cities claimed him, Smyrna and Chios most insistently, and the ancient Lives of Homer are largely fiction, written centuries later. The picture of a blind singer goes back to the Homeric Hymn to Apollo, whose poet calls himself \"a blind man, who lives in rocky Chios\"; Thucydides (3.104) already read those lines as Homer speaking of himself.\n\nModern scholarship sees both epics as the product of a long tradition of oral poetry, composed in performance by generations of singers and fixed in something like their present form, on most accounts, between the late eighth and the seventh century BCE, the Iliad somewhat before the Odyssey. Whether one poet made both is an old debate: already in antiquity a few scholars, the chōrizontes (χωρίζοντες, \"separators\"), gave the Odyssey to a different author. Antiquity also credited Homer with the Homeric Hymns, the comic Margites, the short Epigrams preserved in the Lives (included in this collection) and poems of the Epic Cycle, though Herodotus (2.117) already doubted that one of these, the Cypria, was his.\n\nThe Iliad tells of the wrath of Achilles in the tenth year of the Trojan War; the Odyssey follows Odysseus' ten-year journey home and his revenge on the men courting his wife Penelope. Both are in dactylic hexameter, in an artificial poetic language that nobody ever spoke. Its base is Ionic, with η even where Attic keeps ᾱ (ἀγορή, agorē, for Attic ἀγορά, \"assembly\"), but it mixes in Aeolic forms such as ἄμμες (ammes, \"we\", Attic ἡμεῖς) and very old ones such as genitives in -οιο (-oio). For the Greeks these poems were more than literature. They were the shared schoolbook, the source of their stories about gods and heroes, and the standard against which every later poet was measured.",
+  "timeline": [
+   {
+    "year": -1184,
+    "what": "Eratosthenes' date for the fall of Troy (1184/3 BCE), the one most later writers followed; other ancient reckonings differed by more than a century, and whether a real war lies behind the story is still debated",
+    "kind": "writing"
+   },
+   {
+    "year": -850,
+    "what": "Herodotus (2.53) places Homer and Hesiod about 400 years before his own time, that is, around 850 BCE",
+    "kind": "reception"
+   },
+   {
+    "year": -750,
+    "what": "c. 750–650 BCE: the period in which most scholars place the composition and written fixing of the poems, the Iliad first; a minority view holds that the text stayed fluid into the sixth century or later",
+    "kind": "writing"
+   },
+   {
+    "year": -520,
+    "what": "Tradition credits Peisistratos or his son Hipparchus with a standard text and with having the poems recited in full, in relay, at the Panathenaia; how much of this 'Peisistratean recension' is historical is disputed",
+    "kind": "reception"
+   },
+   {
+    "year": -280,
+    "what": "Zenodotus of Ephesus, first head of the Library of Alexandria, makes the first critical edition (diorthōsis, διόρθωσις, 'correction')",
+    "kind": "print"
+   },
+   {
+    "year": -150,
+    "what": "Aristarchus of Samothrace, head of the Library, publishes his editions and commentaries. About this time the eccentric early papyri die out and a standard text (the 'vulgate') prevails, though it often does not follow Aristarchus' own readings",
+    "kind": "copy"
+   },
+   {
+    "year": 950,
+    "what": "Venetus A (Marc. gr. Z. 454 = 822) copied, with marginal scholia and critical signs that preserve much of Aristarchus' work",
+    "kind": "copy"
+   },
+   {
+    "year": 1488,
+    "what": "Editio princeps of Homer printed in Florence, edited by Demetrios Chalkokondyles",
+    "kind": "print"
+   },
+   {
+    "year": 1788,
+    "what": "J.-B. G. d'Ansse de Villoison publishes Venetus A and its scholia, the evidence on which Wolf would build",
+    "kind": "copy"
+   },
+   {
+    "year": 1795,
+    "what": "F. A. Wolf's Prolegomena ad Homerum argues that the poems were composed without writing and assembled only later, opening the modern 'Homeric Question'",
+    "kind": "writing"
+   },
+   {
+    "year": 1928,
+    "what": "Milman Parry's L'Épithète traditionnelle dans Homère shows the formulaic system at work, the start of the oral-formulaic theory",
+    "kind": "reception"
+   }
+  ],
+  "transmission": "No ancient author's text is better attested. Well over 1,500 papyri of Homer survive from Graeco-Roman Egypt, dating from the third century BCE to the seventh century CE, the Iliad far outnumbering the Odyssey. The earliest, from the Ptolemaic period, contain 'wild' texts with extra lines; these disappear after about 150 BCE, as a standard text took hold.\n\nThe medieval tradition rests on nearly 200 manuscripts of the Iliad and about 80 of the Odyssey. The most important is Venetus A (Marc. gr. Z. 454 = 822, tenth century) in Venice. Its margins carry Aristarchus' critical signs and scholia drawn from a lost digest of four later scholars (Didymus, Aristonicus, Herodian and Nicanor), our main source for Alexandrian work on the text. Venetus B (Marc. gr. Z. 453 = 821, eleventh century) and the Townley Homer (British Library, Burney 86, dated 1059 CE) carry a second family of mainly explanatory notes, the 'bT scholia'. The Odyssey has no witness of Venetus A's standing and much thinner scholia; its key manuscripts include Laurentianus 32.24 in Florence (tenth or eleventh century) and Palatinus gr. 45 in Heidelberg, dated 1201.",
+  "variants": "Aristarchus marked the lines he thought spurious with a marginal sign, the obelos (ὀβελός, 'spit'), but left them in the text. This 'setting aside' is called athetēsis (ἀθέτησις), and many lines he athetized still stand in modern editions: the Iliad's only mention of the Judgement of Paris (24.29–30) falls in a passage he rejected. The early papyri show 'plus-verses' (lines missing from the standard text) and different phrasing, signs of a performance tradition that was still fluid.\n\nBook 10 of the Iliad, the night raid known as the Doloneia, was already suspected in antiquity: a scholion reports that Homer composed it as a separate piece and Peisistratos put it into the poem. Many modern scholars also think it a later addition, though it has its defenders. At Odyssey 23.296 the scholia say that Aristophanes of Byzantium and Aristarchus made this line the πέρας (peras, 'limit, end') of the poem; whether they meant that everything after it was spurious, or only that the story reaches its goal there, is still debated.\n\nEditors also differ over how far to follow Aristarchus' readings, and over spelling, since the text passed through Athens and picked up Attic forms. The digamma (ϝ), a w-sound lost from Ionic speech, is printed in no standard edition, but the metre still feels it. In Iliad 1.7, Ἀτρεΐδης τε ἄναξ ἀνδρῶν, the τε is not elided because ἄναξ once began with it: ϝάναξ (wanax, 'lord'), a word already found in Linear B as wa-na-ka.",
+  "editions": [
+   {
+    "text": "D. B. Monro and T. W. Allen, Homeri Opera I–II: Ilias (Oxford Classical Texts, 3rd ed. 1920) — the Iliad text used here; T. W. Allen, Homeri Opera III–IV: Odyssea (2nd ed. 1917–19)"
+   },
+   {
+    "text": "A. T. Murray, Loeb Classical Library: Odyssey (1919) and Iliad (1924–25) — the Odyssey Greek text and one of the translations used here; revised by G. E. Dimock (Odyssey, 1995) and W. F. Wyatt (Iliad, 1999)"
+   },
+   {
+    "text": "Samuel Butler, prose translations of the Iliad (1898) and Odyssey (1900; the Odyssey here as revised by T. Power and G. Nagy) — the other translations used here"
+   },
+   {
+    "text": "M. L. West, Homerus: Ilias (Teubner, 1998–2000) and Odyssea (2017) — the fullest modern critical editions"
+   },
+   {
+    "text": "H. van Thiel, Homeri Odyssea (1991) and Homeri Ilias (1996), texts that stay close to the medieval vulgate"
+   },
+   {
+    "text": "G. S. Kirk (ed.), The Iliad: A Commentary, 6 vols (1985–93); A. Heubeck et al., A Commentary on Homer's Odyssey, 3 vols (1988–92)"
+   }
+  ],
+  "sources": [],
+  "checked": ""
+ },
+ "tlg0016": {
+  "id": "tlg0016",
+  "summary": "Herodotus of Halicarnassus (Ἡρόδοτος, Hērodotos, c. 484–c. 425 BCE) wrote a single great work, the Histories. Cicero called him \"the father of history\", though in the same breath he noted the countless tales in his work. His subject is the conflict between Greeks and Persians that ended in the Greek victories of 480–479 BCE, but his enquiry reaches much further: the customs of Egyptians, Scythians and Persians, the rise of the Persian empire, tyrants, oracles and marvels. The work opens by calling itself ἱστορίης ἀπόδεξις (historiēs apodexis, \"the setting-out of an enquiry\"), and his word for enquiry, historiē, gave us \"history\".\n\nHe travelled widely, questioned people and weighed their stories, often reporting several versions and saying which one he believes. Later critics, beginning with Thucydides and culminating in Plutarch's essay On the Malice of Herodotus, found him too fond of a good story or too kind to non-Greeks, but his curiosity and his fairness have kept him fresh.\n\nHe writes in Ionic Greek in a relaxed, flowing style that is a pleasure to read and one of the best ways into Greek prose. Expect η where Attic has ᾱ, uncontracted forms, κ where Attic has π in question words (κῶς, kōs, for πῶς, \"how?\"), and no h-sound in compounds such as ἀπικνέομαι (apikneomai, \"arrive\"; Attic ἀφικνέομαι).",
+  "timeline": [
+   {
+    "year": -484,
+    "what": "Born at Halicarnassus (traditional date)",
+    "kind": "writing"
+   },
+   {
+    "year": -450,
+    "what": "Travels in Egypt, the Levant, Scythia and elsewhere (dates uncertain)",
+    "kind": "reception"
+   },
+   {
+    "year": -445,
+    "what": "Said by later sources to have given public readings at Athens",
+    "kind": "reception"
+   },
+   {
+    "year": -443,
+    "what": "Joins, by tradition, the Athenian colony of Thurii in southern Italy",
+    "kind": "reception"
+   },
+   {
+    "year": -425,
+    "what": "The latest datable events in the Histories belong to the early years of the Peloponnesian War (431–c. 425); Aristophanes' Acharnians (425) seems to parody its opening. Death shortly after",
+    "kind": "writing"
+   },
+   {
+    "year": 1474,
+    "what": "Lorenzo Valla's Latin translation printed in Venice",
+    "kind": "print"
+   },
+   {
+    "year": 1502,
+    "what": "Aldine editio princeps",
+    "kind": "print"
+   }
+  ],
+  "transmission": "The manuscripts fall into two families. The 'Florentine' family is led by Laurentianus 70.3 in Florence (A, tenth century) and a manuscript in Rome (Angelicanus gr. 83, B, eleventh century); the 'Roman' family by Vaticanus gr. 2369 (D, eleventh or twelfth century), with R, S and V. Neither family is consistently better. Several dozen papyri, mostly from Oxyrhynchus, give earlier readings and show that the ancient text was already close to the medieval one. The division into nine books is probably the work of Hellenistic scholars; by the second century CE the books were named after the nine Muses.",
+  "variants": "Byzantine scribes 'improved' Herodotus' Ionic towards the Attic they knew, so every editor must decide how far to restore Ionic forms. Even the first words vary: our manuscripts call him \"Herodotus of Halicarnassus\", but Aristotle quotes the opening as \"Herodotus of Thurii\", and Plutarch says that many readers made that change.\n\nReaders have also long argued over passages whose truth Herodotus himself had to defend, such as the debate among the Persian nobles about the best form of government (3.80–82), which he insists really took place, and the meeting of Solon and Croesus, which chronology makes very hard to accept. Whether the work was meant to end where it does, at 9.122, has long been debated.",
+  "editions": [
+   {
+    "text": "A. D. Godley, Herodotus, 4 vols (Loeb Classical Library, 1920–25) — the text and translation used here"
+   },
+   {
+    "text": "N. G. Wilson, Herodoti Historiae, 2 vols (OCT, 2015), replacing Hude (3rd ed. 1927)"
+   },
+   {
+    "text": "H. B. Rosén, Herodoti Historiae (Teubner, 1987–97)"
+   },
+   {
+    "text": "D. Asheri, A. Lloyd, A. Corcella, A Commentary on Herodotus Books I–IV (Oxford, 2007)"
+   }
+  ],
+  "sources": [],
+  "checked": ""
+ }
+}

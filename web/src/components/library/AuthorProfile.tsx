@@ -14,7 +14,9 @@ import { centuries, DATE_NOTE, loadWorksMeta, type WorkMeta } from "@/lib/works-
 import { commonShare, loadDifficulty } from "@/lib/difficulty";
 import { lifeSpan, loadAuthorsMeta, type AuthorMeta } from "@/lib/authors-meta";
 import { AREAS } from "@/config/areas";
+import { articleFor } from "@/wiki/author-articles";
 import { WorkItem } from "./Library";
+import AuthorArticleView from "./AuthorArticleView";
 import lib from "./Library.module.css";
 import styles from "./AuthorProfile.module.css";
 
@@ -80,6 +82,7 @@ export function AuthorView({ author, meta, diff, who: wd, related: entries, land
     .sort((a, b) => b.p - a.p).slice(0, 3), [author, diff]);
 
   const lived = lifeSpan(wd);
+  const written = articleFor(author.id);
   return (
     <div className={`wrap ${styles.page}`}>
       <p className={styles.crumb}><Link href={AREAS.library.href}>← {AREAS.library.name} · {AREAS.library.english}</Link></p>
@@ -97,6 +100,8 @@ export function AuthorView({ author, meta, diff, who: wd, related: entries, land
         {!facts.when && !lived && <p className={styles.note}>GLAUx, the source of the dates and kinds of writing, does not analyse this author&apos;s texts, so none are shown. Nothing is guessed.</p>}
       </header>
       <div><div className="meander draw" aria-hidden="true" /></div>
+
+      {written && <AuthorArticleView name={author.name} article={written.article} draft={written.draft} />}
 
       {begin.length > 0 && author.works.length > 3 && (
         <section className={styles.sec} aria-labelledby="begin-title">

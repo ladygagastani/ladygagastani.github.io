@@ -26,6 +26,15 @@ export function CertTag({ c }: { c: Certainty }) {
   return <span className={`tag ${CERTAINTY[c].cls}`} title={CERTAINTY[c].about}>{CERTAINTY[c].label}</span>;
 }
 
+/** A superscript pointer to the numbered source list under an author's article. */
+export function SourceMark({ n }: { n: number[] }) {
+  return (
+    <sup className={styles.srcMark}>
+      {n.map((k, j) => <a key={k} href={`#src-${k}`} aria-label={`Source ${k}`}>{j ? "," : ""}{k}</a>)}
+    </sup>
+  );
+}
+
 export function Inline({ xs }: { xs: Inl[] }) {
   return (
     <>
@@ -34,6 +43,7 @@ export function Inline({ xs }: { xs: Inl[] }) {
         if ("b" in x) return <b key={i}><Inline xs={x.b} /></b>;
         if ("i" in x) return <i key={i}><Inline xs={x.i} /></i>;
         if ("cert" in x) return <CertTag key={i} c={x.cert} />;
+        if ("src" in x) return <SourceMark key={i} n={x.src} />;
         if ("cite" in x) return <Link key={i} className={styles.cite} href={readHref(x.cite)} transitionTypes={["page-turn"]} title="Read this passage in the Scroll">{greekAware(x.text, "t")}</Link>;
         if ("wiki" in x) {
           const e = entryBySlug.get(x.wiki);

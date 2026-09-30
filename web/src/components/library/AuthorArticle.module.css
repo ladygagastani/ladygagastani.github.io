@@ -1,0 +1,89 @@
+/* An author's article: life and work, the road of the text, how the text survived, editions, sources. */
+.sec { display: grid; gap: 10px; }
+.sec h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); }
+.head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; }
+.stamp { font-family: var(--f-label); font-size: 0.85rem; letter-spacing: 0.06em; color: var(--blue); border: 1px solid currentColor; border-radius: 999px; padding: 2px 12px; }
+
+.draft { margin: 0 0 6px; padding: 12px 16px; border: 2px dashed var(--ochre); border-radius: var(--radius); color: var(--ochre); background: var(--surface); font-size: 0.95rem; }
+
+/* ---------------------------------------------------------------- life and work */
+.lifeGrid { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 28px 44px; align-items: start; }
+.lead { max-width: 66ch; font-size: 1.08rem; line-height: 1.7; }
+.lead p { margin: 0 0 1em; }
+/* the first letter is set as a rubric initial, in the red of the manuscripts */
+.lead p:first-child { font-size: 1.2rem; }
+.lead p:first-child::first-letter { float: left; font-family: var(--f-display); font-size: 3.7em; line-height: 0.82; padding: 0.06em 0.1em 0 0; color: var(--accent); }
+.key { display: grid; gap: 10px; padding: 18px 20px; background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; font-size: 0.92rem; line-height: 1.5; position: sticky; top: calc(var(--hdr-vis, 0px) + 16px); }
+.key h3 { margin: 0; }
+.key p { margin: 0; }
+.key ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.key li { display: grid; gap: 4px; justify-items: start; color: var(--ink-2); }
+.fakeMark { font-family: var(--f-label); font-size: 0.8em; color: var(--accent); }
+
+/* ---------------------------------------------------------------- the road of the text */
+.roadWrap { display: grid; gap: 14px; margin-top: 6px; }
+.road { --pin: 30px; list-style: none; margin: 0; padding: 30px 4px 10px; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(180px, 1fr); overflow-x: auto; scrollbar-width: thin; }
+.stop { position: relative; display: grid; align-content: start; gap: 2px; padding-right: 18px; line-height: 1.45; }
+/* the road itself: one stretch of line through every mark, each drawn after the one before */
+.stop::before { content: ""; position: absolute; top: calc(var(--pin) / 2 - 1px); left: 0; right: 0; height: 3px; background: var(--ink); border-radius: 2px; }
+.stop:first-child::before { left: calc(var(--pin) / 2); }
+.stop:last-child::before { right: calc(100% - var(--pin) / 2); }
+.pin { position: relative; z-index: 1; display: grid; place-items: center; width: var(--pin); height: var(--pin); border-radius: 50%; background: var(--bg); color: var(--ink); border: 2px solid currentColor; margin-bottom: 8px; }
+.stop[data-kind="writing"] .pin, .legend [data-kind="writing"] .keyPin { color: var(--accent); }
+.stop[data-kind="copy"] .pin, .legend [data-kind="copy"] .keyPin { color: var(--ochre); }
+.stop[data-kind="print"] .pin, .legend [data-kind="print"] .keyPin { color: var(--blue); }
+.stop[data-kind="reception"] .pin, .legend [data-kind="reception"] .keyPin { color: var(--ink); }
+.gap { position: absolute; top: -22px; left: calc(-50% + var(--pin) / 2); transform: translateX(-50%); white-space: nowrap; font-family: var(--f-label); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--ink-2); }
+.when { font-family: var(--f-display); font-size: 1.35rem; line-height: 1.1; }
+.kindName { font-family: var(--f-label); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.what { font-size: 0.98rem; margin-top: 4px; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; list-style: none; margin: 0; padding: 0; font-family: var(--f-label); font-size: 0.85rem; letter-spacing: 0.04em; color: var(--ink-2); }
+.legend li { display: inline-flex; align-items: center; gap: 8px; }
+.keyPin { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 2px solid currentColor; background: var(--bg); }
+
+/* plays once, when the road scrolls into view; at rest (and with reduced motion) the road is fully drawn */
+.road[data-play] .stop::before { animation: stretch 0.7s var(--ease) both; animation-delay: calc(var(--i) * 0.28s); }
+.road[data-play] .pin { animation: pinPop 0.45s var(--ease) both; animation-delay: calc(var(--i) * 0.28s); }
+.road[data-play] .gap, .road[data-play] .when, .road[data-play] .kindName, .road[data-play] .what { animation: textIn 0.5s var(--ease) both; animation-delay: calc(var(--i) * 0.28s + 0.25s); }
+@keyframes stretch { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes pinPop { from { transform: scale(0); } 70% { transform: scale(1.18); } to { transform: scale(1); } }
+@keyframes textIn { from { opacity: 0; transform: translateY(6px); } }
+
+/* ---------------------------------------------------------------- how the text survived */
+.panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px; margin-top: 6px; }
+.panel { display: grid; gap: 10px; align-content: start; padding: 24px 26px 26px; background: var(--surface); border-top: 4px solid var(--ink); border-radius: 0 0 var(--radius) var(--radius); font-size: 1.02rem; line-height: 1.65; }
+.panel > svg { color: var(--accent); }
+.panel h3 { font-size: clamp(1.3rem, 2vw, 1.6rem); }
+.panel p { margin: 0; }
+.panel h4 { font-family: var(--f-label); letter-spacing: 0.06em; margin: 6px 0 0; }
+.panel ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+
+/* ---------------------------------------------------------------- editions and sources */
+.eds { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 0; max-width: 78ch; }
+.eds li { padding: 12px 0 12px 22px; border-top: 1px solid var(--rule); position: relative; line-height: 1.55; }
+.eds li:last-child { border-bottom: 1px solid var(--rule); }
+.eds li::before { content: ""; position: absolute; left: 2px; top: 1.15em; width: 8px; height: 8px; background: var(--accent); transform: rotate(45deg); }
+.sources { margin: 4px 0 0; padding-left: 1.6em; display: grid; gap: 8px; max-width: 78ch; line-height: 1.55; }
+.sources li::marker { font-family: var(--f-label); color: var(--accent); }
+.sources li:target { background: color-mix(in srgb, var(--accent) 14%, transparent); outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 2px; }
+.sources a { text-underline-offset: 3px; text-decoration-color: var(--accent); }
+.checked { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 0.88rem; color: var(--ink-2); max-width: 78ch; }
+
+/* ---------------------------------------------------------------- phones: the road runs downwards */
+@media (max-width: 899px) {
+  .lifeGrid { grid-template-columns: minmax(0, 1fr); }
+  .key { position: static; }
+  .road { grid-auto-flow: row; grid-auto-columns: auto; overflow: visible; padding: 4px 0; gap: 0; }
+  .stop { padding: 0 0 26px 48px; }
+  .stop::before { top: 0; bottom: 0; left: calc(var(--pin) / 2 - 1px); right: auto; width: 3px; height: auto; }
+  .stop:first-child::before { top: calc(var(--pin) / 2); left: calc(var(--pin) / 2 - 1px); right: auto; }
+  .stop:last-child::before { right: auto; bottom: calc(100% - var(--pin) / 2); }
+  .pin { position: absolute; left: 0; top: 0; margin: 0; }
+  .gap { position: static; transform: none; order: -1; margin-bottom: 4px; }
+  .road[data-play] .stop::before { animation-name: stretchDown; }
+  @keyframes stretchDown { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+}
+@media (min-width: 900px) {
+  .stop:first-child { padding-left: 0; }
+}
