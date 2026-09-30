@@ -13,6 +13,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
     "next": "16.3.6",
+    "openseadragon": "^6.1.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "saxes": "^6.0.0",

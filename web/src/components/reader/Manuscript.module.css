@@ -1,0 +1,64 @@
+/* How it was written: the passage re-set step by step, then a real manuscript page. */
+.title { font-size: 1.3rem; }
+.src { font-size: 0.7em; line-height: 0; margin-left: 1px; }
+.src a { color: var(--accent); text-decoration: none; }
+
+.stages { display: grid; gap: 12px; }
+.passage { margin: 0; }
+.steps { justify-self: stretch; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; }
+.steps > button { padding: 8px 6px; font-size: 0.84rem; white-space: normal; line-height: 1.15; }
+.steps > button:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.steps > button:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+
+/* the page: clay in light mode, a dark panel at night; parchment-coloured from the capitals on */
+.page {
+  --ms-ink: var(--ink);
+  padding: 16px 18px; border-radius: var(--radius); background: var(--bg-2);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rule) 60%, transparent);
+  font-family: var(--f-greek); font-size: 1.12rem; line-height: 1.6; color: var(--ms-ink);
+  transition: background-color 0.6s var(--ease), color 0.6s var(--ease);
+}
+.page p { margin: 0; }
+.page p + p { margin-top: 2px; }
+.w { display: inline-block; }
+.page[data-stage="2"], .page[data-stage="3"] {
+  --ms-ink: #4A2A14; background: #EAD9B5; letter-spacing: 0.05em;
+  background-image: radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.35), transparent 60%);
+}
+.page[data-stage="3"] { word-break: break-all; }
+:global([data-theme="dark"]) .page[data-stage="2"], :global([data-theme="dark"]) .page[data-stage="3"] { --ms-ink: #3B2110; background-color: #D9C49A; }
+@media (prefers-color-scheme: dark) {
+  :global(html:not([data-theme="light"])) .page[data-stage="2"], :global(html:not([data-theme="light"])) .page[data-stage="3"] { --ms-ink: #3B2110; background-color: #D9C49A; }
+}
+.more { color: var(--ink-2); }
+.say { margin: 0; font-size: 0.92rem; line-height: 1.55; min-height: 4.6em; }
+
+
+/* the manuscript */
+.ms { display: grid; gap: 8px; padding-top: 14px; border-top: 1px solid var(--rule); }
+.msName { font-size: 1.15rem; margin: 0; }
+.msMeta { margin: 0; font-family: var(--f-label); font-size: 0.85rem; color: var(--ink-2); }
+.msAbout { margin: 0; font-size: 0.92rem; line-height: 1.55; }
+.viewerWrap { position: relative; border-radius: var(--radius); overflow: hidden; background: #1B1410; box-shadow: 0 14px 30px -22px var(--shadow); }
+.viewer { height: min(520px, 58vh); }
+@media (max-width: 760px) { .viewer { height: 44vh; } }
+.wait { position: absolute; inset: 0; margin: 0; display: grid; place-items: center; color: #E6C39B; font-family: var(--f-label); }
+.tools {
+  position: absolute; left: 8px; right: 8px; bottom: 8px; display: flex; align-items: center; gap: 4px;
+  padding: 4px; border-radius: var(--radius); background: rgba(22, 17, 14, 0.78); color: #F2DDBB; backdrop-filter: blur(4px);
+}
+.tools button {
+  min-width: 36px; height: 36px; padding: 0 8px; border: 0; border-radius: var(--radius);
+  background: transparent; color: inherit; font-size: 1.15rem; cursor: pointer;
+}
+.tools button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); }
+.tools button:disabled { opacity: 0.35; cursor: default; }
+.tools button:focus-visible { outline: 2px solid #E0673A; outline-offset: 1px; }
+@media (pointer: coarse) { .tools button { min-width: 44px; height: 44px; } }
+.folio { font-family: var(--f-label); font-size: 0.95rem; min-width: 5.5em; text-align: center; }
+.gap { flex: 1; }
+.lineMark { border: 2px solid #E0673A; border-radius: 3px; box-shadow: 0 0 0 9999px rgba(10, 6, 4, 0.28); animation: mark-in 0.8s var(--ease) both; }
+@keyframes mark-in { from { opacity: 0; } to { opacity: 1; } }
+.err { margin: 0; color: var(--accent); font-size: 0.9rem; }
+.sources { font-size: 0.85rem; color: var(--ink-2); }
+.sources ol { margin: 6px 0 0; padding-left: 1.3em; }

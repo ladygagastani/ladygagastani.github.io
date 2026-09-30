@@ -26,6 +26,7 @@ import ShareDialog, { type ShareData } from "./ShareDialog";
 import WorkPicker from "./WorkPicker";
 import VocabPanel from "./VocabPanel";
 import PlacesPanel from "./PlacesPanel";
+import ManuscriptPanel from "./ManuscriptPanel";
 import { greekKey } from "@/lib/search/codec";
 import PanelGuard from "@/components/PanelGuard";
 import EchoesPanel, { type EchoMarks, type EchoQuery, type EchoTarget } from "./EchoesPanel";
@@ -158,6 +159,8 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const fitLines = useSettings((s) => s.fitLines);
   const [vocabOpen, setVocabOpen] = useState(false);
   const [placesOpen, setPlacesOpen] = useState(false);
+  const [msOpen, setMsOpen] = useState(false);
+  const [topRow, setTopRow] = useState<string | null>(null);
   const [placeMarks, setPlaceMarks] = useState<Map<string, Set<string>> | null>(null);
 
   const workId = P("w") ?? "";
@@ -385,6 +388,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
         const key = topKey();
         if (!key || key === last) return;
         last = key;
+        setTopRow(key);
         savePosition(workId, { ed: edV, tr: trV, at: key });
         if (pane === 1) onPosition.current?.(key);
         if (!floating) paneTops[pane] = key;
@@ -845,7 +849,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   function openEchoes(start: Point, end: Point) {
     if (!doc || !grcText || !work) return;
     setEcho({ work: workId, urn: grcText.urn, doc, title: work.title, start, end });
-    setWord(null); setVocabOpen(false); setPlacesOpen(false);
+    setWord(null); setVocabOpen(false); setPlacesOpen(false); setMsOpen(false);
   }
   const echoJump = (t: EchoTarget) => {
     const q = new URLSearchParams(params.toString());
@@ -996,8 +1000,9 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       <button type="button" className="chip" aria-pressed={translit} onClick={() => setSettings({ translit: !translit })} title="Show each line in Latin letters">Transliteration</button>
       <button type="button" className="chip" aria-pressed={cases} onClick={() => setSettings({ cases: !cases })} title="Underline nouns, adjectives and participles in the colour of their case">Colour by case</button>
       {mInfo && <button type="button" className="chip" aria-pressed={metreOn} onClick={() => setSettings({ metre: !metreOn })} title="Mark long and short syllables, feet and caesura">Metre</button>}
-      <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setPlacesOpen(false); setWord(null); setEcho(null); }}>Vocabulary</button>
-      <button type="button" className="chip" aria-pressed={placesOpen} onClick={() => { setPlacesOpen(!placesOpen); setVocabOpen(false); setWord(null); setEcho(null); }} title="The places this page names, on a map">Places</button>
+      <button type="button" className="chip" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setPlacesOpen(false); setMsOpen(false); setWord(null); setEcho(null); }}>Vocabulary</button>
+      <button type="button" className="chip" aria-pressed={placesOpen} onClick={() => { setPlacesOpen(!placesOpen); setVocabOpen(false); setMsOpen(false); setWord(null); setEcho(null); }} title="The places this page names, on a map">Places</button>
+      <button type="button" className="chip" aria-pressed={msOpen} onClick={() => { setMsOpen(!msOpen); setVocabOpen(false); setPlacesOpen(false); setWord(null); setEcho(null); }} title="The passage as a scribe wrote it, and the page of a real manuscript">Manuscript</button>
       {trText && columns === "both" && <button type="button" className="chip" aria-pressed={tryFirst} onClick={() => setSettings({ tryFirst: !tryFirst })} title="Hide each translation until you tap it, so you read the Greek first">Try it first</button>}
       {hasLines && <button type="button" className="chip" aria-pressed={fitLines} onClick={() => setSettings({ fitLines: !fitLines })} title="Make each verse line fit the width of the page instead of wrapping">Fit lines</button>}
     </div>
@@ -1013,7 +1018,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const sortedMarks = [...allMarks].sort((a, b) => cmp(a.start, b.start, order));
 
   return (
-    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${verses ? styles.verses : ""} ${word || echo || vocabOpen || placesOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""} ${floating ? styles.floating : ""}`}
+    <div ref={rootRef} className={`${styles.reader} ${styles["cols-" + columns]} ${verses ? styles.verses : ""} ${word || echo || vocabOpen || placesOpen || msOpen ? styles.withPanel : ""} ${split ? styles.pane : ""} ${split && active ? styles.activePane : ""} ${floating ? styles.floating : ""}`}
       onPointerDown={() => useUI.getState().setActivePane(pane)} onFocusCapture={() => useUI.getState().setActivePane(pane)}>
       {load.state === "ready" && <ScrollMarkers rootRef={rootRef} contained={contained} items={markerItems} onJump={jumpToRow} depKey={`${chunk}|${rows.length}|${columns}|${translit}|${!!metre}|${word ? 1 : 0}`} />}
       {split && (
@@ -1224,6 +1229,16 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           <PlacesPanel work={workId} doc={doc} pageKeys={pageKeys} onJump={jumpToRef} onMarks={setPlaceMarks} onClose={() => setPlacesOpen(false)} />
         </PanelGuard>
       )}
+      {msOpen && doc && !word && !echo && (() => {
+        const row = rows.find((r) => r.key === topRow) ?? rows[0];
+        const units = row?.greek ?? [];
+        return (
+          <PanelGuard name="manuscript panel" className={styles.panel} onClose={() => setMsOpen(false)}>
+            <ManuscriptPanel work={workId} units={units} label={`${work?.title ?? ""} ${row ? rangeLabel(units[0]?.ref.join(".") ?? row.key, units[units.length - 1]?.ref.join(".") ?? row.key) : ""}`}
+              book={doc.levels.length > 1 && units[0] ? units[0].ref[0] : null} onClose={() => setMsOpen(false)} />
+          </PanelGuard>
+        );
+      })()}
       {echo && !word && (
         <PanelGuard name="Echoes panel" className={styles.panel} onClose={() => setEcho(null)}>
           <EchoesPanel q={echo} onJump={echoJump} onMarks={setEchoMarks} onClose={() => setEcho(null)} />

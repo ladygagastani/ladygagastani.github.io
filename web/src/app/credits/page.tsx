@@ -18,6 +18,7 @@ const SOFTWARE = [
   { name: "Next.js and React", by: "Vercel and Meta", licence: "MIT", href: "https://nextjs.org" },
   { name: "Zustand", by: "Poimandres", licence: "MIT", href: "https://github.com/pmndrs/zustand" },
   { name: "supabase-js (accounts, the Town Hall and the Pnyx)", by: "Supabase", licence: "MIT", href: "https://github.com/supabase/supabase-js" },
+  { name: "OpenSeadragon (the reader's manuscript viewer)", by: "OpenSeadragon contributors", licence: "BSD 3-Clause", href: "https://openseadragon.github.io" },
 ];
 
 export default function CreditsPage() {
@@ -87,6 +88,17 @@ export default function CreditsPage() {
           })}
         </ul>
 
+        <h2>Manuscripts</h2>
+        <p>
+          The reader&apos;s Manuscript panel shows pages of real manuscripts from the libraries&apos; and projects&apos; own image servers; no
+          photograph is copied to this site. Which pages hold which work comes from each library&apos;s catalogue (<code>src/data/manuscripts.ts</code>).
+        </p>
+        <ul>
+          <li><b>Venetus A</b> (Venice, Biblioteca Nazionale Marciana, Marc. gr. Z. 454 = 822): photographs and the index of every Iliad line on its page, the <a href="https://www.homermultitext.org/" rel="noopener">Homer Multitext project</a>, Creative Commons Attribution-NonCommercial (the index: CC BY-NC 4.0, built by <code>pipeline/build_manuscripts.py</code>).</li>
+          <li><b>The Medicean manuscript of Aeschylus and Sophocles</b> (Florence, Biblioteca Medicea Laurenziana, Plut. 32.9): photographs, Biblioteca Medicea Laurenziana, <a href="https://tecabml.contentdm.oclc.org/digital/collection/plutei" rel="noopener">Teca digitale</a>, for personal and non-commercial use; contents by folio from <a href="https://portail.biblissima.fr/" rel="noopener">Biblissima</a>.</li>
+          <li><b>Plato, Paris grec 1807</b>: Source gallica.bnf.fr / Bibliothèque nationale de France (<a href="https://gallica.bnf.fr/edit/und/conditions-dutilisation-des-contenus-de-gallica" rel="noopener">free non-commercial reuse</a>); contents by folio from the BnF&apos;s Archives et manuscrits.</li>
+        </ul>
+
         <h2>Fonts and software</h2>
         <ul>
           {SOFTWARE.map((s) => (
@@ -104,6 +116,7 @@ export default function CreditsPage() {
           <li>Your settings, reading positions, bookmarks, notes, highlights, saved words, unsent forum drafts and everything else in the Treasury, and the people you have hidden in the Town Hall, are stored only in this browser, on this computer. “Download my Treasury” saves a copy as a file on your computer; nothing is uploaded.</li>
           <li>When you are online and a text is not in your downloaded library, your browser fetches that text&apos;s file from GitHub (raw.githubusercontent.com).</li>
           <li>When you look up a word or open its Word Study page while online, that word (and nothing else) is sent to Wiktionary (en.wiktionary.org).</li>
+          <li>When you open the reader&apos;s Manuscript panel, your browser fetches that manuscript&apos;s photographs from its library&apos;s image server: the Homer Multitext project (homermultitext.org) for the Iliad, the Biblioteca Medicea Laurenziana (via OCLC&apos;s contentdm.oclc.org) for Aeschylus, Sophocles and Apollonius, or the Bibliothèque nationale de France (gallica.bnf.fr) for Plato. Only the page asked for is requested. The Places panel uses only this site&apos;s own map.</li>
           <li>Downloading the library fetches the text files from GitHub. Links to Logeion and Perseus take you to those sites only when you click them.</li>
           <li>
             <b>The Town Hall, the Pnyx and accounts</b> are kept by <a href="https://supabase.com" rel="noopener">Supabase</a>, on servers in the European
