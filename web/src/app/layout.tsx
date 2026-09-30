@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { GFS_Didot, Alegreya, Alegreya_Sans_SC } from "next/font/google";
+import { GFS_Didot, Alegreya, Alegreya_Sans_SC, Gentium_Book_Plus, Noto_Sans, Alegreya_Sans } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TabBar from "@/components/TabBar";
@@ -23,6 +23,11 @@ import "./globals.css";
 const didot = GFS_Didot({ weight: "400", subsets: ["greek", "greek-ext", "latin"], variable: "--font-didot", display: "swap" });
 const alegreya = Alegreya({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-alegreya", display: "swap" });
 const alegreyaSC = Alegreya_Sans_SC({ weight: ["500", "700"], subsets: ["latin"], variable: "--font-alegreya-sc", display: "swap" });
+// The typefaces a reader can choose in Settings (all with full polytonic Greek): never preloaded, so a browser
+// downloads one only if it is chosen.
+const gentium = Gentium_Book_Plus({ weight: ["400", "700"], style: ["normal", "italic"], subsets: ["greek-ext"], variable: "--font-gentium", display: "swap", preload: false });
+const notoSans = Noto_Sans({ subsets: ["greek-ext"], variable: "--font-noto-sans", display: "swap", preload: false });
+const alegreyaSans = Alegreya_Sans({ weight: ["400", "700"], style: ["normal", "italic"], subsets: ["latin"], variable: "--font-alegreya-sans", display: "swap", preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -49,7 +54,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${didot.variable} ${alegreya.variable} ${alegreyaSC.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${didot.variable} ${alegreya.variable} ${alegreyaSC.variable} ${gentium.variable} ${notoSans.variable} ${alegreyaSans.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
       </head>

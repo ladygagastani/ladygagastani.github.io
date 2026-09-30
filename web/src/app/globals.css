@@ -143,6 +143,10 @@ input { text-overflow: ellipsis; }
 @media (pointer: coarse) { input[type="checkbox"], input[type="radio"] { width: 20px; height: 20px; flex: none; } }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+/* the typefaces chosen in Settings (lib/settings.ts): Greek text, and English reading text; headings keep Didot */
+html[data-greek-face="gentium"] { --f-greek: var(--font-gentium), "Gentium Book Plus", var(--font-didot), serif; }
+html[data-greek-face="sans"] { --f-greek: var(--font-noto-sans), "Noto Sans", system-ui, sans-serif; }
+html[data-text-face="sans"] { --f-body: var(--font-alegreya-sans), "Alegreya Sans", system-ui, sans-serif; }
 [lang="grc"] { font-family: var(--f-greek); }
 
 .wrap {

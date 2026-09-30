@@ -12,10 +12,13 @@ test.describe("on a phone", () => {
 
   test("the bottom bar holds the five places in order, and the header fits in one row", async ({ page }) => {
     await page.goto("/");
-    const links = tabBar(page).getByRole("link");
+    const links = tabBar(page).locator("a, button");
     await expect(links).toHaveCount(5);
     const labels = await links.evaluateAll((els) => els.map((e) => e.firstElementChild?.nextElementSibling?.firstChild?.textContent));
-    expect(labels).toEqual(["Library", "Learn Greek", "Wiki", "Forum", "My Library"]);
+    expect(labels).toEqual(["Library", "Learn Greek", "Search", "Wiki", "My Library"]);
+    // the forum moves to the header, where the search button was
+    await expect(page.locator("header").getByRole("link", { name: "The Town Hall: Forum" })).toBeVisible();
+    await expect(page.locator("header").getByRole("button", { name: "The Oracle: Search" })).toBeHidden();
     // the bar is along the bottom edge of the screen
     const box = (await tabBar(page).boundingBox())!;
     expect(Math.round(box.y + box.height)).toBe(812);
@@ -69,7 +72,7 @@ test.describe("on a phone", () => {
 
   test("search opens as a full-screen sheet with Greek letters, and closes", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("button", { name: "The Oracle: Search" }).click();
+    await tabBar(page).getByRole("button", { name: /^Search/ }).click();
     const sheet = page.getByRole("dialog", { name: "Quick search" });
     await expect(sheet).toBeVisible();
     // it rises into place, then covers the whole screen
@@ -133,7 +136,7 @@ test.describe("on a phone", () => {
       await expect(page.getByRole("dialog", { name: "Settings" })).toBeVisible();
       await check("Settings");
       await page.keyboard.press("Escape");
-      await page.getByRole("button", { name: "The Oracle: Search" }).click();
+      await tabBar(page).getByRole("button", { name: /^Search/ }).click();
       await page.getByRole("button", { name: "Greek letters on screen" }).click();
       await page.getByRole("combobox", { name: "Search" }).fill("logos");
       await check("Quick search");

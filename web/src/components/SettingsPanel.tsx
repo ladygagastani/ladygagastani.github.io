@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useSettings, LIMITS, applySettings, type ThemePref, type MotionPref } from "@/lib/settings";
+import { useSettings, LIMITS, applySettings, type ThemePref, type MotionPref, type GreekFace, type TextFace } from "@/lib/settings";
 import { useUI } from "@/lib/ui";
 import { useAcademy } from "@/lib/academy";
 import { useDragToClose } from "@/lib/use-drag-close";
@@ -11,6 +11,31 @@ import styles from "./SettingsPanel.module.css";
 const THEMES: [ThemePref, string][] = [["auto", "Automatic"], ["light", "Papyrus (light)"], ["dark", "Black-figure (dark)"]];
 const MOTIONS: [MotionPref, string][] = [["auto", "Automatic"], ["reduce", "Reduced"], ["full", "Full"]];
 const ON_OFF: ["on" | "off", string][] = [["on", "On"], ["off", "Off"]];
+/** Each choice shown in its own typeface (the font variables come from layout.tsx). */
+const GREEK_FACES: { v: GreekFace; name: string; about: string; font: string }[] = [
+  { v: "didot", name: "Didot", about: "The site's classic face", font: "var(--font-didot)" },
+  { v: "gentium", name: "Gentium", about: "A book face made for scholarly Greek", font: "var(--font-gentium)" },
+  { v: "sans", name: "Sans", about: "Clean, without serifs", font: "var(--font-noto-sans)" },
+];
+const TEXT_FACES: { v: TextFace; name: string; font: string }[] = [
+  { v: "serif", name: "Serif", font: "var(--font-alegreya)" },
+  { v: "sans", name: "Sans", font: "var(--font-alegreya-sans)" },
+];
+
+function FacePicker<T extends string>({ label, value, options, sample, lang, onChange }:
+  { label: string; value: T; options: { v: T; name: string; about?: string; font: string }[]; sample: string; lang?: string; onChange: (v: T) => void }) {
+  return (
+    <div className={styles.faces} role="radiogroup" aria-label={label}>
+      {options.map((o) => (
+        <button key={o.v} type="button" role="radio" aria-checked={value === o.v} onClick={() => onChange(o.v)} className={styles.face}>
+          <span className={styles.faceSample} lang={lang} style={{ fontFamily: o.font }}>{sample}</span>
+          <span className={styles.faceName}>{o.name}</span>
+          {o.about && <span className={styles.faceAbout}>{o.about}</span>}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 /**
  * Loads saved settings after hydration (so server and client first render match) and applies
@@ -95,6 +120,10 @@ export default function SettingsPanel() {
           <p className={styles.sample} lang="grc" style={{ fontSize: `${s.greekSize}rem`, lineHeight: s.leading }}>
             μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος<br />οὐλομένην, ἣ μυρίʼ Ἀχαιοῖς ἄλγεʼ ἔθηκε
           </p>
+          <span className={styles.subLabel}>Greek typeface</span>
+          <FacePicker label="Greek typeface" value={s.greekFace} options={GREEK_FACES} sample="Ἀχιλλεύς" lang="grc" onChange={(greekFace) => s.set({ greekFace })} />
+          <span className={styles.subLabel}>English typeface</span>
+          <FacePicker label="English typeface" value={s.textFace} options={TEXT_FACES} sample="Sing, goddess" onChange={(textFace) => s.set({ textFace })} />
           <div className={styles.row}>
             <span>Greek text size</span>
             <Stepper label="Greek text size" value={s.greekSize} display={`${Math.round(s.greekSize * 16)} px`}

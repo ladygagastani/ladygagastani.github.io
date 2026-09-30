@@ -63,13 +63,16 @@
   .areas a { padding-block: 6px 9px; }
   .tools { margin-left: auto; }
 }
+.phoneOnly { display: none; }
+.tbtn[aria-current="page"] { border-color: var(--accent); color: var(--accent); }
 /* phones (the width at which the bottom bar takes over the menu, TabBar.module.css): one row with the site's name
    and four finger-sized buttons; the quick theme switch steps aside (it is in Settings) */
 @media (max-width: 760px) {
   .row { flex-wrap: nowrap; gap: 8px; min-height: 60px; padding-block: 8px; }
   .areasWrap { display: none; }
-  .txt, .theme { display: none; }
+  .txt, .theme, .notPhone { display: none; }
   .tools { gap: 8px; margin-left: auto; }
+  .phoneOnly { display: inline-flex; align-items: center; }
   .tbtn { width: var(--tap); height: var(--tap); min-height: 0; justify-content: center; padding: 0; border-radius: 10px; }
   .tbtn svg { width: 19px; height: 19px; }
   .tools .light { padding-inline: 0; }

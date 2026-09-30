@@ -98,8 +98,8 @@ export const NAV: AreaId[] = ["home", "library", "study", "wiki", "forum", "trea
 export const TABS: { id: AreaId; also?: string[] }[] = [
   { id: "library", also: [AREAS.reader.href] },
   { id: "study" },
+  { id: "search" },       // a button: opens the universal search (Quick search) rather than a page
   { id: "wiki" },
-  { id: "forum" },
   { id: "treasury" },
 ];
 

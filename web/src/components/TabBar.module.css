@@ -60,3 +60,16 @@
   animation: offline-in 0.3s var(--ease);
 }
 @keyframes offline-in { from { transform: translateY(100%); opacity: 0; } }
+
+/* Search, in the middle: the lens in a medallion, like the roundel painted inside a cup */
+.searchTab { border: 0; background: transparent; font: inherit; cursor: pointer; }
+.lens {
+  display: grid; place-items: center; width: 40px; height: 40px; margin-top: -8px; border-radius: 50%;
+  background: var(--sel-bg); color: var(--sel-fg); box-shadow: 0 0 0 3px var(--bg), 0 6px 14px -6px var(--shadow);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s;
+}
+.lens svg { width: 22px; height: 22px; }
+.searchTab:active .lens { transform: scale(0.9) rotate(-12deg); }
+.searchTab[aria-expanded="true"] .lens, .searchTab[aria-current="page"] .lens { box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent); }
+.searchTab[aria-current="page"] svg { color: var(--sel-fg); fill-opacity: 0; }
+.searchTab .label { color: var(--ink); }

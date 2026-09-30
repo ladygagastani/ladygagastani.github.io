@@ -65,3 +65,18 @@
   .stepper button { width: var(--tap); height: var(--tap); }
   .reset { min-height: var(--tap); }
 }
+
+/* typeface pickers: each choice drawn in its own face */
+.subLabel { font-size: 0.92rem; color: var(--ink-2); margin-bottom: -4px; }
+.faces { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.face {
+  display: grid; gap: 2px; justify-items: start; align-content: start; padding: 10px 12px; text-align: left;
+  background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); color: var(--ink);
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.face:hover { border-color: var(--ink-2); }
+.face[aria-checked="true"] { background: var(--sel-bg); color: var(--sel-fg); border-color: var(--sel-edge, var(--sel-bg)); --ink-2: var(--ink-2-on-ink); }
+.faceSample { font-size: 1.35rem; line-height: 1.2; }
+.faceName { font-family: var(--f-label); font-size: 0.85rem; letter-spacing: 0.05em; }
+.faceAbout { font-size: 0.78rem; color: var(--ink-2); line-height: 1.3; }
+@media (pointer: coarse) { .face { min-height: var(--tap); } }

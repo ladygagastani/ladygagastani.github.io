@@ -5,6 +5,9 @@ export type ThemePref = "auto" | "light" | "dark";
 export type MotionPref = "auto" | "reduce" | "full";
 export type Columns = "both" | "greek" | "trans";
 export type Pronunciation = "attic" | "erasmian" | "modern";
+/** The typeface of Greek text, and of English reading text. Headings keep the site's own (GFS Didot). */
+export type GreekFace = "didot" | "gentium" | "sans";
+export type TextFace = "serif" | "sans";
 /** Kinds of marker beside the reader's scroll bar. */
 export type MarkerKind = "note" | "bookmark" | "highlight" | "favourite" | "xref" | "left" | "echo";
 export const MARKER_KINDS: MarkerKind[] = ["note", "bookmark", "highlight", "favourite", "xref", "left", "echo"];
@@ -23,9 +26,11 @@ export interface Settings {
   vibrate: boolean;    // phones: a short vibration on a save, a bookmark, a right answer (lib/haptics.ts)
   pron: Pronunciation; // pronunciation system shown in the Academy
   markers: MarkerKind[];   // reader: which kinds of marker to show beside the scroll bar
+  greekFace: GreekFace;
+  textFace: TextFace;
 }
 
-export const DEFAULTS: Settings = { theme: "auto", motion: "auto", greekSize: 1.25, leading: 1.75, columns: "both", translit: false, cases: false, metre: false, tryFirst: false, fitLines: false, vibrate: true, pron: "attic", markers: MARKER_KINDS };
+export const DEFAULTS: Settings = { theme: "auto", motion: "auto", greekSize: 1.25, leading: 1.75, columns: "both", translit: false, cases: false, metre: false, tryFirst: false, fitLines: false, vibrate: true, pron: "attic", markers: MARKER_KINDS, greekFace: "didot", textFace: "serif" };
 export const LIMITS = {
   greekSize: { min: 1, max: 2, step: 0.0625 },
   leading: { min: 1.4, max: 2.2, step: 0.1 },
@@ -60,7 +65,7 @@ export const useSettings = create<SettingsStore>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => safeStorage),
-      partialize: ({ theme, motion, greekSize, leading, columns, translit, cases, metre, tryFirst, fitLines, vibrate, pron, markers }) => ({ theme, motion, greekSize, leading, columns, translit, cases, metre, tryFirst, fitLines, vibrate, pron, markers }),
+      partialize: ({ theme, motion, greekSize, leading, columns, translit, cases, metre, tryFirst, fitLines, vibrate, pron, markers, greekFace, textFace }) => ({ theme, motion, greekSize, leading, columns, translit, cases, metre, tryFirst, fitLines, vibrate, pron, markers, greekFace, textFace }),
       skipHydration: true,
     },
   ),
@@ -86,6 +91,8 @@ export function applySettings(s: Settings) {
   if (s.motion === "auto") el.removeAttribute("data-motion"); else el.setAttribute("data-motion", s.motion);
   el.style.setProperty("--greek-size", `${s.greekSize}rem`);
   el.style.setProperty("--reading-leading", String(s.leading));
+  if (s.greekFace === "didot") el.removeAttribute("data-greek-face"); else el.setAttribute("data-greek-face", s.greekFace);
+  if (s.textFace === "serif") el.removeAttribute("data-text-face"); else el.setAttribute("data-text-face", s.textFace);
 }
 
 /** True when animation should be skipped: the user's setting wins, then the system setting. */
@@ -103,5 +110,7 @@ export const BOOT_SCRIPT = `(function(){try{var s=JSON.parse(localStorage.getIte
 if(s.theme==="light"||s.theme==="dark"){e.setAttribute("data-theme",s.theme);var m=document.createElement("meta");m.id=${JSON.stringify(THEME_META)};m.name="theme-color";m.content=${JSON.stringify(THEME_COLOURS)}[s.theme];document.head.prepend(m);}
 if(s.motion==="reduce"||s.motion==="full")e.setAttribute("data-motion",s.motion);
 if(s.greekSize)e.style.setProperty("--greek-size",s.greekSize+"rem");
-if(s.leading)e.style.setProperty("--reading-leading",String(s.leading));}catch(_){}
+if(s.leading)e.style.setProperty("--reading-leading",String(s.leading));
+if(s.greekFace==="gentium"||s.greekFace==="sans")e.setAttribute("data-greek-face",s.greekFace);
+if(s.textFace==="sans")e.setAttribute("data-text-face","sans");}catch(_){}
 try{var f=JSON.parse(localStorage.getItem("mathesis:folds")||"[]");if(f.length)document.documentElement.setAttribute("data-folds",f.join(" "));}catch(_){}})();`;

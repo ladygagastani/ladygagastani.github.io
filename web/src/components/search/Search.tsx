@@ -4,6 +4,7 @@
  * translations, and your own notes and saved words. Everything about a search lives in the
  * address, so a search can be bookmarked, shared, and gone back to.
  */
+import { addRecentSearch } from "@/lib/recent-searches";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -101,7 +102,7 @@ export default function Search() {
       <SearchBox key={`${tab}|${q}`} tab={tab} initial={q} script={script}
         onTab={(t) => go({ m: t === "forms" ? null : t, lem: null }, true)}
         onScript={(s) => go({ s: s === "auto" ? null : s })}
-        onSubmit={(text) => go({ q: text.trim(), lem: null }, true)} />
+        onSubmit={(text) => { addRecentSearch(text); go({ q: text.trim(), lem: null }, true); }} />
 
       {refs.length > 0 && (
         <section className={styles.refs} aria-label="Go to a passage">
