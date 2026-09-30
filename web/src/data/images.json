@@ -460,5 +460,19 @@
   "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.5",
   "source": "https://commons.wikimedia.org/wiki/File:Ancient_Olynthos_Chalkidiki_-_Greece_-_042.jpg",
   "sourceName": "Wikimedia Commons"
+ },
+ "stele-woman-and-servant": {
+  "file": "stele-woman-and-servant.jpg",
+  "width": 1600,
+  "height": 2355,
+  "alt": "A tall marble gravestone topped with a small pediment: a young woman in a long draped dress stands looking down at a servant girl, carved at half her size, who holds up an open box to her.",
+  "title": "Grave stele of a young woman and servant, from Attica",
+  "date": "c. 400–390 BC",
+  "place": "The Metropolitan Museum of Art, New York (36.11.1)",
+  "creator": "Unknown",
+  "licence": "CC0",
+  "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "source": "https://www.metmuseum.org/art/collection/search/253505",
+  "sourceName": "The Metropolitan Museum of Art"
  }
 }

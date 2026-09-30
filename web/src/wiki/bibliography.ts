@@ -394,4 +394,20 @@ export const BIB: Record<string, Secondary> = {
     author: "Sarah B. Pomeroy", title: "Xenophon, Oeconomicus: A Social and Historical Commentary", year: 1994,
     publisher: "Oxford: Clarendon Press", checked: "https://bmcr.brynmawr.edu/1995/1995.03.32",
   },
+  "hunt-slavery": {
+    author: "Peter Hunt", title: "Ancient Greek and Roman Slavery", year: 2018,
+    publisher: "Hoboken, NJ: Wiley Blackwell", checked: "https://bmcr.brynmawr.edu/2018/2018.09.53/",
+  },
+  "andreau-descat-slave": {
+    author: "Jean Andreau and Raymond Descat, translated by Marion Leopold", title: "The Slave in Greece and Rome", year: 2011,
+    publisher: "Madison: University of Wisconsin Press", checked: "https://bmcr.brynmawr.edu/2012/2012.10.26/",
+  },
+  "forsdyke-slaves-tell-tales": {
+    author: "Sara Forsdyke", title: "Slaves Tell Tales: And Other Episodes in the Politics of Popular Culture in Ancient Greece", year: 2012,
+    publisher: "Princeton: Princeton University Press", checked: "https://press.princeton.edu/books/hardcover/9780691140056/slaves-tell-tales",
+  },
+  "gagarin-torture": {
+    author: "Michael Gagarin", title: "The Torture of Slaves in Athenian Law", year: 1996,
+    publisher: "Classical Philology 91, 1–18", checked: "https://doi.org/10.1086/367489",
+  },
 };

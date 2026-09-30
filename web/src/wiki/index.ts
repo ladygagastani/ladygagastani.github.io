@@ -37,8 +37,9 @@ import troy from "./entries/troy";
 import drugsAndPoisons from "./entries/drugs-and-poisons";
 import loveSexAndMarriage from "./entries/love-sex-and-marriage";
 import household from "./entries/household";
+import slavery from "./entries/slavery";
 
-export const ENTRIES: Entry[] = [melos, ostracism, laurion, linearB, plague, mytilene, helots, diogenes, delphi, paintedStatues, antikythera, kerameikos, blackAndRedFigure, pericles, hipparchia, school, spartanUpbringing, symposium, olympicGames, kleroterion, eleusinianMysteries, trialOfSocrates, pythagoras, asclepius, homericSimiles, mycenae, readingTheLayers, knossos, parthenonMarbles, troy, drugsAndPoisons, loveSexAndMarriage, household];
+export const ENTRIES: Entry[] = [melos, ostracism, laurion, linearB, plague, mytilene, helots, diogenes, delphi, paintedStatues, antikythera, kerameikos, blackAndRedFigure, pericles, hipparchia, school, spartanUpbringing, symposium, olympicGames, kleroterion, eleusinianMysteries, trialOfSocrates, pythagoras, asclepius, homericSimiles, mycenae, readingTheLayers, knossos, parthenonMarbles, troy, drugsAndPoisons, loveSexAndMarriage, household, slavery];
 
 export const entryBySlug = new Map(ENTRIES.map((e) => [e.slug, e]));
 export const entriesIn = (c: CategoryId) => ENTRIES.filter((e) => e.category === c).sort((a, b) => a.title.localeCompare(b.title));
