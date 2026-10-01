@@ -10,7 +10,7 @@ const entry: Entry = {
   hook: `A Greek marriage was a deal between two households, made so that a man would have legitimate children to inherit his house. The bride could be a young teenager and the groom twice her age. Yet the same people wrote one of the most famous poems of desire ever written, told a myth in which lovers are two halves of one creature looking for each other, and argued about the proper way for a man to court a boy. Athenian law let a husband kill a man caught in bed with his wife, and a comedy had the women of Greece stop a war by refusing sex. Here is what the texts say, and where they need reading with care.`,
   body: `## A contract between two houses
 
-The frankest statement of what an Athenian marriage was for comes from a lawsuit. In the mid-4th century BC Apollodorus prosecuted Neaera, whom he accused of having been a courtesan and of living as the wife of an Athenian citizen although she was a foreigner, which the law [forbade](cts:tlg0014.tlg059:16). The speech survives among the works of Demosthenes. Explaining what marriage means, the prosecutor tells the jury:
+The frankest statement of what an Athenian marriage was for comes from a lawsuit. In the mid-4th century BC Theomnestus and his brother-in-law Apollodorus, who gave most of the speech, prosecuted Neaera, whom he accused of having been a courtesan and of living as the wife of an Athenian citizen although she was a foreigner, which the law [forbade](cts:tlg0014.tlg059:16). The speech survives among the works of Demosthenes. Explaining what marriage means, the prosecutor tells the jury:
 
 {{quote:neaera}}
 
@@ -58,7 +58,7 @@ A wife could leave her husband, but the divorce had to be registered, in person,
 
 {{quote:hipparete}}
 
-The law on adultery was harsh on the man. In a speech Lysias wrote for Euphiletus, an Athenian on trial for killing his wife's lover Eratosthenes, the defendant says he caught Eratosthenes in the act, and that the law allowed a husband to kill him there. He describes his small house, where he had given the ground floor to his wife so that she could see to the baby at night:
+The law on adultery was harsh on the man. In a speech Lysias wrote for Euphiletus, an Athenian on trial for killing his wife's lover Eratosthenes, the defendant says he caught Eratosthenes in the act, and that the law allowed a husband to kill him there. He describes his small house, where he had given the ground floor to his wife so that she would not have to go up and down the stairs with the baby:
 
 {{quote:house}}
 

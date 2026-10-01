@@ -40,7 +40,7 @@ A slave had a price like any property: Demosthenes' father owned [a workshop of 
 
 ## How many?
 
-Nobody knows how many slaves there were. The only ancient figure for Athens comes from a lost chronicle by Ctesicles, again quoted by Athenaeus, reporting a count of the inhabitants of Attica made under Demetrius of Phalerum, who governed Athens at the end of the 4th century BC:
+Nobody knows how many slaves there were. The best-known ancient figure for Athens comes from a lost chronicle by Ctesicles, again quoted by Athenaeus, reporting a count of the inhabitants of Attica made under Demetrius of Phalerum, who governed Athens at the end of the 4th century BC:
 
 {{quote:census}}
 

@@ -32,7 +32,7 @@ The geographer Strabo, writing under Augustus, believed nothing was left at all:
 
 {{quote:lions}}
 
-{legend} The walls, he adds, were said to be the work of the Cyclopes, the giants who built the walls of Tiryns: stones that big seemed beyond human strength. Archaeologists still call such masonry "Cyclopean". Pausanias was also shown the graves of Atreus, of Agamemnon, of his charioteer, of Cassandra's twin sons, all murdered by Aegisthus at the homecoming feast, and he notes where the murderers themselves were buried:
+{legend} The walls, he adds, were said to be the work of the Cyclopes, the giants who built the walls of Tiryns: stones that big seemed beyond human strength. Archaeologists still call such masonry "Cyclopean". Pausanias was also shown the grave of Atreus, and the graves of Agamemnon, of his charioteer, of Cassandra's twin sons and of the others murdered by Aegisthus at the homecoming feast, and he notes where the murderers themselves were buried:
 
 {{quote:graves}}
 
@@ -46,11 +46,11 @@ The geographer Strabo, writing under Augustus, believed nothing was left at all:
 
 ## Too early for Agamemnon
 
-{well} The shaft graves were soon shown to be far older than Schliemann hoped. They belong to the sixteenth century BC, at least three hundred years before any date that ancient or modern writers have proposed for a Trojan War. In 1951 a second, still older circle of graves, **Grave Circle B**, was found by chance outside the walls, while work was going on at the great beehive-shaped tomb that local tradition called the "Tomb of Clytemnestra"; its burials go back to the late seventeenth century BC.
+{well} The shaft graves were soon shown to be far older than Schliemann hoped. They belong to the sixteenth century BC, two to three centuries earlier than the dates usually given for a Trojan War. In 1951 a second, still older circle of graves, **Grave Circle B**, was found by chance outside the walls, while work was going on at the great beehive-shaped tomb that local tradition called the "Tomb of Clytemnestra"; its burials go back to the late seventeenth century BC.
 
 {well} The walls and the Lion Gate that Pausanias saw, and that stand today, came later, in the palace's last great age in the thirteenth century BC. When the wall was built, the old grave circle was brought inside it and kept as a monument, which is why Schliemann found royal graves "within the wall". Pausanias' guides were right that great men lay there; they were wrong about who.
 
-{well} Around 1200 BC the palace on the summit was destroyed by fire, like other Mycenaean palaces. Mycenae has also yielded clay tablets in [Linear B](wiki:linear-b), the earliest written Greek: records kept by its administrators, which survive, as at Pylos and Knossos, because fire baked the clay hard. People went on living at Mycenae, on a smaller scale, until the Argives ended it.
+{well} Around 1200 BC the palace on the summit was destroyed by fire, like other Mycenaean palaces. Mycenae has also yielded clay tablets in [Linear B](wiki:linear-b), the earliest written Greek: records kept by its administrators, which survive, as at Pylos and Knossos, because fire baked the clay hard. People went on living at Mycenae, on a smaller scale, until the Argives ended it in the fifth century BC; a small village grew up there again in Hellenistic times.
 
 ## Can we trust Schliemann?
 

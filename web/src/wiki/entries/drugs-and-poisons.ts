@@ -30,7 +30,7 @@ Theophrastus adds that such rites [look like embellishments](cts:tlg0093.tlg001:
 
 {{quote:strychnos}}
 
-{debated} Which plant this was is not certain. LSJ identifies the maddening *strychnos* as thorn-apple, *Datura stramonium*, following the later herbal of Dioscorides; identifications of ancient plant names from descriptions like these are often insecure.
+{debated} Which plant this was is not certain. LSJ identifies the maddening *strychnos* as thorn-apple, *Datura stramonium*, following the later herbal of Dioscorides; but thorn-apple is usually thought to have come from the Americas, and identifications of ancient plant names from descriptions like these are often insecure.
 
 ## Hemlock, the city's poison
 
@@ -54,7 +54,7 @@ The Hippocratic Oath, sworn by Apollo the physician, [Asclepius](wiki:asclepius)
 
 ## Mad honey
 
-In 401–400 BC Xenophon led the ten thousand Greek soldiers of the *Anabasis* north through the mountains to the Black Sea. In the villages of the Colchians, two days' march from Trapezus, they found beehives, and ate the honey.
+In 401–400 BC the ten thousand Greek soldiers of Xenophon's *Anabasis*, with Xenophon among their generals, marched north through the mountains to the Black Sea. In the villages of the Colchians, two days' march from Trapezus, they found beehives, and ate the honey.
 
 {{quote:honey}}
 
