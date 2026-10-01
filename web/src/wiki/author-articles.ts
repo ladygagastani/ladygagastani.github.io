@@ -9,14 +9,6 @@
  * written from memory. Prose uses the wiki's markup (markup.ts); `[^2]` points at source 2.
  */
 import type { Certainty } from "./types";
-import { herodotus } from "./authors/tlg0016";
-import { homer } from "./authors/tlg0012";
-import { thucydides } from "./authors/tlg0003";
-import { plato } from "./authors/tlg0059";
-import { sophocles } from "./authors/tlg0011";
-import { aristotle } from "./authors/tlg0086";
-import { euripides } from "./authors/tlg0006";
-import { aeschylus } from "./authors/tlg0085";
 
 /** What a timeline mark stands for: the author's own time, a copy of the text, a printing or
  *  modern edition, or later reception. Shown as a shape and a word, never by colour alone. */
@@ -54,8 +46,21 @@ export interface AuthorArticle {
   checked: string;
 }
 
-/** Only source-checked articles: each lives in authors/<id>.ts. */
-export const ARTICLES: Record<string, AuthorArticle> = { [herodotus.id]: herodotus, [homer.id]: homer, [thucydides.id]: thucydides, [plato.id]: plato, [sophocles.id]: sophocles, [aristotle.id]: aristotle, [euripides.id]: euripides, [aeschylus.id]: aeschylus };
+/**
+ * Only source-checked articles: each lives in authors/<id>.ts and is loaded only when its author's page is
+ * opened, so no page carries every article. (All of them at once, for the build and the tests: author-articles-all.ts.)
+ * A new article is added here AND in author-articles-all.ts (a test checks the two agree).
+ */
+export const ARTICLE_LOADERS: Record<string, () => Promise<AuthorArticle>> = {
+  tlg0016: () => import("./authors/tlg0016").then((m) => m.herodotus),
+  tlg0012: () => import("./authors/tlg0012").then((m) => m.homer),
+  tlg0003: () => import("./authors/tlg0003").then((m) => m.thucydides),
+  tlg0059: () => import("./authors/tlg0059").then((m) => m.plato),
+  tlg0011: () => import("./authors/tlg0011").then((m) => m.sophocles),
+  tlg0086: () => import("./authors/tlg0086").then((m) => m.aristotle),
+  tlg0006: () => import("./authors/tlg0006").then((m) => m.euripides),
+  tlg0085: () => import("./authors/tlg0085").then((m) => m.aeschylus),
+};
 
 /**
  * The unchecked drafts used to look at the design, read only by `npm run dev`. The test is a build-time
@@ -67,9 +72,11 @@ const PREVIEW: Record<string, AuthorArticle> =
     ? (require("./drafts/preview.json") as Record<string, AuthorArticle>)
     : {};
 
-/** The article for an author: the checked one, or (development only) a draft marked as unchecked. */
-export function articleFor(id: string): { article: AuthorArticle; draft: boolean } | null {
-  if (ARTICLES[id]) return { article: ARTICLES[id], draft: false };
-  if (PREVIEW[id]) return { article: PREVIEW[id], draft: true };
-  return null;
+/** An unchecked draft, for the design preview in development only. */
+export const draftFor = (id: string): { article: AuthorArticle; draft: boolean } | null => (PREVIEW[id] ? { article: PREVIEW[id], draft: true } : null);
+
+/** The article for an author, fetched when needed: the checked one, or (development only) a draft marked as unchecked. */
+export async function loadArticle(id: string): Promise<{ article: AuthorArticle; draft: boolean } | null> {
+  const load = ARTICLE_LOADERS[id];
+  return load ? { article: await load(), draft: false } : draftFor(id);
 }

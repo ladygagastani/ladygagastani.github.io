@@ -8,6 +8,7 @@ import { hasTranslation } from "@/lib/catalog";
 import { lifeSpan } from "@/lib/authors-meta";
 import { SHARE_IMAGE, absolute, authorDescription } from "@/lib/seo";
 import { entriesForAuthor } from "@/wiki/related";
+import { articleFor } from "@/wiki/author-articles-all";
 import type { WorkMeta } from "@/lib/works-meta";
 
 export const dynamicParams = false;
@@ -53,7 +54,7 @@ export default async function AuthorLanding({ params }: PageProps<"/author/[id]"
         ...(f.wd?.place ? { birthPlace: f.wd.place } : {}),
         sameAs: [...(f.wd ? [`https://www.wikidata.org/wiki/${f.wd.q}`] : []), ...(f.wd?.wp ? [f.wd.wp] : [])],
       }} />
-      <AuthorView author={f.author} meta={meta} diff={common} who={f.wd} related={entriesForAuthor(id)} landing />
+      <AuthorView author={f.author} meta={meta} diff={common} who={f.wd} related={entriesForAuthor(id)} article={articleFor(id)} landing />
     </Page>
   );
 }

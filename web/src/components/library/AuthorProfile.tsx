@@ -14,7 +14,7 @@ import { centuries, DATE_NOTE, loadWorksMeta, type WorkMeta } from "@/lib/works-
 import { commonShare, loadDifficulty } from "@/lib/difficulty";
 import { lifeSpan, loadAuthorsMeta, type AuthorMeta } from "@/lib/authors-meta";
 import { AREAS } from "@/config/areas";
-import { articleFor } from "@/wiki/author-articles";
+import { loadArticle, type AuthorArticle } from "@/wiki/author-articles";
 import { WorkItem } from "./Library";
 import AuthorArticleView from "./AuthorArticleView";
 import lib from "./Library.module.css";
@@ -55,8 +55,10 @@ export default function AuthorProfile({ related }: { related: Record<string, Rel
  * The author's page itself. It takes plain data, so it can be drawn while the site is built (the static
  * /author/[id] pages that search engines and link previews read) as well as in the browser.
  */
-export function AuthorView({ author, meta, diff, who: wd, related: entries, landing = false }: {
+export function AuthorView({ author, meta, diff, who: wd, related: entries, landing = false, article }: {
   author: CatAuthor; meta: Record<string, WorkMeta>; diff: Record<string, [number, number]>; who: AuthorMeta | undefined; related: RelatedEntry[];
+  /** the written article, when the page is built with it (the static /author/[id] pages); otherwise it is fetched */
+  article?: { article: AuthorArticle; draft: boolean } | null;
   /** the static /author/[id] page: each work also links to its own page */
   landing?: boolean;
 }) {
@@ -85,7 +87,15 @@ export function AuthorView({ author, meta, diff, who: wd, related: entries, land
     .sort((a, b) => b.p - a.p).slice(0, famous ? 2 : 3), [author, diff, famous]);
 
   const lived = lifeSpan(wd);
-  const written = articleFor(author.id);
+  // the written article: given by the built page, or fetched for this author alone
+  const [fetched, setFetched] = useState<{ id: string; a: { article: AuthorArticle; draft: boolean } | null } | null>(null);
+  useEffect(() => {
+    if (article !== undefined) return;
+    let live = true;
+    loadArticle(author.id).then((a) => { if (live) setFetched({ id: author.id, a }); }, () => undefined);
+    return () => { live = false; };
+  }, [author.id, article]);
+  const written = article !== undefined ? article : fetched?.id === author.id ? fetched.a : null;
   return (
     <div className={`wrap ${styles.page}`}>
       <p className={styles.crumb}><Link href={AREAS.library.href}>← {AREAS.library.name} · {AREAS.library.english}</Link></p>

@@ -13,7 +13,8 @@ import { indexCatalog, greekEditions, translations, type Catalog, type CatText }
 import { parseTei } from "@/lib/tei/parse";
 import { findRef } from "@/lib/tei/refs";
 import type { Block, TeiDoc } from "@/lib/tei/types";
-import { ARTICLES as PUBLISHED, type AuthorArticle } from "./author-articles";
+import type { AuthorArticle } from "./author-articles";
+import { ARTICLES as PUBLISHED } from "./author-articles-all";
 import { blocks, linksIn } from "./markup";
 
 const CORPUS = "../pipeline/.cache/corpus";

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { ARTICLES as PUBLISHED, PIN_KINDS, type AuthorArticle } from "./author-articles";
+import { ARTICLE_LOADERS, PIN_KINDS, type AuthorArticle } from "./author-articles";
+import { ARTICLES as PUBLISHED } from "./author-articles-all";
 import { blocks, inline, linksIn } from "./markup";
 import { gapText, yearLabel, yearsBetween } from "../components/library/AuthorRoad";
 import catalog from "../../public/data/catalog.json";
@@ -86,5 +87,12 @@ describe("published author articles", () => {
       const { cites } = linksIn([...blocks(a.summary), ...blocks(a.transmission), ...blocks(a.variants)]);
       for (const c of cites) expect(works.has(c.work), `${a.id}: ${c.work}`).toBe(true);
     }
+  });
+});
+
+describe("loading one article at a time", () => {
+  it("has a loader for every published article, and it gives that article", async () => {
+    expect(Object.keys(ARTICLE_LOADERS).sort()).toEqual(Object.keys(PUBLISHED).sort());
+    for (const [id, load] of Object.entries(ARTICLE_LOADERS)) expect(await load()).toBe(PUBLISHED[id]);
   });
 });
