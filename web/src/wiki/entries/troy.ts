@@ -28,7 +28,7 @@ In the *Iliad*, Hector, leaving his wife Andromache and their baby son to go bac
 
 {{quote:village}}
 
-Strabo also cites [Hestiaea of Alexandria](cts:tlg0099.tlg001:13.1.36), a woman who wrote a book on the *Iliad* and asked whether the war could really have been fought around the Ilion of her own day. Modern archaeology has come down on the side of Ilion's own claim: Hisarlik was a great Bronze Age citadel.
+Demetrius, Strabo reports, also called a woman as his witness: [Hestiaea of Alexandria](cts:tlg0099.tlg001:13.1.36) (perhaps the Alexandria in the Troad), who wrote a book on the *Iliad* and asked whether the war could really have been fought around the Ilion of her own day. Modern archaeology has come down on the side of Ilion's own claim: Hisarlik was a great Bronze Age citadel.
 
 ## Calvert and Schliemann
 
