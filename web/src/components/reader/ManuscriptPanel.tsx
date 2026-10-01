@@ -81,19 +81,48 @@ function Stages({ units, label }: { units: Unit[]; label: string }) {
   }, [units]);
   const cut = units.reduce((a, u) => a + unitLines(u).join(" ").split(" ").length, 0) > MAX_WORDS;
 
-  /** Change step; with the View Transitions API each word glides to its new place and shape. */
-  const go = (s: Stage) => {
-    const doc = document as Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
-    if (!doc.startViewTransition || prefersReducedMotion(motion)) { setStage(s); return Promise.resolve(); }
-    document.documentElement.classList.add("ms-morph");
-    return doc.startViewTransition(() => flushSync(() => setStage(s))).finished.catch(() => undefined)
-      .finally(() => document.documentElement.classList.remove("ms-morph"));
-  };
+  const page = useRef<HTMLDivElement>(null);
+  const running = useRef<Animation[]>([]);
+  const shown = useRef<Stage>(0);
+  useEffect(() => () => running.current.forEach((a) => a.cancel()), []);
+  /**
+   * Change step, and let each word glide from where it was to where it now sits (measured before and after, then
+   * moved back and released: transforms only, which phones draw cheaply, inside the panel, in every browser).
+   * The box eases to its new height. Resolves when the words have settled.
+   */
+  const go = (s: Stage) => new Promise<void>((done) => {
+    const box = page.current;
+    if (s === shown.current) { done(); return; }
+    shown.current = s;
+    running.current.forEach((a) => a.cancel());
+    running.current = [];
+    if (!box || prefersReducedMotion(motion) || typeof box.animate !== "function") { setStage(s); done(); return; }
+    const words = () => [...box.querySelectorAll<HTMLElement>("[data-k]")];
+    const before = new Map(words().map((e) => [e.dataset.k!, e.getBoundingClientRect()]));
+    const h0 = box.getBoundingClientRect().height;
+    flushSync(() => setStage(s));
+    const h1 = box.getBoundingClientRect().height;
+    const timing = { duration: 620, easing: "cubic-bezier(0.3, 0.7, 0.2, 1)" };
+    const list: Animation[] = [];
+    if (Math.abs(h1 - h0) > 1) list.push(box.animate([{ height: `${h0}px` }, { height: `${h1}px` }], timing));
+    words().forEach((e, i) => {
+      const a = before.get(e.dataset.k!);
+      if (!a) return;
+      const b = e.getBoundingClientRect(), dx = a.left - b.left, dy = a.top - b.top;
+      // a word that stays where it is only flickers as its letters change; the rest travel, a little after each other
+      const kf = Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5
+        ? [{ opacity: 0.45 }, { opacity: 1 }]
+        : [{ transform: `translate(${dx}px, ${dy}px)`, opacity: 0.6 }, { transform: "none", opacity: 1 }];
+      list.push(e.animate(kf, { ...timing, delay: Math.min(i, 60) * 4, fill: "backwards" }));
+    });
+    running.current = list;
+    Promise.allSettled(list.map((x) => x.finished)).then(() => done());
+  });
   const play = async () => {
     setPlaying(true);
     for (const s of [0, 1, 2, 3] as Stage[]) {
       await go(s);
-      await new Promise((r) => setTimeout(r, s === 3 ? 0 : 1100));
+      await new Promise((r) => setTimeout(r, s === 3 ? 0 : 900));
     }
     setPlaying(false);
   };
@@ -107,14 +136,14 @@ function Stages({ units, label }: { units: Unit[]; label: string }) {
           <button key={st.label} type="button" role="radio" aria-checked={stage === n} disabled={playing} onClick={() => go(n as Stage)}>{st.label}</button>
         ))}
       </div>
-      <div className={styles.page} data-stage={stage} lang="grc">
+      <div ref={page} className={styles.page} data-stage={stage} lang="grc">
         {lines.map((ws, l) => (
           <p key={l}>
             {ws.map((w, j) => {
               const k = i++;
               const t = stageWord(w, stage);
               // real spaces (for screen readers and copying), gone at the last step
-              return t ? <Fragment key={k}>{j > 0 && stage < 3 ? " " : ""}<span className={styles.w} style={{ viewTransitionName: `msw-${k}` } as React.CSSProperties}>{t}</span></Fragment> : null;
+              return t ? <Fragment key={k}>{j > 0 && stage < 3 ? " " : ""}<span className={styles.w} data-k={k}>{t}</span></Fragment> : null;
             })}
           </p>
         ))}
@@ -168,9 +197,16 @@ function Photos({ w, work, line, book }: { w: Witness; work: string; line: strin
         visibilityRatio: 0.6, minZoomImageRatio: 0.6, maxZoomPixelRatio: 2.5,
         animationTime: prefersReducedMotion(motion) ? 0 : 0.9, springStiffness: 8,
         gestureSettingsMouse: { clickToZoom: false, dblClickToZoom: true },
+        // phones: one finger scrolls the panel (the photograph fills half the screen, and must not trap it);
+        // two fingers move and zoom the page, as on the Periplus map
+        gestureSettingsTouch: { dragToPan: false, flickEnabled: false, pinchToZoom: true, clickToZoom: false, dblClickToZoom: true },
         // shown, never read: one image server does not allow scripts to read its pictures, which WebGL drawing needs
         drawer: "canvas", crossOriginPolicy: false, preserveViewport: false,
       });
+      // the viewer focuses its canvas when a finger or the mouse is lifted; focusing would scroll the panel to it,
+      // so a tap on the photograph made the panel jump: focus it where it is instead
+      const canvas = viewer.current.canvas as HTMLElement, focus = canvas.focus.bind(canvas);
+      canvas.focus = (o?: FocusOptions) => focus({ ...o, preventScroll: true });
       setReady(true);
     }, (e: Error) => { if (live) setError(`The viewer could not start (${e.message}).`); });
     return () => { live = false; viewer.current?.destroy(); viewer.current = null; };
@@ -201,6 +237,31 @@ function Photos({ w, work, line, book }: { w: Witness; work: string; line: strin
     v.open({ tileSource: `${page.service}/info.json` });
   }, [ready, pages, at, mark]);
 
+  // one finger scrolls the panel; two move the photograph. The first couple of times one finger drags sideways
+  // across it, a hint says to use two
+  const wrap = useRef<HTMLDivElement>(null);
+  const [hint, setHint] = useState(false);
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return;
+    let one: { x: number; y: number } | null = null, timer = 0;
+    const start = (e: TouchEvent) => { one = e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null; };
+    const move = (e: TouchEvent) => {
+      // two fingers belong to the photograph (moved and zoomed by the viewer), never to the panel's scrolling
+      if (e.touches.length === 2) { if (e.cancelable) e.preventDefault(); return; }
+      if (!one || e.touches.length !== 1) return;
+      const dx = e.touches[0].clientX - one.x, dy = e.touches[0].clientY - one.y;
+      if (Math.abs(dx) < 24 || Math.abs(dx) < Math.abs(dy)) return;
+      one = null;
+      let n = 0;
+      try { n = Number(localStorage.getItem("mathesis:ms-hint")) || 0; localStorage.setItem("mathesis:ms-hint", String(n + 1)); } catch { /* ignore */ }
+      if (n < 2) { setHint(true); clearTimeout(timer); timer = window.setTimeout(() => setHint(false), 2200); }
+    };
+    el.addEventListener("touchstart", start, { passive: true });
+    el.addEventListener("touchmove", move, { passive: false });
+    return () => { clearTimeout(timer); el.removeEventListener("touchstart", start); el.removeEventListener("touchmove", move); };
+  }, []);
+
   const page = pages && at !== null ? pages[at] : null;
   const turn = (d: number) => pages && setAt((a) => Math.min(pages.length - 1, Math.max(0, (a ?? 0) + d)));
 
@@ -209,9 +270,10 @@ function Photos({ w, work, line, book }: { w: Witness; work: string; line: strin
       <h3 className={styles.msName}>{w.name}</h3>
       <p className={styles.msMeta}>{w.shelfmark} · {w.date}{w.place ? ` · ${w.place}` : ""}</p>
       <p className={styles.msAbout}>{w.about}</p>
-      <div className={styles.viewerWrap}>
+      <div ref={wrap} className={styles.viewerWrap}>
         <div ref={box} className={styles.viewer} role="img" aria-label={page ? `Folio ${page.folio} of ${w.name}` : `${w.name}, loading`} />
         {!page && !error && <p className={styles.wait}>Opening the manuscript…</p>}
+        {hint && <p className={styles.touchHint} role="status">Use two fingers to move the page</p>}
         <div className={styles.tools}>
           <button type="button" onClick={() => turn(-1)} disabled={!page || at === 0} aria-label="Previous page">‹</button>
           <span className={styles.folio} aria-live="polite">{page ? `f. ${page.folio}` : "…"}</span>

@@ -17,6 +17,7 @@
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rule) 60%, transparent);
   font-family: var(--f-greek); font-size: 1.12rem; line-height: 1.6; color: var(--ms-ink);
   transition: background-color 0.6s var(--ease), color 0.6s var(--ease);
+  overflow: hidden;   /* while its height eases to the new step's, words stay inside it */
 }
 .page p { margin: 0; }
 .page p + p { margin-top: 2px; }
@@ -41,6 +42,13 @@
 .msAbout { margin: 0; font-size: 0.92rem; line-height: 1.55; }
 .viewerWrap { position: relative; border-radius: var(--radius); overflow: hidden; background: #1B1410; box-shadow: 0 14px 30px -22px var(--shadow); }
 .viewer { height: min(520px, 58vh); }
+/* phones: one finger scrolls the panel past the photograph (the viewer would take every touch); two move and zoom it */
+@media (pointer: coarse) { .viewer, .viewer * { touch-action: pan-y !important; } }
+.touchHint {
+  position: absolute; z-index: 5; left: 50%; top: 42%; translate: -50% -50%; margin: 0; padding: 10px 16px; border-radius: 999px; pointer-events: none;
+  background: var(--inv-bg); color: var(--inv-fg); font-family: var(--f-label); letter-spacing: 0.03em; white-space: nowrap;
+  animation: mark-in 0.3s var(--ease) both;
+}
 @media (max-width: 760px) { .viewer { height: 44vh; } }
 .wait { position: absolute; inset: 0; margin: 0; display: grid; place-items: center; color: #E6C39B; font-family: var(--f-label); }
 .tools {

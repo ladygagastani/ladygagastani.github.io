@@ -382,8 +382,6 @@ select { max-width: 100%; }
   text-decoration: underline 2px var(--ochre);
   text-underline-offset: 4px;
 }
-/* the reader's Manuscript panel: each word glides to its new place and shape between steps */
-html.ms-morph::view-transition-group(*) { animation-duration: 0.7s; animation-timing-function: cubic-bezier(0.3, 0.7, 0.2, 1); }
 /* words that name a place, marked while the reader's Places panel is open */
 ::highlight(place-1), ::highlight(place-2) {
   background-color: color-mix(in srgb, var(--accent) 14%, transparent);
