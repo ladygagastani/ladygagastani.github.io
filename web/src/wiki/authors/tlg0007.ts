@@ -18,7 +18,7 @@ As a young man he studied philosophy at Athens with a Platonist called Ammonius,
 
 {debated} His birth date is worked out from that remark. If he was not more than twenty when he studied with Ammonius, he was born between AD 45 and 47.[^3]
 
-He stayed on at Athens long enough to become an Athenian citizen, and travelled widely, to Rome and to Alexandria.[^3] About AD 70 he visited Rome with Lucius Mestrius Florus, an associate of the new emperor Vespasian, who sponsored him as a Roman citizen.[^1] In Rome and Italy, he says, he was too busy with “my public duties and the number of my pupils in philosophy” to practise Latin: “It was therefore late and when I was well on in years that I began to study Roman literature”.[^2]
+He became an Athenian citizen, and travelled widely, to Rome and to Alexandria.[^3] About AD 70 he visited Rome with Lucius Mestrius Florus, an associate of the new emperor Vespasian; it was Florus who sponsored him as a Roman citizen.[^1] In Rome and Italy, he says, he was too busy with “my public duties and the number of my pupils in philosophy” to practise Latin: “It was therefore late and when I was well on in years that I began to study Roman literature”.[^2]
 
 {debated} As a Roman citizen he was possibly called Lucius Mestrius Plutarchus.[^1]
 
@@ -30,7 +30,7 @@ About AD 95 he became one of the two priests of Apollo's temple at Delphi.[^1] I
 
 {legend} One of the Delphic dialogues, *The Obsolescence of Oracles*, holds a strange story, told by one of the speakers. On a ship off the island of Paxi a voice called to the Egyptian pilot Thamus, and told him to announce «Πὰν ὁ μέγας τέθνηκε», “Great Pan is dead”; when he did, a great cry of lament went up, and the emperor Tiberius had the story looked into.[^7]
 
-He was still alive in 119, the year in which, by a notice in Eusebius' *Chronicle*, Hadrian made him procurator of Achaea;[^3] Wikipedia calls the post nominal.[^1]
+He was still alive in 119, the year in which, by a notice from Eusebius' *Chronicle* preserved by the Byzantine chronicler George Syncellus, Hadrian made him procurator of Achaea;[^3] Wikipedia calls the post nominal.[^1]
 
 ### The Parallel Lives
 
@@ -59,7 +59,7 @@ Philemon Holland made the first complete English *Moralia* from the Greek in 160
     { year: 95, approx: true, kind: "writing", what: "Becomes one of the two priests of Apollo at Delphi", src: [1, 6] },
     { year: 100, approx: true, kind: "writing", what: "The *Parallel Lives*, probably written at the beginning of the second century", src: [8] },
     { year: 119, kind: "writing", what: "Still alive; made procurator of Achaea by Hadrian", src: [3, 1] },
-    { year: 1296, kind: "copy", what: "A professional scribe finishes Parisinus gr. 1671 on 11 July: the *Lives* and the *Moralia*, revised by Maximus Planudes", src: [20] },
+    { year: 1296, kind: "copy", what: "A single scribe finishes Parisinus gr. 1671 on 11 July: the *Lives* and the *Moralia*, revised by Maximus Planudes", src: [20] },
     { year: 1302, kind: "copy", what: "Planudes adds a list of 69 Plutarch titles to his manuscript of the Greek Anthology", src: [21] },
     { year: 1470, approx: true, kind: "print", what: "The *Lives* are first printed, in a Latin translation, at Rome", src: [8] },
     { year: 1509, kind: "print", what: "Aldus Manutius prints the Greek *Moralia* at Venice; Erasmus is one of its proofreaders", src: [13, 22] },
@@ -79,7 +79,7 @@ Philemon Holland made the first complete English *Moralia* from the Greek in 160
 
 **The Lives.** Bernadotte Perrin, introducing the Loeb *Lives* in 1914, named the oldest manuscripts. The Codex Sangermanensis (Sg), of the tenth century, is the oldest, but holds only fifteen Lives. The Codex Seitenstettensis (S), from the monastery of Seitenstetten in Austria, is of the eleventh century and holds sixteen; only since 1870 has it been known as the best manuscript of all. Three Paris manuscripts, numbered 1671 (A), 1672 (C) and 1674 (D), he called “of supreme importance”.[^16]
 
-**Planudes.** The Byzantine scholar Maximus Planudes had a hand in the Plutarch we read. Parisinus gr. 1671 was written by a single professional scribe, who finished on 11 July 1296, and was “revised and corrected by Planudes” (our translation); it holds the *Lives*, arranged in three volumes, and the *Moralia*.[^20] In 1302 Planudes wrote into his manuscript of the Greek Anthology a list of the titles of sixty-nine works of Plutarch.[^21]
+**Planudes.** The Byzantine scholar Maximus Planudes had a hand in the Plutarch we read. Parisinus gr. 1671 was written by a single scribe, apparently a professional,, who finished on 11 July 1296, and was “revised and corrected by Planudes” (our translation); it holds the *Lives*, arranged in three volumes, and the *Moralia*.[^20] In 1302 Planudes wrote into his manuscript of the Greek Anthology a list of the titles of sixty-nine works of Plutarch.[^21]
 
 {debated} Only one manuscript, Parisinus gr. 1672, contains all seventy-eight works of the *Moralia*. G. R. Manton (1949) dated it soon after 1302 and took it to have been made at Planudes' prompting;[^21] Philippe Hoffmann (1983) says that the great book, long thought to come from Planudes' workshop, is at least half a century later than his death.[^20]
 
@@ -93,7 +93,7 @@ Philemon Holland made the first complete English *Moralia* from the Greek in 160
 
 **Damaged works.** Some of the *Moralia* reach us broken. *On the Face which Appears in the Orb of the Moon* is, its Loeb editor writes, “certainly mutilated at the beginning, although one cannot tell whether much or little has been lost”, and he adds that he holds this “despite statements to the contrary”.[^26] The speeches *On the Eating of Flesh* are worse: the text we have comes from someone who made extracts from them and, the editors think, added “stupid interpolations” and a passage from another work.[^14]
 
-**Works that are not his.** The *Moralia* as printed include works Plutarch did not write. Of the first, *The Education of Children*, its Loeb translator writes: “It is generally believed that the essay which stands first in the collected works of Plutarch cannot have been written by him.”[^27] The *Lives of the Ten Orators*, *On the Opinions of the Philosophers*, *On Fate* and *On Music* are counted among the works of an unknown “Pseudo-Plutarch”.[^13] So are the *Consolation to Apollonius*, *Whether Fire or Water is More Useful* and the *Greek and Roman Parallel Stories*.[^28] All of these are in the Scroll under Plutarch's name: [*The Lives of the Ten Orators*](cts:tlg0007.tlg121:1.1), [*On Fate*](cts:tlg0007.tlg108:1), [*A Letter of Condolence to Apollonius*](cts:tlg0007.tlg076:1), [*Whether Water or Fire Is More Useful*](cts:tlg0007.tlg128:1) and [*Greek and Roman Parallel Stories*](cts:tlg0007.tlg085:1).
+**Works that are not his.** The *Moralia* as printed include works Plutarch did not write. Of the first, *The Education of Children*, its Loeb translator writes: “It is generally believed that the essay which stands first in the collected works of Plutarch cannot have been written by him.”[^27] The *Lives of the Ten Orators*, *On the Opinions of the Philosophers*, *On Fate* and *On Music* are counted among the works of an unknown “Pseudo-Plutarch”.[^13] So are *Whether Fire or Water is More Useful* and the *Greek and Roman Parallel Stories*, and the *Consolation to Apollonius* is often counted with them.[^28] All of these are in the Scroll under Plutarch's name: [*The Lives of the Ten Orators*](cts:tlg0007.tlg121:1.1), [*On Fate*](cts:tlg0007.tlg108:1), [*A Letter of Condolence to Apollonius*](cts:tlg0007.tlg076:1), [*Whether Water or Fire Is More Useful*](cts:tlg0007.tlg128:1) and [*Greek and Roman Parallel Stories*](cts:tlg0007.tlg085:1).
 
 **And works the old list misses.** The Lamprias catalogue is not a safe guide either way. The speeches on meat-eating are “one of the eighteen works of the received Corpus of Plutarch that do not appear in the Lamprias Catalogue”, and so, their editors point out, is the *Table Talk*: “the Symposiacs themselves are not to be found there”.[^14]`,
 
@@ -102,7 +102,7 @@ Philemon Holland made the first complete English *Moralia* from the Greek in 160
     { text: "*Plutarch's Moralia*, in sixteen volumes (Loeb Classical Library), translated by F. C. Babbitt, W. C. Helmbold, H. N. Fowler, H. Cherniss and others.[^29,4,6,26]", note: "Many of the Scroll's English *Moralia*, and some of its Greek, come from these volumes." },
     { text: "F. H. Sandbach, *Plutarch's Moralia*, vol. XV: *Fragments* (Loeb Classical Library, 1969).[^29]", note: "The fragments of the lost works." },
     { text: "G. N. Bernardakis, *Plutarchi Chaeronensis Moralia* (Teubner, Leipzig, from 1888).[^4]", note: "Much of the Scroll's Greek *Moralia*; the volumes used are dated 1888 to 1895." },
-    { text: "W. W. Goodwin (ed.), *Plutarch's Morals*, 5 vols (Boston, Little, Brown, 1874).[^5]", note: "Translations by many hands, edited by Goodwin; the Scroll's second English *Moralia*." },
+    { text: "W. W. Goodwin (ed.), *Plutarch's Morals*, 5 vols (Boston, Little, Brown, 1870; the Scroll's copies are dated 1874).[^5]", note: "Translations by many hands, edited by Goodwin; the Scroll's second English *Moralia*." },
     { text: "Cl. Lindskog and K. Ziegler, *Plutarchi Vitae Parallelae* (Teubner, from 1914); vol. I, fasc. 1, fifth edition by H. Gärtner (K. G. Saur, 2000).[^23]", note: "The critical text built on Ziegler's study of the manuscripts." },
     { text: "R. Flacelière and É. Chambry, *Plutarque, Vies* (Budé, Les Belles Lettres); for example tome XII, *Démosthène–Cicéron* (Paris, 1976).[^30]", note: "Greek text with a French translation." },
     { text: "R. Waterfield (trans.), with introduction and notes by P. A. Stadter, *Plutarch: Greek Lives* (Oxford World's Classics, 1998).[^31]", note: "A modern English translation." },

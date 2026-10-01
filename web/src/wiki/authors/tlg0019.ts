@@ -30,7 +30,7 @@ The *Knights* is a sustained attack on Cleon. He appears as a slave of old Demos
 
 ### The *Clouds* and Socrates
 
-The *Clouds* was staged at the City Dionysia in 423 BC and came last of the three plays that competed. One of the winners, Ameipsias' *Connus*, also made fun of Socrates.[^12] In Aristophanes' play an old man, Strepsiades, sunk in debt, goes to Socrates' school, the “thinking-shop” of the Scroll's translation, to learn the arguments that will beat his creditors in court. He finds the philosopher hanging in a basket: “Why callest thou me, thou creature of a day?” And what is he doing up there? «ἀεροβατῶ καὶ περιφρονῶ τὸν ἥλιον», “I am walking in the air, and speculating about the sun.”[^13]
+The *Clouds* was staged at the City Dionysia in 423 BC and came last of the three plays that competed. One of the two plays that beat it, Ameipsias' *Connus*, also made fun of Socrates.[^12] In Aristophanes' play an old man, Strepsiades, sunk in debt, goes to Socrates' school, the “thinking-shop” of the Scroll's translation, to learn the arguments that will beat his creditors in court. He finds the philosopher hanging in a basket: “Why callest thou me, thou creature of a day?” And what is he doing up there? «ἀεροβατῶ καὶ περιφρονῶ τὸν ἥλιον», “I am walking in the air, and speculating about the sun.”[^13]
 
 Aristophanes thought it his best play. In the revised parabasis he tells the audience that he had judged them “to be clever spectators, and this to be the cleverest of my comedies”, and that he “retired from the contest defeated by vulgar fellows, though I did not deserve it”.[^7]
 
@@ -42,7 +42,7 @@ The *Wasps* followed at the Lenaia in 422, with a chorus of old jurymen; Cleon d
 
 The *Birds* (City Dionysia, 414, second prize) is his longest surviving play.[^18] An Athenian, Pisthetaerus, persuades the birds to build a great city in the sky, and the name chosen for it is «Νεφελοκοκκυγίαν»: “Do you like Nephelococcygia?” In English it is usually Cloudcuckooland.[^19,18]
 
-In 411 came two plays about women. In *Lysistrata*, first staged at the Lenaia, the women of the warring cities go on a sex strike and take over the Acropolis to force the men to make peace.[^20] Lysistrata puts it plainly: «εἴπερ μέλλομεν ἀναγκάσειν τοὺς ἄνδρας εἰρήνην ἄγειν», “if we are going to force the men to keep the peace” (our translation).[^21] *Women at the Thesmophoria*, probably staged at the City Dionysia, sends Euripides' elderly relative Mnesilochus, disguised as a woman, to spy on a women's festival; how it fared in the competition is unknown.[^22]
+In 411 came two plays about women. In *Lysistrata*, first staged at the Lenaia, the women of the warring cities go on a sex strike and take over the Acropolis to force the men to make peace.[^20] Lysistrata puts it plainly: «εἴπερ μέλλομεν ἀναγκάσειν τοὺς ἄνδρας εἰρήνην ἄγειν», “if we are going to force the men to keep the peace” (our translation).[^21] *Women at the Thesmophoria*, probably staged at the City Dionysia, sends Euripides' elderly in-law (never named in the play; the ancient list of characters calls him Mnesilochus), disguised as a woman, to spy on a women's festival; how it fared in the competition is unknown.[^22]
 
 ### The *Frogs*
 
@@ -77,16 +77,16 @@ Plato puts Aristophanes at the dinner party of the *Symposium*, though how far t
     { year: -392, approx: true, kind: "writing", what: "*Assemblywomen* (392 or 391 BC)", src: [1, 30] },
     { year: -388, kind: "writing", what: "*Wealth*, his last surviving play", src: [31] },
     { year: -386, approx: true, kind: "writing", what: "Dies, about 386 BC", src: [1] },
-    { year: 100, approx: true, kind: "copy", what: "A roll of one of his comedies is copied in the first or second century AD; three scraps of it are found at Oxyrhynchus in 1897", src: [35] },
+    { year: 100, approx: true, kind: "copy", what: "A roll of a comedy, probably his, is copied in the first or second century AD; three scraps of it are found at Oxyrhynchus in 1897", src: [35] },
     { year: 950, approx: true, kind: "copy", what: "The Ravenna manuscript, the oldest with all eleven plays, is written in the mid-tenth century", src: [36] },
     { year: 1423, kind: "copy", what: "Giovanni Aurispa brings the Ravenna manuscript to Niccolò Niccoli in Florence", src: [36] },
     { year: 1498, kind: "print", what: "First printed edition (Aldus Manutius, Venice, edited by Marcus Musurus): nine plays, with the ancient notes", src: [38] },
     { year: 1515, approx: true, kind: "print", what: "*Lysistrata* and *Women at the Thesmophoria* first printed, in Florence by the Giunti (1515 or 1516)", src: [36, 39] },
-    { year: 1906, kind: "print", what: "Hall and Geldart's Oxford Classical Text (1906–07), the Greek text in the Scroll", src: [42, 40] },
+    { year: 1906, kind: "print", what: "The revised edition of Hall and Geldart's Oxford Classical Text (1906–07), the Greek text in the Scroll", src: [42, 40] },
     { year: 2007, kind: "print", what: "N. G. Wilson's new Oxford Classical Text", src: [40] },
   ],
 
-  transmission: `**Papyri.** His plays were still being copied in Roman Egypt. At Oxyrhynchus in 1897 Grenfell and Hunt found three scraps of a comedy by Aristophanes, from a roll copied in the first or second century AD; they are now in the British Library.[^35] Wilson's Oxford edition lists, before each play, the papyri it uses with their dates, alongside the medieval manuscripts.[^40]
+  transmission: `**Papyri.** His plays were still being copied in Roman Egypt. At Oxyrhynchus in 1897 Grenfell and Hunt found three scraps of a comedy that is probably by Aristophanes, from a roll copied in the first or second century AD; they are now in the British Library.[^35] Wilson's Oxford edition lists, before each play, the papyri it uses with their dates, alongside the medieval manuscripts.[^40]
 
 **The Ravenna manuscript.** The oldest book with all eleven plays is the Ravenna manuscript (Ravennas 429, in the Biblioteca Classense), written in the mid-tenth century. For the whole of *Women at the Thesmophoria*, and about a quarter of *Lysistrata*, it is the only medieval witness: every other copy was made from it. Giovanni Aurispa brought it to Florence in 1423; in 1712 it was taken from Pisa to the monastery of Classe at Ravenna.[^36] It is still checked today: the Oxford editor N. G. Wilson used a facsimile of it to correct readings that earlier editors had reported wrongly.[^40]
 
@@ -94,11 +94,11 @@ Plato puts Aristophanes at the dinner party of the *Symposium*, though how far t
 
 **Print.** In July 1498 Aldus Manutius printed at Venice the first edition of nine plays (*Wealth*, *Clouds*, *Frogs*, *Knights*, *Acharnians*, *Wasps*, *Birds*, *Peace* and *Assemblywomen*), edited by the Cretan scholar Marcus Musurus. The Greek text stands in the centre of the page, with the scholia that Musurus compiled from the ancient commentators.[^38] The two missing plays, *Lysistrata* and *Women at the Thesmophoria*, were first printed by the Giunti in Florence, using the Ravenna manuscript. Our two sources disagree on the year, 1515 or 1516.[^36,39]
 
-**Modern texts.** For a century the Oxford Classical Text was F. W. Hall and W. M. Geldart's (1906–07), the Greek text the Scroll uses.[^42,40] In 2007 N. G. Wilson replaced it with a new Oxford text, based on a fairly small number of chosen manuscripts.[^40]`,
+**Modern texts.** For a century the Oxford Classical Text was F. W. Hall and W. M. Geldart's (first published in 1900, revised in 1906–07; the Scroll uses the revised text).[^42,40] In 2007 N. G. Wilson replaced it with a new Oxford text, based on a fairly small number of chosen manuscripts.[^40]`,
 
   variants: `**Who says which line?** Deciding which character speaks each line is one of the hardest jobs for an editor of Aristophanes. Papyri and manuscripts are of little or no help, and opinions can differ widely with no way to settle them.[^40]
 
-{debated} **The Clouds we read is a second draft.** No copy of the play staged in 423 survives. What we have is a partial revision, which was afterwards circulated in written copies.[^12] The clues are in the parabasis. It complains that the first version failed,[^7] and it mentions Eupolis' *Maricas* (staged in 421) and attacks on the politician Hyperbolus, who was ostracised in 416. That puts the revision somewhere between 421 and 416 BC.[^12,7] Yet the same parabasis still urges the audience to “convict the cormorant Cleon of bribery and embezzlement”, though Cleon died in 422. So that part must be left over from 423, and the revision was only partial.[^15,12]
+{debated} **The Clouds we read is a second draft.** No copy of the play staged in 423 survives. What we have is a partial revision, which was afterwards circulated in written copies.[^12] The clues are in the parabasis. It complains that the first version failed,[^7] and it mentions Eupolis' *Maricas* (staged in 421) and attacks on the politician Hyperbolus, who was ostracised in about 416 (the year is uncertain). That puts the revision somewhere between about 421 and 416 BC.[^12,7] Yet the same parabasis still urges the audience to “convict the cormorant Cleon of bribery and embezzlement”, though Cleon died in 422. So that part must be left over from 423, and the revision was only partial.[^15,12]
 
 {debated} **Three lines too many?** Near the end of the *Clouds* there are three lines in which old Strepsiades admits that his son “seems to speak justly” ([Clouds 1437–1439](cts:tlg0019.tlg003:1437-1439)). Wilson's 2007 text removes these three lines as a later addition, something nobody seems to have suspected before.[^40,41] The Scroll's text, Hall and Geldart's, prints them.[^41]
 
