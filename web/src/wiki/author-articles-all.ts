@@ -12,7 +12,9 @@ import { aristotle } from "./authors/tlg0086";
 import { euripides } from "./authors/tlg0006";
 import { aeschylus } from "./authors/tlg0085";
 
-export const ARTICLES: Record<string, AuthorArticle> = { [herodotus.id]: herodotus, [homer.id]: homer, [thucydides.id]: thucydides, [plato.id]: plato, [sophocles.id]: sophocles, [aristotle.id]: aristotle, [euripides.id]: euripides, [aeschylus.id]: aeschylus };
+import { demosthenes } from "./authors/tlg0014";
+
+export const ARTICLES: Record<string, AuthorArticle> = { [herodotus.id]: herodotus, [homer.id]: homer, [thucydides.id]: thucydides, [plato.id]: plato, [sophocles.id]: sophocles, [aristotle.id]: aristotle, [euripides.id]: euripides, [aeschylus.id]: aeschylus, [demosthenes.id]: demosthenes };
 
 /** The article for an author: the checked one, or (development only) a draft marked as unchecked. */
 export function articleFor(id: string): { article: AuthorArticle; draft: boolean } | null {
