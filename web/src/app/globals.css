@@ -414,3 +414,6 @@ select { max-width: 100%; }
 
 /* touch screens: a label holding a tick box or radio button is at least finger-tall (the whole label is the target) */
 @media (pointer: coarse) { label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) { min-height: var(--tap); align-items: center; } }
+
+/* the word being read aloud (Listen, in the reader) */
+::highlight(listen-word) { background-color: color-mix(in srgb, var(--accent) 30%, transparent); color: inherit; }

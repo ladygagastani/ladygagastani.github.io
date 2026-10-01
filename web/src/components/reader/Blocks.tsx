@@ -61,8 +61,8 @@ function inlines(c: Inline[], greek: boolean, key: string, line: LineCtx = null)
     const k = `${key}.${i}`;
     if (typeof x === "string") return <Fragment key={k}>{words(x, greek, k, line)}</Fragment>;
     if ("gap" in x) return <span key={k} className={styles.gap} title="A gap in the text">…</span>;
-    if ("note" in x) return <sup key={k} className={styles.note} title={x.note} aria-label={`Note: ${x.note}`} tabIndex={0}>*</sup>;
-    if (SHOWN.has(x.m) && x.n) return <span key={k} className={styles.mk} title={`${x.m} ${x.n}`}>{x.n}</span>;
+    if ("note" in x) return <sup key={k} className={styles.note} title={x.note} aria-label={`Note: ${x.note}`} tabIndex={0} data-silent="">*</sup>;
+    if (SHOWN.has(x.m) && x.n) return <span key={k} className={styles.mk} title={`${x.m} ${x.n}`} data-silent="">{x.n}</span>;
     return null;
   });
 }
@@ -92,7 +92,7 @@ export const Blocks = memo(function Blocks({ blocks, greek, keyPrefix, translit 
     <>
       {blocks.map((b, i) => {
         const k = `${keyPrefix}-${i}`;
-        const speaker = "speaker" in b && b.speaker ? <span className={styles.speaker}>{b.speaker}</span> : null;
+        const speaker = "speaker" in b && b.speaker ? <span className={styles.speaker} data-speaker="">{b.speaker}</span> : null;
         if (b.t === "head") return <p key={k} className={styles.head}>{inlines(b.c, greek, k)}</p>;
         if (b.t === "l") {
           const r = metre?.[i] ?? null;

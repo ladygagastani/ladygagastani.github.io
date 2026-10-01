@@ -536,3 +536,11 @@ p.translit { margin: -0.3em 0 0.8em; }
 
 /* the collection's own Latin or Greek title under an English one */
 .titleOrig { margin: 4px 0 0; font-size: 0.9rem; color: var(--ink-2); }
+
+/* Listen: the passage being read aloud, marked along its translation */
+.row[data-listening] .tr { position: relative; }
+.row[data-listening] .tr::before {
+  content: ""; position: absolute; left: -12px; top: 2px; bottom: 2px; width: 3px; border-radius: 2px; background: var(--accent);
+  transform-origin: top; animation: listen-in 0.4s var(--ease) both;
+}
+@keyframes listen-in { from { transform: scaleY(0); } }

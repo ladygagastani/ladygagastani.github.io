@@ -28,6 +28,7 @@ import VocabPanel from "./VocabPanel";
 import PlacesPanel from "./PlacesPanel";
 import OrigTitle from "@/components/library/OrigTitle";
 import ManuscriptPanel from "./ManuscriptPanel";
+import Listen from "./Listen";
 import { greekKey } from "@/lib/search/codec";
 import PanelGuard from "@/components/PanelGuard";
 import EchoesPanel, { type EchoMarks, type EchoQuery, type EchoTarget } from "./EchoesPanel";
@@ -107,7 +108,7 @@ const RowView = memo(function RowView({ row, marks, openNote, onCloseNote, trans
       <div className={styles.grc} lang="grc">
         {row.greek.map((u) => <div key={u.ref.join(".")} data-u={u.ref.join(".")}><Blocks blocks={u.blocks} greek keyPrefix={u.ref.join(".")} translit={translit} metre={metre?.get(u.ref.join("."))} /></div>)}
       </div>
-      <div className={styles.tr} data-veiled={veiled || undefined}>
+      <div className={styles.tr} data-tr="" data-veiled={veiled || undefined}>
         {veiled && <button type="button" className={styles.reveal} onClick={() => setShown(true)}>Tap to see the translation</button>}
         {row.trans.length ? <Blocks blocks={row.trans} greek={false} keyPrefix={`t${row.key}`} /> : <span className={styles.none} aria-label="No translation for this passage">—</span>}
       </div>
@@ -161,6 +162,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
   const [vocabOpen, setVocabOpen] = useState(false);
   const [placesOpen, setPlacesOpen] = useState(false);
   const [msOpen, setMsOpen] = useState(false);
+  const [listenOpen, setListenOpen] = useState(false);
   const [topRow, setTopRow] = useState<string | null>(null);
   const [placeMarks, setPlaceMarks] = useState<Map<string, Set<string>> | null>(null);
 
@@ -1037,6 +1039,7 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
       <button type="button" className="chip" data-closes-sheet="" aria-pressed={vocabOpen} onClick={() => { setVocabOpen(!vocabOpen); setPlacesOpen(false); setMsOpen(false); setWord(null); setEcho(null); }}>Vocabulary</button>
       <button type="button" className="chip" data-closes-sheet="" aria-pressed={placesOpen} onClick={() => { setPlacesOpen(!placesOpen); setVocabOpen(false); setMsOpen(false); setWord(null); setEcho(null); }} title="The places this page names, on a map">Places</button>
       <button type="button" className="chip" data-closes-sheet="" aria-pressed={msOpen} onClick={() => { setMsOpen(!msOpen); setVocabOpen(false); setPlacesOpen(false); setWord(null); setEcho(null); }} title="The passage as a scribe wrote it, and the page of a real manuscript">Manuscript</button>
+      {trText && <button type="button" className="chip" data-closes-sheet="" aria-pressed={listenOpen} onClick={() => setListenOpen(!listenOpen)} title="Hear the English translation read aloud, passage by passage">Listen</button>}
       {trText && columns === "both" && <button type="button" className="chip" aria-pressed={tryFirst} onClick={() => setSettings({ tryFirst: !tryFirst })} title="Hide each translation until you tap it, so you read the Greek first">Try it first</button>}
       {hasLines && <button type="button" className="chip" aria-pressed={fitLines} onClick={() => setSettings({ fitLines: !fitLines })} title="Make each verse line fit the width of the page instead of wrapping">Fit lines</button>}
     </div>
@@ -1258,6 +1261,10 @@ function ReaderPane({ pane, split, onOpenSecond }: PaneProps) {
           <VocabPanel work={workId} doc={doc} pageKeys={pageKeys}
             onClose={() => setVocabOpen(false)} onPick={(lemma) => setWord({ w: lemma, ctx: null, at: null })} />
         </PanelGuard>
+      )}
+      {listenOpen && trText && work && rows.length > 0 && (
+        <Listen rows={rows} root={root} startKey={topRow} title={work.title}
+          onNextPage={doc && chunk < doc.chunks.length - 1 ? () => goChunkRef.current(chunk + 1) : null} onClose={() => setListenOpen(false)} />
       )}
       {placesOpen && doc && !word && !echo && (
         <PanelGuard name="places panel" className={styles.panel} onClose={() => setPlacesOpen(false)}>

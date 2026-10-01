@@ -1,8 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { ARTICLES, PIN_KINDS } from "./author-articles";
+import { ARTICLES as PUBLISHED, PIN_KINDS, type AuthorArticle } from "./author-articles";
 import { blocks, inline, linksIn } from "./markup";
 import { gapText, yearLabel, yearsBetween } from "../components/library/AuthorRoad";
 import catalog from "../../public/data/catalog.json";
+
+/** ARTICLE=tlg0014 tests that one article file instead (one being written, not yet in ARTICLES). */
+const one = process.env.ARTICLE;
+const ARTICLES: Record<string, AuthorArticle> = one
+  ? Object.fromEntries(Object.values((await import(`./authors/${one}.ts`)) as Record<string, AuthorArticle>).map((a) => [a.id, a]))
+  : PUBLISHED;
 
 const cat = (catalog as { authors: { id: string; works: { id: string }[] }[] }).authors;
 const authorIds = new Set(cat.map((a) => a.id));

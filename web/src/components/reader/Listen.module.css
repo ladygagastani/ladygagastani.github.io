@@ -1,0 +1,54 @@
+/* Listen: a small player along the bottom of the reader, above the phone's bars. */
+.bar {
+  position: fixed; z-index: 45; left: 50%; translate: -50% 0;
+  bottom: calc(14px + max(var(--tabbar-vis) + var(--readbar-vis), env(safe-area-inset-bottom, 0px)));
+  width: min(640px, calc(100vw - 24px)); display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto; align-items: center; gap: 4px 10px;
+  padding: 10px 10px 8px 12px; border-radius: 14px; overflow: hidden;
+  background: var(--inv-bg); color: var(--inv-fg); box-shadow: 0 18px 40px -18px var(--shadow), 0 0 0 1px color-mix(in srgb, var(--inv-fg) 10%, transparent);
+  --accent: var(--accent-on-ink);
+  animation: rise 0.4s var(--ease) both;
+  transition: bottom 0.35s var(--ease);
+}
+@keyframes rise { from { translate: -50% 24px; opacity: 0; } }
+
+/* how far through the page: a thin line along the top that grows as passages are read */
+.progress {
+  position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--accent);
+  transform-origin: left; transition: transform 0.6s var(--ease);
+}
+
+.transport { display: flex; align-items: center; gap: 2px; }
+.transport button, .x, .rate {
+  display: grid; place-items: center; min-width: 40px; height: 40px; padding: 0 6px; border: 0; border-radius: 10px;
+  background: transparent; color: inherit; cursor: pointer;
+}
+.transport button:hover:not(:disabled), .x:hover, .rate:hover { background: color-mix(in srgb, var(--inv-fg) 12%, transparent); }
+.transport button:disabled { opacity: 0.35; cursor: default; }
+.transport svg { width: 20px; height: 20px; fill: currentColor; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+.play { width: 48px; height: 48px !important; border-radius: 50% !important; background: var(--accent) !important; color: var(--inv-bg) !important; transition: scale 0.2s var(--ease); }
+.play:hover { scale: 1.06; }
+.play svg { width: 22px; height: 22px; stroke: none; }
+/* while reading, the play button breathes gently */
+.bar[data-status="playing"] .play { animation: breathe 2.4s ease-in-out infinite; }
+@keyframes breathe { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 22%, transparent); } }
+
+.where { margin: 0; min-width: 0; display: grid; gap: 1px; line-height: 1.2; }
+.where :global(.label) { color: var(--accent); font-size: 0.72rem; }
+.what { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.95rem; }
+.what b { font-family: var(--f-label); font-weight: 500; }
+.rate { font: 600 0.9rem/1 var(--f-label); font-variant-numeric: tabular-nums; }
+.voice {
+  max-width: 150px; height: 36px; padding: 0 8px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--inv-fg) 25%, transparent);
+  background: transparent; color: inherit; font: 0.85rem var(--f-body);
+}
+.voice option { color: var(--ink); background: var(--bg); }
+.x { font-size: 1.5rem; line-height: 1; }
+.note { margin: 0; grid-column: 1 / 5; font-size: 0.92rem; }
+.fine { grid-column: 1 / -1; margin: 2px 0 0; font-size: 0.75rem; color: color-mix(in srgb, var(--inv-fg) 70%, var(--inv-bg)); }
+
+@media (max-width: 560px) {
+  .bar { grid-template-columns: auto minmax(0, 1fr) auto auto; }
+  .voice { grid-column: 1 / -1; grid-row: 3; max-width: none; width: 100%; }
+  .fine { grid-row: 4; }
+}
+@media (pointer: coarse) { .transport button, .x, .rate { min-width: 44px; height: 44px; } }

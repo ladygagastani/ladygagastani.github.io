@@ -13,10 +13,15 @@ import { indexCatalog, greekEditions, translations, type Catalog, type CatText }
 import { parseTei } from "@/lib/tei/parse";
 import { findRef } from "@/lib/tei/refs";
 import type { Block, TeiDoc } from "@/lib/tei/types";
-import { ARTICLES } from "./author-articles";
+import { ARTICLES as PUBLISHED, type AuthorArticle } from "./author-articles";
 import { blocks, linksIn } from "./markup";
 
 const CORPUS = "../pipeline/.cache/corpus";
+/** ARTICLE=tlg0014 checks that one article file instead (one being written, not yet in ARTICLES). */
+const one = process.env.ARTICLE;
+const ARTICLES: Record<string, AuthorArticle> = one
+  ? Object.fromEntries(Object.values((await import(`./authors/${one}.ts`)) as Record<string, AuthorArticle>).map((a) => [a.id, a]))
+  : PUBLISHED;
 const idx = indexCatalog(JSON.parse(readFileSync("public/data/catalog.json", "utf8")) as Catalog);
 const docs = new Map<string, TeiDoc | null>();
 function load(t: CatText | undefined) {
