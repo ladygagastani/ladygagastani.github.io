@@ -277,3 +277,22 @@ test("a reading aid that opens a panel puts the aids sheet away, so the panel is
     await expect(shown).toBeHidden();
   }
 });
+
+test("nothing makes the page wider than the phone, not even while the scroll markers slide in on a second visit", async ({ page }) => {
+  // the widest the layout gets, sampled every frame from the very start of each page
+  await page.addInitScript(() => {
+    const w = window as unknown as { __widest: number };
+    w.__widest = 0;
+    const tick = () => { w.__widest = Math.max(w.__widest, innerWidth, document.documentElement.scrollWidth); requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  });
+  await openIliad(page);
+  await page.locator('[data-u="1.1"] [data-w="μῆνιν"]').first().click();
+  await openIliad(page);
+  await page.waitForTimeout(1500);
+  expect(await page.evaluate(() => (window as unknown as { __widest: number }).__widest)).toBeLessThanOrEqual(375);
+  // and a box that is too wide is clipped by the page, not given room by widening the screen
+  await page.evaluate(() => { const d = document.createElement("div"); d.style.cssText = "width:600px;height:10px"; document.querySelector("main")!.prepend(d); });
+  await page.waitForTimeout(300);
+  expect(await page.evaluate(() => innerWidth)).toBe(375);
+});

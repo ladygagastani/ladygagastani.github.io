@@ -109,8 +109,12 @@ html[data-hdr="hidden"] { --tabbar-vis: 0px; --readbar-vis: 0px; }
 /* ---------------------------------------------------------------- base */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-/* phones: nothing may nudge the page sideways (clip, unlike hidden, keeps sticky elements working) */
-body { overflow-x: clip; }
+/* Phones: nothing may nudge the page sideways, not even for a moment while something slides in. A phone sizes
+   its screen to everything on the page and ignores the overflow set on <body> (which goes to the window, below), so
+   the page's content clips itself: <main> with overflow-x: clip, which unlike hidden makes no scroll box, so sticky
+   bars keep working. (Clip on <html> or <body> would not do: their setting goes to the window, or, on a <body> whose
+   <html> has one of its own, makes <body> a scroll box and unpins every sticky bar.) */
+main { overflow-x: clip; }
 body {
   margin: 0;
   padding-bottom: calc(var(--tabbar-h) + var(--readbar-h));  /* the end of every page clears the phone bars */
@@ -354,6 +358,10 @@ main { display: block; min-height: calc(100vh - var(--hdr-h)); min-height: calc(
 
 /* the title of a page inside an area (a lesson, an author, the alphabet…): one size everywhere */
 .page-title { font-size: clamp(2.4rem, 5vw, 4rem); }
+/* a title that is one long word (Batrachomyomachia) may break inside the word on a narrow phone, never widen the page */
+h1, .page-title { overflow-wrap: anywhere; }
+/* a drop-down is as wide as its longest choice; never wider than its column */
+select { max-width: 100%; }
 .page-title > [lang="grc"] { color: var(--accent); }
 
 .soon { padding-block: clamp(32px, 5vw, 56px); }
