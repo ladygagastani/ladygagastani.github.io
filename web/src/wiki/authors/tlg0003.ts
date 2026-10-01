@@ -27,7 +27,7 @@ Thucydides did not divide his work into eight books. The division is most likely
     { year: -431, kind: "writing", what: "The war begins, and he begins to write “at the very outset”", src: [1] },
     { year: -430, kind: "writing", what: "The plague reaches Athens; he catches it and recovers", src: [3] },
     { year: -424, approx: true, kind: "writing", what: "As a general in Thrace he sails to save Amphipolis, but arrives too late; he is banished for twenty years", src: [4, 5, 7, 8] },
-    { year: -411, approx: true, kind: "writing", what: "The narrative breaks off in mid-story, near the end of the war's twenty-first year", src: [12, 14] },
+    { year: -411, approx: true, kind: "writing", what: "The narrative breaks off in mid-story in the summer of 411 BC, partway through the war's twenty-first year", src: [12, 14] },
     { year: -404, kind: "writing", what: "The war ends; he later writes that it lasted twenty-seven years", src: [8] },
     { year: 50, approx: true, kind: "copy", what: "About twenty papyrus fragments of Thucydides are copied at Oxyrhynchus between the 1st and 6th centuries AD", src: [14] },
     { year: 1450, approx: true, kind: "print", what: "Lorenzo Valla makes the first Latin translation, between 1448 and 1452", src: [16] },
@@ -50,7 +50,7 @@ Thucydides did not divide his work into eight books. The division is most likely
 **Old spellings.** Thucydides writes ξυν- where later Attic has συν-, which LSJ records as the old Attic form.[^2] That is one reason his Greek looks different from fourth-century prose.`,
 
   editions: [
-    { text: "H. S. Jones and J. E. Powell, *Thucydidis Historiae*, 2 vols (Oxford Classical Texts, 1942).[^18]", note: "The Greek in the Scroll is Jones's Oxford text, in Perseus's copy (published 1910, reprinted 1942).[^19]" },
+    { text: "H. S. Jones and J. E. Powell, *Thucydidis Historiae*, 2 vols (Oxford Classical Texts, 1942).[^18]", note: "The Greek in the Scroll is Jones's Oxford text, in Perseus's copy (its file gives the dates 1910 and 1942).[^19]" },
     { text: "Richard Crawley's translation (1914 edition) and Thomas Hobbes's (the 1843 reprint of his English Works).[^19]", note: "The English translations in the Scroll, beside French, German, Italian and Latin versions." },
     { text: "G. B. Alberti, *Thucydidis Historiae*, 3 vols (Rome, Istituto Poligrafico e Zecca dello Stato, 1972–2000).[^20]" },
     { text: "S. Hornblower, *A Commentary on Thucydides*, 3 vols (Oxford University Press, 1991–2008).[^15][^21]", note: "The commentary to read beside the text." },

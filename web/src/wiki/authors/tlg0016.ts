@@ -42,9 +42,9 @@ He wrote in Ionic, and you can hear it in the first line. LSJ, the standard dict
     { year: 2015, kind: "print", what: "N. G. Wilson's Oxford Classical Text replaces Hude's", src: [32, 33] },
   ],
 
-  transmission: `What we read today comes from two families of medieval manuscripts.[^24] The “Florentine” family is led by a book in Florence (Laurentianus plut. 70.3, called A) and one in Rome (Angelicanus gr. 83, B). The “Roman” family is led by two in the Vatican (gr. 2369, D, and gr. 123, R), one now at Emmanuel College, Cambridge (S) and one in Vienna (V). A few others, called C and P, mix readings from both.[^24] A is a parchment book of 374 leaves, made in the tenth century.[^25]
+  transmission: `What we read today comes from two families of medieval manuscripts.[^24] The “Florentine” family includes a book in Florence (Laurentianus plut. 70.3, called A) and one in Rome (Angelicanus gr. 83, B). The “Roman” family is led by two in the Vatican (gr. 2369, D, and gr. 123, R), one now at Emmanuel College, Cambridge (S) and one in Vienna (V). A few others, called C and P, mix readings from both.[^24] A is a parchment book of 374 leaves, made in the tenth century.[^25]
 
-The papyri are older than either family. Forty-four had been published when Gertjan Verhasselt edited one more, a scrap of Book 4, and they agree with neither family all the time, sometimes giving readings the medieval books do not have.[^24]
+The papyri are older than either family. When Gertjan Verhasselt edited one more, a scrap of Book 4, he counted forty-four already published, and they agree with neither family all the time, sometimes giving readings the medieval books do not have.[^24]
 
 Our division into nine books goes back, Jona Lendering says, to scholars at Alexandria in the third century BC.[^26] By Lucian's day they were known by the Muses' names.[^14]
 

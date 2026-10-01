@@ -11,7 +11,7 @@ export const plato: AuthorArticle = {
   id: "tlg0059",
   summary: `Plato hardly ever appears in his own books. Diogenes Laertius noticed: he names himself only in the *Phaedo* and the *Apology*.[^1] In the *Phaedo* it is a throwaway line, when the narrator lists who was with Socrates on his last day and adds that Plato was ill.[^2] In the *Apology* he is one of the friends standing by at the trial.[^3]
 
-{debated} Apollodorus' chronology puts his birth in 428/7 BC, and Hermippus says he died at a wedding feast in 348/7, in his eighty-first year.[^4] Some modern books give c. 428–347.[^5] He came from an aristocratic and influential Athenian family, and two relatives, Critias and Charmides, were among the Thirty who ruled Athens in 404 BC.[^5]
+{debated} Apollodorus' chronology puts his birth in 428/7 BC, and Hermippus says he died at a wedding feast in 348/7, in his eighty-first year.[^4] Some modern books give c. 428–347.[^5] He came from an aristocratic and influential Athenian family, and two relatives were leaders of the oligarchy that seized Athens in 404 BC: Critias was one of the Thirty, and Charmides one of the Ten who ruled in Piraeus. Xenophon tells how [both died in the same battle](cts:tlg0032.tlg001:2.4.19).[^5]
 
 {debated} A letter that bears his name, the Seventh, says that he first reached Syracuse “being about forty years old”.[^6] It also gives his most famous political verdict: humankind “will have no cessation from evils until either the class of those who are right and true philosophers attains political supremacy”, or rulers become true philosophers.[^7] Whether Plato wrote the letter is itself disputed.[^5]
 
@@ -19,7 +19,7 @@ He founded the Academy in the 380s BC, and Aristotle arrived there in 367.[^5]
 
 His best-known picture is a cave. “Picture men dwelling in a sort of subterranean cavern”, says Socrates in the *Republic*, “fettered from childhood”, able to look only at shadows.[^8] The same book imagines a city that exists only “in the ideal”.[^9] And the *Euthyphro* shows the method on a smaller scale: Socrates asks what holiness is, and the two of them tangle over whether the gods love the holy *because* it is holy, or whether it is holy *because* they love it.[^10]
 
-You can hear the conversation in the replies. Socrates' partners keep agreeing with πάνυ μὲν οὖν and πάνυ γε, roughly “quite certainly” and “very much so” (our translation). They fill the first book of the *Republic*.[^11] LSJ's word for πάνυ is “altogether, perfectly, very”.[^12]
+You can hear the conversation in the replies. Socrates' partners keep agreeing with πάνυ μὲν οὖν and πάνυ γε, roughly “quite certainly” and “very much so” (our translation). They fill the first book of the *Republic*.[^11] LSJ glosses πάνυ as “altogether”, and in use “perfectly” or “very”.[^12]
 
 ### Things readers still argue about
 
@@ -47,7 +47,7 @@ You can hear the conversation in the replies. Socrates' partners keep agreeing w
 
   transmission: `**Nine groups of four.** Thrasyllus says Plato published his dialogues in tetralogies, like the tragic poets; he counts fifty-six genuine dialogues (the *Republic* as ten, the *Laws* as twelve) in nine tetralogies.[^13] The text we have rests on that arrangement from the first century AD, by Thrasyllus of Mendes.[^5]
 
-**Manuscripts.** Some 250 Byzantine manuscripts of Plato survive.[^5] The oldest for about half the dialogues is the “Clarke Plato” in Oxford's Bodleian Library (MS. E. D. Clarke 39), written in 895 by a professional calligrapher for Arethas of Caesarea, who paid 21 gold coins for it and added notes in the margin. It holds the first six tetralogies: twenty-four works, from the *Euthyphro* and *Apology* to the *Gorgias*.[^14]
+**Manuscripts.** Some 250 Byzantine manuscripts of Plato survive.[^5] The oldest for about half the dialogues is the “Clarke Plato” in Oxford's Bodleian Library (MS. E. D. Clarke 39), written in 895 by a professional calligrapher for Arethas of Caesarea, who paid 21 gold coins for it and added notes in the margin. It holds the first six tetralogies: twenty-four works, from the *Euthyphro* and *Apology* to the *Meno*.[^14]
 
 **The page numbers.** References such as *Republic* 514a come from a three-volume edition of Plato's complete works printed in Geneva in 1578 by Henri Estienne (Henricus Stephanus), with a Latin translation by Joannes Serranus; each page is split into sections lettered a to e.[^15]
 
@@ -61,7 +61,7 @@ You can hear the conversation in the replies. Socrates' partners keep agreeing w
     { text: "J. Burnet, *Platonis Opera*, 5 vols (Oxford Classical Texts, 1900–07).[^19]", note: "The Greek *Republic* in the Scroll is Burnet's text, in Perseus's copy.[^21]" },
     { text: "E. A. Duke and others, *Platonis Opera*, vol. 1 (Oxford Classical Texts, 1995).[^17][^18]", note: "It replaces Burnet's first volume, from the *Euthyphro* to the *Politicus*." },
     { text: "S. R. Slings, *Platonis Respublica* (Oxford Classical Texts, 2003).[^20]" },
-    { text: "Paul Shorey's translation of the *Republic* (Loeb Classical Library, 1935–37).[^21]", note: "The English *Republic* in the Scroll." },
+    { text: "Paul Shorey's translation of the *Republic* (Loeb Classical Library; the Scroll's copy is the printing of 1935–37).[^21]", note: "The English *Republic* in the Scroll." },
     { text: "J. M. Cooper (ed.), *Plato: Complete Works* (Hackett, 1997).[^22]", note: "Modern translations of everything attributed to Plato in antiquity, in one volume." },
   ],
 
@@ -90,7 +90,9 @@ You can hear the conversation in the replies. Socrates' partners keep agreeing w
     { label: "PhilPapers, J. M. Cooper (ed.), Plato: Complete Works (Hackett, 1997)", url: "https://philpapers.org/rec/COOPCW-3" },
   ],
   outsideQuotes: [
-    "altogether, perfectly, very",
+    "altogether",
+    "perfectly",
+    "very",
     "quite certainly",
     "very much so",
   ],

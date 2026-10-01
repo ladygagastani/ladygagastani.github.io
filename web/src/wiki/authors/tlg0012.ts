@@ -12,7 +12,7 @@ export const homer: AuthorArticle = {
 
 Who was Homer? Nobody knows. The two best-known ancient biographies, the *Life of Homer* ascribed to Herodotus and the *Contest of Homer and Hesiod*, are treated by modern scholars as legend, and most of the ancient lives make him blind.[^4] Chios and Smyrna were already named as his home by fifth-century writers; later ones added Cyme, Argos, Pylos and Athens.[^4] One ancient text fits both the blindness and Chios: the singer of the *Hymn to Apollo* says τυφλὸς ἀνήρ, οἰκεῖ δὲ Χίῳ ἔνι παιπαλοέσσῃ, “a blind man, and he lives on rocky Chios” (our translation).[^5] Thucydides, quoting that hymn as Homer's, says that in it the poet “also mentions himself”.[^6]
 
-{debated} Most scholars place the poems in the late eighth or early seventh century BC, the *Iliad* slightly before the *Odyssey*.[^4] Proposals range much wider, from the eighth century (Richard Janko) to the middle of the second century BC (Gregory Nagy), with Martin West at 660–650.[^7] Herodotus supposed that Homer and Hesiod lived “not more than four hundred years earlier than I”, which points to about the ninth century.[^8]
+{debated} Most scholars place the poems in the late eighth or early seventh century BC, the *Iliad* slightly before the *Odyssey*.[^4] Proposals range much wider, from the eighth century (Richard Janko), with Martin West putting the *Iliad* no earlier than 660–650; Gregory Nagy holds that the poems went on changing in performance and did not settle into a fixed text until as late as the middle of the second century BC.[^7] Herodotus supposed that Homer and Hesiod lived “not more than four hundred years earlier than I”, which points to about the ninth century.[^8]
 
 Was it one poet or two? The question is ancient. The *chōrizontes*, “separators”, held that the *Iliad* and *Odyssey* had different authors; only two of their names survive, Xenon and Hellanicus.[^9] Antiquity also credited Homer with a great deal more: the *Homeric Hymns*, epigrams, the comic *Margites* and poems of the Epic Cycle.[^4] Herodotus already refused him the *Cypria*, pointing out that they say Paris crossed to Troy with Helen in three days of fair wind, while the *Iliad* has him wander off course.[^10]
 
@@ -20,15 +20,15 @@ Homer's Greek is a literary dialect: mainly an archaic Ionic, with some Aeolic f
 
 ### Things readers still argue about
 
-**How did the poems come down to us?** In 1795 Friedrich August Wolf argued that they began as short oral songs, carried in memory for centuries and assembled only in the sixth century BC; the modern “Homeric Question” grew from that.[^4][^7] From about 1928 Milman Parry and Albert Lord, studying singers in the Balkans, argued that the poems were composed in performance from traditional phrases, the “oral-formulaic theory”, which won very wide acceptance.[^4]
+**How did the poems come down to us?** In 1795 Friedrich August Wolf argued that they began as short oral songs, carried in memory for centuries and assembled only in the sixth century BC; the modern “Homeric Question” grew from that.[^4][^7] From 1928 Milman Parry showed how much of Homer's style is built from traditional phrases; in the 1930s he and Albert Lord recorded singers in the Balkans, and they argued that the poems were composed in performance from traditional phrases, the “oral-formulaic theory”, which won very wide acceptance.[^4]
 
 {legend} **Did an Athenian tyrant fix the text?** Cicero reports that Pisistratus is said to have been the first to arrange Homer's books, which had been in confusion, as we have them now.[^13] A short dialogue transmitted under Plato's name, the *Hipparchus*, says that Pisistratus' son Hipparchus first brought Homer's poems to Attica and made the rhapsodes recite them at the Panathenaea in relay, one following on another.[^14]`,
 
   timeline: [
     { year: -700, approx: true, kind: "writing", certainty: "debated", what: "The *Iliad* and *Odyssey* are composed, on most accounts between the late 8th and early 7th centuries BC, the *Iliad* first", src: [4, 7] },
-    { year: -284, approx: true, kind: "print", what: "Zenodotus, the first head of the Library of Alexandria (appointed 284 BC), becomes the first critical editor of Homer", src: [15] },
+    { year: -284, approx: true, kind: "copy", what: "Zenodotus, the first head of the Library of Alexandria (appointed 284 BC), becomes the first critical editor of Homer", src: [15] },
     { year: -250, approx: true, kind: "copy", what: "The oldest surviving papyri of Homer are written (3rd century BC on); some have lines that later copies lack", src: [17, 18] },
-    { year: -150, approx: true, kind: "print", what: "Aristarchus, head of the Library from 153 to 145 BC, makes the most historically important critical edition of Homer, with a system of critical signs", src: [16] },
+    { year: -150, approx: true, kind: "copy", what: "Aristarchus, head of the Library from 153 to 145 BC, makes the most historically important critical edition of Homer, with a system of critical signs", src: [16] },
     { year: -150, approx: true, kind: "copy", what: "From about now the papyri settle into a more uniform text", src: [17] },
     { year: 950, approx: true, kind: "copy", what: "The Venetus A (Marcianus Graecus Z. 454), the main source of the “A scholia”, is copied in the 10th century", src: [20] },
     { year: 1488, kind: "print", what: "The first printed Homer appears in Florence (1488–89), edited by Demetrius Chalcondyles", src: [21] },

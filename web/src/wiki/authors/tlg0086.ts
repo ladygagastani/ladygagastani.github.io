@@ -3,7 +3,7 @@
  * reliable could be found: Cicero's "golden stream" (the page would not open), Strabo's cellar story,
  * the dates of Andronicus of Rhodes, "over a thousand" manuscripts, the dates of Parisinus 1854 and
  * Marcianus 213, Grosseteste's translation, Arabic translations at Baghdad in the 9th and 10th
- * centuries, the glosses of οὐσία and τέλος, Ross's other Oxford texts, and "Magna Moralia is disputed"
+ * centuries, the glosses of οὐσία and τέλος, and Ross's other Oxford texts
  * (Wikipedia lists it as generally agreed spurious).
  */
 import type { AuthorArticle } from "../author-articles";
@@ -12,7 +12,7 @@ export const aristotle: AuthorArticle = {
   id: "tlg0086",
   summary: `Diogenes Laertius gives the outline of Aristotle's life. He was born at Stagira (384–322 BC), the son of Nicomachus, who lived at the court of Amyntas, king of Macedon, as physician and friend.[^1] By Apollodorus' chronology he joined Plato at seventeen and stayed with him twenty years.[^2] When Plato died, he went to Hermias and stayed three years; he came to Philip's court when Alexander was in his fifteenth year; he arrived back in Athens and lectured at the Lyceum for thirteen years; then he retired to Chalcis, where he died a natural death at about sixty-three, the same year Demosthenes died at Calauria.[^3]
 
-{legend} Some said differently. Eumelus claimed that Aristotle died at Chalcis by drinking aconite, at seventy. Diogenes answers that he is mistaken, since Aristotle lived to sixty-three.[^4] And “it is said” that he displeased the king by introducing Callisthenes to him.[^3]
+{legend} Some said differently. Eumelus claimed that Aristotle died at Chalcis by drinking aconite, at seventy, and that he came to Plato at thirty. Diogenes says he is mistaken: Aristotle lived to sixty-three, and was seventeen when he became Plato's pupil.[^4] And “it is said” that he displeased the king by introducing Callisthenes to him.[^3]
 
 After Plato's death Aristotle left Athens with Xenocrates for Assos in Asia Minor. There he and Theophrastus did extensive research in botany and marine biology, which they carried on at nearby Lesbos.[^5] He returned to Athens, founded the Lyceum, and from it his school took the name Peripatetic.[^5]
 
@@ -26,7 +26,7 @@ His Greek builds technical terms from plain words. τὸ τί ἦν εἶναι,
 
 **One ethics or two?** Books 5, 6 and 7 of the *Nicomachean Ethics* are identical to Books 4, 5 and 6 of the *Eudemian Ethics*.[^11] The *Nicomachean Ethics* also handles pleasure in two places: Book 7, chapters 11–14, and Book 10, chapters 1–5.[^12][^13]
 
-**What is really his?** Many works carried under his name are generally agreed to be spurious, among them *On Colours*, *On Things Heard*, *Physiognomonics*, *On Plants*, *On Marvellous Things Heard*, *Mechanics*, *On Indivisible Lines*, the *Rhetoric to Alexander*, *On Virtues and Vices* and the *Magna Moralia*. The authenticity of the *Problemata* and the *Economics* is disputed.[^6]`,
+**What is really his?** Many works carried under his name are generally agreed to be spurious, among them *On Colours*, *On Things Heard*, *Physiognomonics*, *On Plants*, *On Marvellous Things Heard*, *Mechanics*, *On Indivisible Lines*, the *Rhetoric to Alexander*, and *On Virtues and Vices*. The authenticity of the *Magna Moralia*, the *Problemata* and the *Economics* is disputed.[^6]`,
 
   timeline: [
     { year: -384, kind: "writing", what: "Born at Stagira, in Chalcidice, in the first year of the 99th Olympiad by Apollodorus' count", src: [1, 2] },
@@ -50,7 +50,7 @@ His Greek builds technical terms from plain words. τὸ τί ἦν εἶναι,
 
 **The oldest *Ethics*.** The oldest surviving manuscript of the *Nicomachean Ethics* is the Florence codex Laurentianus LXXXI.11, called Kb, of the tenth century.[^11]
 
-**The *Poetics* on a thin thread.** The accepted Greek source is the eleventh-century manuscript Paris 1741. A second route is an Arabic version, made from a Syriac one that descends from a Greek manuscript of before AD 700 and is independent of Paris 1741. William of Moerbeke made an accurate Latin translation in 1278, which was virtually ignored. Only the first part survives, on tragedy and epic; the second, on comedy, is lost. The Greek text was first printed by the Aldine press in 1508.[^14]
+**The *Poetics* on a thin thread.** The main Greek source is a manuscript in Paris (gr. 1741) of the tenth or eleventh century; another Greek manuscript, in Florence, is of the fourteenth.[^21] A second route is an Arabic version, made from a Syriac one that descends from a Greek manuscript of before AD 700 and is independent of Paris 1741. William of Moerbeke made an accurate Latin translation in 1278, which was virtually ignored. Only the first part survives, on tragedy and epic; the second, on comedy, is lost. The Greek text was first printed by the Aldine press in 1508.[^14]
 
 **The *Constitution*.** Two papyrus fragments were found in the Fayum in 1879 and published in 1880. A much larger papyrus was bought in Egypt in 1890 and acquired for the British Museum, and Kenyon published it in 1891.[^10]`,
 
@@ -58,12 +58,12 @@ His Greek builds technical terms from plain words. τὸ τί ἦν εἶναι,
 
 **Three shared books.** The same three books are printed in both ethical works, and editors must decide how to handle the duplication.[^11]
 
-**Doubtful works.** Whole works are in question, rather than readings: many are generally agreed to be spurious, and two are disputed.[^6]`,
+**Doubtful works.** Whole works are in question, rather than readings: many are generally agreed to be spurious, and three are disputed.[^6]`,
 
   editions: [
     { text: "I. Bywater, *Aristotelis Ethica Nicomachea* (Oxford Classical Texts, 1894).[^16]", note: "The Greek *Nicomachean Ethics* in the Scroll, with H. Rackham's Loeb translation (1926).[^18]" },
     { text: "W. D. Ross's Oxford text of the *Rhetoric* and J. H. Freese's Loeb translation (1926, reprinted 1947).[^18]", note: "The *Rhetoric* in the Scroll." },
-    { text: "R. Kassel, *Aristotelis De arte poetica liber* (Oxford Classical Texts, 1965).[^17]", note: "The Greek *Poetics* in the Scroll, with W. H. Fyfe's Loeb translation (1939).[^18]" },
+    { text: "R. Kassel, *Aristotelis De arte poetica liber* (Oxford Classical Texts, 1965).[^17]", note: "The Greek *Poetics* in the Scroll, with W. H. Fyfe's Loeb translation (the printing of 1939).[^18]" },
     { text: "I. Bekker (ed.), *Aristotelis Opera*, for the Prussian Academy of Sciences (Berlin, 1831–70).[^6]", note: "The source of the Bekker numbers." },
     { text: "R. A. Gauthier and J. Y. Jolif, *L'Éthique à Nicomaque* (Louvain and Paris, 1970, revising the first edition of 1958–59).[^19]", note: "With commentary." },
     { text: "J. Barnes (ed.), *The Complete Works of Aristotle: The Revised Oxford Translation*, 2 vols (Princeton University Press, 1984).[^20]" },
@@ -90,6 +90,7 @@ His Greek builds technical terms from plain words. τὸ τί ἦν εἶναι,
     { label: "Perseus's copies of Aristotle shown in the Scroll; each file's header names its edition (Bywater 1894 and Rackham 1926; Ross and Freese; Kassel 1965 and Fyfe 1939)", cite: { work: "tlg0086.tlg010", ref: "1.1" } },
     { label: "WorldCat, Gauthier and Jolif, L'éthique à Nicomaque (Louvain, 1970)", url: "https://www.worldcat.org/title/ethique-a-nicomaque/oclc/546332" },
     { label: "PhilPapers, Jonathan Barnes (ed.), Complete Works of Aristotle, vol. 2: The Revised Oxford Translation", url: "https://philpapers.org/rec/BARCWO-2" },
+    { label: "John T. Kirby, Introduction to Aristotle's Poetics (University of Miami): Parisinus 1741 of the tenth or eleventh century; Riccardianus 46 of the fourteenth", url: "https://web.as.miami.edu/personal/corax/kirbypoeticsintro.html" },
   ],
   outsideQuotes: [
     "what it was to be",

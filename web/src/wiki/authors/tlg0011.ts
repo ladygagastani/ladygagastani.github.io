@@ -8,7 +8,7 @@ import type { AuthorArticle } from "../author-articles";
 
 export const sophocles: AuthorArticle = {
   id: "tlg0011",
-  summary: `Sophocles was a public man as well as a dramatist. In 443/2 BC he was one of the Hellenotamiai, the treasurers of Athena, and the *Life of Sophocles* says he was elected one of the ten generals in 441, a junior colleague of Pericles, and served in the campaign against Samos.[^1] An old story says Athens made him general because of his *Antigone*. Hugh Lloyd-Jones calls that “most improbable”.[^1]
+  summary: `Sophocles was a public man as well as a dramatist. In 443/2 BC he was one of the Hellenotamiai, the treasurers who received the tribute of Athens' allies,[^1,17] and the *Life of Sophocles* says he was elected one of the ten generals in 441, a junior colleague of Pericles, and served in the campaign against Samos.[^1] An old story says Athens made him general because of his *Antigone*. Hugh Lloyd-Jones calls that “most improbable”.[^1]
 
 He wrote more than 120 plays, and only seven survive complete. He entered thirty competitions, won twenty-four, and was never placed lower than second.[^1] His first triumph came in 468 BC, at the Dionysia, when he beat Aeschylus.[^1]
 
@@ -30,7 +30,7 @@ His Greek can say two things at once. The famous ode in *Antigone* begins πολ
     { year: -497, approx: true, kind: "writing", what: "Born at Colonus, in Attica, about 497/6 BC", src: [1] },
     { year: -480, approx: true, kind: "writing", certainty: "legend", what: "Said to have led the paean for the victory at Salamis", src: [1] },
     { year: -468, kind: "writing", what: "First prize at the Dionysia, beating Aeschylus", src: [1, 2] },
-    { year: -443, kind: "writing", what: "One of the Hellenotamiai, the treasurers of Athena (443/2)", src: [1] },
+    { year: -443, kind: "writing", what: "One of the Hellenotamiai, the treasurers of the allies' tribute (443/2)", src: [1, 17] },
     { year: -441, kind: "writing", what: "Elected one of the ten generals, a junior colleague of Pericles, and serves against Samos", src: [1] },
     { year: -420, approx: true, kind: "writing", what: "Chosen to receive the image of Asclepius; afterwards called Dexion", src: [1] },
     { year: -409, kind: "writing", what: "*Philoctetes* wins first prize", src: [1] },
@@ -83,6 +83,7 @@ His Greek can say two things at once. The famous ode in *Antigone* begins πολ
     { label: "Revue des études grecques, review of Lloyd-Jones and Wilson, Sophoclis Fabulae (Oxford 1990) and Sophoclea", url: "https://www.persee.fr/doc/reg_0035-2039_1991_num_104_495_2512_t1_0291_0000_2" },
     { label: "Perseus's copies of Sophocles shown in the Scroll: each file's header names its edition (Storr, Heinemann 1912; Jebb, Cambridge 1891; Mahoney; Hunt, 1912)", cite: { work: "tlg0011.tlg002", ref: "1" } },
     { label: "Loeb Classical Library, Sophocles, Ajax, Electra, Oedipus Tyrannus (H. Lloyd-Jones, 1994)", url: "https://www.loebclassics.com/view/LCL020/1994/pb_LCL020.19.xml" },
+    { label: "Wikipedia, Hellenotamiae (the ten magistrates who received the contributions of the allied states)", url: "https://en.wikipedia.org/wiki/Hellenotamiae" },
   ],
   outsideQuotes: [
     "most improbable",

@@ -45,7 +45,7 @@ After his death his plays were honoured in a way no one else's were: his were th
     { year: -456, approx: true, kind: "writing", what: "Dies at Gela, in Sicily (456 or 455 BC)", src: [1] },
     { year: -405, kind: "reception", what: "Aristophanes' *Frogs* wins first prize, with Aeschylus as a character", src: [31, 11] },
     { year: -336, approx: true, kind: "copy", what: "In the years of Lycurgus (in charge of the city's money from 336 BC) a law has official copies of the three tragedians kept; actors must not depart from them", src: [30, 14] },
-    { year: 1000, approx: true, kind: "copy", what: "The Medicean manuscript (M), with all seven plays, is written about AD 1000", src: [16, 27] },
+    { year: 975, approx: true, kind: "copy", what: "The Medicean manuscript (M), with all seven plays, is written in the late tenth century or about AD 1000", src: [16, 27] },
     { year: 1423, kind: "copy", what: "M arrives in Florence", src: [16] },
     { year: 1518, kind: "print", what: "First printed edition (Aldine press, Venice): six plays, with the *Agamemnon* and *Libation Bearers* run together", src: [18] },
     { year: 1552, kind: "print", what: "Robortello's Venice edition separates the two plays for the first time", src: [18] },
@@ -60,7 +60,7 @@ After his death his plays were honoured in a way no one else's were: his were th
 
 **Three plays for school.** In Byzantine times a smaller selection was read: *Prometheus*, *Seven against Thebes* and *Persians*, the “Byzantine triad”. Of about 150 manuscripts of Aeschylus, almost all contain only these three.[^16]
 
-**The Agamemnon.** Besides M and its copies, the *Agamemnon* and *Eumenides* survive in three other manuscripts, at least one of them the work of the fourteenth-century scholar Demetrius Triclinius.[^16] For a large part of the *Agamemnon* these Triclinian manuscripts (called Tr and F) are the only basis for the text.[^17]
+**The Agamemnon.** Besides M and its copies, the *Agamemnon* and *Eumenides* survive in three other manuscripts, at least one of them the work of the fourteenth-century scholar Demetrius Triclinius.[^16] For a large part of the *Agamemnon* two of these manuscripts (called Tr and F) are the only basis for the text.[^17]
 
 **Print.** The first printed edition came from the Aldine press at Venice in 1518. It has only six plays: its manuscripts had fused the *Agamemnon* and the *Libation Bearers*, leaving out lines 311–1066 of the *Agamemnon*. The error was first put right in 1552, in Francesco Robortello's edition at Venice.[^18]`,
 
