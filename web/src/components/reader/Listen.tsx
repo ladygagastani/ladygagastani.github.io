@@ -213,7 +213,7 @@ export default function Listen({ rows, root, startKey, title, onNextPage, onClos
         </>
       )}
       <button type="button" className={styles.x} onClick={close} aria-label="Stop and close">×</button>
-      <p className={styles.fine}>The English translation, read by your device&apos;s voice. The Greek is not read aloud: no voice speaks it as it sounded.</p>
+      <p className={styles.fine}>The English translation, read by your device&apos;s voice{voice && !voice.localService ? " (an online voice: the passage is sent to your browser's maker to be spoken)" : ""}. The Greek is not read aloud: no voice speaks it as it sounded.</p>
     </div>
   );
 }
