@@ -71,7 +71,7 @@ export const BIB: Record<string, Secondary> = {
   },
   "hct-2": {
     author: "A. W. Gomme", title: "A Historical Commentary on Thucydides, Volume II: The Ten Years' War, Books II–III", year: 1956,
-    publisher: "Oxford: Clarendon Press", checked: "https://philpapers.org/rec/HAMACO-4",
+    publisher: "Oxford: Clarendon Press", checked: "https://global.oup.com/academic/product/a-historical-commentary-on-thucydides-9780198140030",
   },
   "kagan-archidamian": {
     author: "Donald Kagan", title: "The Archidamian War", year: 1974,
@@ -255,7 +255,7 @@ export const BIB: Record<string, Secondary> = {
   },
   "moulton-similes": {
     author: "Carroll Moulton", title: "Similes in the Homeric Poems (Hypomnemata 49)", year: 1977,
-    publisher: "Göttingen: Vandenhoeck & Ruprecht", checked: "https://philpapers.org/rec/TAPHS",
+    publisher: "Göttingen: Vandenhoeck & Ruprecht", checked: "https://www.cambridge.org/core/journals/journal-of-hellenic-studies/article/abs/moulton-c-similes-in-the-homeric-poems-hypomnemata-49gottingen-vandenhoeck-ruprecht-1977-pp-163-dm-28/2C5D617D27A698732B5AF5B04FBD771A",
   },
   "scott-simile": {
     author: "William C. Scott", title: "The Oral Nature of the Homeric Simile (Mnemosyne Supplement 28)", year: 1974,

@@ -19,7 +19,7 @@ Turning a handle on the side moved everything at once. On the front, pointers sh
 
 - The upper spiral counted a cycle of 235 lunar months, which equal nineteen solar years almost exactly, so that a calendar of months could be kept in step with the seasons.
 - The lower spiral covered 223 lunar months, the cycle after which eclipses repeat, and marked the months in which eclipses of the sun and moon could be expected.
-- Smaller dials counted the four-year cycle of the great games: Olympia, Nemea, the Isthmus and Delphi.
+- A smaller dial counted the four-year cycle of the games: the four great games of Olympia, Nemea, the Isthmus and Delphi, and lesser festivals such as the Naa at Dodona.
 
 {well} The gearing even reproduced the moon's changing speed across the sky, using two gears on slightly different axes linked by a pin in a slot: a mechanical model of an astronomical theory.
 
@@ -35,7 +35,7 @@ He also defines the *exeligmos*, three eclipse cycles long, which appears on the
 
 ## Who made it, and when?
 
-{debated} The month names on the calendar dial are those of Corinth or one of its colonies, which has led some researchers to suggest Syracuse, the Corinthian colony where Archimedes had built a famous model of the heavens in the third century BC, and others the Corinthian colonies of north-western Greece. The date of manufacture is also argued: the inscriptions look like second-century BC lettering, and some calculations based on the eclipse dial point to a starting date in the late third century BC.
+{debated} The month names on the calendar dial are those of Corinth or one of its colonies, which has led some researchers to suggest Syracuse, the Corinthian colony where Archimedes had built a famous model of the heavens in the third century BC, and others the Corinthian colonies of north-western Greece; Rhodes, home of the astronomer Hipparchus, has long been proposed too. The date of manufacture is also argued: the inscriptions look like second-century BC lettering, and some calculations based on the eclipse dial point to a starting date in the late third century BC.
 
 {debated} The front of the machine is badly damaged, and whether it also showed the five planets known in antiquity is reconstructed rather than seen. The inscriptions name planets, and the most detailed modern reconstruction, published in 2021, includes them.
 

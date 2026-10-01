@@ -18,7 +18,7 @@ Herodotus tells the same story, with different numbers. Each citizen was about t
 
 {{quote:hdt}}
 
-{debated} The two accounts disagree on the size of the fleet: a hundred ships in the *Constitution of the Athenians*, two hundred in Herodotus. Both agree that the new ships were built for a war with the neighbouring island of Aegina, and that they fought at Salamis in 480 BC.
+{debated} The two accounts disagree on the size of the fleet: a hundred ships in the *Constitution of the Athenians*, two hundred in Herodotus. Herodotus says the new ships were built for the war with the neighbouring island of Aegina; the *Constitution* says Themistocles had a talent lent to each of the hundred richest Athenians to build one ship. Both say the ships fought at Salamis in 480 BC.
 
 ## Who dug it
 
@@ -30,7 +30,7 @@ The general Nicias rented his thousand slaves to a Thracian contractor. The cont
 
 !! Xenophon's plan for the mines was for the city to do what the rich were doing: buy slaves with public money and rent them out, [until there were three for every citizen](cts:tlg0032.tlg011:4.17).
 
-{well} Mining at Laurion was slave labour on an industrial scale. The owners, the contractors and the men who profited are named in the sources; the miners themselves are not.
+{well} Mining at Laurion was slave labour on an industrial scale. The owners, the contractors and the men who profited are named in the sources; the miners themselves almost never are. One exception is a gravestone for Atotas, a Paphlagonian who called himself a "miner".
 
 ## Escape
 

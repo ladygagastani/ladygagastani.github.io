@@ -55,7 +55,7 @@ When the palaces fell, around 1200 BC, Linear B disappeared with them. On the Gr
     },
   },
   timeline: [
-    { when: "c. 1400 BC", what: "The Knossos archive (its date is disputed).", certainty: "debated" },
+    { when: "14th c. BC", what: "The Knossos archive (its date is disputed).", certainty: "debated" },
     { when: "c. 1200 BC", what: "Fire destroys the palace of Pylos, baking its tablets.", certainty: "well" },
     { when: "1900", what: "Arthur Evans begins excavating Knossos and finds tablets.", certainty: "well" },
     { when: "1939", what: "Carl Blegen finds the Pylos archive.", certainty: "well" },

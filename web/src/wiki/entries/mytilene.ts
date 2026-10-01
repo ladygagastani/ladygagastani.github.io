@@ -7,7 +7,7 @@ const entry: Entry = {
   category: "democracy",
   kicker: "427 BC: the Assembly votes to kill a city, then changes its mind",
   image: "mytilene-theatre",
-  hook: `In 427 BC the Athenian Assembly voted, in anger, to put to death every grown man of Mytilene and enslave the women and children. A ship left that day with the order. Overnight the Athenians began to feel what they had done. The next morning they argued it all again, voted by the narrowest of margins to spare the city, and sent a second ship after the first. Its crew rowed without stopping for a day and a night, eating as they rowed.`,
+  hook: `In 427 BC the Athenian Assembly voted, in anger, to put to death every grown man of Mytilene and enslave the women and children. A ship left that day with the order. Overnight the Athenians began to feel what they had done. The next morning they argued it all again, voted by the narrowest of margins to spare the city, and sent a second ship after the first. It had a day and a night to make up, and its crew rowed in shifts, eating as they rowed.`,
   body: `## A rebellious ally
 
 Mytilene, the chief city of the island of Lesbos, was one of Athens' most privileged allies: it kept its own fleet and paid no tribute. In 428 BC it revolted anyway, counting on Spartan help. The help came late and timidly, and in 427 the city surrendered to the Athenian general Paches, who sent the leaders of the revolt to Athens.
@@ -84,7 +84,7 @@ No contrary wind blew, and the first ship, on its horrible errand, was in no hur
   timeline: [
     { when: "428 BC", what: "Mytilene and most of Lesbos revolt from Athens.", certainty: "well" },
     { when: "Summer 427 BC", what: "Mytilene surrenders to Paches; the Assembly votes to kill all its men.", certainty: "well" },
-    { when: "The next day", what: "Second debate: Cleon against Diodotus. Diodotus wins by a hair; the second ship catches the first.", certainty: "well" },
+    { when: "The next day", what: "Second debate: Cleon against Diodotus. Diodotus wins by a hair; the second ship arrives just in time.", certainty: "well" },
     { when: "427 BC", what: "Over a thousand men executed; walls destroyed; land given to Athenian settlers.", certainty: "well" },
   ],
   readIt: [

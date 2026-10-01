@@ -28,7 +28,7 @@ Plato's *Apology*, "defence speech", is not a transcript: it was written afterwa
 
 ## The verdict and the penalty
 
-He was found guilty, and Socrates himself says he was surprised how close it was: if only [thirty votes had gone the other way](cts:tlg0059.tlg002:36), he would have been acquitted. Under Athenian law the prosecution proposed a penalty and the defendant proposed another, and the jury chose between them. Meletus proposed death. Socrates first suggested that, as a benefactor of the city, he deserved free meals in the town hall for life, like an Olympic victor. Then, at his friends' urging, he offered a fine of [thirty minas](cts:tlg0059.tlg002:38), which Plato and others would guarantee. The jury voted for death.
+He was found guilty, and Socrates himself says he was surprised how close it was: if only [thirty votes had gone the other way](cts:tlg0059.tlg002:36), he would have been acquitted. Under Athenian law the prosecution proposed a penalty and the defendant proposed another, and the jury chose between them. Meletus proposed death. Socrates first suggested that, as a benefactor of the city, he deserved free meals in the town hall for life, like an Olympic victor. Then he offered a fine of one mina, all he could pay, and at his friends' urging raised it to [thirty minas](cts:tlg0059.tlg002:38), which Plato and others would guarantee. The jury voted for death.
 
 ## The death
 
@@ -40,7 +40,7 @@ The execution had to wait: while the sacred ship Athens sent to Delos every year
 
 ## Why?
 
-{debated} Religion was a real charge in Athens, and Socrates' claim to be guided by a private divine sign could sound like a new god. But many historians think politics mattered more. Athens had lost the Peloponnesian War in 404 BC and been ruled for a year by the Thirty Tyrants, whose leader Critias had been one of Socrates' companions, as had the traitor Alcibiades. An amnesty in 403 BC forbade prosecutions for what had happened under the Thirty, so, the argument goes, the anger took the form of a religious charge. Others reply that the ancient sources hardly mention this, and that the charge should be taken at its word.
+{debated} Religion was a real charge in Athens, and Socrates' claim to be guided by a private divine sign could sound like a new god. But many historians think politics mattered more. Athens had lost the Peloponnesian War in 404 BC and been ruled for a year by the Thirty Tyrants, whose leader Critias had been one of Socrates' companions, as had the traitor Alcibiades. An amnesty in 403 BC forbade prosecutions for what had happened under the Thirty, so, the argument goes, the anger took the form of a religious charge. Others reply that the indictment and Plato's *Apology* say nothing of politics (the link is made by the accuser Xenophon quotes, and half a century later in a speech by Aeschines), and that the charge should be taken at its word.
 
 {{timeline}}`,
   quotes: {

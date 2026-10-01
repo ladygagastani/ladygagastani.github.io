@@ -16,7 +16,7 @@ In Herodotus, a Persian noble arguing for rule by the many sums up what it means
 
 {well} Athens had [some seven hundred officials](cts:tlg0086.tlg003:24.3) at home, and by the fourth century BC most of them were chosen by lot, for one year. The Council of Five Hundred, which prepared the Assembly's business, was drawn by lot, and a man could [serve on it only twice](cts:tlg0086.tlg003:62.3) in his life. The great exception was the generals, and other military posts, which were elected, because nobody wanted a general chosen by chance.
 
-The chief magistrates, the nine archons, were first chosen by lot, from men nominated by the villages, in [487/6 BC](cts:tlg0086.tlg003:22.5). From then on the archonship, once the highest office in Athens, lost its power to the elected generals.
+The chief magistrates, the nine archons, were chosen by lot, from men nominated by the villages, in [487/6 BC](cts:tlg0086.tlg003:22.5): for the first time since the tyranny, the *Constitution* says (it credits Solon with an earlier lottery). From then on the archonship, once the highest office in Athens, lost its power to the elected generals.
 
 ## The critics
 
@@ -39,7 +39,7 @@ The *Constitution of the Athenians* describes, in minute detail, how jurors were
 
 The chosen jurors were given a staff painted [the colour of their court](cts:tlg0086.tlg003:65.1), so that anyone who went to the wrong one would be caught.
 
-{well} Fragments of stone *kleroteria* were found in the American excavations of the Athenian Agora, which began in 1931, with rows of narrow slots exactly as the text describes, and bronze *pinakia* stamped with names survive too. Sterling Dow's study of 1939 matched them to Aristotle's account.
+{well} Fragments of stone *kleroteria* were found in the American excavations of the Athenian Agora, which began in 1931: most of them later than the *Constitution*, of the third and second centuries BC, and laid out in different ways, but with the rows of narrow slots the text describes. Bronze *pinakia* stamped with names survive too. Sterling Dow's study of 1939 matched them to Aristotle's account.
 
 ## Did it work?
 
@@ -69,7 +69,7 @@ The chosen jurors were given a staff painted [the colour of their court](cts:tlg
   timeline: [
     { when: "487/6 BC", what: "The archons are first chosen by lot from nominated candidates.", certainty: "well" },
     { when: "5th c. BC", what: "Council, juries and most magistrates are chosen by lot.", certainty: "well" },
-    { when: "4th c. BC", what: "Stone allotment machines are in use for the courts.", certainty: "well" },
+    { when: "4th c. BC", what: "Allotment machines are in use for the courts, as the *Constitution* describes.", certainty: "well" },
     { when: "c. 330–320 BC", what: "The Constitution of the Athenians describes the procedure.", certainty: "well" },
     { when: "1930s", what: "Fragments of kleroteria are found in the Agora excavations.", certainty: "well" },
     { when: "1939", what: "Sterling Dow publishes his study of the machines.", certainty: "well" },

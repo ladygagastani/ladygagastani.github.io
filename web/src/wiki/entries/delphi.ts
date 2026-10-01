@@ -26,7 +26,7 @@ The oracle's most famous answers are the ambiguous ones. Herodotus tells how Cro
 
 ## A trance, and a death
 
-{legend} Plutarch describes a session that went wrong. A foreign delegation had come; the omens were bad, but the priests forced them. The Pythia went down into the shrine unwillingly, answered in a harsh voice, then, he says, with a terrible cry rushed for the exit and threw herself down. Everyone fled. She was carried out still conscious, and lived for only a few days.
+{legend} Plutarch's dialogue [*The Obsolescence of Oracles*](cts:tlg0007.tlg092:51) tells of a session that went wrong, as a recent event witnessed by the oracle's interpreter, Nicander. A foreign delegation had come; the omens were bad, but the priests forced them. The Pythia went down into the shrine unwillingly, answered in a harsh voice, then, he says, with a terrible cry rushed for the exit and threw herself down. Everyone fled. She was carried out still conscious, and lived for only a few days.
 
 ## Was there a vapour?
 

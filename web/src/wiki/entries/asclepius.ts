@@ -24,7 +24,7 @@ The greatest sanctuary was at Epidaurus in the Peloponnese. Pausanias, who visit
 
 ## A night in the god's hall
 
-The only first-hand description of what happened at night is a comedy. In Aristophanes' *Wealth* (388 BC), a slave describes taking the blind god Wealth to be cured by Asclepius: first a bath in the cold sea, then offerings at the altar, then lying down on beds of leaves among the other sick people, while the temple servant put out the lamps and told everyone to keep quiet. The slave could not sleep, because an old woman near him had a pot of porridge.
+The fullest description from classical Athens of what happened at night is a comedy. In Aristophanes' *Wealth* (388 BC), a slave describes taking the blind god Wealth to be cured by Asclepius: first a bath in the cold sea, then offerings at the altar, then lying down on beds of leaves among the other sick people, while the temple servant put out the lamps and told everyone to keep quiet. The slave could not sleep, because an old woman near him had a pot of porridge.
 
 {{quote:priest}}
 
@@ -32,7 +32,7 @@ Then the priest [went round every altar](cts:tlg0019.tlg011:679) looking for lef
 
 ## Gods and doctors
 
-{debated} Temple healing and the medicine of doctors such as Hippocrates are sometimes presented as rivals, religion against science. The ancient evidence suggests they lived side by side: doctors honoured Asclepius as their patron, and the Hippocratic Oath begins with his name.
+{debated} Temple healing and the medicine of doctors such as Hippocrates are sometimes presented as rivals, religion against science. The ancient evidence suggests they lived side by side: doctors honoured Asclepius as their patron, and the Hippocratic Oath names him in its first line, after Apollo.
 
 {{quote:oath}}
 

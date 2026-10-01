@@ -16,15 +16,15 @@ Pythagoras was born on the island of Samos and, around 530 BC, moved to Croton i
 
 ## A friend in a puppy
 
-The oldest surviving mention of Pythagoras is a joke. The poet Xenophanes, a younger contemporary, mocked his belief that souls pass from body to body, humans and animals alike.
+The oldest surviving mention of Pythagoras is a joke. The poet Xenophanes, a contemporary, mocked his belief that souls pass from body to body, humans and animals alike.
 
 {{quote:puppy}}
 
-Pythagoras was said to remember his own earlier lives: among others, he had been Euphorbus, a Trojan [wounded by Menelaus](cts:tlg0004.tlg001:8.1.4) in the *Iliad*.
+Pythagoras was said to remember his own earlier lives: among others, he had been Euphorbus, a Trojan [wounded by Menelaus](cts:tlg0004.tlg001:8.1.4) (in the *Iliad*, Menelaus kills him).
 
 ## Why not beans?
 
-The Pythagoreans lived by a list of rules, some sensible and some very strange: [do not stir the fire with a knife](cts:tlg0004.tlg001:8.1.17), do not pick up crumbs that fall from the table, do not eat the heart. Above all, Diogenes Laertius says, Pythagoras [forbade beans](cts:tlg0004.tlg001:8.1.19). Nobody was sure why, not even Aristotle, who gave a list of possible reasons.
+The Pythagoreans lived by a list of rules, some sensible and some very strange: [do not stir the fire with a knife](cts:tlg0004.tlg001:8.1.17), do not pick up crumbs that fall from the table, do not eat the heart. Diogenes Laertius says Pythagoras forbade red mullet, the hearts of animals and [beans](cts:tlg0004.tlg001:8.1.19). Nobody was sure why, not even Aristotle, who gave a list of possible reasons.
 
 {{quote:beans}}
 
@@ -68,10 +68,10 @@ Other writers said he [starved himself to death](cts:tlg0004.tlg001:8.1.40) in a
   timeline: [
     { when: "c. 570 BC", what: "Pythagoras is born on Samos.", certainty: "debated" },
     { when: "c. 530 BC", what: "He moves to Croton in southern Italy and founds his community.", certainty: "well" },
-    { when: "late 6th c. BC", what: "Xenophanes mocks his teaching that souls are reborn.", certainty: "well" },
+    { when: "late 6th or early 5th c. BC", what: "Xenophanes mocks his teaching that souls are reborn.", certainty: "debated" },
     { when: "c. 500 BC?", what: "Death of Pythagoras, by one of several reported means.", certainty: "legend" },
     { when: "5th c. BC", what: "Attacks on the Pythagorean societies in southern Italy.", certainty: "well" },
-    { when: "3rd c. AD", what: "Diogenes Laertius, Porphyry and Iamblichus write lives of Pythagoras.", certainty: "well" },
+    { when: "3rd–4th c. AD", what: "Diogenes Laertius, Porphyry and Iamblichus write lives of Pythagoras.", certainty: "well" },
   ],
   readIt: [
     { work: "tlg0004.tlg001", ref: "8.1.1", to: "8.1.50", label: "Diogenes Laertius 8.1–50", why: "The life, with the rules, the theorem and the deaths." },

@@ -10,7 +10,7 @@ const entry: Entry = {
   hook: `The *Iliad* is a poem about a few weeks of killing outside Troy. Yet again and again, just as the fighting is at its fiercest, Homer stops and says "as when…", and for a few lines we are somewhere else: on a mountain under the stars, in a snowstorm, beside a mother with a crying child. These long comparisons, the Homeric similes, are among the most beautiful things in Greek, and they are a good reason to learn to read it.`,
   body: `## "As when…"
 
-A simile compares one thing to another with "like" or "as". Homer's are often long, and they grow: the comparison starts with a single point in common and then unfolds into a scene of its own, with details the story does not need. Most begin with the same words, *hōs d' hote*, "and as when".
+A simile compares one thing to another with "like" or "as". Homer's are often long, and they grow: the comparison starts with a single point in common and then unfolds into a scene of its own, with details the story does not need. Many begin with the same words, *hōs d' hote*, "and as when".
 
 ## Leaves
 
