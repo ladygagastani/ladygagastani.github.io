@@ -236,8 +236,8 @@ the owner picks what to keep.
 
 **5. Gestures elsewhere**
 - **Pull down to refresh** the Town Hall and a thread.
-- The map: **two fingers to move it**, one finger scrolls the page (with a short hint the first time),
-  so the page can never get stuck on the map.
+- ~~The map: two fingers to move it, one finger scrolls the page.~~ **Changed by the owner (2026-10-01): one finger
+  moves the map, two fingers zoom it**; the map leaves part of the page in view on phones, to scroll by.
 - Swipe between tabs where a page has tabs (the Oracle's search kinds, the Census's lists).
 - A short **vibration** on save, bookmark and correct answer, on Android phones that allow it (iPhones
   do not let websites vibrate), off by a Settings switch.

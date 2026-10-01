@@ -1,8 +1,8 @@
 "use client";
 /**
- * The Periplus: a map of the Greek world drawn like a painted vase (clay land, black-gloss sea), with
+ * The Periplus: a map of the Greek world in the colours of a painted vase (clay land, an Aegean sea), with
  * every place the library mentions. Dots grow with the number of mentions; click one to see what the
- * texts say of it, and where. Wheel, drag, pinch, double-click or the buttons to move about; the
+ * texts say of it, and where. Wheel, drag (one finger on a phone), pinch, double-click or the buttons to move about; the
  * keyboard works too (arrows to pan, + and − to zoom). ?p=<Pleiades id> opens a place.
  *
  * The map is painted on a canvas by an engine outside React (engine.ts, draw.ts), once per screen frame
@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { fold, loadCatalog, type CatalogIndex } from "@/lib/catalog";
-import { KINDS, kindOf, loadMap, loadSavedPlaces, mapSize, project, typeLabel, useSavedPlaces, type Base, type Place, type PlacesMeta } from "@/lib/map";
+import { KINDS, kindOf, loadMap, loadSavedPlaces, mapSize, project, shortName, typeLabel, useSavedPlaces, type Base, type Place, type PlacesMeta } from "@/lib/map";
 import { useSettings } from "@/lib/settings";
 import { buildLods, type Pt } from "./draw";
 import { MapEngine, trailVelocity } from "./engine";
@@ -60,12 +60,13 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
   const [engine] = useState(() => makeEngine(base, places));
 
   const [kinds, setKinds] = useState<Set<string>>(() => new Set(KINDS.map((k) => k.id)));
-  const [greekNames, setGreekNames] = useState(true);
+  const [greekNames, setGreekNames] = useState(false);
   const [q, setQ] = useState("");
   const saved = useSavedPlaces((s) => s.saved);
   const toggleSaved = useSavedPlaces((s) => s.toggle);
   const [hover, setHover] = useState<{ id: string; x: number; y: number } | null>(null);
-  const [hint, setHint] = useState(false);
+  const hoverRef = useRef(hover);
+  useEffect(() => { hoverRef.current = hover; }, [hover]);
   const [homeReady, setHomeReady] = useState(false);
 
   const stage = useRef<HTMLDivElement>(null);
@@ -148,19 +149,19 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
     if (id) select(id === selectedId ? null : id);
   };
 
-  // ---- touch: two fingers move and zoom the map; one finger scrolls the page, so the page can never get
-  // stuck on the map. The first couple of times a finger drags across it alone, a hint says so.
+  // ---- touch: one finger moves the map (with a glide when let go), two fingers zoom it (and move it as they go).
+  // On a phone the map leaves part of the page in view above or below it, to scroll the page by.
   useEffect(() => {
     const el = stage.current!;
-    let last: { x: number; y: number; d: number } | null = null, one: { x: number; y: number } | null = null, hinted = false, timer = 0;
+    let last: { x: number; y: number; d: number } | null = null, one: { x: number; y: number } | null = null;
     let trail: { t: number; x: number; y: number }[] = [];
     const mid = (t: TouchList) => ({ x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2, d: Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) });
+    const track = (x: number, y: number) => { trail.push({ t: performance.now(), x, y }); if (trail.length > 12) trail.shift(); };
     const start = (e: TouchEvent) => {
       lastTouch.current = performance.now();
-      moved.current = 0;
       engine.stop();
       if (e.touches.length === 2) { last = mid(e.touches); one = null; trail = []; }
-      else if (e.touches.length === 1) { one = { x: e.touches[0].clientX, y: e.touches[0].clientY }; hinted = false; }
+      else if (e.touches.length === 1) { moved.current = 0; one = { x: e.touches[0].clientX, y: e.touches[0].clientY }; trail = []; track(one.x, one.y); }
     };
     const move = (e: TouchEvent) => {
       if (e.touches.length === 2 && last) {
@@ -170,22 +171,31 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
         const k = engine.limitK(v.k * (last.d > 0 ? m.d / last.d : 1)), wx = (last.x - r.left - v.tx) / v.k, wy = (last.y - r.top - v.ty) / v.k;
         engine.set({ k, tx: m.x - r.left - wx * k, ty: m.y - r.top - wy * k });
         moved.current += 10;
-        trail.push({ t: performance.now(), x: m.x, y: m.y });
-        if (trail.length > 12) trail.shift();
+        track(m.x, m.y);
         last = m;
-      } else if (e.touches.length === 1 && one && !hinted) {
-        if (Math.hypot(e.touches[0].clientX - one.x, e.touches[0].clientY - one.y) < 24) return;
-        hinted = true;
-        moved.current = 24;
-        let n = 0;
-        try { n = Number(localStorage.getItem("mathesis:map-hint")) || 0; localStorage.setItem("mathesis:map-hint", String(n + 1)); } catch { /* ignore */ }
-        if (n < 2) { setHint(true); clearTimeout(timer); timer = window.setTimeout(() => setHint(false), 2200); }
+      } else if (e.touches.length === 1 && one) {
+        e.preventDefault();
+        const x = e.touches[0].clientX, y = e.touches[0].clientY, v = engine.v;
+        moved.current += Math.abs(x - one.x) + Math.abs(y - one.y);
+        engine.set({ k: v.k, tx: v.tx + x - one.x, ty: v.ty + y - one.y });
+        one = { x, y };
+        track(x, y);
+        if (hoverRef.current) setHover(null);
       }
     };
     const end = (e: TouchEvent) => {
       lastTouch.current = performance.now();
-      if (e.touches.length < 2 && last) { last = null; if (e.type === "touchend") engine.fling(trailVelocity(trail)); trail = []; }
-      if (!e.touches.length) one = null;
+      if (e.touches.length === 1) {
+        // from two fingers back to one: carry on moving from where that finger is, without a jump
+        last = null; trail = [];
+        one = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        track(one.x, one.y);
+        return;
+      }
+      if (!e.touches.length) {
+        if (e.type === "touchend" && moved.current > 6) engine.fling(trailVelocity(trail));
+        last = null; one = null; trail = [];
+      }
     };
     // the wheel (and a trackpad's pinch) zooms, gliding
     const wheel = (e: WheelEvent) => {
@@ -198,7 +208,6 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
     el.addEventListener("touchcancel", end);
     el.addEventListener("wheel", wheel, { passive: false });
     return () => {
-      clearTimeout(timer);
       el.removeEventListener("touchstart", start); el.removeEventListener("touchmove", move);
       el.removeEventListener("touchend", end); el.removeEventListener("touchcancel", end);
       el.removeEventListener("wheel", wheel);
@@ -221,7 +230,7 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
   const found = useMemo(() => {
     const n = fold(q).trim();
     if (n.length < 2) return [];
-    return places.filter((p) => fold(p.grc).includes(n) || p.en.toLowerCase().includes(q.trim().toLowerCase()) || (p.also ?? []).some((a) => fold(a).includes(n))).slice(0, 8);
+    return places.filter((p) => fold(p.grc).includes(n) || fold(shortName(p)).includes(n) || p.en.toLowerCase().includes(q.trim().toLowerCase()) || (p.also ?? []).some((a) => fold(a).includes(n))).slice(0, 8);
   }, [q, places]);
 
   const byId = useMemo(() => new Map(places.map((p) => [p.id, p])), [places]);
@@ -238,7 +247,7 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
           {found.length > 0 && (
             <ul className={styles.found}>
               {found.map((p) => (
-                <li key={p.id}><button type="button" onClick={() => { setQ(""); select(p.id); }}><b lang="grc">{p.grc}</b> <span>{p.en.split("/")[0]}</span> <small>{fmt(p.n)}</small></button></li>
+                <li key={p.id}><button type="button" onClick={() => { setQ(""); select(p.id); }}><b>{shortName(p)}</b> <span lang="grc">{p.grc}</span> <small>{fmt(p.n)}</small></button></li>
               ))}
             </ul>
           )}
@@ -253,10 +262,9 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
           <div ref={ring} className={styles.ring} hidden aria-hidden="true" />
           {hovered && hover && (
             <p className={styles.tip} style={{ transform: `translate(${Math.round(hover.x)}px, ${Math.round(hover.y)}px)` }} aria-hidden="true">
-              <b lang="grc">{hovered.grc}</b> {hovered.en.split("/")[0]} <small>{fmt(hovered.n)}</small>
+              <b>{shortName(hovered)}</b> <span lang="grc">{hovered.grc}</span> <small>{fmt(hovered.n)}</small>
             </p>
           )}
-          {hint && <p className={styles.touchHint} role="status">Use two fingers to move the map</p>}
           <div className={styles.controls} data-avoid="">
             <div className={styles.zoomPair}>
               <button type="button" onClick={() => engine.zoomAt(1.6, engine.w / 2, engine.h / 2)} aria-label="Zoom in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
@@ -277,7 +285,7 @@ function MapView({ base, places, meta, idx, entriesByPlace }: { base: Base; plac
             <button key={kd.id} type="button" className="chip" aria-pressed={kinds.has(kd.id)}
               onClick={() => setKinds((ks) => { const n = new Set(ks); if (n.has(kd.id)) n.delete(kd.id); else n.add(kd.id); return n; })}>{kd.label}</button>
           ))}
-          <button type="button" className="chip" aria-pressed={greekNames} onClick={() => setGreekNames(!greekNames)}>{greekNames ? "Names in Greek" : "Names in English"}</button>
+          <button type="button" className="chip" aria-pressed={greekNames} onClick={() => setGreekNames(!greekNames)}>Names in Greek</button>
         </div>
       </div>
 
@@ -299,7 +307,7 @@ function PlaceCard({ p, idx, entries, saved, onSave, onClose }: { p: Place; idx:
   return (
     <div className={styles.card} key={p.id}>
       <p className="label">{typeLabel(p.type)}{p.approx ? " · position approximate" : ""}</p>
-      <h2 className={styles.placeName}><span lang="grc">{p.grc}</span><small>{p.en}</small></h2>
+      <h2 className={styles.placeName}>{shortName(p)}<small lang="grc">{p.grc}</small></h2>
       <p className={styles.count}>Named <b>{fmt(p.n)}</b> times in <b>{fmt(p.works)}</b> {p.works === 1 ? "work" : "works"} of the library{p.also?.length ? <> (also as <span lang="grc">{p.also.join(", ")}</span>)</> : null}.</p>
       {!p.checked && <p className={styles.caveat}>Matched automatically by its name, and not yet checked by hand: some names belong to people or gods as well as places.</p>}
       {p.alt > 0 && <p className={styles.caveat}>Pleiades lists {p.alt} other {p.alt === 1 ? "place" : "places"} with this name; the map shows the one Pleiades connects most other places to.</p>}
@@ -338,7 +346,7 @@ function Intro({ places, meta, onPick }: { places: Place[]; meta: PlacesMeta; on
       <p className="label">Most named</p>
       <ol className={styles.top}>
         {places.slice(0, 12).map((p) => (
-          <li key={p.id}><button type="button" onClick={() => onPick(p.id)}><b lang="grc">{p.grc}</b> <span>{p.en.split("/")[0].replace(/ \(.*\)$/, "")}</span> <small>{fmt(p.n)}</small></button></li>
+          <li key={p.id}><button type="button" onClick={() => onPick(p.id)}><b>{shortName(p)}</b> <span lang="grc">{p.grc}</span> <small>{fmt(p.n)}</small></button></li>
         ))}
       </ol>
       <div className={styles.key} aria-label="Key">

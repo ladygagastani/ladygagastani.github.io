@@ -8,6 +8,7 @@
  */
 import { create } from "zustand";
 import { persist, createJSONStorage, type StateStorage } from "zustand/middleware";
+import { ENGLISH_NAMES } from "./place-names";
 
 export interface Base { bbox: [number, number, number, number]; water: number[][]; lakes: number[][]; source: string }
 export interface Place {
@@ -80,7 +81,20 @@ export function placesByName(): Promise<Map<string, Place>> {
   return byName;
 }
 /** A place's English name as the map letters it: the first of Pleiades' names, without its note ("Tyrus/Col. …" → "Tyrus"). */
-export const shortName = (p: Place) => p.en.split("/")[0].replace(/ \(.*\)$/, "").replace(/\?$/, "");
+/** A place's name in English: the usual English name where there is one (Athens, not Athenae), else Pleiades' first title. */
+export const shortName = (p: Place) => ENGLISH_NAMES[p.id] ?? cleanTitle(p.en);
+/**
+ * Pleiades' first title without its notes: "Ancient Egypt (region)" Ancient Egypt, "Ilium/Troia" Ilium,
+ * "Croto(n)" Croton (letters some sources add), "(Hypo)Chalkis" Chalkis, "Hormina? M." Hormina M.
+ */
+export const cleanTitle = (en: string) => en
+  .replace(/\s+\([^)]*\)?/g, "")
+  .split("/")[0]
+  .replace(/\(\p{L}+\)(?=\p{Lu})/gu, "")
+  .replace(/\((\p{L}{1,3})\)/gu, "$1")
+  .replace(/\?/g, "")
+  .replace(/\s+/g, " ")
+  .trim();
 /** The place a dictionary word names, if it is on the map (Σπάρτη → Sparta). */
 export function placeNamed(lemma: string): Promise<Place | null> {
   return placesByName().then((m) => m.get(lemma.normalize("NFC")) ?? null, () => null);

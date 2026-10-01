@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ImportProblem, exportHtml, parseExport } from "@/lib/treasury-io";
 import { applyIncoming, gather, type ApplyReport } from "@/lib/treasury-apply";
-import { loadMap } from "@/lib/map";
+import { loadMap, shortName } from "@/lib/map";
 import { hasSavedSession, lastSynced, problem, useAccount } from "@/lib/community/account";
 import type { Position } from "@/lib/position";
 
@@ -37,7 +37,7 @@ export default function KeepSafe({ t, summary }: { t: TreasuryState; summary: st
     setBusy(true);
     try {
       const d = await gather();
-      const names = await loadMap().then((m) => new Map(m.places.map((p) => [p.id, `${p.grc} (${p.en.split("/")[0]})`])), () => new Map<string, string>());
+      const names = await loadMap().then((m) => new Map(m.places.map((p) => [p.id, `${shortName(p)} (${p.grc})`])), () => new Map<string, string>());
       const html = exportHtml(d, t.idx, location.origin, (id) => names.get(id) ?? `Pleiades place ${id}`);
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([html], { type: "text/html" }));

@@ -106,6 +106,24 @@ html[data-hdr="hidden"] { --tabbar-vis: 0px; --readbar-vis: 0px; }
   color-scheme: dark;
 }
 
+/* ---------------------------------------------------------------- maps
+   Every map (the Periplus, the reader's Places, My Library's places): warm vase-clay land and a muted Aegean
+   sea, so land and water tell apart at a glance in both themes; names in ink with a halo of the land. */
+:root {
+  --map-land: #EFDCBC; --map-sea: #A9C1C6; --map-coast: #5F8590; --map-wave: rgba(255, 255, 255, 0.30);
+  --map-name: #2A1C12; --map-halo: #EFDCBC; --map-sea-name: #24505C; --map-accent-sea: #9E2F17;
+}
+:root[data-theme="dark"] {
+  --map-land: #3B3026; --map-sea: #15283A; --map-coast: #7FA3B5; --map-wave: rgba(140, 185, 210, 0.10);
+  --map-name: #F2DDBB; --map-halo: #3B3026; --map-sea-name: #9CC3D6; --map-accent-sea: #F08A5D;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --map-land: #3B3026; --map-sea: #15283A; --map-coast: #7FA3B5; --map-wave: rgba(140, 185, 210, 0.10);
+    --map-name: #F2DDBB; --map-halo: #3B3026; --map-sea-name: #9CC3D6; --map-accent-sea: #F08A5D;
+  }
+}
+
 /* ---------------------------------------------------------------- base */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }

@@ -12,7 +12,7 @@ import { coreEntry, CORE_CREDIT, type CoreEntry } from "@/lib/lookup/core";
 import { useUI } from "@/lib/ui";
 import { useAcademy } from "@/lib/academy";
 import { buzz } from "@/lib/haptics";
-import { placeNamed, type Place } from "@/lib/map";
+import { placeNamed, shortName, type Place } from "@/lib/map";
 import styles from "./Reader.module.css";
 
 export interface WordContext { work: string; unitKey: string; occurrence: number; keys: Set<string>; depth: number }
@@ -321,7 +321,7 @@ export default function WordPanel({ word, ctx, onClose, onEchoes, onStep, sheet 
           </button>
         )}
         {place && (
-          <Link className="chip" href={`/stoa/periplus?p=${place.id}`} transitionTypes={["page-turn"]} title={`${place.en}: where it is, and which works name it most`}>
+          <Link className="chip" href={`/stoa/periplus?p=${place.id}`} transitionTypes={["page-turn"]} title={`${shortName(place)}: where it is, and which works name it most`}>
             On the map · <span lang="grc">{place.grc}</span>
           </Link>
         )}

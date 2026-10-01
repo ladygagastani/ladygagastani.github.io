@@ -2,7 +2,7 @@
 /** The Treasury's Places: the places you saved on the Periplus, on a small map of your own. */
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { loadMap, loadSavedPlaces, project, ringsPath, typeLabel, useSavedPlaces, type Base, type Place } from "@/lib/map";
+import { loadMap, loadSavedPlaces, project, ringsPath, shortName, typeLabel, useSavedPlaces, type Base, type Place } from "@/lib/map";
 import { ago } from "./data";
 import styles from "./Treasury.module.css";
 
@@ -37,9 +37,9 @@ export default function PlacesSection() {
       <ul className={styles.placeList}>
         {mine.map(({ p, t }) => (
           <li key={p.id}>
-            <Link href={`/stoa/periplus?p=${p.id}`} transitionTypes={["page-turn"]}><b lang="grc">{p.grc}</b> <span>{p.en.split("/")[0]}</span></Link>
+            <Link href={`/stoa/periplus?p=${p.id}`} transitionTypes={["page-turn"]}><b>{shortName(p)}</b> <span lang="grc">{p.grc}</span></Link>
             <small>{typeLabel(p.type)} · named {p.n.toLocaleString("en-GB")} times · saved {ago(t)}</small>
-            <button type="button" className="chip" onClick={() => toggle(p.id)} aria-label={`Remove ${p.en} from your places`}>Remove</button>
+            <button type="button" className="chip" onClick={() => toggle(p.id)} aria-label={`Remove ${shortName(p)} from your places`}>Remove</button>
           </li>
         ))}
       </ul>

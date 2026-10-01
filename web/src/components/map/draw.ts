@@ -3,7 +3,7 @@
  * as many places and names as fit without touching (the most-named first), each fading in and out as
  * the view changes. Pure drawing and layout; Periplus.tsx owns the view and the gestures.
  */
-import type { Place } from "@/lib/map";
+import { shortName, type Place } from "@/lib/map";
 
 export interface View { k: number; tx: number; ty: number }
 export interface Pt { p: Place; x: number; y: number; kind: string; r: number; name: "region" | "sea" | "river" | null }
@@ -68,7 +68,7 @@ export function readLook(el: Element): Look {
   const cs = getComputedStyle(el), v = (n: string) => cs.getPropertyValue(n).trim();
   return {
     land: v("--map-land"), sea: v("--map-sea"), coast: v("--map-coast"), wave: v("--map-wave"), name: v("--map-name"),
-    halo: v("--map-halo"), seaName: v("--map-sea-name"), accent: v("--accent"), accentOnSea: v("--accent-on-ink") || v("--accent"), ink: v("--ink"), ink2: v("--ink-2"),
+    halo: v("--map-halo"), seaName: v("--map-sea-name"), accent: v("--accent"), accentOnSea: v("--map-accent-sea") || v("--accent"), ink: v("--ink"), ink2: v("--ink-2"),
     greek: v("--f-greek"), body: v("--f-body"), label: v("--f-label"),
   };
 }
@@ -92,7 +92,7 @@ const caps = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCa
 export interface Label {
   key: string; text: string; font: string; spacing: number; x: number; y: number; w: number; align: "left" | "center" | "right";
   style: "place" | "region" | "sea" | "river";
-  sea: boolean;   // written on the sea: clay letters on the black, as on a vase
+  sea: boolean;   // written on the sea: in the sea's own colour of letters, haloed with the sea
 }
 
 const labelFont = (look: Look, style: Label["style"], greek: boolean, small: boolean) => {
@@ -155,26 +155,14 @@ export function layout(g: CanvasRenderingContext2D, pts: Pt[], v: View, w: numbe
   for (const t of cand) score.set(t, (t.p.id === o.selected ? 1e9 : o.saved[t.p.id] ? 1e8 : 0) + t.p.n * (o.shown.has(t.p.id) ? 1.4 : 1));
   cand.sort((a, b) => score.get(b)! - score.get(a)!);
 
-  // 1. dots (names written across the map have none)
-  const dots: Pt[] = [], dotBox = new Map<string, Box>();
-  for (const t of cand) {
-    if (t.name) continue;
-    if (dots.length >= dotBudget && t.p.id !== o.selected && !o.saved[t.p.id]) continue;
-    // each dot keeps a little clear ground around it
-    const sx = t.x * v.k + v.tx, sy = t.y * v.k + v.ty, r = t.r + 4;
-    const b = { x0: sx - r, y0: sy - r, x1: sx + r, y1: sy + r };
-    if (t.p.id !== o.selected && hits(b)) continue;
-    add(b); dotBox.set(t.p.id, b); dots.push(t);
-  }
-
-  // 2. names: the selected place first, then by rank, trying right, left, above and below a dot
-  const labels: Label[] = [];
-  for (const t of cand) {
-    if (labels.length >= labelBudget && t.p.id !== o.selected) break;
-    const own = dotBox.get(t.p.id);
-    if (!t.name && !own) continue;
+  // The great places first: their dots (about a third of what fits), then their names, so one great place's
+  // name never pushes another off the map; then the lesser dots, each named at once if there is room, so they
+  // give way to the names rather than crowding them out. Names written across the map (regions, seas,
+  // rivers) come last, where room is left.
+  const dots: Pt[] = [], labels: Label[] = [];
+  const name = (t: Pt, own: Box | undefined) => {
     const style: Label["style"] = t.name ?? "place";
-    const raw = o.greek ? t.p.grc : t.p.en.split("/")[0].replace(/ \(.*\)$/, "");
+    const raw = o.greek ? t.p.grc : shortName(t.p);
     const text = style === "region" ? caps(raw) : raw;
     const { font, spacing, size } = labelFont(o.look, style, o.greek, small);
     const tw = measure(g, text, font, spacing), th = size * 1.15;
@@ -192,9 +180,25 @@ export function layout(g: CanvasRenderingContext2D, pts: Pt[], v: View, w: numbe
       // on the sea if most of the name is (its two ends and middle, halfway up the letters)
       const my = y - size * 0.35, sea = +o.onSea(x0, my) + +o.onSea(x0 + tw / 2, my) + +o.onSea(x0 + tw, my) >= 2;
       labels.push({ key: t.p.id, text, font, spacing, x, y, w: tw, align, style, sea });
-      break;
+      return;
     }
-  }
+  };
+  const great = Math.round(dotBudget * 0.35), placed = new Map<Pt, Box>();
+  const dot = (t: Pt) => {
+    if (dots.length >= dotBudget && t.p.id !== o.selected && !o.saved[t.p.id]) return null;
+    // each dot keeps a sliver of clear ground around it (enough that dots never touch; more would hide near
+    // neighbours such as Sparta beside Argos)
+    const sx = t.x * v.k + v.tx, sy = t.y * v.k + v.ty, r = t.r + 1.5;
+    const b = { x0: sx - r, y0: sy - r, x1: sx + r, y1: sy + r };
+    if (t.p.id !== o.selected && hits(b)) return null;
+    add(b); dots.push(t); placed.set(t, b);
+    return b;
+  };
+  const withDots = cand.filter((t) => !t.name);
+  for (const t of withDots.slice(0, great)) dot(t);
+  for (const t of withDots.slice(0, great)) { const b = placed.get(t); if (b && (labels.length < labelBudget || t.p.id === o.selected)) name(t, b); }
+  for (const t of withDots.slice(great)) { const b = dot(t); if (b && (labels.length < labelBudget || t.p.id === o.selected)) name(t, b); }
+  for (const t of cand) if (t.name && (labels.length < labelBudget + 6 || t.p.id === o.selected)) name(t, undefined);
   return { dots, labels };
 }
 
@@ -283,7 +287,8 @@ export function paint(f: Frame) {
     const sel = t.p.id === f.selected || t.p.id === f.hover;
     const font = l.font;
     if (sel) l.font = `bold ${l.font}`;
-    if (l.sea) text(g, l, sel ? look.accentOnSea : look.seaName, look.sea, 3);
+    // a town's name stays in ink wherever it falls (blue is for seas and rivers), haloed with what lies under it
+    if (l.sea) text(g, l, sel ? look.accentOnSea : look.name, look.sea, 3.5);
     else text(g, l, sel ? look.accent : look.name, look.halo, 3.5);
     l.font = font;
   }

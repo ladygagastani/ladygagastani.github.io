@@ -112,6 +112,13 @@ OVERRIDES = {
     "Σμύρνα": ("550893",), "Ἴστρος": ("226577", 28.0, 44.6), "Ἰσθμός": ("570317",), "Καπετώλιον": ("347036492",),
     "Μεσοποταμία": ("874602", 43.0, 34.6), "Αἰθιοπία": ("39274", 32.6, 22.6), "Ἰορδάνης": ("687932",),
     "Σαμάρεια": ("678369",),
+    # The texts' Artemisium is the cape in northern Euboea, scene of the sea battle of 480 BC (Herodotus 7.175-176
+    # and 8, by far the most mentions), named after its sanctuary of Artemis; not the temple at Nemi or a hill in Arcadia.
+    "Ἀρτεμίσιον": ("540667",),
+    # Abdera in Thrace (Democritus' city; Hippocrates' Epidemics, Herodotus, Thucydides), not the one in Spain;
+    # and the Chersonese of Greek history (Miltiades, Demosthenes' speech On the Chersonese) is the Thracian one,
+    # the Gallipoli peninsula, not the city in the Crimea
+    "Ἄβδηρα": ("501323",), "Χερρόνησος": ("501386",),
 }
 
 def download():
@@ -301,7 +308,8 @@ def main():
     for lemma, works in names.items():
         if lemma in NOT_PLACES:
             continue
-        cands = [places[i] for i in by_name.get(fold(lemma), ())]
+        # (in order of Pleiades id, so places that tie in rank are chosen the same way on every run)
+        cands = [places[i] for i in sorted(by_name.get(fold(lemma), ()), key=lambda i: int(i) if i.isdigit() else 0)]
         ov = OVERRIDES.get(lemma)
         if ov:
             best = places.get(ov[0]) or all_places[ov[0]]

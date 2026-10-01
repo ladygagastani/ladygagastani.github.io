@@ -11,6 +11,7 @@ import { Blocks, Figure, Inline, CertTag, readHref, greekAware } from "./Markup"
 import Contents from "./Contents";
 import { EntryMarkers, SectionNote } from "./EntryNotes";
 import mapData from "../../../public/data/map/places.json";
+import { ENGLISH_NAMES } from "@/lib/place-names";
 import styles from "./Stoa.module.css";
 
 const PLACE_NAME = new Map((mapData as { places: { id: string; grc: string; en: string }[] }).places.map((p) => [p.id, p]));
@@ -89,7 +90,7 @@ export default function EntryView({ e }: { e: Entry }) {
           {(e.places?.length ?? 0) > 0 && (
             <div className={styles.onMap}>
               <p className="label">On the map</p>
-              {e.places!.map((id) => { const p = PLACE_NAME.get(id); return p && <Link key={id} href={`/stoa/periplus?p=${id}`} transitionTypes={["page-turn"]}><span lang="grc">{p.grc}</span> {p.en.split("/")[0].replace(/ \(.*\)$/, "")} →</Link>; })}
+              {e.places!.map((id) => { const p = PLACE_NAME.get(id); return p && <Link key={id} href={`/stoa/periplus?p=${id}`} transitionTypes={["page-turn"]}>{ENGLISH_NAMES[id] ?? p.en.split("/")[0].replace(/ \(.*\)$/, "")} <span lang="grc">{p.grc}</span> →</Link>; })}
             </div>
           )}
           <div className={styles.onMap}>

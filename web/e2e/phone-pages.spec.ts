@@ -70,22 +70,26 @@ test("pull down to refresh the Town Hall", async ({ page }) => {
   await expect(page.locator(".pull")).not.toHaveAttribute("data-waiting", /.*/, { timeout: 20_000 });
 });
 
-test("the map: two fingers move it, one finger leaves it be and shows a hint", async ({ page }) => {
+test("the map: one finger moves it, two fingers zoom it, and the page stays where it is", async ({ page }) => {
   await page.goto("/stoa/periplus");
   const stage = page.getByRole("application", { name: /Map of the Greek world/ });
   await expect(stage).toHaveAttribute("data-view", /\d/);   // painted, and at rest
   await page.waitForTimeout(600);
-  const view = () => stage.getAttribute("data-view");
-  const before = await view();
+  const view = async () => (await stage.getAttribute("data-view"))!.split(" ").map(Number);
+  const [k0, x0, y0] = await view();
+  const scroll0 = await page.evaluate(() => scrollY);
   const b = (await stage.boundingBox())!;
   const cx = b.x + b.width / 2, cy = b.y + b.height / 2;
-  // one finger: the map stays, a hint appears
-  await touch(page, "[role='application']", [[[cx, cy]], [[cx + 20, cy + 30]], [[cx + 40, cy + 70]]]);
-  expect(await view()).toBe(before);
-  await expect(stage.getByRole("status")).toHaveText("Use two fingers to move the map");
-  // two fingers: it moves
-  await touch(page, "[role='application']", [[[cx - 40, cy], [cx + 40, cy]], [[cx - 10, cy + 30], [cx + 70, cy + 30]], [[cx + 20, cy + 60], [cx + 100, cy + 60]]]);
-  await expect.poll(view).not.toBe(before);
+  // one finger: the map follows it (at the same zoom), and the page does not scroll
+  await touch(page, "[role='application']", [[[cx, cy]], [[cx - 30, cy - 20]], [[cx - 60, cy - 40]], [[cx - 90, cy - 60]]]);
+  await expect.poll(async () => (await view())[1]).toBeLessThan(x0 - 40);
+  expect((await view())[0]).toBeCloseTo(k0, 3);
+  expect(await page.evaluate(() => scrollY)).toBe(scroll0);
+  // two fingers moving apart: it zooms in
+  await touch(page, "[role='application']", [[[cx - 30, cy], [cx + 30, cy]], [[cx - 50, cy], [cx + 50, cy]], [[cx - 80, cy], [cx + 80, cy]], [[cx - 110, cy], [cx + 110, cy]]]);
+  await expect.poll(async () => (await view())[0]).toBeGreaterThan(k0 * 2);
+  expect(await page.evaluate(() => scrollY)).toBe(scroll0);
+  void y0;
 });
 
 test("a sideways swipe moves between the Oracle's kinds of search, and the Census's lists", async ({ page }) => {

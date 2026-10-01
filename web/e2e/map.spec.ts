@@ -4,7 +4,7 @@ test("the Periplus finds a place and shows which works name it most", async ({ p
   await page.goto("/stoa/periplus");
   await expect(page.getByRole("application", { name: /Map of the Greek world/ })).toBeVisible();
   await page.getByRole("searchbox", { name: "Find a place" }).fill("Σπαρτη");
-  await page.getByRole("button", { name: /Σπάρτη Sparta/ }).click();
+  await page.getByRole("button", { name: /Sparta Σπάρτη/ }).click();
   await expect(page).toHaveURL(/[?&]p=570685/);
   await expect(page.getByRole("heading", { level: 2, name: /Σπάρτη/ })).toBeVisible();
   await expect(page.getByText(/Named \d+ times in \d+ works/)).toBeVisible();
@@ -26,7 +26,7 @@ test("a saved place appears in the Treasury on a map of your own, and can be rem
 
 test("a wiki entry links to its place on the map", async ({ page }) => {
   await page.goto("/stoa/spartan-upbringing");
-  await page.getByRole("link", { name: /Σπάρτη Sparta →/ }).click();
+  await page.getByRole("link", { name: /Sparta Σπάρτη →/ }).click();
   await expect(page).toHaveURL(/\/stoa\/periplus\?p=570685/);
   await expect(page.getByRole("heading", { level: 2, name: /Σπάρτη/ })).toBeVisible();
 });

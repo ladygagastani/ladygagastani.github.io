@@ -115,6 +115,36 @@ export default function PlacesPanel({ work, doc, pageKeys, onJump, onMarks, onCl
   }, [target, motion]);
 
   const sea = base && view ? seaPath(base, tolFor(view.w)) : "";
+  // names beside the dots: the most-named places on this page first, each only where it overlaps no other name or dot
+  // (the box is drawn only once the map has loaded, so it is followed from the moment it appears)
+  const [mapBox, setMapBox] = useState<HTMLDivElement | null>(null);
+  const [boxW, setBoxW] = useState(0);
+  useEffect(() => {
+    if (!mapBox) return;
+    const ro = new ResizeObserver(() => setBoxW(mapBox.clientWidth));
+    ro.observe(mapBox);
+    return () => ro.disconnect();
+  }, [mapBox]);
+  const names = useMemo(() => {
+    const out = new Map<string, { x: number; y: number; flip: boolean }>();
+    if (!base || !view || !list || !boxW) return out;
+    const H = boxW * RATIO, many = list.length > 20, dotR = many ? 6 : 12, max = many ? 10 : 14;
+    const at = (pp: PagePlace) => { const [x, y] = project(base, pp.place.lon, pp.place.lat); return [((x - view.x) / view.w) * boxW, ((y - view.y) / view.h) * H]; };
+    const boxes: [number, number, number, number][] = list.map((pp) => { const [x, y] = at(pp); return [x - dotR, y - dotR, x + dotR, y + dotR]; });
+    const free = (b: [number, number, number, number]) => b[0] >= 2 && b[2] <= boxW - 2 && b[1] >= 2 && b[3] <= H - 2
+      && !boxes.some((o) => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
+    for (const pp of [...list].sort((a, b) => b.n - a.n || b.place.n - a.place.n)) {
+      if (out.size >= max) break;
+      const [x, y] = at(pp);
+      if (x < 0 || x > boxW || y < 0 || y > H) continue;
+      const w = shortName(pp.place).length * 6.6 + 6, h = 16;
+      for (const flip of [false, true]) {
+        const b: [number, number, number, number] = flip ? [x - dotR - 3 - w, y - h / 2, x - dotR - 3, y + h / 2] : [x + dotR + 3, y - h / 2, x + dotR + 3 + w, y + h / 2];
+        if (free(b)) { boxes.push(b); out.set(pp.place.id, { x: (x / boxW) * 100, y: (y / H) * 100, flip }); break; }
+      }
+    }
+    return out;
+  }, [base, view, list, boxW]);
   const chosen = list?.find((p) => p.place.id === active) ?? null;
   // the numbers stay those of reading order, whichever way the list is sorted
   const num = useMemo(() => new Map(list?.map((p, i) => [p.place.id, i + 1])), [list]);
@@ -128,7 +158,7 @@ export default function PlacesPanel({ work, doc, pageKeys, onJump, onMarks, onCl
       </div>
 
       {base && view && (
-        <div className={styles.map} data-empty={list && !list.length ? "" : undefined} data-many={list && list.length > 20 ? "" : undefined}>
+        <div ref={setMapBox} className={styles.map} data-empty={list && !list.length ? "" : undefined} data-many={list && list.length > 20 ? "" : undefined}>
           <svg viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
             <path d={sea} className={styles.sea} fillRule="evenodd" />
           </svg>
@@ -144,6 +174,11 @@ export default function PlacesPanel({ work, doc, pageKeys, onJump, onMarks, onCl
                 <span aria-hidden="true">{i + 1}</span>
               </button>
             );
+          })}
+          {list?.map((p) => {
+            const n = names.get(p.place.id);
+            if (!n || p.place.id === active) return null;
+            return <span key={`n-${p.place.id}`} className={styles.label} data-flip={n.flip ? "" : undefined} style={{ left: `${n.x}%`, top: `${n.y}%` }} aria-hidden="true">{shortName(p.place)}</span>;
           })}
           {chosen && (() => {
             const [x, y] = project(base, chosen.place.lon, chosen.place.lat);
