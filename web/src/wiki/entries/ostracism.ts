@@ -42,7 +42,7 @@ Aristides wrote his own name, handed the sherd back, and, leaving the city, pray
 
 ## The sherds themselves
 
-Ostracism is one of the few ancient votes whose ballots survive. About 9,000 ostraka have been excavated in the Kerameikos, the potters' quarter of Athens, and more than a thousand from the Agora. The names on them match the men the literary sources say were candidates: Themistocles, Megacles, Aristides, Xanthippus and many more.
+Ostracism is one of the few ancient votes whose ballots survive. More than 9,000 ostraka have been excavated in the Kerameikos, the potters' quarter of Athens, and more than a thousand from the Agora. The names on them match the men the literary sources say were candidates: Themistocles, Megacles, Aristides, Xanthippus and many more.
 
 {debated} In 1937 excavators on the north slope of the Acropolis found 190 sherds with the name of Themistocles, written by only a few hands. They look prepared in advance, either to help voters who could not write, or as part of an organised campaign against him. Which it was cannot be proved.
 

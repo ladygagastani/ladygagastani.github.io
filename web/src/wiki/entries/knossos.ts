@@ -36,7 +36,7 @@ The later mythographers told the rest: the bull from the sea, Queen Pasiphae's p
 
 ## The palace of Minos
 
-{well} Work began on 23 March 1900. Evans' workmen uncovered a vast complex of courtyards, halls, staircases and storerooms, and clay tablets written in scripts that no one could read; Evans distinguished two of them, which he called Linear A and [Linear B](wiki:linear-b). He coined the word "Minoan" for the civilisation of Bronze Age Crete, and spent much of the rest of his life on it, publishing his results in the many volumes of *The Palace of Minos at Knossos*.
+{well} Work began on 23 March 1900. Evans' workmen uncovered a vast complex of courtyards, halls, staircases and storerooms, and clay tablets written in scripts that no one could read; Evans distinguished two of them, which he called Linear A and [Linear B](wiki:linear-b). He made "Minoan" the name of the civilisation of Bronze Age Crete, and spent much of the rest of his life on it, publishing his results in the many volumes of *The Palace of Minos at Knossos*.
 
 {well} The site is far older than Evans' palace. People lived on the hill in the Neolithic, thousands of years earlier, and the palace itself was built and rebuilt through the second millennium BC.
 
@@ -101,7 +101,7 @@ The later mythographers told the rest: the bull from the sea, Queen Pasiphae's p
   secondary: [
     { id: "gere-knossos", note: "Evans' Knossos and what the twentieth century made of it." },
     { id: "macgillivray-minotaur", note: "A critical life of Evans." },
-    { id: "kotsonas-2016", note: "Minos Kalokairinos, the first excavator." },
+    { id: "kotsonas-2016", note: "Minos Kalokairinos and his work at Knossos, chiefly on its Greek and Roman remains." },
     { id: "dickinson-aegean", note: "Minoan Crete in its Bronze Age setting." },
   ],
   written: "2026-09-28",

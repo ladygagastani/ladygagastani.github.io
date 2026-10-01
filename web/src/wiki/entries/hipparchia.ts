@@ -55,7 +55,7 @@ Theodorus had no answer, so he tried to pull off her cloak. She was not upset. T
   },
   timeline: [
     { when: "c. 405 BC", what: "Euripides' Bacchae is first staged, after his death.", certainty: "well" },
-    { when: "328–325 BC", what: "The 113th Olympiad, when Crates \"flourished\" according to Diogenes Laertius.", certainty: "debated" },
+    { when: "328–324 BC", what: "The 113th Olympiad, when Crates \"flourished\" according to Diogenes Laertius.", certainty: "debated" },
     { when: "c. 300 BC", what: "Hipparchia marries Crates and lives as a Cynic.", certainty: "debated" },
     { when: "3rd c. AD", what: "Diogenes Laertius gives her a life in his Lives of the Philosophers.", certainty: "well" },
   ],

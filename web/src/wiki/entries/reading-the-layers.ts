@@ -13,13 +13,13 @@ Thucydides wanted to show that the islands had once been held by pirates of othe
 
 {{quote:carians}}
 
-The occasion was a religious one. The Athenians, [following an oracle](cts:tlg0003.tlg001:3.104.1), cleared every grave from the island, forbade anyone to die or give birth there, and moved the dead across to the neighbouring island of Rheneia. The tyrant Peisistratus had done something similar a century before, but only for [the ground within sight of the temple](cts:tlg0016.tlg001:1.64.2).
+The occasion was a religious one. The Athenians, [following an oracle](cts:tlg0003.tlg001:3.104.1), cleared every grave from the island, forbade anyone to die or give birth there, and [moved the dead](cts:tlg0060.tlg001:12.58.7) across to the neighbouring island of Rheneia. The tyrant Peisistratus had done something similar a century before, but only for [the ground within sight of the temple](cts:tlg0016.tlg001:1.64.2).
 
 {debated} Whether those graves really were Carian is another matter. Thucydides reasons that foreign weapons and a foreign way of burial mean a foreign people. Archaeologists have learned to handle that argument with care: objects travel by trade and gift, and customs change without the people changing.
 
 ## The pit on Rheneia
 
-{well} The bones and grave goods from Delos did not disappear. In 1897 Dimitrios Stavropoullos, the Greek official supervising the French excavations on Delos, began digging on Rheneia and found the pit where the Athenians had deposited them in the winter of 426/5 BC. It held [thousands of finds](https://cyclades.culture.gov.gr/en/location/the-archaeological-museum-of-mykonos/), and the museum on Mykonos was founded to house them; its pottery runs from the eighth century to the fifth.
+{well} The bones and grave goods from Delos did not disappear. In 1897 Dimitrios Stavropoullos, the Greek official supervising the French excavations on Delos, began digging on Rheneia and found the pit where the Athenians had deposited them in the winter of 426/5 BC. It held [thousands of finds](https://cyclades.culture.gov.gr/en/location/the-archaeological-museum-of-mykonos/), and the museum on Mykonos was founded to house them; its pottery spans several centuries, down to the fifth.
 
 This is what archaeologists call a closed deposit: a group of objects sealed at one known moment. Everything in the Rheneia pit was already in the ground of Delos by 426/5 BC, so none of it can be later. A date like that, the latest possible date for everything found with it, is called a *terminus ante quem*.
 
@@ -71,7 +71,7 @@ On the Acropolis of Athens, the ground itself remembers a date. In 480 BC the Pe
     { when: "1897", what: "Dimitrios Stavropoullos finds the purification pit on Rheneia.", certainty: "well" },
     { when: "late 1940s", what: "Willard Libby develops radiocarbon dating.", certainty: "well" },
     { when: "1973", what: "Edward Harris devises the Harris matrix for recording layers.", certainty: "well" },
-    { when: "2006, 2018", what: "The buried olive tree, then a year-by-year tree-ring record, re-date the Thera eruption.", certainty: "well" },
+    { when: "2006, 2018", what: "The buried olive tree, then a year-by-year tree-ring record, re-date the Thera eruption.", certainty: "debated" },
   ],
   readIt: [
     { work: "tlg0003.tlg001", ref: "1.8.1", to: "1.8.4", label: "Thucydides 1.8", why: "The Carian graves of Delos, and Thucydides' picture of early Greece." },
