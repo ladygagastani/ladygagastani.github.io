@@ -544,3 +544,8 @@ p.translit { margin: -0.3em 0 0.8em; }
   transform-origin: top; animation: listen-in 0.4s var(--ease) both;
 }
 @keyframes listen-in { from { transform: scaleY(0); } }
+
+/* Listen: a button beside "Float the reader" on wide screens, a chip in the aids sheet on phones */
+.listenBtn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+@media (min-width: 761px) { .listenChip { display: none !important; } }
+@media (max-width: 760px) { .listenBtn { display: none !important; } }

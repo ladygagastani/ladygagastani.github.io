@@ -9,7 +9,7 @@ import { blocks, inline } from "@/wiki/markup";
 import { CERTAINTY, type Certainty } from "@/wiki/types";
 import type { AuthorArticle } from "@/wiki/author-articles";
 import Link from "next/link";
-import { CertTag, Inline, readHref } from "../stoa/Markup";
+import { CertTag, Inline, emphAware, readHref } from "../stoa/Markup";
 import AuthorRoad from "./AuthorRoad";
 import styles from "./AuthorArticle.module.css";
 
@@ -22,7 +22,7 @@ function Prose({ src }: { src: string }) {
     <>
       {blocks(src).map((b, i) => {
         if ("p" in b) return <p key={i}>{b.cert && <><CertTag c={b.cert} />{" "}</>}<Inline xs={b.p} /></p>;
-        if ("h3" in b) return <h4 key={i}>{b.h3}</h4>;
+        if ("h3" in b) return <h4 key={i}>{emphAware(b.h3, "h")}</h4>;
         if ("list" in b) return <ul key={i}>{b.list.map((li, j) => <li key={j}><Inline xs={li} /></li>)}</ul>;
         return null;
       })}

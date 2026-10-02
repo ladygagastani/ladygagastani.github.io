@@ -20,6 +20,13 @@ export function greekAware(s: string, key: string | number): ReactNode {
   return <Fragment key={key}>{parts.map((p, i) => (i % 2 ? <span key={i} lang="grc" className={styles.inGr}>{p}</span> : p))}</Fragment>;
 }
 
+/** A short text that may hold *italics* (a link's words, a heading), with Greek marked as Greek. */
+export function emphAware(s: string, key: string | number): ReactNode {
+  const parts = s.split(/\*([^*]+)\*/);
+  if (parts.length === 1) return greekAware(s, key);
+  return <Fragment key={key}>{parts.map((p, i) => (i % 2 ? <i key={i}>{greekAware(p, i)}</i> : greekAware(p, i)))}</Fragment>;
+}
+
 export const readHref = (c: { work: string; ref: string }) => `/read?w=${c.work}&at=${encodeURIComponent(c.ref)}`;
 
 export function CertTag({ c }: { c: Certainty }) {
@@ -44,12 +51,12 @@ export function Inline({ xs }: { xs: Inl[] }) {
         if ("i" in x) return <i key={i}><Inline xs={x.i} /></i>;
         if ("cert" in x) return <CertTag key={i} c={x.cert} />;
         if ("src" in x) return <SourceMark key={i} n={x.src} />;
-        if ("cite" in x) return <Link key={i} className={styles.cite} href={readHref(x.cite)} transitionTypes={["page-turn"]} title="Read this passage in the Scroll">{greekAware(x.text, "t")}</Link>;
+        if ("cite" in x) return <Link key={i} className={styles.cite} href={readHref(x.cite)} transitionTypes={["page-turn"]} title="Read this passage in the Scroll">{emphAware(x.text, "t")}</Link>;
         if ("wiki" in x) {
           const e = entryBySlug.get(x.wiki);
-          return <Link key={i} className={styles.wikiLink} href={`/stoa/${x.wiki}`} transitionTypes={["page-turn"]} title={e?.kicker}>{greekAware(x.text, "t")}</Link>;
+          return <Link key={i} className={styles.wikiLink} href={`/stoa/${x.wiki}`} transitionTypes={["page-turn"]} title={e?.kicker}>{emphAware(x.text, "t")}</Link>;
         }
-        return <a key={i} href={x.ext} target="_blank" rel="noopener noreferrer">{x.text}</a>;
+        return <a key={i} href={x.ext} target="_blank" rel="noopener noreferrer">{emphAware(x.text, "t")}</a>;
       })}
     </>
   );
@@ -102,11 +109,11 @@ export function Blocks({ bs, entry }: { bs: Blk[]; entry: Entry }) {
       {bs.map((b, i) => {
         if ("h2" in b) return (
           <Fragment key={i}>
-            <h2 id={b.id} data-key={b.id} className={`${styles.h2} rv`}>{greekAware(b.h2, "h")}</h2>
+            <h2 id={b.id} data-key={b.id} className={`${styles.h2} rv`}>{emphAware(b.h2, "h")}</h2>
             <SectionNote slug={entry.slug} section={b.id} title={b.h2} />
           </Fragment>
         );
-        if ("h3" in b) return <h3 key={i} className={styles.h3}>{greekAware(b.h3, "h")}</h3>;
+        if ("h3" in b) return <h3 key={i} className={styles.h3}>{emphAware(b.h3, "h")}</h3>;
         if ("quote" in b) return <Quote key={i} q={entry.quotes![b.quote]} />;
         if ("figure" in b) return <Figure key={i} id={b.figure} />;
         if ("timeline" in b) return entry.timeline ? <Timeline key={i} items={entry.timeline} /> : null;

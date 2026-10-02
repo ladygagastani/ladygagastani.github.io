@@ -77,7 +77,8 @@ for (const theme of ["light", "dark"] as const) {
   test.describe(`accessibility after a click, ${theme}`, () => {
     for (const [name, path, act] of STATES) {
       test(`${name} (${theme})`, async ({ page }) => {
-        test.setTimeout(90_000);
+        // every reading aid at once makes a page of some 23,000 elements, which the checker alone takes over a minute to scan
+        test.setTimeout(name === "reading aids" ? 240_000 : 90_000);
         await page.addInitScript((t) => {
           localStorage.setItem("mathesis:settings", JSON.stringify({ state: { theme: t, motion: "reduce" }, version: 0 }));
         }, theme);
